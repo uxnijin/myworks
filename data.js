@@ -27,13 +27,13 @@ const TOOLS = [
   {
     name: "Site Speed Test",
     description: "Checks page load time, size, and request waterfall for any website.",
-    url: "https://your-site-speed-test.netlify.app",
+    url: "https://sitespeedcheck.nijin.site/",
     tag: "Network",
   },
   {
     name: "IP & DNS Checker",
     description: "Shows your IP details and checks DNS records + propagation.",
-    url: "https://your-dns-checker.netlify.app",
+    url: "https://dnschecker.nijin.site/",
     tag: "Network",
   },
 ];
