@@ -15,8 +15,8 @@ const TOOLS = [
   {
     name: "Design School",
     description: "A curated collection of resources for learning design.",
-    url: "https://school.nijin.site/",
-    tag: "Design Resource",
+    url: "https://design.nijin.site/",
+    tag: "Resource",
   },
   {
     name: "Speed Test",
