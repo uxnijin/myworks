@@ -4,21 +4,24 @@
 
 const PROFILE = {
   name: "Nijin",
+  avatar: "avatar.jpg",
   role: "Product Designer",
   bio: "I design and build small tools. Here's a collection of them.",
-  links: [
-    { label: "Website", url: "https://nijin.site" },
-    // { label: "Twitter", url: "https://twitter.com/yourhandle" },
-    // { label: "GitHub", url: "https://github.com/yourhandle" },
-  ],
+  links: [],
 };
 
 // Add one object per tool. Order here = order shown on the page.
 const TOOLS = [
   {
+    name: "Design School",
+    description: "A curated collection of resources for learning design.",
+    url: "https://school.nijin.site/",
+    tag: "Design Resource",
+  },
+  {
     name: "Speed Test",
     description: "Internet speed test — download, upload, ping, jitter.",
-    url: "https://your-speedtest-site.netlify.app",
+    url: "https://speedtest.nijin.site/",
     tag: "Network",
   },
   {
