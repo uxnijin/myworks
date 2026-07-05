@@ -8,9 +8,9 @@ const PROFILE = {
   role: "Product Designer",
   bio: "I design and build small tools. Here's a collection of them.",
   links: [
-    { label: "Instagram", url: "https://instagram.com/nijin" },
-    { label: "LinkedIn", url: "https://linkedin.com/in/nijin" },
-    { label: "YouTube", url: "https://youtube.com/@nijin" },
+    { label: "Instagram", url: "https://instagram.com/uxnijin" },
+    { label: "LinkedIn", url: "https://linkedin.com/in/nijinmuhammed" },
+    { label: "YouTube", url: "https://www.youtube.com/@designschoolmalayalam" },
   ],
 };
 

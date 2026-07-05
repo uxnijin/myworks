@@ -144,19 +144,25 @@ body {
   display: flex;
   gap: 16px;
   margin-top: 8px;
+  align-items: center;
 }
 
 .links a {
-  font-family: var(--font-mono);
-  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--ink-dim);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--grey-3);
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .links a:hover {
-  color: var(--ink);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.links svg {
+  width: 18px;
+  height: 18px;
 }
 
 .grid {
