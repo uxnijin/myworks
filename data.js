@@ -6,7 +6,9 @@ const PROFILE = {
   name: "Nijin",
   avatar: "avatar.jpg",
   role: "Product Designer",
-  bio: "I design and build small tools. Here's a collection of them.",
+  bio: `Product Designer worked with 30+ clients
+Mentored 500+ design students at HACA (harisandcoacademy.com)
+Currently building products I wish existed`,
   links: [
     { label: "Instagram", url: "https://instagram.com/uxnijin" },
     { label: "LinkedIn", url: "https://linkedin.com/in/nijinmuhammed" },
