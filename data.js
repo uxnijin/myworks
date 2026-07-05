@@ -39,5 +39,11 @@ const TOOLS = [
     description: "Shows your DNS records + propagation.",
     url: "https://dnschecker.nijin.site/",
     tag: "Network",
+  },
+  {
+    name: "IP Checker",
+    description: "Check IP and location.",
+    url: "https://ipchecker.nijin.site/",
+    tag: "Network",
   }
 ];

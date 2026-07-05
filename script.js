@@ -121,4 +121,34 @@
     });
   });
 
+  // Dynamic rounded favicon generation
+  if (PROFILE.avatar) {
+    const faviconImg = new Image();
+    faviconImg.src = PROFILE.avatar;
+    faviconImg.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 64;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
+      ctx.clip();
+
+      const minSize = Math.min(faviconImg.width, faviconImg.height);
+      const srcX = (faviconImg.width - minSize) / 2;
+      const srcY = (faviconImg.height - minSize) / 2;
+      ctx.drawImage(faviconImg, srcX, srcY, minSize, minSize, 0, 0, size, size);
+
+      let link = document.querySelector("link[rel~='icon']");
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      link.type = 'image/png';
+      link.href = canvas.toDataURL('image/png');
+    };
+  }
 })();
