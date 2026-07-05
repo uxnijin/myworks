@@ -7,7 +7,11 @@ const PROFILE = {
   avatar: "avatar.jpg",
   role: "Product Designer",
   bio: "I design and build small tools. Here's a collection of them.",
-  links: [],
+  links: [
+    { label: "Instagram", url: "https://instagram.com/nijin" },
+    { label: "LinkedIn", url: "https://linkedin.com/in/nijin" },
+    { label: "YouTube", url: "https://youtube.com/@nijin" },
+  ],
 };
 
 // Add one object per tool. Order here = order shown on the page.
@@ -31,9 +35,15 @@ const TOOLS = [
     tag: "Network",
   },
   {
-    name: "IP & DNS Checker",
-    description: "Shows your IP details and checks DNS records + propagation.",
+    name: "DNS Checker",
+    description: "Shows your DNS records + propagation.",
     url: "https://dnschecker.nijin.site/",
+    tag: "Network",
+  },
+  {
+    name: "IP Checker",
+    description: "Shows your IP and location.",
+    url: "https://ipchecker.nijin.site/",
     tag: "Network",
   },
 ];
