@@ -123,6 +123,18 @@ body {
   font-size: 22px;
   font-weight: 700;
   color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.verify-badge {
+  width: 18px;
+  height: 18px;
+  fill: #1d9bf0;
+  flex-shrink: 0;
+  transform: translateY(2px);
 }
 
 .role {
