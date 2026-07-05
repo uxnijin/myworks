@@ -6,8 +6,7 @@ const PROFILE = {
   name: "Nijin",
   avatar: "avatar.jpg",
   bio: `Product Designer worked with <strong>30+ clients</strong>
-Mentored <strong>500+ design students</strong> at <a href="https://harisandcoacademy.com" target="_blank" rel="noopener">HACA</a>
-Currently building products I wish existed`,
+Mentored <strong>500+ design students</strong> at <a href="https://harisandcoacademy.com" target="_blank" rel="noopener">HACA</a>`,
   links: [
     { label: "Instagram", url: "https://instagram.com/uxnijin" },
     { label: "LinkedIn", url: "https://linkedin.com/in/nijinmuhammed" },
