@@ -7,8 +7,12 @@
     $('avatar').textContent = PROFILE.name.charAt(0).toUpperCase();
   }
   $('name').textContent = PROFILE.name;
-  $('role').textContent = PROFILE.role;
-  $('bio').textContent = PROFILE.bio;
+  if (PROFILE.role) {
+    $('role').textContent = PROFILE.role;
+  } else {
+    $('role').style.display = 'none';
+  }
+  $('bio').innerHTML = PROFILE.bio;
 
   const ICONS = {
     instagram: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>`,
@@ -30,18 +34,69 @@
     return `<a href="${l.url}" target="_blank" rel="noopener" title="${l.label || key}" aria-label="${l.label || key}">${iconSvg}</a>`;
   }).join('');
 
-  $('grid').innerHTML = TOOLS.map((t) => `
-    <a class="card" href="${t.url}" target="_blank" rel="noopener">
-      <div class="card-top">
-        <span class="tag">${t.tag || 'Tool'}</span>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </div>
-      <h2 class="card-name">${t.name}</h2>
-      <p class="card-desc">${t.description}</p>
-    </a>
-  `).join('');
+  const getTagHue = (tag) => {
+    let hash = 0;
+    for (let i = 0; i < tag.length; i++) {
+      hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash % 360);
+  };
+
+  $('grid').innerHTML = TOOLS.map((t) => {
+    const tag = t.tag || 'Tool';
+    const hue = getTagHue(tag);
+    return `
+      <a class="card" href="${t.url}" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="tag" style="--tag-hue: ${hue}">${tag}</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+        <h2 class="card-name">${t.name}</h2>
+        <p class="card-desc">${t.description}</p>
+      </a>
+    `;
+  }).join('');
+
+  // Tabs setup
+  const uniqueTags = ['All', ...new Set(TOOLS.map((t) => t.tag).filter(Boolean))];
+  const tabsContainer = $('tabs');
+  let activeTab = 'All';
+
+  const renderTabs = () => {
+    tabsContainer.innerHTML = uniqueTags.map((tag) => {
+      const isActive = tag === activeTab;
+      const hue = tag !== 'All' ? getTagHue(tag) : null;
+      const style = hue !== null ? `style="--tag-hue: ${hue}"` : '';
+      return `<button class="tab-btn ${isActive ? 'active' : ''}" ${style} data-tag="${tag}">${tag}</button>`;
+    }).join('');
+  };
+
+  const filterTools = () => {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card) => {
+      const tagElement = card.querySelector('.tag');
+      const tagText = tagElement ? tagElement.textContent : 'Tool';
+      if (activeTab === 'All' || tagText === activeTab) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  };
+
+  if (tabsContainer) {
+    tabsContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tab-btn');
+      if (!btn) return;
+      activeTab = btn.dataset.tag;
+      renderTabs();
+      filterTools();
+    });
+
+    renderTabs();
+  }
 
   // Mouse spotlight & 3D Tilt hover effect
   document.querySelectorAll('.card').forEach((card) => {
@@ -66,30 +121,4 @@
     });
   });
 
-  // Instant Search filter logic
-  const searchInput = $('search');
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      document.querySelectorAll('.card').forEach((card) => {
-        const name = card.querySelector('.card-name').textContent.toLowerCase();
-        const desc = card.querySelector('.card-desc').textContent.toLowerCase();
-        const tag = card.querySelector('.tag').textContent.toLowerCase();
-
-        if (name.includes(query) || desc.includes(query) || tag.includes(query)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-
-    // Keyboard shortcut '/' to focus search input
-    window.addEventListener('keydown', (e) => {
-      if (e.key === '/' && document.activeElement !== searchInput) {
-        e.preventDefault();
-        searchInput.focus();
-      }
-    });
-  }
 })();

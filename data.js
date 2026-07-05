@@ -5,9 +5,8 @@
 const PROFILE = {
   name: "Nijin",
   avatar: "avatar.jpg",
-  role: "Product Designer",
-  bio: `Product Designer worked with 30+ clients
-Mentored 500+ design students at HACA (harisandcoacademy.com)
+  bio: `Product Designer worked with <strong>30+ clients</strong>
+Mentored <strong>500+ design students</strong> at <a href="https://harisandcoacademy.com" target="_blank" rel="noopener">HACA</a>
 Currently building products I wish existed`,
   links: [
     { label: "Instagram", url: "https://instagram.com/uxnijin" },
@@ -41,11 +40,5 @@ const TOOLS = [
     description: "Shows your DNS records + propagation.",
     url: "https://dnschecker.nijin.site/",
     tag: "Network",
-  },
-  {
-    name: "IP Checker",
-    description: "Shows your IP and location.",
-    url: "https://ipchecker.nijin.site/",
-    tag: "Network",
-  },
+  }
 ];
