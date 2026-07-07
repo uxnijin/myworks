@@ -17,6 +17,12 @@ Mentored <strong>500+ design students</strong> at <a href="https://harisandcoaca
 // Add one object per tool. Order here = order shown on the page.
 const TOOLS = [
   {
+    name: "Tasks Extension",
+    description: "A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.",
+    url: "./tasks/index.html",
+    tag: "Product",
+  },
+  {
     name: "Design School",
     description: "A curated collection of resources for learning design.",
     url: "https://design.nijin.site/",
