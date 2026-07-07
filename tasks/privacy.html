@@ -67,10 +67,33 @@
         <h2>7. Revoking Access</h2>
         <p>You can revoke the Extension's access to your Google account at any time. To do so, visit the <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account Permissions page</a> and remove access for "Tasks". Doing so will stop all sync activity and render the Extension signed out.</p>
 
-        <h2>8. Changes to This Privacy Policy</h2>
+        <h2>8. Extension Permissions &amp; Justifications</h2>
+        <p>The Extension requests only the permissions it needs to function. Below is a transparent explanation of every permission used and why:</p>
+        <ul>
+          <li><strong>sidePanel:</strong> The extension's entire user interface is rendered inside Chrome's side panel. This permission is used to register the extension's HTML page as a side panel and to open it programmatically when the user clicks the extension icon or a notification.</li>
+          <li><strong>storage:</strong> Used via <code>chrome.storage.local</code> to persist the user's tasks, task lists, categories, and preferences locally in the browser. This enables offline access to tasks and allows the background service worker to read task data for scheduling reminder alarms.</li>
+          <li><strong>alarms:</strong> Used to schedule task reminder notifications. When a user sets a due date or reminder on a task, the extension creates a <code>chrome.alarms</code> timer that fires at the specified time to trigger a desktop notification reminding the user of the upcoming task.</li>
+          <li><strong>notifications:</strong> Used to display desktop reminder notifications when a task's due date or scheduled reminder time arrives. Notifications show the task title, priority, and due time so the user doesn't miss deadlines.</li>
+          <li><strong>identity:</strong> Used to authenticate the user via Google OAuth 2.0 using <code>chrome.identity.launchWebAuthFlow()</code>. This allows the user to sign in with their Google Account so the extension can obtain an access token to sync tasks with the Google Tasks API.</li>
+          <li><strong>Host permissions</strong> (<code>https://*.googleapis.com/*</code>): Required to communicate with the Google Tasks API (<code>tasks.googleapis.com</code>) to read, create, update, and delete the user's task lists and tasks, and with the Google OAuth2 userinfo endpoint to retrieve the signed-in user's name, email, and profile picture for display in the extension.</li>
+        </ul>
+
+        <h2>9. Remote Code Disclosure</h2>
+        <p>This extension does not use remote code. All JavaScript is bundled locally within the extension package. The only remote requests made are REST API calls to Google's official API endpoints (<code>googleapis.com</code>) to fetch and sync task data.</p>
+
+        <h2>10. Data Use Certification</h2>
+        <p>We certify that the tasks extension complies with the Chrome Web Store Developer Program Policies regarding data use:</p>
+        <ul>
+          <li>We do <strong>not</strong> sell user data to third parties.</li>
+          <li>We do <strong>not</strong> use or transfer user data for purposes unrelated to the extension's core task management functionality.</li>
+          <li>We do <strong>not</strong> use or transfer user data to determine creditworthiness or for lending purposes.</li>
+          <li>We do <strong>not</strong> use user data for advertising, marketing, analytics, or profiling.</li>
+        </ul>
+
+        <h2>11. Changes to This Privacy Policy</h2>
         <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date. We encourage you to review this page periodically.</p>
 
-        <h2>9. Contact Us</h2>
+        <h2>12. Contact Us</h2>
         <p>If you have any questions or feedback regarding this Privacy Policy, please contact the developer via Nijin's <a href="https://linkedin.com/in/nijinmuhammed" target="_blank" rel="noopener">LinkedIn Profile</a> or <a href="https://instagram.com/uxnijin" target="_blank" rel="noopener">Instagram</a>.</p>
       </div>
     </div>
