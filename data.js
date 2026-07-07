@@ -17,7 +17,7 @@ Mentored <strong>500+ design students</strong> at <a href="https://harisandcoaca
 // Add one object per tool. Order here = order shown on the page.
 const TOOLS = [
   {
-    name: "Tasks Extension",
+    name: "tasks",
     description: "A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.",
     url: "./tasks/index.html",
     tag: "Product",
