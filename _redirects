@@ -1,0 +1,3 @@
+# Rewrite subdomain traffic to the tints-and-shades subdirectory (200 Rewrite/Proxy)
+https://tintsandshades.nijin.site/*  /tints-and-shades/:splat  200
+http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
