@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tints &amp; Shades - Figma Plugin</title>
+  <meta name="description"
+    content="Generate mathematically balanced tints and shades color scales directly in Figma. Synchronize palettes to styles instantly.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Modern Header Navigation -->
+  <header class="header-nav" id="main-header">
+    <div class="header-container">
+      <a href="../index.html" class="logo-container">
+        <!-- SVG Diamond divider logo matching image -->
+        <svg class="app-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3.5" y="3.5" width="17" height="17" rx="3.5" transform="rotate(45 12 12)" stroke="#8c52ff"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <line x1="12" y1="3.5" x2="12" y2="20.5" stroke="#8c52ff" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+        <span class="logo-text">Tints &amp; Shades</span>
+      </a>
+      <nav class="header-menu">
+        <a href="#why-needed" class="menu-item">The Need</a>
+        <a href="#playground" class="menu-item">Sandbox</a>
+        <a href="#matrix" class="menu-item">Palettes</a>
+        <a href="#audience" class="menu-item">Audience</a>
+        <a href="#usecases" class="menu-item">Use Cases</a>
+        <a href="#faq" class="menu-item">FAQ</a>
+      </nav>
+      <div class="header-right">
+        <a href="https://www.figma.com/community" target="_blank" rel="noopener" class="add-chrome-btn"
+          id="header-add-figma">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 62" fill="none"
+            style="width: 12px; height: 17px; margin-right: 6px;">
+            <path
+              d="M21.3422 40.313V21.3422H11.8567C9.34106 21.3422 6.92841 22.3415 5.14955 24.1204C3.37069 25.8992 2.37134 28.3119 2.37134 30.8276C2.37134 33.3433 3.37069 35.7559 5.14955 37.5348C6.92841 39.3136 9.34106 40.313 11.8567 40.313M21.3422 40.313H11.8567M21.3422 40.313V49.7984C21.3422 52.3141 20.3428 54.7267 18.5639 56.5056C16.7851 58.2844 14.3724 59.2838 11.8567 59.2838C9.34106 59.2838 6.92841 58.2844 5.14955 56.5056C3.37069 54.7267 2.37134 52.3141 2.37134 49.7984C2.37134 47.2827 3.37069 44.87 5.14955 43.0912C6.92841 41.3123 9.34106 40.313 11.8567 40.313"
+              stroke="currentColor" stroke-width="4.7427" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M21.3427 30.8277C21.3446 28.9526 21.902 27.1201 22.9445 25.5616C23.9871 24.0031 25.468 22.7884 27.2004 22.0709C28.9327 21.3534 30.8388 21.1653 32.678 21.5302C34.5173 21.8952 36.2071 22.7969 37.5342 24.1215C38.64 25.2241 39.4565 26.5825 39.9114 28.0763C40.3663 29.5701 40.4455 31.1531 40.142 32.6848C39.8385 34.2165 39.1616 35.6497 38.1714 36.8571C37.1813 38.0646 35.9085 39.009 34.4658 39.6066C33.0232 40.2043 31.4554 40.4366 29.9014 40.2831C28.3475 40.1295 26.8554 39.5949 25.5576 38.7265C24.2599 37.8581 23.1964 36.6828 22.4617 35.305C21.727 33.9271 21.3437 32.3892 21.3458 30.8277"
+              stroke="currentColor" stroke-width="4.7427" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M21.3423 2.37134H30.8277C33.3434 2.37134 35.756 3.37069 37.5349 5.14955C39.3137 6.92841 40.3131 9.34106 40.3131 11.8567C40.3131 14.3724 39.3137 16.7851 37.5349 18.5639C35.756 20.3428 33.3434 21.3422 30.8277 21.3422H21.3423M21.3423 2.37134V21.3422M21.3423 2.37134H11.8569C9.34118 2.37134 6.92853 3.37069 5.14967 5.14955C3.37081 6.92841 2.37146 9.34106 2.37146 11.8567C2.37146 14.3724 3.37081 16.7851 5.14967 18.5639C6.92853 20.3428 9.34118 21.3422 11.8569 21.3422H21.3423"
+              stroke="currentColor" stroke-width="4.7427" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Add to Figma</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage">
+
+    <!-- Hero Section -->
+    <section class="hero reveal-scale">
+      <div class="badge">Figma Tints &amp; Shades Plugin</div>
+      <h1>A beautiful way to generate <strong>Color Scales</strong></h1>
+      <p>Instantly build mathematically uniform tints and shades from any base color.</p>
+
+      <div class="hero-actions">
+        <a href="https://www.figma.com/community" target="_blank" rel="noopener" class="cta-btn" id="hero-add-figma">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 62" fill="none"
+            style="width: 14px; height: 20px; margin-right: 6px;">
+            <path
+              d="M21.3422 40.313V21.3422H11.8567C9.34106 21.3422 6.92841 22.3415 5.14955 24.1204C3.37069 25.8992 2.37134 28.3119 2.37134 30.8276C2.37134 33.3433 3.37069 35.7559 5.14955 37.5348C6.92841 39.3136 9.34106 40.313 11.8567 40.313M21.3422 40.313H11.8567M21.3422 40.313V49.7984C21.3422 52.3141 20.3428 54.7267 18.5639 56.5056C16.7851 58.2844 14.3724 59.2838 11.8567 59.2838C9.34106 59.2838 6.92841 58.2844 5.14955 56.5056C3.37069 54.7267 2.37134 52.3141 2.37134 49.7984C2.37134 47.2827 3.37069 44.87 5.14955 43.0912C6.92841 41.3123 9.34106 40.313 11.8567 40.313"
+              stroke="currentColor" stroke-width="4.7427" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M21.3427 30.8277C21.3446 28.9526 21.902 27.1201 22.9445 25.5616C23.9871 24.0031 25.468 22.7884 27.2004 22.0709C28.9327 21.3534 30.8388 21.1653 32.678 21.5302C34.5173 21.8952 36.2071 22.7969 37.5342 24.1215C38.64 25.2241 39.4565 26.5825 39.9114 28.0763C40.3663 29.5701 40.4455 31.1531 40.142 32.6848C39.8385 34.2165 39.1616 35.6497 38.1714 36.8571C37.1813 38.0646 35.9085 39.009 34.4658 39.6066C33.0232 40.2043 31.4554 40.4366 29.9014 40.2831C28.3475 40.1295 26.8554 39.5949 25.5576 38.7265C24.2599 37.8581 23.1964 36.6828 22.4617 35.305C21.727 33.9271 21.3437 32.3892 21.3458 30.8277"
+              stroke="currentColor" stroke-width="4.7427" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M21.3423 2.37134H30.8277C33.3434 2.37134 35.756 3.37069 37.5349 5.14955C39.3137 6.92841 40.3131 9.34106 40.3131 11.8567C40.3131 14.3724 39.3137 16.7851 37.5349 18.5639C35.756 20.3428 33.3434 21.3422 30.8277 21.3422H21.3423M21.3423 2.37134V21.3422M21.3423 2.37134H11.8569C9.34118 2.37134 6.92853 3.37069 5.14967 5.14955C3.37081 6.92841 2.37146 9.34106 2.37146 11.8567C2.37146 14.3724 3.37081 16.7851 5.14967 18.5639C6.92853 20.3428 9.34118 21.3422 11.8569 21.3422H21.3423"
+              stroke="currentColor" stroke-width="4.7427" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>Add to Figma</span>
+        </a>
+        <a href="../index.html" class="cta-btn-secondary">
+          Developer
+        </a>
+      </div>
+    </section>
+    </section>
+
+    <!-- Interactive Try & Preview Sandbox -->
+    <section id="playground" class="sandbox-section">
+      <h2 class="section-title reveal-scale">Try the Plugin Live</h2>
+      <p class="section-subtitle reveal-scale">Choose a color and click generated swatches to test them live on the UI
+        card.</p>
+
+      <div class="sandbox-container reveal-scale">
+        <!-- Palette generator panel -->
+        <div class="generator-control-box">
+          <div class="control-header">Figma Tints &amp; Shades Panel</div>
+
+          <div class="picker-row">
+            <span style="font-size: 14px; font-weight: 600;">Base Color</span>
+            <div class="picker-wrapper">
+              <div class="picker-dot" id="color-box-preview">
+                <input type="color" id="base-color-picker" value="#8C52FF" aria-label="Choose base color">
+              </div>
+              <input type="text" id="base-color-hex" class="picker-hex-val" value="#8C52FF" placeholder="#8C52FF">
+            </div>
+          </div>
+
+          <div class="swatches-strip" id="generated-swatches-strip"></div>
+
+          <p style="font-size: 12px; color: var(--grey-600); text-align: center; font-weight: 600;">
+            Click a swatch above to preview UI states. Double-click to copy HEX.
+          </p>
+        </div>
+
+        <!-- UI Component Preview Card -->
+        <div class="ui-preview-card">
+          <div class="preview-badge-row">
+            <span class="preview-title" id="mockup-header-title">Primary Accent</span>
+            <span class="preview-badge" id="mockup-badge">Badge Token</span>
+          </div>
+
+          <p class="preview-desc">
+            Select swatches to see button, badge, and text colors adapt in real time.
+          </p>
+
+          <button class="preview-btn" id="mockup-btn">Action Button</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Tints & Shades Section (Teal/Green Background Card) -->
+    <section id="why-needed" class="how-it-works-section colored-card reveal-scale">
+      <h2 class="section-title">Why Tints &amp; Shades?</h2>
+      <p class="section-subtitle" style="margin-bottom: 40px;">Unified color rules to replace manual guessing.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Consistent Scales</h3>
+          <p>Generates mathematically uniform color increments automatically.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Variable Syncing</h3>
+          <p>Saves palettes directly into document variable lists.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Dark Theme Ready</h3>
+          <p>Quickly maps opposite token values for dark backdrops.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Plugin Capabilities Section (New Section) -->
+    <section class="how-it-works-section reveal-scale">
+      <h2 class="section-title">Plugin Capabilities</h2>
+      <p class="section-subtitle">Core engine utilities built into Figma.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <h3>WCAG Alignment</h3>
+          <p>Helps designers meet AA and AAA contrast guidelines.</p>
+        </div>
+        <div class="step-card">
+          <h3>Local Storage</h3>
+          <p>Saves plugin steps preferences for your next workspace session.</p>
+        </div>
+        <div class="step-card">
+          <h3>Batch Export</h3>
+          <p>Syncs multiple color scales simultaneously to reduce repetitive clicks.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Palettes Overview Section -->
+    <section id="matrix" class="color-matrix-section">
+      <h2 class="section-title reveal-scale">Palettes Overview</h2>
+      <p class="section-subtitle reveal-scale">Vibrant scales calculated dynamically across primary states.</p>
+
+      <div class="matrix-grid reveal-scale">
+        <div class="matrix-row">
+          <span class="matrix-row-title">Blue Palette</span>
+          <div class="matrix-row-chips" id="matrix-blue"></div>
+        </div>
+        <div class="matrix-row">
+          <span class="matrix-row-title">Purple Palette</span>
+          <div class="matrix-row-chips" id="matrix-purple"></div>
+        </div>
+        <div class="matrix-row">
+          <span class="matrix-row-title">Green Palette</span>
+          <div class="matrix-row-chips" id="matrix-green"></div>
+        </div>
+        <div class="matrix-row">
+          <span class="matrix-row-title">Orange Palette</span>
+          <div class="matrix-row-chips" id="matrix-orange"></div>
+        </div>
+        <div class="matrix-row">
+          <span class="matrix-row-title">Pink Palette</span>
+          <div class="matrix-row-chips" id="matrix-pink"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Operates Section (New Section) -->
+    <section class="how-it-works-section colored-card reveal-scale"
+      style="background-color: #f0f7ff; border-color: rgba(26, 188, 254, 0.15);">
+      <h2 class="section-title">How It Operates</h2>
+      <p class="section-subtitle">Simple, mathematical color blending rules.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">A</div>
+          <h3>Tint Blending</h3>
+          <p>Gradually blends chosen base channels with white (RGB 255).</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">B</div>
+          <h3>Shade Blending</h3>
+          <p>Gradually blends chosen base channels with black (RGB 0).</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">C</div>
+          <h3>Linear Steps</h3>
+          <p>Interpolates intervals evenly to prevent color jumps.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Target Audience Section (Orange Background Card) -->
+    <section id="audience" class="audience-section colored-card reveal-scale">
+      <h2 class="section-title">Designed for product teams</h2>
+      <p class="section-subtitle" style="margin-bottom: 40px;">Streamlined handoffs for all roles.</p>
+
+      <div class="audience-grid">
+        <div class="audience-card">
+          <span class="aud-badge designer">Product Designers</span>
+          <h3>Design hover states</h3>
+          <p>Pair active colors for interface elements instantly.</p>
+        </div>
+        <div class="audience-card">
+          <span class="aud-badge lead">Design System Leads</span>
+          <h3>Standardize tokens</h3>
+          <p>Define scales (50-950) with uniform step intervals.</p>
+        </div>
+        <div class="audience-card">
+          <span class="aud-badge developer">Frontend Developers</span>
+          <h3>Direct CSS parameters</h3>
+          <p>Retrieve exact HEX arrays without questioning style updates.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Integrations & Formats Section (New Section) -->
+    <section class="how-it-works-section reveal-scale">
+      <h2 class="section-title">Handoff Integrations</h2>
+      <p class="section-subtitle">Ready-made formats for web platforms.</p>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <h3>Tailwind Themes</h3>
+          <p>Exports hex arrays formatted for tailwind.config files.</p>
+        </div>
+        <div class="step-card">
+          <h3>CSS Variables</h3>
+          <p>Generates root custom properties ready for stylesheet templates.</p>
+        </div>
+        <div class="step-card">
+          <h3>Design Tokens JSON</h3>
+          <p>Outputs unified JSON schemas matching Style Dictionary specifications.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Use Cases Section (Individually Tinted Cards) -->
+    <section id="usecases" class="usecases-section">
+      <h2 class="section-title reveal-scale">Popular Use Cases</h2>
+      <p class="section-subtitle reveal-scale">Applying mathematically scaled palettes to UI components.</p>
+
+      <div class="usecases-grid">
+        <div class="usecase-card card-purple reveal-left">
+          <h3>Dark Theme Maps</h3>
+          <p>Instantly establish matching dark backdrops for primary colors.</p>
+        </div>
+        <div class="usecase-card card-blue reveal-scale">
+          <h3>Interactive Elements</h3>
+          <p>Create focus rings, warnings, and error accents predictably.</p>
+        </div>
+        <div class="usecase-card card-green reveal-right">
+          <h3>Text Hierarchies</h3>
+          <p>Map secondary descriptions to highly legible shade parameters.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+      <h2 class="section-title reveal-scale">Frequently asked questions</h2>
+      <div class="faq-container">
+
+        <div class="faq-item open reveal-scale">
+          <button class="faq-trigger">
+            <span>How does the plugin calculate the scale?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-panel">
+            <p>It uses linear color interpolation to blend RGB channels towards pure white or pure black.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal-scale">
+          <button class="faq-trigger">
+            <span>Does it support Figma variables?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-panel">
+            <p>Yes. Any calculated scale can be exported directly as Figma variable parameters.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal-scale">
+          <button class="faq-trigger">
+            <span>Is the source code open?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-panel">
+            <p>Yes. It is fully open source under the MIT license.</p>
+          </div>
+        </div>
+
+        <div class="faq-item reveal-scale">
+          <button class="faq-trigger">
+            <span>Can I export scales to JSON?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-panel">
+            <p>Yes. You can export hex values formatted as Tailwind configs or standard JSON token dictionaries.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modern Grid Footer -->
+  <footer class="footer-nav">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <div class="logo-container">
+            <svg class="app-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3.5" y="3.5" width="17" height="17" rx="3.5" transform="rotate(45 12 12)" stroke="#8c52ff"
+                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              <line x1="12" y1="3.5" x2="12" y2="20.5" stroke="#8c52ff" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+            <span class="logo-text">Tints &amp; Shades</span>
+          </div>
+          <p class="footer-brand-desc">Interactive tools and plugins built for Figma and the Chrome ecosystem.</p>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Product</h4>
+          <a href="https://www.figma.com/community" target="_blank" rel="noopener">Plugin</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Developer</h4>
+          <a href="../index.html" target="_blank" rel="noopener">Portfolio</a>
+          <a href="https://linkedin.com/in/nijinmuhammed" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://instagram.com/uxnijin" target="_blank" rel="noopener">Instagram</a>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>Resources</h4>
+          <a href="https://www.figma.com/" target="_blank" rel="noopener">Figma</a>
+          <a href="https://www.figma.com/community/plugins" target="_blank" rel="noopener">Figma Plugins</a>
+          <a href="https://www.figma.com/community" target="_blank" rel="noopener">Figma Community</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="copyright">
+          &copy; 2026 Nijin. All rights reserved. Figma, Tints &amp; Shades Generator are trademarks of Figma Inc.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for Interactive Playground calculations -->
+  <script>
+    // FAQ Accordion logic (Independent toggling using 'open' class)
+    const faqTriggers = document.querySelectorAll('.faq-trigger');
+
+    faqTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const item = trigger.closest('.faq-item');
+        const panel = item.querySelector('.faq-panel');
+        const isOpen = item.classList.contains('open');
+
+        if (isOpen) {
+          item.classList.remove('open');
+          panel.style.maxHeight = null;
+        } else {
+          item.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      });
+    });
+
+    // Initialize the first open FAQ height on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const firstOpen = document.querySelector('.faq-item.open');
+      if (firstOpen) {
+        const panel = firstOpen.querySelector('.faq-panel');
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+
+    // Color Swatches & Interactive UI Preview Logic
+    const baseColorPicker = document.getElementById('base-color-picker');
+    const baseColorHex = document.getElementById('base-color-hex');
+    const generatedSwatchesStrip = document.getElementById('generated-swatches-strip');
+    const colorBoxPreview = document.getElementById('color-box-preview');
+
+    // UI Mockup targets
+    const mockupBadge = document.getElementById('mockup-badge');
+    const mockupBtn = document.getElementById('mockup-btn');
+    const mockupHeaderTitle = document.getElementById('mockup-header-title');
+
+    // Utility: Hex to RGB
+    function hexToRgb(hex) {
+      let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+        return r + r + g + g + b + b;
+      });
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+
+    // Utility: RGB to Hex
+    function rgbToHex(r, g, b) {
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    }
+
+    // Static color interpolator for chips matrix
+    function getInterpolatedScale(baseHex) {
+      const rgb = hexToRgb(baseHex);
+      if (!rgb) return [];
+      const shades = [];
+      const tints = [];
+      const steps = 3;
+
+      for (let i = steps; i > 0; i--) {
+        const factor = i / (steps + 1);
+        const r = Math.round(rgb.r * (1 - factor));
+        const g = Math.round(rgb.g * (1 - factor));
+        const b = Math.round(rgb.b * (1 - factor));
+        shades.push(rgbToHex(r, g, b));
+      }
+
+      for (let i = 1; i <= steps; i++) {
+        const factor = i / (steps + 1);
+        const r = Math.round(rgb.r + (255 - rgb.r) * factor);
+        const g = Math.round(rgb.g + (255 - rgb.g) * factor);
+        const b = Math.round(rgb.b + (255 - rgb.b) * factor);
+        tints.push(rgbToHex(r, g, b));
+      }
+
+      return [...shades, baseHex.toUpperCase(), ...tints];
+    }
+
+    // Render static row matrices
+    const matricesInfo = [
+      { id: 'matrix-blue', base: '#1ABCFE' },
+      { id: 'matrix-purple', base: '#A259FF' },
+      { id: 'matrix-green', base: '#1ABC9C' },
+      { id: 'matrix-orange', base: '#F24E1E' },
+      { id: 'matrix-pink', base: '#FF7262' }
+    ];
+
+    matricesInfo.forEach(row => {
+      const container = document.getElementById(row.id);
+      const scale = getInterpolatedScale(row.base);
+      scale.forEach(color => {
+        const chip = document.createElement('div');
+        chip.className = 'matrix-chip';
+        chip.style.backgroundColor = color;
+
+        // Dynamic text color
+        const rgbColor = hexToRgb(color);
+        const brightness = (rgbColor.r * 299 + rgbColor.g * 587 + rgbColor.b * 114) / 1000;
+        chip.style.color = brightness > 125 ? '#121214' : '#ffffff';
+        chip.textContent = color;
+
+        container.appendChild(chip);
+      });
+    });
+
+    // Generate 7-step scale (3 Shades, 1 Base, 3 Tints)
+    function generatePalette() {
+      let hex = baseColorHex.value.trim();
+      if (!hex.startsWith('#')) hex = '#' + hex;
+
+      const rgb = hexToRgb(hex);
+      if (!rgb) return;
+
+      colorBoxPreview.style.backgroundColor = hex;
+      baseColorPicker.value = hex;
+
+      const scale = getInterpolatedScale(hex);
+
+      // Render strip
+      generatedSwatchesStrip.innerHTML = '';
+      scale.forEach((color) => {
+        const box = document.createElement('div');
+        box.className = 'swatch-box';
+        box.style.backgroundColor = color;
+        box.title = `Click to apply: ${color}`;
+        if (color === hex.toUpperCase()) {
+          box.classList.add('selected');
+        }
+
+        // Apply color on click
+        box.addEventListener('click', () => {
+          document.querySelectorAll('.swatch-box').forEach(b => b.classList.remove('selected'));
+          box.classList.add('selected');
+          updateMockupUI(color);
+        });
+
+        // Copy hex code on double click
+        box.addEventListener('dblclick', () => {
+          navigator.clipboard.writeText(color);
+          box.title = 'HEX COPIED!';
+          setTimeout(() => {
+            box.title = `Click to apply: ${color}`;
+          }, 1000);
+        });
+
+        generatedSwatchesStrip.appendChild(box);
+      });
+
+      // Default apply base color to mockup
+      updateMockupUI(hex);
+    }
+
+    // Update mockup visual components based on selected swatch
+    function updateMockupUI(colorHex) {
+      const rgb = hexToRgb(colorHex);
+      if (!rgb) return;
+
+      // Brightness contrast formula (YIQ)
+      const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+      const isLight = yiq >= 128;
+
+      // Primary Button color adjustments
+      mockupBtn.style.backgroundColor = colorHex;
+      mockupBtn.style.color = isLight ? '#121214' : '#FFFFFF';
+      mockupBtn.style.borderColor = colorHex;
+
+      // Secondary Badge adjustments (tints of color)
+      mockupBadge.style.backgroundColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)`;
+      mockupBadge.style.color = colorHex;
+
+      // Text color highlights
+      mockupHeaderTitle.style.color = colorHex;
+    }
+
+    // Input handlers
+    baseColorPicker.addEventListener('input', (e) => {
+      baseColorHex.value = e.target.value.toUpperCase();
+      generatePalette();
+    });
+
+    baseColorHex.addEventListener('input', () => {
+      let hex = baseColorHex.value.trim();
+      if (hex.match(/^#?[0-9A-Fa-f]{6}$/)) {
+        generatePalette();
+      }
+    });
+
+    // Dynamic Header Scroll Effects
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Intersection Observer Reveal
+    const revealElements = document.querySelectorAll('[class*="reveal-"]');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.05,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Initialize
+    generatePalette();
+  </script>
+
+</body>
+
+</html>

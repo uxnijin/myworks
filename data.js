@@ -23,6 +23,12 @@ const TOOLS = [
     tag: "Product",
   },
   {
+    name: "Tints & Shades",
+    description: "A Figma plugin that generates color scales of tints and shades in seconds.",
+    url: "./tints-and-shades/index.html",
+    tag: "Figma Plugin",
+  },
+  {
     name: "Design School",
     description: "A curated collection of resources for learning design.",
     url: "https://design.nijin.site/",
