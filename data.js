@@ -20,7 +20,7 @@ const TOOLS = [
     name: "Tasks Extension",
     description: "A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.",
     url: "./tasks/index.html",
-    tag: "Product",
+    tag: "Chrome Extension",
   },
   {
     name: "Tints & Shades",
