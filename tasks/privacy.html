@@ -4,113 +4,160 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — tasks Chrome Extension</title>
-  <meta name="description" content="Privacy Policy for tasks Chrome Extension. Find out how we access, store, and manage your Google Tasks data.">
+  <title>Tasks Extension - Privacy Policy</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="noise"></div>
+  <!-- Modern Header Navigation -->
+  <header class="header-nav" id="main-header">
+    <div class="header-left">
+      <a href="index.html" class="logo-container">
+        <img src="logo.png" class="app-icon" alt="tasks logo">
+        <span class="logo-text">Tasks Extension</span>
+      </a>
+      <nav class="header-menu">
+        <a href="index.html#features-tabs" class="menu-item">Features</a>
+        <a href="index.html#demo-live" class="menu-item">Live Demo</a>
+        <a href="index.html#google-integration" class="menu-item">Ecosystem</a>
+        <a href="index.html#usecases" class="menu-item">Use Cases</a>
+        <a href="index.html#faq" class="menu-item">FAQ</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener" class="add-chrome-btn" id="header-add-chrome">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+        </svg>
+        <span>Add to Chrome</span>
+      </a>
+    </div>
+  </header>
 
   <main class="stage">
 
-    <header class="header-nav">
-      <a href="index.html" class="logo-container">
-        <img src="logo.png" class="app-icon" alt="tasks logo">
-        <span class="logo-text">tasks</span>
-      </a>
-      <a href="../index.html" class="back-to-portfolio">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        Nijin's Portfolio
-      </a>
-    </header>
+    <div class="doc-layout">
+      <!-- Google-style Left Sidebar Navigation -->
+      <aside class="doc-sidebar">
+        <a href="#introduction" class="sidebar-link active">Introduction</a>
+        <a href="#oauth-data" class="sidebar-link">Google OAuth Data</a>
+        <a href="#compliance" class="sidebar-link">Limited Use Compliance</a>
+        <a href="#storage" class="sidebar-link">Data Storage &amp; Safety</a>
+        <a href="#permissions" class="sidebar-link">Required Permissions</a>
+        <a href="#changes" class="sidebar-link">Policy Changes</a>
+        <a href="#contact" class="sidebar-link">Contact</a>
+      </aside>
 
-    <div class="doc-container">
-      <header class="doc-header">
-        <h1>Privacy Policy</h1>
-        <div class="doc-meta">Last Updated: July 7, 2026</div>
-      </header>
+      <!-- Right Main Policy Document (Borderless flat layout) -->
+      <article class="doc-content-main">
+        <h1 id="introduction">Privacy Policy</h1>
+        <p class="doc-meta">Last updated: July 8, 2026</p>
+        <hr>
 
-      <div class="doc-content">
-        <p>This Privacy Policy explains how the <strong>tasks Chrome Extension</strong> ("we", "our", or "the Extension") accesses, handles, and protects your information when you use the Extension. We are committed to protecting your privacy and ensuring you have a safe, transparent experience.</p>
+        <p>This privacy policy describes how we collect, protect, and use user information in the Tasks Extension Chrome extension. We are committed to protecting your privacy and security. We do not gather, store, or track any personal information or task list details on external servers.</p>
 
-        <h2>1. Overview and Key Principle</h2>
-        <p>The Extension is a local-first browser extension designed to sync your task lists directly with your Google Tasks account. <strong>We do not run any servers, and we never collect, store, or transmit your task details or personal credentials to any third-party systems.</strong> All sync communication occurs directly between your local browser and Google's official API servers.</p>
+        <h2 id="oauth-data">Google OAuth Data</h2>
+        <p>Our extension uses Google OAuth 2.0 to access Google Tasks APIs on your behalf. The authentication token obtained from this process is saved safely directly inside your local browser storage. This token is used solely to authenticate request endpoints sent from your browser to Google API servers.</p>
+        <p>We do not copy, process, or send this Google Account credential to any third-party databases, developers, or analytical software.</p>
 
-        <h2>2. Google Account & Tasks API Data (Google OAuth)</h2>
-        <p>To provide syncing capabilities, the Extension requests permission to access your Google Tasks via Google's OAuth 2.0 protocol. Specifically, we request access to the following Google API scopes:</p>
+        <h2 id="compliance">Limited Use Compliance</h2>
+        <p>The Tasks Extension's use and transfer of information received from Google APIs to any other app will adhere to <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+        <h2 id="storage">Data Storage &amp; Safety</h2>
+        <p>All app-related data, user settings, authentication credentials, and task caching are kept inside your local device using Chrome's secure sandboxed storage API (Chrome Storage API). No database sync, telemetry tools, or server log tracking are deployed, ensuring that your details remain strictly private.</p>
+
+        <h2 id="permissions">Required Permissions</h2>
+        <p>The Tasks Extension requests the following browser permissions in order to perform correctly:</p>
         <ul>
-          <li><strong>https://www.googleapis.com/auth/tasks</strong>: Allows the Extension to read, edit, create, and delete your tasks and task lists to keep them synchronized with Google Tasks.</li>
-        </ul>
-        <p>How we handle this data:</p>
-        <ul>
-          <li><strong>Authentication Tokens:</strong> The OAuth access token is stored securely in your browser's local sandbox storage (using <code>chrome.storage</code> API) to keep you logged in. It is never exposed or sent to anyone else.</li>
-          <li><strong>Task Content:</strong> Your task titles, notes, due dates, and completion status are fetched directly from Google API endpoints, rendered inside your browser extension panel, and cached locally. We do not store or mirror this data anywhere except in your browser's memory and local cache.</li>
-        </ul>
-
-        <h2>3. Google API Services User Data Policy Compliance</h2>
-        <p>Our use of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements. We do not use your task data for advertising, marketing, analytics, profiling, or any other commercial purpose other than rendering and syncing your task list in the Extension.</p>
-
-        <h2>4. Data Storage and Retention</h2>
-        <p>Because the Extension is local-first, we do not retain your data on any databases of our own. If you uninstall the Extension or sign out of your Google Account within the Extension settings, all locally stored tokens and caches will be instantly deleted from your browser's local memory.</p>
-
-        <h2>5. Information Sharing and Disclosure</h2>
-        <p>We do not share, sell, rent, or distribute your personal details or task data to any third-party companies, advertising networks, or individuals under any circumstances.</p>
-
-        <h2>6. Security</h2>
-        <p>We take the security of your data very seriously. All interactions between the Extension and Google Tasks API endpoints are secured using HTTPS (SSL/TLS) encryption. Access tokens are stored locally inside the browser's extension sandbox, isolated from other websites or extensions.</p>
-
-        <h2>7. Revoking Access</h2>
-        <p>You can revoke the Extension's access to your Google account at any time. To do so, visit the <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account Permissions page</a> and remove access for "Tasks". Doing so will stop all sync activity and render the Extension signed out.</p>
-
-        <h2>8. Extension Permissions &amp; Justifications</h2>
-        <p>The Extension requests only the permissions it needs to function. Below is a transparent explanation of every permission used and why:</p>
-        <ul>
-          <li><strong>sidePanel:</strong> The extension's entire user interface is rendered inside Chrome's side panel. This permission is used to register the extension's HTML page as a side panel and to open it programmatically when the user clicks the extension icon or a notification.</li>
-          <li><strong>storage:</strong> Used via <code>chrome.storage.local</code> to persist the user's tasks, task lists, categories, and preferences locally in the browser. This enables offline access to tasks and allows the background service worker to read task data for scheduling reminder alarms.</li>
-          <li><strong>alarms:</strong> Used to schedule task reminder notifications. When a user sets a due date or reminder on a task, the extension creates a <code>chrome.alarms</code> timer that fires at the specified time to trigger a desktop notification reminding the user of the upcoming task.</li>
-          <li><strong>notifications:</strong> Used to display desktop reminder notifications when a task's due date or scheduled reminder time arrives. Notifications show the task title, priority, and due time so the user doesn't miss deadlines.</li>
-          <li><strong>identity:</strong> Used to authenticate the user via Google OAuth 2.0 using <code>chrome.identity.launchWebAuthFlow()</code>. This allows the user to sign in with their Google Account so the extension can obtain an access token to sync tasks with the Google Tasks API.</li>
-          <li><strong>Host permissions</strong> (<code>https://*.googleapis.com/*</code>): Required to communicate with the Google Tasks API (<code>tasks.googleapis.com</code>) to read, create, update, and delete the user's task lists and tasks, and with the Google OAuth2 userinfo endpoint to retrieve the signed-in user's name, email, and profile picture for display in the extension.</li>
+          <li><strong>identity:</strong> Allows authentication with your Google account through OAuth 2.0.</li>
+          <li><strong>storage:</strong> Saves user preferences and active state on your local machine.</li>
+          <li><strong>alarms:</strong> Powers background alerts to warn you of upcoming scheduled task due dates.</li>
         </ul>
 
-        <h2>9. Remote Code Disclosure</h2>
-        <p>This extension does not use remote code. All JavaScript is bundled locally within the extension package. The only remote requests made are REST API calls to Google's official API endpoints (<code>googleapis.com</code>) to fetch and sync task data.</p>
+        <h2 id="changes">Policy Changes</h2>
+        <p>We may update this Privacy Policy statement occasionally to reflect modifications in our application or browser API changes. We recommend referencing this document regularly to keep updated with updates.</p>
 
-        <h2>10. Data Use Certification</h2>
-        <p>We certify that the tasks extension complies with the Chrome Web Store Developer Program Policies regarding data use:</p>
-        <ul>
-          <li>We do <strong>not</strong> sell user data to third parties.</li>
-          <li>We do <strong>not</strong> use or transfer user data for purposes unrelated to the extension's core task management functionality.</li>
-          <li>We do <strong>not</strong> use or transfer user data to determine creditworthiness or for lending purposes.</li>
-          <li>We do <strong>not</strong> use user data for advertising, marketing, analytics, or profiling.</li>
-        </ul>
-
-        <h2>11. Changes to This Privacy Policy</h2>
-        <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date. We encourage you to review this page periodically.</p>
-
-        <h2>12. Contact Us</h2>
-        <p>If you have any questions or feedback regarding this Privacy Policy, please contact the developer via Nijin's <a href="https://linkedin.com/in/nijinmuhammed" target="_blank" rel="noopener">LinkedIn Profile</a> or <a href="https://instagram.com/uxnijin" target="_blank" rel="noopener">Instagram</a>.</p>
-      </div>
+        <h2 id="contact">Contact</h2>
+        <p>If you have any questions or feedback regarding this privacy document, please contact us at <a href="mailto:privacy@uxnijin.com">privacy@uxnijin.com</a>.</p>
+      </article>
     </div>
 
-    <footer class="footer-nav">
-      <div class="footer-links">
+  </main>
+
+  <!-- Modern Grid Footer -->
+  <footer class="footer-nav">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <div class="logo-container">
+          <img src="logo.png" class="app-icon" alt="tasks logo">
+          <span class="logo-text">Tasks Extension</span>
+        </div>
+        <p class="footer-brand-desc">Minimalist task management, synced directly to your Google account.</p>
+      </div>
+      
+      <div class="footer-links-col">
+        <h4>Product</h4>
         <a href="index.html">Home</a>
         <a href="privacy.html">Privacy Policy</a>
         <a href="terms.html">Terms of Service</a>
-        <a href="../index.html">Developer Portfolio</a>
       </div>
-      <div class="copyright">
-        &copy; 2026 Nijin. All rights reserved. Google Tasks is a trademark of Google LLC.
-      </div>
-    </footer>
 
-  </main>
+      <div class="footer-links-col">
+        <h4>Developer</h4>
+        <a href="../index.html" target="_blank" rel="noopener">Portfolio</a>
+        <a href="https://linkedin.com/in/nijinmuhammed" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://instagram.com/uxnijin" target="_blank" rel="noopener">Instagram</a>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Resources</h4>
+        <a href="https://developers.google.com/tasks" target="_blank" rel="noopener">Google Tasks API</a>
+        <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener">Chrome Web Store</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2026 Nijin. All rights reserved. Google, Google Tasks, and Chrome are trademarks of Google LLC.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Header scroll dynamic effect
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Sidebar active highlight based on scroll position
+    const links = document.querySelectorAll('.sidebar-link');
+    const sections = document.querySelectorAll('article h1, article h2');
+
+    window.addEventListener('scroll', () => {
+      let currentSectionId = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 140;
+        if (window.scrollY >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        links.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  </script>
 
 </body>
 
