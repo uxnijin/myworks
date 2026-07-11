@@ -59,44 +59,6 @@
     `;
   }).join('');
 
-  // Tabs setup
-  const uniqueTags = ['All', ...new Set(TOOLS.map((t) => t.tag).filter(Boolean))];
-  const tabsContainer = $('tabs');
-  let activeTab = 'All';
-
-  const renderTabs = () => {
-    tabsContainer.innerHTML = uniqueTags.map((tag) => {
-      const isActive = tag === activeTab;
-      const hue = tag !== 'All' ? getTagHue(tag) : null;
-      const style = hue !== null ? `style="--tag-hue: ${hue}"` : '';
-      return `<button class="tab-btn ${isActive ? 'active' : ''}" ${style} data-tag="${tag}">${tag}</button>`;
-    }).join('');
-  };
-
-  const filterTools = () => {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach((card) => {
-      const tagElement = card.querySelector('.tag');
-      const tagText = tagElement ? tagElement.textContent : 'Tool';
-      if (activeTab === 'All' || tagText === activeTab) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  };
-
-  if (tabsContainer) {
-    tabsContainer.addEventListener('click', (e) => {
-      const btn = e.target.closest('.tab-btn');
-      if (!btn) return;
-      activeTab = btn.dataset.tag;
-      renderTabs();
-      filterTools();
-    });
-
-    renderTabs();
-  }
 
   // Mouse spotlight & 3D Tilt hover effect
   document.querySelectorAll('.card').forEach((card) => {
@@ -150,5 +112,127 @@
       link.type = 'image/png';
       link.href = canvas.toDataURL('image/png');
     };
+  }
+
+  // Render GitHub Contribution Graph (Real Data)
+  if ($('github-graph-card') && PROFILE.github) {
+    const card = $('github-graph-card');
+
+    // Set loading state
+    card.innerHTML = `<div style="text-align: center; color: var(--ink-dim); padding: 24px; font-size: 14px; font-weight: 500;">Loading GitHub contributions...</div>`;
+
+    fetch(`https://github-contributions-api.deno.dev/${PROFILE.github}.json`)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        const contributions = data.contributions;
+        const totalContributions = data.totalContributions || 0;
+
+        const dayData = contributions.flat();
+
+        const levelMap = {
+          'NONE': 0,
+          'FIRST_QUARTILE': 1,
+          'SECOND_QUARTILE': 2,
+          'THIRD_QUARTILE': 3,
+          'FOURTH_QUARTILE': 4
+        };
+
+        const mappedDays = dayData.map(d => {
+          const date = new Date(d.date);
+          const count = d.contributionCount || 0;
+          const level = levelMap[d.contributionLevel] ?? 0;
+          return {
+            date,
+            count,
+            level
+          };
+        });
+
+        let monthsHtml = '';
+        let lastMonth = -1;
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        const cols = contributions.length;
+        for (let col = 0; col < cols; col++) {
+          const firstDayOfCol = contributions[col][0];
+          if (firstDayOfCol) {
+            const firstDate = new Date(firstDayOfCol.date);
+            const currentMonth = firstDate.getMonth();
+            if (currentMonth !== lastMonth) {
+              monthsHtml += `<span class="github-graph-month-label" style="grid-column-start: ${col + 1};">${months[currentMonth]}</span>`;
+              lastMonth = currentMonth;
+            }
+          }
+        }
+
+        card.innerHTML = `
+          <div class="github-graph-header">
+            <h3 class="github-graph-title">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+              <a href="https://github.com/${PROFILE.github}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                @${PROFILE.github} on GitHub
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 12px; height: 12px; opacity: 0.6;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+              </a>
+            </h3>
+            <div class="github-graph-stats">
+              <strong>${totalContributions.toLocaleString()}</strong> contributions in the last year
+            </div>
+          </div>
+          
+          <div class="github-graph-scroll">
+            <div class="github-graph-wrapper" style="min-width: ${cols * 13 + 36}px;">
+              <div class="github-graph-months" style="grid-template-columns: repeat(${cols}, 1fr);">
+                ${monthsHtml}
+              </div>
+              <div class="github-graph-body">
+                <div class="github-graph-days">
+                  <span>Mon</span>
+                  <span>Wed</span>
+                  <span>Fri</span>
+                </div>
+                <div class="github-graph-grid" id="github-grid" style="grid-template-columns: repeat(${cols}, 1fr);">
+                  ${mappedDays.map(d => {
+          const formattedDate = d.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const text = d.count === 0 ? `No contributions on ${formattedDate}` : `${d.count} contribution${d.count > 1 ? 's' : ''} on ${formattedDate}`;
+          return `<div class="github-cell" data-level="${d.level}" data-tooltip="${text}"></div>`;
+        }).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="github-tooltip" id="github-tooltip"></div>
+        `;
+
+        const tooltip = $('github-tooltip');
+        const cells = card.querySelectorAll('.github-cell');
+
+        cells.forEach(cell => {
+          if (!cell.dataset.tooltip) return;
+          cell.addEventListener('mouseenter', (e) => {
+            tooltip.textContent = cell.dataset.tooltip;
+            tooltip.classList.add('show');
+
+            const rect = cell.getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+            const left = rect.left - cardRect.left + (rect.width / 2);
+            const top = rect.top - cardRect.top;
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+          });
+
+          cell.addEventListener('mouseleave', () => {
+            tooltip.classList.remove('show');
+          });
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        card.innerHTML = `<div style="text-align: center; color: var(--ink-dim); padding: 24px; font-size: 14px;">Could not load GitHub contributions. <a href="https://github.com/${PROFILE.github}" target="_blank" rel="noopener" style="color: var(--white); text-decoration: underline; margin-left: 4px;">View Profile</a></div>`;
+      });
   }
 })();
