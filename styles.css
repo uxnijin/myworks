@@ -2921,10 +2921,6 @@ td code {
   flex-direction: column;
   gap: 20px;
   margin-top: 32px;
-  padding: 24px;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
-  border-radius: 12px;
 }
 
 .form-group {
