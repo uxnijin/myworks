@@ -136,7 +136,7 @@
         <section class="sec">
           <div class="sec-head">
             <h2>Projects</h2>
-            <span class="sec-count">${PROJECTS.length} case studies</span>
+            <span class="sec-count">${PROJECTS.length} Projects</span>
           </div>
           <p class="sec-sub">Every one has a doc page: the problem, the decisions, and what I'd change.</p>
           <div class="index">${rows}</div>
