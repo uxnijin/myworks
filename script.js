@@ -82,9 +82,9 @@
           }
         )
         .join('')}
-      <details class="nav-group" ${!collapsedGroups.has('Elsewhere') ? 'open' : ''} data-group-name="Elsewhere">
+      <details class="nav-group" ${!collapsedGroups.has('Socials') ? 'open' : ''} data-group-name="Socials">
         <summary class="nav-title">
-          <span>Elsewhere</span>
+          <span>Socials</span>
           <span class="nav-chevron">${icon('chevronRight')}</span>
         </summary>
         <ul class="nav-list">
