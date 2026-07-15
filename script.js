@@ -96,7 +96,7 @@
   // ------------------------------------------------------------- home view
 
   function viewHome() {
-    document.title = `${PROFILE.name} — ${PROFILE.role}`;
+    document.title = `${PROFILE.name} ${PROFILE.role}`;
 
     const rows = PROJECTS.map(
       (p) => `
