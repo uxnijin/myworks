@@ -16,9 +16,12 @@
     // Set the theme before first paint so there's no flash.
     (() => {
       try {
-        const saved = localStorage.getItem('theme');
-        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        const query = window.matchMedia('(prefers-color-scheme: dark)');
+        const update = () => {
+          document.documentElement.dataset.theme = query.matches ? 'dark' : 'light';
+        };
+        update();
+        query.addEventListener('change', update);
       } catch (e) {
         document.documentElement.dataset.theme = 'light';
       }
@@ -46,8 +49,6 @@
       <span class="search-label">Search projects…</span>
       <kbd id="search-kbd">⌘K</kbd>
     </button>
-
-    <button class="icon-btn theme-btn" id="theme-btn" aria-label="Toggle dark mode"></button>
   </header>
 
   <div class="scrim" id="scrim"></div>

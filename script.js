@@ -678,7 +678,6 @@
   function boot() {
     // topbar icons
     $('#menu-btn').innerHTML = icon('menu');
-    $('#theme-btn').innerHTML = `${icon('sun', 'sun')}${icon('moon', 'moon')}`;
     $('.search-ico').innerHTML = icon('search');
     $('#pal-icon').innerHTML = icon('search');
     $('#lb-close').innerHTML = icon('x');
@@ -709,17 +708,6 @@
         l.href = c.toDataURL('image/png');
       };
     }
-
-    // theme
-    $('#theme-btn').addEventListener('click', () => {
-      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-      document.documentElement.dataset.theme = next;
-      try {
-        localStorage.setItem('theme', next);
-      } catch {
-        /* private mode — theme just won't persist */
-      }
-    });
 
     // nav
     $('#menu-btn').addEventListener('click', () =>

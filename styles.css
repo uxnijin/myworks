@@ -376,18 +376,6 @@ kbd {
   height: 16px;
 }
 
-.theme-btn .moon {
-  display: none;
-}
-
-:root[data-theme='dark'] .theme-btn .sun {
-  display: none;
-}
-
-:root[data-theme='dark'] .theme-btn .moon {
-  display: block;
-}
-
 .menu-btn {
   display: none;
 }
