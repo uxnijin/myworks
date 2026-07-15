@@ -398,21 +398,12 @@ kbd {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 24px 16px 48px 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
+  display: none;
 }
 
 .content {
