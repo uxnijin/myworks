@@ -1,3 +1,9 @@
 # Rewrite subdomain traffic to the tints-and-shades subdirectory (200 Rewrite/Proxy)
 https://tintsandshades.nijin.site/*  /tints-and-shades/:splat  200
 http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
+
+# SPA fallback for the docs router (/docs/<slug>).
+# Netlify serves matching static files first, so the real product directories
+# (/tasks/, /design-system-extractor/, /tints-and-shades/) keep resolving normally.
+# Keep this rule LAST — it is the catch-all.
+/*  /index.html  200

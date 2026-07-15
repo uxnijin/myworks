@@ -4,136 +4,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nijin — Product Documentation & Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/jpeg" href="avatar.jpg">
+  <title>Nijin — Product Designer</title>
+  <meta name="description" content="Design engineering, documented. Case studies for the browser extensions, Figma plugins and network tools I design and build.">
+  <!-- Root-absolute: the router serves /docs/<slug>, so relative asset paths would break. -->
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/jpeg" href="/avatar.jpg">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
+  <script>
+    // Set the theme before first paint so there's no flash.
+    (() => {
+      try {
+        const saved = localStorage.getItem('theme');
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="progress" id="progress"></div>
 
-  <div class="noise"></div>
+  <header class="topbar">
+    <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar"></button>
 
-  <!-- Mobile Top Bar -->
-  <header class="mobile-topbar">
-    <button id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    </button>
-    <a href="#/" class="logo-link">
-      <span class="logo-text">Nijin</span>
-      <span class="logo-badge">Docs</span>
+    <a class="brand" href="/" data-link>
+      <span class="brand-mark" id="brand-mark"></span>
+      <span id="brand-name">Nijin</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-sub">Docs</span>
     </a>
-    <button id="theme-toggle-mobile" aria-label="Toggle Color Theme" class="theme-btn">
-      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-      <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+
+    <span class="topbar-spacer"></span>
+
+    <button class="search-btn" id="search-btn" aria-label="Search projects">
+      <span class="sr-only">Search</span>
+      <span class="search-ico" aria-hidden="true"></span>
+      <span class="search-label">Search projects…</span>
+      <kbd id="search-kbd">⌘K</kbd>
     </button>
+
+    <button class="icon-btn theme-btn" id="theme-btn" aria-label="Toggle dark mode"></button>
   </header>
 
-  <div class="app-layout">
-    <!-- Left Sidebar -->
-    <aside class="sidebar" id="app-sidebar">
-      <div class="sidebar-header">
-        <a href="#/" class="profile-brand">
-          <div class="avatar" id="sidebar-avatar"></div>
-          <div class="brand-info">
-            <span class="brand-name">Nijin</span>
-            <span class="brand-tagline">Product Designer</span>
-          </div>
-        </a>
-        <button id="theme-toggle" aria-label="Toggle Color Theme" class="theme-btn">
-          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-        </button>
-      </div>
+  <div class="scrim" id="scrim"></div>
 
-      <div class="sidebar-search-wrapper">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="search" id="sidebar-search" placeholder="Quick search..." autocomplete="off">
-      </div>
-
-      <nav class="sidebar-nav">
-        <ul class="nav-list">
-          <li>
-            <a href="#/" class="nav-item active" id="nav-home">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-              <span>Overview</span>
-            </a>
-          </li>
-
-          <li class="nav-section-title">Case Studies</li>
-          <ul class="nav-sublist" id="nav-case-studies">
-            <!-- Dynamic Case Studies list -->
-          </ul>
-
-          <li class="nav-section-title">Utilities & Projects</li>
-          <ul class="nav-sublist" id="nav-utilities">
-            <!-- Dynamic tools list -->
-          </ul>
-
-          <li class="nav-section-title">Links & Socials</li>
-          <ul class="nav-sublist" id="nav-social-links">
-            <!-- Dynamic Social list -->
-          </ul>
-        </ul>
-      </nav>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Project navigation">
+      <nav id="nav"></nav>
     </aside>
 
-    <!-- Main Content Canvas -->
-    <main class="content-canvas">
-      <div id="home-view" class="view-panel">
-        <header class="profile">
-          <div class="home-avatar-container">
-            <div class="avatar" id="avatar"></div>
-          </div>
-          <h1 class="name" id="name"></h1>
-          <p class="role" id="role"></p>
-          <p class="bio" id="bio"></p>
-        </header>
-
-        <section class="grid" id="grid"></section>
-        <section class="github-graph-card" id="github-graph-card"></section>
-      </div>
-
-      <div id="project-view" class="view-panel" style="display: none;">
-        <article class="reading-column" id="project-article">
-          <!-- Rendered Case Study -->
-        </article>
-      </div>
+    <main class="content" id="main">
+      <div id="view"></div>
     </main>
 
-    <!-- Right Sidebar Table of Contents -->
-    <aside class="toc-sidebar" id="app-toc">
-      <div class="toc-sticky">
-        <div class="toc-title">On this page</div>
-        <nav id="toc-nav">
-          <ul id="toc-list">
-            <!-- Dynamic TOC headings -->
-          </ul>
-        </nav>
-      </div>
-    </aside>
+    <aside class="toc" id="toc" aria-label="On this page"></aside>
   </div>
 
-  <!-- Lightbox Zoom Overlay -->
-  <div class="lightbox" id="image-lightbox" aria-hidden="true">
-    <button class="lightbox-close" aria-label="Close image lightbox">&times;</button>
-    <div class="lightbox-content">
-      <img id="lightbox-img" src="" alt="Expanded View">
-      <p id="lightbox-caption" class="lightbox-caption"></p>
+  <!-- Search palette -->
+  <div class="pal-bg" id="pal-bg" role="dialog" aria-modal="true" aria-label="Search projects">
+    <div class="pal">
+      <div class="pal-in">
+        <span id="pal-icon" aria-hidden="true"></span>
+        <input type="text" id="pal-input" placeholder="Search projects…" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="pal-res" aria-autocomplete="list">
+      </div>
+      <div class="pal-res" id="pal-res" role="listbox" aria-label="Results"></div>
+      <div class="pal-foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
     </div>
   </div>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+  <!-- Lightbox -->
+  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lb-close" id="lb-close" aria-label="Close"></button>
+    <img id="lb-img" src="" alt="">
+  </div>
+
+  <div class="gh-tip" id="gh-tip" role="status"></div>
+
+  <script src="/data.js"></script>
+  <script src="/blocks.js"></script>
+  <script src="/script.js"></script>
 </body>
 
 </html>

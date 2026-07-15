@@ -1,795 +1,824 @@
+// ============================================================================
+//  script.js — router, views, and interactions.
+//  Content lives in data.js. Block rendering lives in blocks.js.
+// ============================================================================
+
 (() => {
-  const $ = (id) => document.getElementById(id);
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  // --- STATE MANAGEMENT ---
-  let currentProject = null;
+  // ------------------------------------------------------------- routing
+  // History API when served over http(s); hash fallback for file:// so the
+  // site still works when opened straight off disk.
+  const HASH_MODE = location.protocol === 'file:';
 
-  // --- THEME MANAGEMENT ---
-  const initTheme = () => {
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-      document.body.classList.add('dark-mode');
-      updateThemeToggles(true);
+  const href = (path) => (HASH_MODE ? `#/${path}` : `/${path}`);
+
+  const currentPath = () =>
+    HASH_MODE
+      ? location.hash.replace(/^#\/?/, '').replace(/\/$/, '')
+      : location.pathname.replace(/^\//, '').replace(/\/$/, '');
+
+  const go = (path, replace = false) => {
+    const url = href(path);
+    if (HASH_MODE) {
+      replace ? location.replace(url) : (location.hash = `/${path}`);
     } else {
-      document.body.classList.remove('dark-mode');
-      updateThemeToggles(false);
+      history[replace ? 'replaceState' : 'pushState']({}, '', url);
+      render();
     }
   };
 
-  const updateThemeToggles = (isDark) => {
-    const sunIcons = document.querySelectorAll('.sun-icon');
-    const moonIcons = document.querySelectorAll('.moon-icon');
-    
-    sunIcons.forEach(icon => icon.style.display = isDark ? 'block' : 'none');
-    moonIcons.forEach(icon => icon.style.display = isDark ? 'none' : 'block');
-  };
+  const bySlug = (slug) => PROJECTS.find((p) => p.slug === slug);
 
-  const toggleTheme = () => {
-    const isDark = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateThemeToggles(isDark);
-  };
+  // ------------------------------------------------------------- sidebar nav
 
-  $('theme-toggle').addEventListener('click', toggleTheme);
-  $('theme-toggle-mobile').addEventListener('click', toggleTheme);
-
-  // --- NAVIGATION RENDERING ---
-  const initNavigation = () => {
-    // Render profile info in sidebar
-    if (PROFILE.avatar) {
-      $('sidebar-avatar').style.backgroundImage = `url(${PROFILE.avatar})`;
-    } else {
-      $('sidebar-avatar').textContent = PROFILE.name.charAt(0).toUpperCase();
-    }
-
-    // Render Home profile info
-    if (PROFILE.avatar && $('avatar')) {
-      $('avatar').style.backgroundImage = `url(${PROFILE.avatar})`;
-    }
-    $('name').innerHTML = `${PROFILE.name} <svg class="verify-badge" viewBox="0 0 40 40"><path d="M19.998 3.094 14.638 0l-2.972 5.15H5.432v6.354L0 14.64 3.094 20 0 25.359l5.432 3.137v5.905h5.975L14.638 40l5.36-3.094L25.358 40l3.232-5.6h6.162v-6.01L40 25.359 36.905 20 40 14.641l-5.248-3.03v-6.46h-6.419L25.358 0l-5.36 3.094Zm7.415 11.225 2.254 2.287-11.43 11.5-6.835-6.93 2.244-2.258 4.587 4.581 9.18-9.18Z"/></svg>`;
-    $('role').textContent = PROFILE.role || 'Product Designer';
-    $('bio').innerHTML = PROFILE.bio;
-
-    // Render Social/Link icons in sidebar
-    const ICONS = {
-      instagram: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>`,
-      linkedin: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
-      youtube: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.136C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.482A3.003 3.003 0 0 0 .502 6.163C0 8.07 0 12 0 12s0 3.93.502 5.837a3.003 3.003 0 0 0 2.11 2.136c1.87.482 9.388.482 9.388.482s7.518 0 9.388-.482a3.002 3.002 0 0 0 2.11-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
-      github: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>`,
-      instagram: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051C.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>`,
-      link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2m6 10h2a5 5 0 0 0 0-10h-2M8 12h8"/></svg>`
-    };
-
-    $('nav-social-links').innerHTML = PROFILE.links.map((l) => {
-      const key = (l.label || '').toLowerCase().trim();
-      const iconSvg = ICONS[key] || ICONS['link'];
-      return `
-        <li>
-          <a href="${l.url}" target="_blank" rel="noopener" class="nav-sub-item">
-            ${iconSvg}
-            <span>${l.label}</span>
-          </a>
-        </li>
-      `;
-    }).join('');
-
-    // Distribute case studies vs utility tools
-    let caseStudiesHtml = '';
-    let utilitiesHtml = '';
-
-    TOOLS.forEach((tool) => {
-      const activeClass = '';
-      const icon = tool.caseStudy ? `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-      ` : `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-      `;
-
-      const markup = `
-        <li>
-          <a href="#/project/${tool.id}" class="nav-sub-item" data-id="${tool.id}">
-            ${icon}
-            <span>${tool.name}</span>
-          </a>
-        </li>
-      `;
-
-      if (tool.caseStudy) {
-        caseStudiesHtml += markup;
-      } else {
-        utilitiesHtml += markup;
-      }
+  function renderNav() {
+    const path = currentPath();
+    const groups = [];
+    PROJECTS.forEach((p) => {
+      const g = groups.find((x) => x.name === (p.group || 'Projects'));
+      g ? g.items.push(p) : groups.push({ name: p.group || 'Projects', items: [p] });
     });
 
-    $('nav-case-studies').innerHTML = caseStudiesHtml;
-    $('nav-utilities').innerHTML = utilitiesHtml;
-  };
-
-  // --- SEARCH FILTERING ---
-  $('sidebar-search').addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase().trim();
-    const navItems = document.querySelectorAll('.sidebar-nav li:not(.nav-section-title)');
-
-    navItems.forEach(item => {
-      const link = item.querySelector('a');
-      if (!link) return;
-      
-      const text = link.textContent.toLowerCase();
-      const id = link.dataset.id;
-      
-      let match = text.includes(q);
-      
-      // Also match tool descriptions in query
-      if (id) {
-        const tool = TOOLS.find(t => t.id === id);
-        if (tool && tool.description.toLowerCase().includes(q)) {
-          match = true;
-        }
-      }
-      
-      if (q === '' || match || link.id === 'nav-home') {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  });
-
-  // --- HOME VIEW RENDER ---
-  const getTagHue = (tag) => {
-    let hash = 0;
-    for (let i = 0; i < tag.length; i++) {
-      hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return Math.abs(hash % 360);
-  };
-
-  const renderHomeGrid = () => {
-    $('grid').innerHTML = TOOLS.map((t) => {
-      const tag = t.tag || 'Tool';
-      const hue = getTagHue(tag);
-      return `
-        <a class="card" href="#/project/${t.id}">
-          <div class="card-top">
-            <span class="tag" style="--tag-hue: ${hue}">${tag}</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </div>
-          <h2 class="card-name">${t.name}</h2>
-          <p class="card-desc">${t.description}</p>
+    const link = (h, ico, label, active, ext) => `
+      <li>
+        <a class="nav-link${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${
+      active ? ' aria-current="page"' : ''
+    }>
+          <span class="nav-icon">${icon(ico)}</span>
+          <span class="nav-label">${esc(label)}</span>
+          ${ext ? `<span class="nav-ext">${icon('external')}</span>` : ''}
         </a>
-      `;
-    }).join('');
-  };
+      </li>`;
 
-  // --- CASE STUDY RENDER ENGINE ---
-  const renderCaseStudy = (project) => {
-    currentProject = project;
-    const article = $('project-article');
-    const isDoc = !!project.caseStudy;
-    
-    // Header section
-    let html = `
-      <h1>${project.name}</h1>
-      <p class="case-subtitle">${isDoc ? project.caseStudy.subtitle : project.description}</p>
-      <div class="case-meta">
-        <span class="tag">${project.tag || 'Application'}</span>
-        <a href="${project.url}" target="_blank" rel="noopener" class="launch-btn">
-          <span>Launch Project</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
+    $('#nav').innerHTML = `
+      <div class="nav-group">
+        <p class="nav-title">Overview</p>
+        <ul class="nav-list">
+          ${link(href(''), 'home', 'Index', path === '')}
+        </ul>
       </div>
-    `;
-
-    if (isDoc) {
-      project.caseStudy.content.forEach((block) => {
-        switch (block.type) {
-          case 'h2':
-            html += `<h2 id="${block.id}">${block.text}</h2>`;
-            break;
-          case 'h3':
-            html += `<h3>${block.text}</h3>`;
-            break;
-          case 'p':
-            html += `<p>${block.text}</p>`;
-            break;
-          case 'list':
-            html += `<ul>${block.items.map(item => `<li>${item}</li>`).join('')}</ul>`;
-            break;
-          case 'callout':
-            const iconSvg = getCalloutIcon(block.style);
-            html += `
-              <div class="callout ${block.style}">
-                ${iconSvg}
-                <div>${block.text}</div>
-              </div>
-            `;
-            break;
-          case 'code':
-            html += `
-              <div class="code-container">
-                <div class="code-header">
-                  <span>${block.language || 'code'}</span>
-                  <button class="copy-btn">Copy</button>
-                </div>
-                <pre><code class="language-${block.language}">${escapeHtml(block.code)}</code></pre>
-              </div>
-            `;
-            break;
-          case 'diagram':
-            html += block.html;
-            break;
-          case 'slider':
-            html += `
-              <div class="slider-container" style="--slider-pos: 0.5;">
-                <img src="${block.beforeImage}" class="slider-img before" alt="Before">
-                <img src="${block.afterImage}" class="slider-img after" alt="After">
-                <div class="slider-label before">${block.beforeLabel}</div>
-                <div class="slider-label after">${block.afterLabel}</div>
-                <div class="slider-handle">
-                  <div class="slider-button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="8 5 1 12 8 19"></polyline><polyline points="16 5 23 12 16 19"></polyline>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            `;
-            break;
-          case 'gallery':
-            html += `
-              <div class="gallery">
-                ${block.images.map(img => `
-                  <div class="gallery-item">
-                    <div class="gallery-img-wrapper">
-                      <img src="${img.url}" alt="${img.caption || 'Project visual'}">
-                    </div>
-                    ${img.caption ? `<div class="gallery-caption">${img.caption}</div>` : ''}
-                  </div>
-                `).join('')}
-              </div>
-            `;
-            break;
-          case 'figma':
-            html += `
-              <div class="figma-embed-container">
-                <iframe src="${block.url}" allowfullscreen></iframe>
-              </div>
-            `;
-            break;
-          case 'interactive-color-generator':
-            html += `
-              <div class="color-picker-widget">
-                <div class="widget-controls">
-                  <span class="swatch-row-label">Base Color:</span>
-                  <div class="color-input-wrapper">
-                    <input type="color" class="color-picker-input" value="#0066cc">
-                    <input type="text" class="hex-text-input" value="#0066cc" maxlength="7">
-                  </div>
-                </div>
-                <div class="widget-swatches-grid">
-                  <div class="swatch-row">
-                    <div class="swatch-row-label">Tints (Lighter Steps)</div>
-                    <div class="swatches-flex" id="tints-swatches"></div>
-                  </div>
-                  <div class="swatch-row">
-                    <div class="swatch-row-label">Shades (Darker Steps)</div>
-                    <div class="swatches-flex" id="shades-swatches"></div>
-                  </div>
-                </div>
-              </div>
-            `;
-            break;
-        }
-      });
-    } else {
-      // Default placeholder info for external tools
-      html += `
-        <h2>Project Overview</h2>
-        <p>This application is hosted externally. You can launch it using the link above to view it in full screen.</p>
-        <div class="callout info">
-          <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-          <div><strong>External Access:</strong> You are navigating to <code>${project.url}</code>. Ensure popup blockers are disabled if the app loads on a separate tab.</div>
-        </div>
-      `;
-    }
-
-    article.innerHTML = html;
-
-    // Build Table of Contents
-    const tocList = $('toc-list');
-    const tocSidebar = $('app-toc');
-    
-    if (isDoc && project.caseStudy.toc && project.caseStudy.toc.length > 0) {
-      tocSidebar.style.display = 'block';
-      tocList.innerHTML = project.caseStudy.toc.map(item => `
-        <li><a href="#${item.id}" class="toc-link" data-id="${item.id}">${item.title}</a></li>
-      `).join('');
-      
-      // Bind TOC smooth scroll
-      document.querySelectorAll('.toc-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const target = $(link.dataset.id);
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // Update URL hash without reload
-            history.pushState(null, null, `${window.location.hash.split('?')[0]}?section=${link.dataset.id}`);
-          }
-        });
-      });
-    } else {
-      tocSidebar.style.display = 'none';
-      tocList.innerHTML = '';
-    }
-
-    // Attach Event Handlers for components
-    attachSliderHandlers();
-    attachCopyHandlers();
-    attachLightboxHandlers();
-    attachInteractiveColorHandlers();
-  };
-
-  // Helper formatting and SVGs
-  const escapeHtml = (text) => {
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  };
-
-  const getCalloutIcon = (style) => {
-    const base = 'class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
-    if (style === 'success') {
-      return `<svg ${base}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
-    }
-    if (style === 'warning') {
-      return `<svg ${base}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
-    }
-    // Default info
-    return `<svg ${base}><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
-  };
-
-  // --- COMPONENT HANDLERS IMPLEMENTATION ---
-  
-  // 1. Comparison Slider dragging
-  const attachSliderHandlers = () => {
-    const sliders = document.querySelectorAll('.slider-container');
-    sliders.forEach(slider => {
-      const updateSlider = (clientX) => {
-        const rect = slider.getBoundingClientRect();
-        let pos = (clientX - rect.left) / rect.width;
-        pos = Math.max(0, Math.min(1, pos));
-        slider.style.setProperty('--slider-pos', pos);
-      };
-
-      let isDragging = false;
-
-      slider.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateSlider(e.clientX);
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        updateSlider(e.clientX);
-      });
-
-      window.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-
-      // Touch events support
-      slider.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        if (e.touches[0]) updateSlider(e.touches[0].clientX);
-      });
-
-      window.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        if (e.touches[0]) updateSlider(e.touches[0].clientX);
-      });
-
-      window.addEventListener('touchend', () => {
-        isDragging = false;
-      });
-    });
-  };
-
-  // 2. Code block clipboard copy
-  const attachCopyHandlers = () => {
-    const codeContainers = document.querySelectorAll('.code-container');
-    codeContainers.forEach(container => {
-      const btn = container.querySelector('.copy-btn');
-      const codeNode = container.querySelector('code');
-      
-      btn.addEventListener('click', () => {
-        navigator.clipboard.writeText(codeNode.textContent).then(() => {
-          btn.textContent = 'Copied!';
-          btn.style.borderColor = 'var(--border-active)';
-          btn.style.color = 'var(--accent)';
-          setTimeout(() => {
-            btn.textContent = 'Copy';
-            btn.style.borderColor = 'var(--border)';
-            btn.style.color = 'var(--ink-dim)';
-          }, 2000);
-        });
-      });
-    });
-  };
-
-  // 3. Image Lightbox
-  const attachLightboxHandlers = () => {
-    const imgWrappers = document.querySelectorAll('.gallery-img-wrapper');
-    const lightbox = $('image-lightbox');
-    const lightboxImg = $('lightbox-img');
-    const lightboxCaption = $('lightbox-caption');
-
-    imgWrappers.forEach(wrapper => {
-      wrapper.addEventListener('click', () => {
-        const img = wrapper.querySelector('img');
-        const caption = wrapper.nextElementSibling;
-        
-        lightboxImg.src = img.src;
-        lightboxCaption.textContent = caption ? caption.textContent : '';
-        lightbox.classList.add('show');
-        lightbox.setAttribute('aria-hidden', 'false');
-      });
-    });
-
-    const closeLightbox = () => {
-      lightbox.classList.remove('show');
-      lightbox.setAttribute('aria-hidden', 'true');
-    };
-
-    lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox.classList.contains('show')) {
-        closeLightbox();
-      }
-    });
-  };
-
-  // 4. Interactive Tints & Shades Generator
-  const hexToRgb = (hex) => {
-    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    const fullHex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : { r: 0, g: 102, b: 204 };
-  };
-
-  const rgbToHex = (r, g, b) => {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  };
-
-  const generateSwatches = (hex) => {
-    const baseRgb = hexToRgb(hex);
-    const tintsContainer = $('tints-swatches');
-    const shadesContainer = $('shades-swatches');
-    
-    if (!tintsContainer || !shadesContainer) return;
-
-    let tintsHtml = '';
-    let shadesHtml = '';
-
-    for (let i = 1; i <= 10; i++) {
-      const factor = i * 0.09;
-      // Tint (interpolate towards white: 255, 255, 255)
-      const tr = Math.round(baseRgb.r + (255 - baseRgb.r) * factor);
-      const tg = Math.round(baseRgb.g + (255 - baseRgb.g) * factor);
-      const tb = Math.round(baseRgb.b + (255 - baseRgb.b) * factor);
-      const tintHex = rgbToHex(tr, tg, tb);
-
-      // Shade (interpolate towards black: 0, 0, 0)
-      const sr = Math.round(baseRgb.r * (1 - factor));
-      const sg = Math.round(baseRgb.g * (1 - factor));
-      const sb = Math.round(baseRgb.b * (1 - factor));
-      const shadeHex = rgbToHex(sr, sg, sb);
-
-      tintsHtml += `
-        <div class="swatch-card" style="background: ${tintHex};" data-hex="${tintHex}" title="Click to copy ${tintHex}">
-          <span class="swatch-card-hex">${tintHex.toUpperCase()}</span>
-        </div>
-      `;
-
-      shadesHtml += `
-        <div class="swatch-card" style="background: ${shadeHex};" data-hex="${shadeHex}" title="Click to copy ${shadeHex}">
-          <span class="swatch-card-hex">${shadeHex.toUpperCase()}</span>
-        </div>
-      `;
-    }
-
-    tintsContainer.innerHTML = tintsHtml;
-    shadesContainer.innerHTML = shadesHtml;
-
-    // Attach clipboard click copy to cards
-    document.querySelectorAll('.swatch-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const color = card.dataset.hex;
-        navigator.clipboard.writeText(color).then(() => {
-          const hexLabel = card.querySelector('.swatch-card-hex');
-          const originalText = hexLabel.textContent;
-          hexLabel.textContent = 'COPIED';
-          setTimeout(() => {
-            hexLabel.textContent = originalText;
-          }, 1000);
-        });
-      });
-    });
-  };
-
-  const attachInteractiveColorHandlers = () => {
-    const picker = document.querySelector('.color-picker-input');
-    const textInput = document.querySelector('.hex-text-input');
-
-    if (!picker || !textInput) return;
-
-    picker.addEventListener('input', (e) => {
-      const color = e.target.value;
-      textInput.value = color;
-      generateSwatches(color);
-    });
-
-    textInput.addEventListener('input', (e) => {
-      let color = e.target.value;
-      if (!color.startsWith('#')) {
-        color = '#' + color;
-      }
-      if (/^#[0-9A-F]{6}$/i.test(color)) {
-        picker.value = color;
-        generateSwatches(color);
-      }
-    });
-
-    // Initial swatches render
-    generateSwatches(picker.value);
-  };
-
-  // --- ROUTER ENGINE ---
-  const route = () => {
-    const hash = window.location.hash || '#/';
-    
-    // Close mobile sidebar on navigation
-    $('app-sidebar').classList.remove('show');
-    
-    // Deactivate all nav items
-    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-
-    if (hash === '#/') {
-      // Toggle views
-      $('home-view').style.display = 'block';
-      $('project-view').style.display = 'none';
-      $('app-toc').style.display = 'none';
-      $('nav-home').classList.add('active');
-      window.scrollTo(0, 0);
-      currentProject = null;
-    } else if (hash.startsWith('#/project/')) {
-      const id = hash.split('?')[0].replace('#/project/', '');
-      const project = TOOLS.find(t => t.id === id);
-      
-      if (project) {
-        // Toggle views
-        $('home-view').style.display = 'none';
-        $('project-view').style.display = 'block';
-        
-        // Mark navigation sidebar active
-        const navLink = document.querySelector(`.sidebar-nav a[data-id="${id}"]`);
-        if (navLink) navLink.classList.add('active');
-
-        // Render project case study
-        renderCaseStudy(project);
-        
-        // Handle section scrolling if specified in URL query
-        const queryParams = new URLSearchParams(hash.split('?')[1] || '');
-        const sectionId = queryParams.get('section');
-        if (sectionId) {
-          setTimeout(() => {
-            const el = $(sectionId);
-            if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
-          }, 100);
-        } else {
-          window.scrollTo(0, 0);
-        }
-      } else {
-        // Not found, redirect home
-        window.location.hash = '#/';
-      }
-    }
-  };
-
-  window.addEventListener('hashchange', route);
-
-  // --- SCROLL SPY (TOC HIGHLIGHTING) ---
-  window.addEventListener('scroll', () => {
-    if (!currentProject || !currentProject.caseStudy) return;
-    
-    const headings = currentProject.caseStudy.toc.map(item => $(item.id)).filter(Boolean);
-    if (headings.length === 0) return;
-
-    let activeId = null;
-    const scrollPos = window.scrollY + 100; // Offset for accuracy
-
-    for (let i = 0; i < headings.length; i++) {
-      const el = headings[i];
-      if (scrollPos >= el.offsetTop) {
-        activeId = el.id;
-      }
-    }
-
-    if (!activeId && headings.length > 0) {
-      activeId = headings[0].id;
-    }
-
-    document.querySelectorAll('.toc-link').forEach(link => {
-      if (link.dataset.id === activeId) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
-    });
-  });
-
-  // --- MOBILE NAVIGATION BAR TOGGLE ---
-  $('mobile-menu-toggle').addEventListener('click', () => {
-    $('app-sidebar').classList.toggle('show');
-  });
-
-  // Close sidebar clicking outside on mobile
-  document.addEventListener('click', (e) => {
-    const sidebar = $('app-sidebar');
-    const menuToggle = $('mobile-menu-toggle');
-    if (window.innerWidth <= 768 && 
-        sidebar.classList.contains('show') && 
-        !sidebar.contains(e.target) && 
-        !menuToggle.contains(e.target)) {
-      sidebar.classList.remove('show');
-    }
-  });
-
-  // --- INITIALIZATION ---
-  initTheme();
-  initNavigation();
-  renderHomeGrid();
-  route();
-
-  // --- GITHUB CONTRIBUTION GRAPH RENDERING ---
-  const renderGithubGraph = () => {
-    if (!$('github-graph-card') || !PROFILE.github) return;
-
-    const card = $('github-graph-card');
-    card.innerHTML = `<div style="text-align: center; color: var(--grey-2); padding: 16px; font-size: 13px; font-weight: 500;">Loading GitHub contributions...</div>`;
-
-    fetch(`https://github-contributions-api.deno.dev/${PROFILE.github}.json`)
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to load contributions');
-        return response.json();
-      })
-      .then(data => {
-        const contributions = data.contributions;
-        const totalContributions = data.totalContributions || 0;
-        const dayData = contributions.flat();
-
-        const levelMap = {
-          'NONE': 0,
-          'FIRST_QUARTILE': 1,
-          'SECOND_QUARTILE': 2,
-          'THIRD_QUARTILE': 3,
-          'FOURTH_QUARTILE': 4
-        };
-
-        const mappedDays = dayData.map(d => {
-          const date = new Date(d.date);
-          const count = d.contributionCount || 0;
-          const level = levelMap[d.contributionLevel] ?? 0;
-          return { date, count, level };
-        });
-
-        let monthsHtml = '';
-        let lastMonth = -1;
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const cols = contributions.length;
-
-        for (let col = 0; col < cols; col++) {
-          const firstDayOfCol = contributions[col][0];
-          if (firstDayOfCol) {
-            const firstDate = new Date(firstDayOfCol.date);
-            const currentMonth = firstDate.getMonth();
-            if (currentMonth !== lastMonth) {
-              monthsHtml += `<span class="github-graph-month-label" style="grid-column-start: ${col + 1};">${months[currentMonth]}</span>`;
-              lastMonth = currentMonth;
-            }
-          }
-        }
-
-        card.innerHTML = `
-          <div class="github-graph-header">
-            <h3 class="github-graph-title">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-              <a href="https://github.com/${PROFILE.github}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                @${PROFILE.github} on GitHub
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 12px; height: 12px; opacity: 0.6;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-              </a>
-            </h3>
-            <div class="github-graph-stats">
-              <strong>${totalContributions.toLocaleString()}</strong> contributions in the last year
-            </div>
-          </div>
-          
-          <div class="github-graph-scroll">
-            <div class="github-graph-wrapper" style="min-width: ${cols * 13 + 36}px;">
-              <div class="github-graph-months" style="grid-template-columns: repeat(${cols}, 1fr);">
-                ${monthsHtml}
-              </div>
-              <div class="github-graph-body">
-                <div class="github-graph-days">
-                  <span>Mon</span>
-                  <span>Wed</span>
-                  <span>Fri</span>
-                </div>
-                <div class="github-graph-grid" id="github-grid" style="grid-template-columns: repeat(${cols}, 1fr);">
-                  ${mappedDays.map(d => {
-                    const formattedDate = d.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                    const text = d.count === 0 ? `No contributions on ${formattedDate}` : `${d.count} contribution${d.count > 1 ? 's' : ''} on ${formattedDate}`;
-                    return `<div class="github-cell" data-level="${d.level}" title="${text}"></div>`;
-                  }).join('')}
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      })
-      .catch(err => {
-        console.error(err);
-        card.innerHTML = `<div style="text-align: center; color: var(--grey-2); padding: 16px; font-size: 13px;">Could not load GitHub contributions. <a href="https://github.com/${PROFILE.github}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline;">View Profile</a></div>`;
-      });
-  };
-
-  renderGithubGraph();
-
-  // Dynamic favicon generation matching theme
-  if (PROFILE.avatar) {
-    const faviconImg = new Image();
-    faviconImg.src = PROFILE.avatar;
-    faviconImg.onload = () => {
-      const canvas = document.createElement('canvas');
-      const size = 64;
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-
-      ctx.beginPath();
-      ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
-      ctx.clip();
-
-      const minSize = Math.min(faviconImg.width, faviconImg.height);
-      const srcX = (faviconImg.width - minSize) / 2;
-      const srcY = (faviconImg.height - minSize) / 2;
-      ctx.drawImage(faviconImg, srcX, srcY, minSize, minSize, 0, 0, size, size);
-
-      let link = document.querySelector("link[rel~='icon']");
-      if (!link) {
-        link = document.createElement('link');
-        link.rel = 'icon';
-        document.head.appendChild(link);
-      }
-      link.type = 'image/png';
-      link.href = canvas.toDataURL('image/png');
-    };
+      ${groups
+        .map(
+          (g) => `
+        <div class="nav-group">
+          <p class="nav-title">${esc(g.name)}</p>
+          <ul class="nav-list">
+            ${g.items.map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`)).join('')}
+          </ul>
+        </div>`
+        )
+        .join('')}
+      <div class="nav-group">
+        <p class="nav-title">Elsewhere</p>
+        <ul class="nav-list">
+          ${PROFILE.links.map((l) => link(l.url, (l.label || '').toLowerCase(), l.label, false, true)).join('')}
+        </ul>
+      </div>`;
   }
 
+  // ------------------------------------------------------------- home view
+
+  function viewHome() {
+    document.title = `${PROFILE.name} — ${PROFILE.role}`;
+
+    const rows = PROJECTS.map(
+      (p) => `
+      <a class="row" href="${href(`docs/${p.slug}`)}" data-link>
+        <span class="row-ico">${icon(p.icon)}</span>
+        <span class="row-body">
+          <span class="row-name">${esc(p.name)}</span>
+          <span class="row-desc">${esc(p.summary)}</span>
+        </span>
+        <span class="row-tag">${esc(p.tag)}</span>
+        <span class="row-go"><span>Read</span>${icon('arrowRight')}</span>
+      </a>`
+    ).join('');
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <section class="hero">
+          <span class="hero-badge"><span class="dot"></span>Available for work</span>
+
+          <div class="hero-id">
+            <span class="hero-avatar" style="background-image:url(${esc(PROFILE.avatar)})"></span>
+            <span class="hero-id-text">
+              <span class="hero-id-name">${esc(PROFILE.name)} ${icon('verified')}</span>
+              <span class="hero-id-role">${esc(PROFILE.role)}</span>
+            </span>
+          </div>
+
+          <h1>${esc(PROFILE.tagline).replace('documented.', '<em>documented.</em>')}</h1>
+          <p class="hero-lede">${PROFILE.bio}</p>
+          <p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>
+
+          <div class="hero-actions">
+            <a class="cta" href="${href(`docs/${PROJECTS[0].slug}`)}" data-link>Start reading ${icon('arrowRight')}</a>
+            <button class="cta ghost" id="hero-search">${icon('search')} Search projects</button>
+          </div>
+        </section>
+
+        <section class="sec">
+          <div class="sec-head">
+            <h2>Projects</h2>
+            <span class="sec-count">${PROJECTS.length} case studies</span>
+          </div>
+          <p class="sec-sub">Every one has a doc page — the problem, the decisions, and what I'd change.</p>
+          <div class="index">${rows}</div>
+        </section>
+
+        <section class="sec">
+          <div class="sec-head"><h2>Activity</h2></div>
+          <p class="sec-sub">Most of this is the tools above, being built in public.</p>
+          <div class="gh" id="gh"><div class="gh-skel">Loading contributions…</div></div>
+        </section>
+
+        <footer class="foot">
+          <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built as documentation.</span>
+          <span class="socials">
+            ${PROFILE.links
+              .map(
+                (l) =>
+                  `<a href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)}">${icon(
+                    (l.label || '').toLowerCase()
+                  )}</a>`
+              )
+              .join('')}
+          </span>
+        </footer>
+      </div>`;
+
+    $('#toc').innerHTML = '';
+    $('#hero-search')?.addEventListener('click', openPalette);
+    renderGitHub();
+  }
+
+  // ------------------------------------------------------------- doc view
+
+  function viewDoc(p) {
+    document.title = `${p.name} — ${PROFILE.name}`;
+
+    const i = PROJECTS.indexOf(p);
+    const prev = PROJECTS[i - 1];
+    const next = PROJECTS[i + 1];
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <nav class="crumbs" aria-label="Breadcrumb">
+              <a href="${href('')}" data-link>Index</a>
+              ${icon('chevronRight')}
+              <span>${esc(p.group || 'Projects')}</span>
+              ${icon('chevronRight')}
+              <span style="color:var(--text)">${esc(p.name)}</span>
+            </nav>
+            <h1 class="doc-h1">${esc(p.name)}</h1>
+            <p class="doc-lede">${p.lede}</p>
+            <div class="doc-meta">
+              <span class="pill accent">${icon(p.icon)}${esc(p.tag)}</span>
+              ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}"><span class="dot"></span>${esc(p.status)}</span>` : ''}
+              <a class="cta" href="${esc(p.url)}" target="_blank" rel="noopener" style="margin-left:auto">
+                Open ${esc(p.name)} ${icon('external')}
+              </a>
+            </div>
+          </header>
+
+          <div class="prose">${renderBlocks(p.blocks)}</div>
+
+          <nav class="page-nav" aria-label="Pagination">
+            ${
+              prev
+                ? `<a class="page-nav-link prev" href="${href(`docs/${prev.slug}`)}" data-link>
+                     <span class="page-nav-dir">${icon('chevronLeft')} Previous</span>
+                     <span class="page-nav-name">${esc(prev.name)}</span>
+                   </a>`
+                : '<span></span>'
+            }
+            ${
+              next
+                ? `<a class="page-nav-link next" href="${href(`docs/${next.slug}`)}" data-link>
+                     <span class="page-nav-dir">Next ${icon('chevronRight')}</span>
+                     <span class="page-nav-name">${esc(next.name)}</span>
+                   </a>`
+                : ''
+            }
+          </nav>
+        </article>
+      </div>`;
+
+    renderTOC(p);
+    initCopy();
+    initZoom();
+    initTilt();
+    initScaleDemo();
+  }
+
+  // ------------------------------------------------------------- TOC
+
+  let tocObserver = null;
+
+  function renderTOC(p) {
+    const heads = $$('.prose h2, .prose h3');
+    if (!heads.length) {
+      $('#toc').innerHTML = '';
+      return;
+    }
+
+    $('#toc').innerHTML = `
+      <p class="toc-title">On this page</p>
+      <ul class="toc-list">
+        ${heads
+          .map(
+            (h) =>
+              `<li><a class="toc-link lvl-${h.tagName === 'H3' ? 3 : 2}" href="#${h.id}" data-toc="${h.id}">${
+                h.textContent.replace(/^#/, '').trim()
+              }</a></li>`
+          )
+          .join('')}
+      </ul>
+      <div class="toc-foot">
+        <a class="toc-action" href="${esc(p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>
+        <a class="toc-action" href="#" data-top>${icon('chevronLeft')} Back to top</a>
+      </div>`;
+
+    $('[data-top]')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // scrollspy — highlight the heading nearest the top of the viewport
+    tocObserver?.disconnect();
+    const seen = new Map();
+    tocObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => seen.set(e.target.id, e));
+        const visible = [...seen.values()]
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        const id = visible[0]?.target.id;
+        if (!id) return;
+        $$('.toc-link').forEach((l) => l.classList.toggle('active', l.dataset.toc === id));
+      },
+      { rootMargin: '-72px 0px -70% 0px', threshold: 0 }
+    );
+    heads.forEach((h) => tocObserver.observe(h));
+  }
+
+  // ------------------------------------------------------------- interactions
+
+  function initCopy() {
+    $$('[data-copy]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const code = btn.closest('.code')?.querySelector('code');
+        if (!code) return;
+        try {
+          await navigator.clipboard.writeText(code.innerText);
+          btn.classList.add('done');
+          setTimeout(() => btn.classList.remove('done'), 1400);
+        } catch {
+          /* clipboard blocked — nothing useful to do */
+        }
+      });
+    });
+  }
+
+  function initZoom() {
+    $$('[data-zoom]').forEach((f) => {
+      f.addEventListener('click', () => {
+        const img = f.querySelector('img');
+        if (!img) return;
+        $('#lb-img').src = img.src;
+        $('#lb-img').alt = img.alt;
+        $('#lb').classList.add('on');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+  }
+
+  const closeLB = () => {
+    $('#lb').classList.remove('on');
+    document.body.style.overflow = '';
+  };
+
+  // Window listeners are registered once at boot, not per render — otherwise
+  // every navigation would leave another set behind pointing at dead nodes.
+  let dragTarget = null;
+
+  const scrub = (el, clientX) => {
+    const r = el.getBoundingClientRect();
+    const pct = Math.min(100, Math.max(0, ((clientX - r.left) / r.width) * 100));
+    el.style.setProperty('--pos', `${pct}%`);
+  };
+
+  function initCompareGlobals() {
+    const xOf = (e) => (e.touches ? e.touches[0]?.clientX : e.clientX);
+
+    const start = (e) => {
+      const el = e.target.closest('[data-compare]');
+      if (!el) return;
+      dragTarget = el;
+      scrub(el, xOf(e));
+    };
+    const move = (e) => {
+      const x = xOf(e);
+      if (x == null) return;
+      if (dragTarget) return scrub(dragTarget, x);
+      // hover-to-scrub feels better than click-drag on desktop
+      const hovered = e.target?.closest?.('[data-compare]');
+      if (hovered) scrub(hovered, x);
+    };
+    const end = () => (dragTarget = null);
+
+    document.addEventListener('mousedown', start);
+    document.addEventListener('touchstart', start, { passive: true });
+    window.addEventListener('mousemove', move);
+    window.addEventListener('touchmove', move, { passive: true });
+    window.addEventListener('mouseup', end);
+    window.addEventListener('touchend', end);
+  }
+
+  function initTilt() {
+    $$('[data-tilt]').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        card.style.setProperty('--my', `${e.clientY - r.top}px`);
+      });
+    });
+  }
+
+  // click-to-load facades keep third-party iframes out until asked
+  document.addEventListener('click', (e) => {
+    const facade = e.target.closest('.facade');
+    if (!facade) return;
+    const wrap = facade.closest('[data-embed]');
+    if (!wrap) return;
+    wrap.innerHTML = `<iframe src="${wrap.dataset.embed}" allow="autoplay; fullscreen; clipboard-write" allowfullscreen loading="lazy" title="Embedded content"></iframe>`;
+  });
+
+  // ------------------------------------------------------------- scale demo
+
+  function initScaleDemo() {
+    const demo = $('[data-demo="scale"]');
+    if (!demo) return;
+
+    const color = $('#demo-color', demo);
+    const hexIn = $('.demo-hex', demo);
+    const steps = $('#demo-steps', demo);
+    const stepsV = $('.demo-steps-v', demo);
+    const scale = $('.demo-scale', demo);
+
+    const paint = (base) => {
+      const n = +steps.value;
+      stepsV.textContent = n;
+      const cells = buildScale(base, n);
+      const mid = n; // index of the base color
+      scale.innerHTML = cells
+        .map((rgb, i) => {
+          const hex = rgbToHex(rgb);
+          return `<button class="demo-cell${i === mid ? ' base' : ''}" role="listitem"
+            style="background:${hex};color:${readable(rgb)}" data-hex="${hex}"
+            title="${hex} — click to copy" aria-label="${hex}"><span>${hex.slice(1)}</span></button>`;
+        })
+        .join('');
+    };
+
+    const update = (v) => {
+      if (!isHex(v)) return;
+      const hex = v.startsWith('#') ? v : `#${v}`;
+      color.value = hex.length === 4 ? `#${hex.slice(1).split('').map((c) => c + c).join('')}` : hex;
+      paint(color.value);
+    };
+
+    color.addEventListener('input', () => {
+      hexIn.value = color.value.toUpperCase();
+      paint(color.value);
+    });
+    hexIn.addEventListener('input', () => update(hexIn.value));
+    steps.addEventListener('input', () => paint(color.value));
+
+    scale.addEventListener('click', async (e) => {
+      const cell = e.target.closest('.demo-cell');
+      if (!cell) return;
+      try {
+        await navigator.clipboard.writeText(cell.dataset.hex);
+        const note = $('.demo-note', demo);
+        const was = note.textContent;
+        note.textContent = `Copied ${cell.dataset.hex}`;
+        note.style.color = 'var(--accent)';
+        setTimeout(() => {
+          note.textContent = was;
+          note.style.color = '';
+        }, 1200);
+      } catch {
+        /* clipboard blocked */
+      }
+    });
+
+    paint(color.value);
+  }
+
+  // ------------------------------------------------------------- github graph
+
+  const GH_CACHE = 'gh-contrib-cache';
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const LEVELS = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
+
+  function paintGitHub(data, cached) {
+    const el = $('#gh');
+    if (!el) return;
+
+    // The API returns an array of weeks; each week is an array of day objects.
+    const weeks = (data.contributions || []).filter((w) => Array.isArray(w) && w.length);
+    if (!weeks.length) throw new Error('unexpected shape');
+
+    const total = data.totalContributions || 0;
+
+    let months = '';
+    let last = -1;
+    weeks.forEach((w, col) => {
+      const d = new Date(w[0].date);
+      if (d.getMonth() !== last) {
+        months += `<span style="grid-column-start:${col + 1}">${MONTHS[d.getMonth()]}</span>`;
+        last = d.getMonth();
+      }
+    });
+
+    const cells = weeks
+      .map((w) =>
+        w
+          .map((d) => {
+            const lvl = LEVELS[d.contributionLevel] ?? 0;
+            const n = d.contributionCount || 0;
+            const date = new Date(d.date).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            });
+            const tip = n === 0 ? `No contributions on ${date}` : `${n} contribution${n > 1 ? 's' : ''} on ${date}`;
+            return `<div class="gh-cell" data-l="${lvl}" data-tip="${esc(tip)}"></div>`;
+          })
+          .join('')
+      )
+      .join('');
+
+    el.innerHTML = `
+      <div class="gh-head">
+        <h3 class="gh-title">
+          ${icon('github')}
+          <a href="https://github.com/${esc(PROFILE.github)}" target="_blank" rel="noopener">@${esc(PROFILE.github)}</a>
+        </h3>
+        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last year</span>
+      </div>
+      <div class="gh-scroll">
+        <div class="gh-wrap">
+          <div class="gh-months" style="grid-template-columns:repeat(${weeks.length},1fr)">${months}</div>
+          <div class="gh-body">
+            <div class="gh-days"><span>Mon</span><span>Wed</span><span>Fri</span></div>
+            <div class="gh-grid" style="grid-template-columns:repeat(${weeks.length},1fr)">${cells}</div>
+          </div>
+        </div>
+      </div>
+      <div class="gh-foot">
+        <span class="gh-cached">${cached ? 'Showing cached data — GitHub is unreachable right now.' : ''}</span>
+        <span class="gh-legend">
+          Less
+          ${[0, 1, 2, 3, 4].map((l) => `<span class="gh-cell" data-l="${l}"></span>`).join('')}
+          More
+        </span>
+      </div>`;
+
+    // tooltip
+    const tip = $('#gh-tip');
+    $$('.gh-grid .gh-cell', el).forEach((c) => {
+      c.addEventListener('mouseenter', () => {
+        tip.textContent = c.dataset.tip;
+        const r = c.getBoundingClientRect();
+        tip.style.left = `${r.left + r.width / 2}px`;
+        tip.style.top = `${r.top}px`;
+        tip.classList.add('on');
+      });
+      c.addEventListener('mouseleave', () => tip.classList.remove('on'));
+    });
+  }
+
+  function renderGitHub() {
+    const el = $('#gh');
+    if (!el || !PROFILE.github) return;
+
+    // 1. paint from cache immediately if we have it, so the graph never flashes empty
+    let cache = null;
+    try {
+      cache = JSON.parse(localStorage.getItem(GH_CACHE) || 'null');
+    } catch {
+      /* corrupt cache — ignore */
+    }
+    if (cache?.data) {
+      try {
+        paintGitHub(cache.data, false);
+      } catch {
+        cache = null;
+      }
+    }
+
+    // 2. always revalidate in the background
+    fetch(`https://github-contributions-api.deno.dev/${PROFILE.github}.json`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
+      .then((data) => {
+        paintGitHub(data, false);
+        try {
+          localStorage.setItem(GH_CACHE, JSON.stringify({ ts: Date.now(), data }));
+        } catch {
+          /* quota — the graph still works, it just won't survive a reload */
+        }
+      })
+      .catch(() => {
+        if (cache?.data) {
+          paintGitHub(cache.data, true); // stale is much better than nothing
+          return;
+        }
+        el.innerHTML = `<div class="gh-skel">
+          Couldn't load contributions.
+          <a href="https://github.com/${esc(PROFILE.github)}" target="_blank" rel="noopener"
+             style="color:var(--accent);font-weight:600">View profile on GitHub →</a>
+        </div>`;
+      });
+  }
+
+  // ------------------------------------------------------------- search palette
+
+  let palIndex = 0;
+  let palItems = [];
+
+  const searchable = () => [
+    { name: 'Index', desc: 'All projects', path: '', icon: 'home' },
+    ...PROJECTS.map((p) => ({ name: p.name, desc: p.summary, path: `docs/${p.slug}`, icon: p.icon, tag: p.tag })),
+  ];
+
+  function paintPalette(q = '') {
+    const needle = q.toLowerCase().trim();
+    palItems = searchable().filter(
+      (it) =>
+        !needle ||
+        it.name.toLowerCase().includes(needle) ||
+        it.desc.toLowerCase().includes(needle) ||
+        (it.tag || '').toLowerCase().includes(needle)
+    );
+    palIndex = 0;
+    const res = $('#pal-res');
+    if (!palItems.length) {
+      res.innerHTML = `<div class="pal-empty">No projects match “${esc(q)}”</div>`;
+      return;
+    }
+    res.innerHTML = palItems
+      .map(
+        (it, i) => `<div class="pal-item" role="option" aria-selected="${i === 0}" data-i="${i}">
+          <span class="pal-ico">${icon(it.icon)}</span>
+          <span class="pal-text">
+            <span class="pal-name">${esc(it.name)}</span>
+            <span class="pal-desc">${esc(it.desc)}</span>
+          </span>
+          ${it.tag ? `<span class="pal-hint">${esc(it.tag)}</span>` : ''}
+        </div>`
+      )
+      .join('');
+  }
+
+  const movePal = (d) => {
+    if (!palItems.length) return;
+    palIndex = (palIndex + d + palItems.length) % palItems.length;
+    $$('.pal-item').forEach((el, i) => el.setAttribute('aria-selected', i === palIndex));
+    $$('.pal-item')[palIndex]?.scrollIntoView({ block: 'nearest' });
+  };
+
+  const choosePal = () => {
+    const it = palItems[palIndex];
+    if (!it) return;
+    closePalette();
+    go(it.path);
+  };
+
+  function openPalette() {
+    $('#pal-bg').classList.add('on');
+    $('#pal-input').value = '';
+    paintPalette('');
+    $('#pal-input').focus();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePalette() {
+    $('#pal-bg').classList.remove('on');
+    document.body.style.overflow = '';
+  }
+
+  // ------------------------------------------------------------- mobile drawer
+
+  const openNav = () => {
+    $('#sidebar').classList.add('open');
+    $('#scrim').classList.add('on');
+    $('#menu-btn').setAttribute('aria-expanded', 'true');
+  };
+  const closeNav = () => {
+    $('#sidebar').classList.remove('open');
+    $('#scrim').classList.remove('on');
+    $('#menu-btn').setAttribute('aria-expanded', 'false');
+  };
+
+  // ------------------------------------------------------------- progress bar
+
+  const updateProgress = () => {
+    const bar = $('#progress');
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    if (max < 200 || currentPath() === '') {
+      bar.classList.remove('on');
+      return;
+    }
+    bar.classList.add('on');
+    bar.style.transform = `scaleX(${Math.min(1, doc.scrollTop / max)})`;
+  };
+
+  // ------------------------------------------------------------- render
+
+  function render() {
+    const path = currentPath();
+    closeNav();
+
+    if (path === '' || path === 'index.html') {
+      viewHome();
+    } else if (path.startsWith('docs/')) {
+      const p = bySlug(path.slice(5));
+      p ? viewDoc(p) : viewNotFound();
+    } else {
+      viewNotFound();
+    }
+
+    renderNav();
+    window.scrollTo(0, 0);
+    updateProgress();
+  }
+
+  function viewNotFound() {
+    document.title = `Not found — ${PROFILE.name}`;
+    $('#toc').innerHTML = '';
+    $('#view').innerHTML = `
+      <div class="view">
+        <h1 class="doc-h1">Page not found</h1>
+        <p class="doc-lede">That page doesn't exist — it may have been renamed.</p>
+        <div class="hero-actions">
+          <a class="cta" href="${href('')}" data-link>Back to the index ${icon('arrowRight')}</a>
+        </div>
+      </div>`;
+  }
+
+  // ------------------------------------------------------------- boot
+
+  function boot() {
+    // topbar icons
+    $('#menu-btn').innerHTML = icon('menu');
+    $('#theme-btn').innerHTML = `${icon('sun', 'sun')}${icon('moon', 'moon')}`;
+    $('.search-ico').innerHTML = icon('search');
+    $('#pal-icon').innerHTML = icon('search');
+    $('#lb-close').innerHTML = icon('x');
+    $('#brand-mark').style.backgroundImage = `url(${PROFILE.avatar})`;
+    $('#brand-name').textContent = PROFILE.name;
+    if (!navigator.platform.toLowerCase().includes('mac')) $('#search-kbd').textContent = 'Ctrl K';
+
+    // rounded favicon
+    if (PROFILE.avatar) {
+      const img = new Image();
+      img.src = PROFILE.avatar;
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = c.height = 64;
+        const x = c.getContext('2d');
+        x.beginPath();
+        x.arc(32, 32, 32, 0, Math.PI * 2);
+        x.clip();
+        const m = Math.min(img.width, img.height);
+        x.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, 64, 64);
+        let l = document.querySelector("link[rel~='icon']");
+        if (!l) {
+          l = document.createElement('link');
+          l.rel = 'icon';
+          document.head.appendChild(l);
+        }
+        l.type = 'image/png';
+        l.href = c.toDataURL('image/png');
+      };
+    }
+
+    // theme
+    $('#theme-btn').addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {
+        /* private mode — theme just won't persist */
+      }
+    });
+
+    // nav
+    $('#menu-btn').addEventListener('click', () =>
+      $('#sidebar').classList.contains('open') ? closeNav() : openNav()
+    );
+    $('#scrim').addEventListener('click', closeNav);
+
+    // intercept internal links
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[data-link]');
+      if (!a) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return; // let cmd-click open a tab
+      if (HASH_MODE) {
+        closeNav();
+        return; // hashchange handles it
+      }
+      e.preventDefault();
+      const path = new URL(a.href, location.origin).pathname.replace(/^\//, '');
+      if (path !== currentPath()) go(path);
+      else closeNav();
+    });
+
+    // palette
+    $('#search-btn').addEventListener('click', openPalette);
+    $('#pal-input').addEventListener('input', (e) => paintPalette(e.target.value));
+    $('#pal-bg').addEventListener('click', (e) => e.target === $('#pal-bg') && closePalette());
+    $('#pal-res').addEventListener('click', (e) => {
+      const item = e.target.closest('.pal-item');
+      if (!item) return;
+      palIndex = +item.dataset.i;
+      choosePal();
+    });
+    $('#pal-res').addEventListener('mousemove', (e) => {
+      const item = e.target.closest('.pal-item');
+      if (!item || +item.dataset.i === palIndex) return;
+      palIndex = +item.dataset.i;
+      $$('.pal-item').forEach((el, i) => el.setAttribute('aria-selected', i === palIndex));
+    });
+
+    // lightbox
+    $('#lb').addEventListener('click', closeLB);
+
+    initCompareGlobals();
+
+    // keys
+    document.addEventListener('keydown', (e) => {
+      const palOpen = $('#pal-bg').classList.contains('on');
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        palOpen ? closePalette() : openPalette();
+        return;
+      }
+      if (e.key === '/' && !palOpen && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
+        e.preventDefault();
+        openPalette();
+        return;
+      }
+      if (e.key === 'Escape') {
+        if (palOpen) closePalette();
+        if ($('#lb').classList.contains('on')) closeLB();
+        closeNav();
+        return;
+      }
+      if (!palOpen) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        movePal(1);
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        movePal(-1);
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        choosePal();
+      }
+    });
+
+    // scroll
+    let ticking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateProgress();
+          ticking = false;
+        });
+      },
+      { passive: true }
+    );
+
+    window.addEventListener('popstate', render);
+    window.addEventListener('hashchange', render);
+
+    render();
+  }
+
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', boot) : boot();
 })();
