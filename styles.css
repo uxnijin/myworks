@@ -1904,7 +1904,7 @@ td code {
 /* ============================================================ HOME */
 
 .hero {
-  padding: 8px 0 40px;
+  padding: 8px 0 20px;
 }
 
 .hero-badge {
@@ -2037,6 +2037,10 @@ td code {
 /* section headers on home */
 .sec {
   margin-top: 64px;
+}
+
+.hero + .sec {
+  margin-top: 32px;
 }
 
 .sec-head {
