@@ -2891,23 +2891,23 @@ td code {
   align-items: center;
   gap: 6px;
   height: 34px;
-  padding: 0 12px;
-  border: 1px solid var(--border);
+  padding: 0 14px;
+  border: none;
   border-radius: var(--radius-pill);
-  background: var(--bg-subtle);
-  color: var(--text-muted);
+  background: var(--accent);
+  color: #fff;
   font: inherit;
+  font-family: var(--font-display);
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
-  transition: border-color .15s, background .15s, color .15s;
+  transition: background .15s, transform .15s var(--ease);
 }
 
 .contact-btn:hover {
-  border-color: var(--border-strong);
-  background: var(--bg-raised);
-  color: var(--accent);
+  background: var(--accent-hover);
+  color: #fff;
 }
 
 .contact-btn .contact-ico svg {
