@@ -99,7 +99,6 @@
     $('#view').innerHTML = `
       <div class="view">
         <section class="hero">
-          <span class="hero-badge"><span class="dot"></span>Available for work</span>
 
           <div class="hero-id">
             <span class="hero-avatar" style="background-image:url(${esc(PROFILE.avatar)})"></span>
