@@ -2966,3 +2966,58 @@ td code {
   font-size: 14px;
   transition: opacity .15s;
 }
+
+/* Contact channels */
+.contact-channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 32px 0;
+}
+
+.channel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color .15s, background .15s;
+}
+
+.channel-card:hover {
+  border-color: var(--accent);
+  background: var(--bg-raised);
+}
+
+.channel-ico {
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.channel-ico svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.channel-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.channel-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .contact-channels {
+    grid-template-columns: 1fr;
+  }
+}

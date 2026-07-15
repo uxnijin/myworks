@@ -693,6 +693,19 @@
             <p class="doc-lede">Feel free to reach out for collaborations, project inquiries, or just to say hi.</p>
           </header>
           
+          <div class="contact-channels">
+            <a href="mailto:uxnijin@gmail.com" class="channel-card">
+              <span class="channel-ico">${icon('mail')}</span>
+              <span class="channel-label">Email</span>
+              <span class="channel-value">uxnijin@gmail.com</span>
+            </a>
+            <a href="https://wa.me/916238417389" target="_blank" rel="noopener" class="channel-card">
+              <span class="channel-ico">${icon('whatsapp')}</span>
+              <span class="channel-label">WhatsApp</span>
+              <span class="channel-value">62384 17389</span>
+            </a>
+          </div>
+          
           <form class="contact-form" id="contact-form">
             <div class="form-group">
               <label for="contact-name">Name</label>
