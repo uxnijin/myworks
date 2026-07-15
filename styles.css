@@ -265,7 +265,7 @@ img {
   align-items: center;
   gap: 10px;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 15px;
   letter-spacing: -.01em;
   color: var(--text);
