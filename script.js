@@ -205,6 +205,15 @@
 
           <div class="prose">${renderBlocks(p.blocks)}</div>
 
+          ${
+            p.privacyBlocks || p.termsBlocks
+              ? `<div class="doc-footer-links">
+                   ${p.privacyBlocks ? `<a class="doc-footer-link" href="${href(`docs/${p.slug}/privacy`)}" data-link>Privacy Policy</a>` : ''}
+                   ${p.termsBlocks ? `<a class="doc-footer-link" href="${href(`docs/${p.slug}/terms`)}" data-link>Terms of Service</a>` : ''}
+                 </div>`
+              : ''
+          }
+
           <nav class="page-nav" aria-label="Pagination">
             ${
               prev
@@ -659,6 +668,33 @@
     bar.style.transform = `scaleX(${Math.min(1, doc.scrollTop / max)})`;
   };
 
+  function viewDocSubPage(p, title, blocks) {
+    document.title = `${title} — ${p.name} — ${PROFILE.name}`;
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <nav class="crumbs" aria-label="Breadcrumb">
+              <a href="${href('')}" data-link>Index</a>
+              ${icon('chevronRight')}
+              <a href="${href(`docs/${p.slug}`)}" data-link>${esc(p.name)}</a>
+              ${icon('chevronRight')}
+              <span style="color:var(--text)">${esc(title)}</span>
+            </nav>
+            <h1 class="doc-h1">${esc(title)}</h1>
+            <p class="doc-lede">Legal documentation for ${esc(p.name)}.</p>
+          </header>
+
+          <div class="prose">${renderBlocks(blocks)}</div>
+        </article>
+      </div>`;
+
+    renderTOC(p);
+    initCopy();
+    initZoom();
+  }
+
   // ------------------------------------------------------------- render
 
   function render() {
@@ -670,8 +706,23 @@
     } else if (path === 'contact') {
       viewContact();
     } else if (path.startsWith('docs/')) {
-      const p = bySlug(path.slice(5));
-      p ? viewDoc(p) : viewNotFound();
+      const parts = path.slice(5).split('/');
+      const slug = parts[0];
+      const sub = parts[1];
+      const p = bySlug(slug);
+      if (p) {
+        if (!sub) {
+          viewDoc(p);
+        } else if (sub === 'privacy' && p.privacyBlocks) {
+          viewDocSubPage(p, 'Privacy Policy', p.privacyBlocks);
+        } else if (sub === 'terms' && p.termsBlocks) {
+          viewDocSubPage(p, 'Terms of Service', p.termsBlocks);
+        } else {
+          viewNotFound();
+        }
+      } else {
+        viewNotFound();
+      }
     } else {
       viewNotFound();
     }

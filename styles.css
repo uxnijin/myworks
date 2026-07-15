@@ -1864,8 +1864,26 @@ td code {
   color: var(--text-faint);
   display: flex;
   justify-content: space-between;
-  gap: 12px;
   flex-wrap: wrap;
+}
+/* Legal links at document footer */
+.doc-footer-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--border);
+  font-size: 14px;
+}
+
+.doc-footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.doc-footer-link:hover {
+  color: var(--text);
 }
 
 /* ============================================================ PAGE NAV (prev/next) */

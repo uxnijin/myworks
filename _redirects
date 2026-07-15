@@ -2,6 +2,22 @@
 https://tintsandshades.nijin.site/*  /tints-and-shades/:splat  200
 http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
 
+# Edge redirects for migrated landing, privacy, and terms pages
+/design-system-extractor/privacy.html  /docs/design-system-extractor/privacy  301
+/design-system-extractor/terms.html    /docs/design-system-extractor/terms    301
+/design-system-extractor               /docs/design-system-extractor          301
+/design-system-extractor/              /docs/design-system-extractor          301
+
+/tasks/privacy.html                    /docs/tasks-extension/privacy          301
+/tasks/terms.html                      /docs/tasks-extension/terms            301
+/tasks                                 /docs/tasks-extension                  301
+/tasks/                                /docs/tasks-extension                  301
+
+/tints-and-shades/privacy.html         /docs/tints-and-shades/privacy         301
+/tints-and-shades/terms.html           /docs/tints-and-shades/terms           301
+/tints-and-shades                      /docs/tints-and-shades                 301
+/tints-and-shades/                     /docs/tints-and-shades                 301
+
 # SPA fallback for the docs router (/docs/<slug>).
 # Netlify serves matching static files first, so the real product directories
 # (/tasks/, /design-system-extractor/, /tints-and-shades/) keep resolving normally.
