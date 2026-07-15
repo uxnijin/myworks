@@ -191,8 +191,7 @@
             <h1 class="doc-h1">${esc(p.name)}</h1>
             <p class="doc-lede">${p.lede}</p>
             <div class="doc-meta">
-              ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}"><span class="dot"></span>${esc(p.status)}</span>` : ''}
-              <div class="doc-meta-actions" style="margin-left:auto; display:flex; gap:8px;">
+              <div class="doc-meta-actions" style="display:flex; gap:8px;">
                 ${
                   p.productUrl
                     ? `<a class="cta" href="${esc(p.productUrl)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>
@@ -200,6 +199,7 @@
                     : `<a class="cta" href="${esc(p.url)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>`
                 }
               </div>
+              ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}" style="margin-left:auto;"><span class="dot"></span>${esc(p.status)}</span>` : ''}
             </div>
           </header>
 
