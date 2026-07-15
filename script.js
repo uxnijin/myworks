@@ -82,12 +82,15 @@
           }
         )
         .join('')}
-      <div class="nav-group">
-        <p class="nav-title">Elsewhere</p>
+      <details class="nav-group" ${!collapsedGroups.has('Elsewhere') ? 'open' : ''} data-group-name="Elsewhere">
+        <summary class="nav-title">
+          <span>Elsewhere</span>
+          <span class="nav-chevron">${icon('chevronRight')}</span>
+        </summary>
         <ul class="nav-list">
           ${PROFILE.links.map((l) => link(l.url, (l.label || '').toLowerCase(), l.label, false, true)).join('')}
         </ul>
-      </div>`;
+      </details>`;
   }
 
   // ------------------------------------------------------------- home view
