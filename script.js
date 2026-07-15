@@ -128,7 +128,7 @@
           ${PROFILE.intro ? `<p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>` : ''}
 
           <div class="hero-actions">
-            <a class="cta" href="${href(`docs/${PROJECTS[0].slug}`)}" data-link>Start reading ${icon('arrowRight')}</a>
+            <a class="cta" href="${href(`docs/${PROJECTS[0].slug}`)}" data-link>See Projects ${icon('arrowRight')}</a>
             <button class="cta ghost" id="hero-search">${icon('search')} Search projects</button>
           </div>
         </section>
