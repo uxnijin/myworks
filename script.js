@@ -573,6 +573,7 @@
 
   const searchable = () => [
     { name: 'Index', desc: 'All projects', path: '', icon: 'home' },
+    { name: 'Contact', desc: 'Get in touch', path: 'contact', icon: 'mail' },
     ...PROJECTS.map((p) => ({ name: p.name, desc: p.summary, path: `docs/${p.slug}`, icon: p.icon, tag: p.tag })),
   ];
 
@@ -667,6 +668,8 @@
 
     if (path === '' || path === 'index.html') {
       viewHome();
+    } else if (path === 'contact') {
+      viewContact();
     } else if (path.startsWith('docs/')) {
       const p = bySlug(path.slice(5));
       p ? viewDoc(p) : viewNotFound();
@@ -677,6 +680,51 @@
     renderNav();
     window.scrollTo(0, 0);
     updateProgress();
+  }
+
+  function viewContact() {
+    document.title = `Contact — ${PROFILE.name}`;
+    $('#toc').innerHTML = '';
+    $('#view').innerHTML = `
+      <div class="view">
+        <article style="max-width: 600px; margin: 0 auto;">
+          <header class="doc-head">
+            <h1 class="doc-h1">Contact</h1>
+            <p class="doc-lede">Feel free to reach out for collaborations, project inquiries, or just to say hi.</p>
+          </header>
+          
+          <form class="contact-form" id="contact-form">
+            <div class="form-group">
+              <label for="contact-name">Name</label>
+              <input type="text" id="contact-name" name="name" required placeholder="Your name">
+            </div>
+            
+            <div class="form-group">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" required placeholder="you@example.com">
+            </div>
+            
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" rows="5" required placeholder="Tell me about your project..."></textarea>
+            </div>
+            
+            <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px;">Send Message</button>
+            <div class="form-status" id="form-status" style="margin-top: 16px; text-align: center; font-weight: 500;"></div>
+          </form>
+        </article>
+      </div>`;
+
+    const form = $('#contact-form');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const status = $('#form-status');
+      if (status) {
+        status.textContent = 'Thank you! Your message has been sent.';
+        status.style.color = 'var(--accent)';
+        form.reset();
+      }
+    });
   }
 
   function viewNotFound() {
@@ -698,6 +746,7 @@
     // topbar icons
     $('#menu-btn').innerHTML = icon('menu');
     $('.search-ico').innerHTML = icon('search');
+    $('#contact-ico').innerHTML = icon('mail');
     $('#pal-icon').innerHTML = icon('search');
     $('#lb-close').innerHTML = icon('x');
     $('#brand-mark').style.backgroundImage = `url(${PROFILE.avatar})`;
