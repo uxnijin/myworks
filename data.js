@@ -58,17 +58,11 @@ const PROJECTS = [
     icon: 'palette',
     group: 'Browser Extensions',
     url: '/design-system-extractor/index.html',
+    productUrl: 'https://chromewebstore.google.com/',
     summary: 'Extract colors, typography, images, icons, and CSS styles from any website in seconds.',
     lede: 'A Chrome extension that reads a live page and hands back its design system — brand colors, fonts, asset URLs, clean SVGs, shadows and corner radii — in one click, without ever opening DevTools.',
     status: 'Unlisted',
     blocks: [
-      {
-        t: 'launch',
-        title: 'Design System Extractor',
-        desc: 'Landing page, feature tour and install link',
-        url: '/design-system-extractor/index.html',
-        label: 'Open product',
-      },
       {
         t: 'p',
         x: `Every designer has done this: you find a site with a palette you like, open DevTools, and start clicking through elements one at a time — copying a hex here, a <code>font-family</code> there, squinting at a <code>box-shadow</code> to work out how many layers it has. Twenty minutes later you have a Slack message to yourself full of half-remembered values.`,
@@ -283,17 +277,11 @@ const authored = getComputedStyle(document.documentElement)
     icon: 'check',
     group: 'Browser Extensions',
     url: '/tasks/index.html',
+    productUrl: 'https://chromewebstore.google.com/',
     summary: 'A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.',
     lede: 'Google Tasks is genuinely good and genuinely buried — three clicks deep in Gmail\'s sidebar. This puts it one keystroke from wherever you already are, with no database in the middle.',
     status: 'Unlisted',
     blocks: [
-      {
-        t: 'launch',
-        title: 'Tasks Extension',
-        desc: 'Landing page with a live interactive demo',
-        url: '/tasks/index.html',
-        label: 'Open product',
-      },
       {
         t: 'p',
         x: `Google Tasks has a quiet advantage over every to-do app on the market: it's already synced to the thing you live in. Due dates land on your calendar. Emails become tasks. It's on your phone. There's no account to make, no team to invite, no upsell.`,
@@ -454,17 +442,11 @@ const authored = getComputedStyle(document.documentElement)
     icon: 'droplet',
     group: 'Figma Plugins',
     url: 'https://tintsandshades.nijin.site/',
+    productUrl: 'https://www.figma.com/community/plugins',
     summary: 'A Figma plugin that generates color scales of tints and shades in seconds.',
     lede: 'Pick a base color, get a mathematically uniform scale, push it straight into Figma variables — or out as Tailwind config, CSS custom properties, or Style Dictionary JSON.',
     status: 'Open source',
     blocks: [
-      {
-        t: 'launch',
-        title: 'Tints & Shades',
-        desc: 'Live plugin page with an interactive generator',
-        url: 'https://tintsandshades.nijin.site/',
-        label: 'Open product',
-      },
       {
         t: 'p',
         x: `Building a color scale by hand is a special kind of tedious. You pick a brand color, then eyeball nine variations of it, then discover halfway through the UI that your 300 and your 400 are indistinguishable and your 700 has quietly gone purple.`,
@@ -577,13 +559,6 @@ for (let i = 1; i <= steps; i++) {
     status: 'Live',
     blocks: [
       {
-        t: 'launch',
-        title: 'Design School',
-        desc: 'The live resource collection',
-        url: 'https://design.nijin.site/',
-        label: 'Open product',
-      },
-      {
         t: 'p',
         x: `After mentoring 500+ students at <a href="https://harisandcoacademy.com" target="_blank" rel="noopener">HACA</a>, I noticed I was answering the same question every intake: <em>"what should I read?"</em> — and answering it badly, with a link dump.`,
       },
@@ -643,13 +618,6 @@ for (let i = 1; i <= steps; i++) {
     status: 'Live',
     blocks: [
       {
-        t: 'launch',
-        title: 'Speed Test',
-        desc: 'Run a live speed test',
-        url: 'https://speedtest.nijin.site/',
-        label: 'Open product',
-      },
-      {
         t: 'p',
         x: `Most speed tests are advertising with a gauge on top. You want one number and you get a page that weighs more than the file it's about to download to measure your connection.`,
       },
@@ -707,13 +675,6 @@ for (let i = 1; i <= steps; i++) {
     lede: 'Load time, total weight, and the request waterfall — the three things that tell you why a page is slow, rather than just that it is.',
     status: 'Live',
     blocks: [
-      {
-        t: 'launch',
-        title: 'Site Speed Test',
-        desc: 'Analyse any URL',
-        url: 'https://sitespeedcheck.nijin.site/',
-        label: 'Open product',
-      },
       {
         t: 'p',
         x: `"Your site scores 63" is not actionable. A composite score compresses a dozen independent problems into one number you can't act on, which is why people stare at it, feel bad, and change nothing.`,
@@ -778,13 +739,6 @@ for (let i = 1; i <= steps; i++) {
     status: 'Live',
     blocks: [
       {
-        t: 'launch',
-        title: 'DNS Checker',
-        desc: 'Look up records and propagation',
-        url: 'https://dnschecker.nijin.site/',
-        label: 'Open product',
-      },
-      {
         t: 'p',
         x: `DNS is the thing that breaks your launch. You changed the record, it works on your machine, and someone on another continent is still hitting the old server — and you have no way to see what they see.`,
       },
@@ -837,13 +791,6 @@ for (let i = 1; i <= steps; i++) {
     lede: 'The smallest useful tool I\'ve built: what\'s my IP, and what does the internet think that means about me?',
     status: 'Live',
     blocks: [
-      {
-        t: 'launch',
-        title: 'IP Checker',
-        desc: 'See your IP and what it reveals',
-        url: 'https://ipchecker.nijin.site/',
-        label: 'Open product',
-      },
       {
         t: 'p',
         x: `Two reasons anyone loads this page: confirming a VPN is actually on, or debugging why a service thinks they're in the wrong country. Both are answered in about one second, and the page should respect that.`,

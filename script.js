@@ -178,9 +178,14 @@
             <div class="doc-meta">
               <span class="pill accent">${icon(p.icon)}${esc(p.tag)}</span>
               ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}"><span class="dot"></span>${esc(p.status)}</span>` : ''}
-              <a class="cta" href="${esc(p.url)}" target="_blank" rel="noopener" style="margin-left:auto">
-                Open ${esc(p.name)} ${icon('external')}
-              </a>
+              <div class="doc-meta-actions" style="margin-left:auto; display:flex; gap:8px;">
+                ${
+                  p.productUrl
+                    ? `<a class="cta" href="${esc(p.productUrl)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>
+                       <a class="cta ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Open Website</a>`
+                    : `<a class="cta" href="${esc(p.url)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>`
+                }
+              </div>
             </div>
           </header>
 
@@ -238,7 +243,7 @@
           .join('')}
       </ul>
       <div class="toc-foot">
-        <a class="toc-action" href="${esc(p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>
+        <a class="toc-action" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>
         <a class="toc-action" href="#" data-top>${icon('chevronLeft')} Back to top</a>
       </div>`;
 
