@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* GitBook's actual content stack (read from gitbook.com's live @font-face rules):
+   body copy renders in Inter; anything bold — headings, buttons, titles — renders
+   in General Sans. Same recipe, reproduced with --font / --font-display below. */
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap');
 
 /* ============================================================
    TOKENS — reverse-engineered from gitbook.com computed styles
@@ -62,8 +66,9 @@
   --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, .14), 0 2px 8px rgba(0, 0, 0, .04);
   --code-bg: var(--tint-2);
 
-  /* Type */
+  /* Type — matches GitBook: Inter for body, General Sans for anything bold */
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'General Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Layout */
@@ -71,6 +76,14 @@
   --toc-w: 256px;
   --reading-w: 768px;
   --topbar-h: 56px;
+
+  /* Radius scale — matches GitBook's actual product buttons/panels:
+     8px icon-only controls, 16px content cards, 24px pill-style nav
+     buttons, 999px true pills (primary CTA, status tags). */
+  --radius-xs: 8px;
+  --radius-md: 16px;
+  --radius-pill: 24px;
+  --radius-full: 999px;
 
   --ease: cubic-bezier(.16, 1, .3, 1);
   color-scheme: light;
@@ -251,6 +264,7 @@ img {
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 15px;
   letter-spacing: -.01em;
@@ -292,7 +306,7 @@ img {
   padding: 0 8px 0 10px;
   min-width: 200px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-pill);
   background: var(--bg-subtle);
   color: var(--text-faint);
   font: inherit;
@@ -329,7 +343,7 @@ kbd {
   font-weight: 600;
   line-height: 1;
   padding: 4px 6px;
-  border-radius: 5px;
+  border-radius: 6px;
   border: 1px solid var(--border);
   border-bottom-width: 2px;
   background: var(--bg);
@@ -343,7 +357,7 @@ kbd {
   width: 34px;
   height: 34px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius-xs);
   background: var(--bg-subtle);
   color: var(--text-muted);
   cursor: pointer;
@@ -489,6 +503,7 @@ kbd {
 
 .nav-link.active {
   color: var(--accent);
+  font-family: var(--font-display);
   font-weight: 600;
   background: var(--bg-subtle);
 }
@@ -624,18 +639,20 @@ kbd {
 }
 
 .doc-h1 {
+  font-family: var(--font-display);
   font-size: 36px;
   line-height: 1.25;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -.025em;
   color: var(--text);
   margin: 0 0 12px;
 }
 
 .prose h2 {
+  font-family: var(--font-display);
   font-size: 30px;
   line-height: 1.2;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -.0125em;
   color: var(--text);
   margin: 56px 0 16px;
@@ -643,9 +660,10 @@ kbd {
 }
 
 .prose h3 {
+  font-family: var(--font-display);
   font-size: 20px;
   line-height: 1.35;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -.01em;
   color: var(--text);
   margin: 40px 0 12px;
@@ -781,7 +799,8 @@ kbd {
   gap: 6px;
   height: 26px;
   padding: 0 10px;
-  border-radius: 100px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: .01em;
@@ -813,16 +832,17 @@ kbd {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--success-9) 20%, transparent);
 }
 
-/* Primary CTA */
+/* Primary CTA — GitBook's marketing buttons are true pills (radius >= half-height) */
 .cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   height: 40px;
   padding: 0 18px;
-  border-radius: 100px;
+  border-radius: var(--radius-full);
   background: var(--accent);
   color: #fff;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   border: none;
@@ -904,9 +924,10 @@ kbd {
 }
 
 .launch-body h4 {
+  font-family: var(--font-display);
   margin: 0 0 2px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
 }
 
@@ -924,7 +945,7 @@ kbd {
   gap: 12px;
   padding: 16px 18px;
   margin: 28px 0;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--bg-subtle);
   font-size: 15.5px;
@@ -962,6 +983,7 @@ kbd {
 
 .callout-title {
   display: block;
+  font-family: var(--font-display);
   font-weight: 600;
   color: var(--text);
   margin-bottom: 4px;
@@ -1013,7 +1035,7 @@ kbd {
 .code {
   margin: 28px 0;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--code-bg);
 }
@@ -1047,7 +1069,7 @@ kbd {
   color: var(--text-faint);
   padding: 2px 6px;
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: 6px;
 }
 
 .copy-btn {
@@ -1056,7 +1078,7 @@ kbd {
   width: 28px;
   height: 28px;
   border: none;
-  border-radius: 7px;
+  border-radius: var(--radius-xs);
   background: transparent;
   color: var(--text-faint);
   cursor: pointer;
@@ -1147,7 +1169,7 @@ kbd {
   font-family: var(--font-mono);
   font-size: .875em;
   padding: 2px 6px;
-  border-radius: 5px;
+  border-radius: 6px;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
   color: var(--primary-10);
@@ -1168,7 +1190,7 @@ kbd {
 
 .frame {
   position: relative;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--bg-subtle);
@@ -1254,7 +1276,7 @@ kbd {
 .embed {
   position: relative;
   margin: 32px 0;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--bg-subtle);
@@ -1330,7 +1352,7 @@ kbd {
 .compare {
   position: relative;
   margin: 32px 0;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border);
   aspect-ratio: 16/10;
@@ -1433,7 +1455,7 @@ kbd {
   gap: 6px;
   padding: 18px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background: var(--bg);
   overflow: hidden;
   transition: border-color .2s, transform .3s var(--ease), box-shadow .3s var(--ease);
@@ -1481,9 +1503,10 @@ kbd {
 }
 
 .card h4 {
+  font-family: var(--font-display);
   margin: 0;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
 }
 
@@ -1542,9 +1565,10 @@ kbd {
 }
 
 .step h4 {
+  font-family: var(--font-display);
   margin: 3px 0 6px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text);
 }
 
@@ -1559,7 +1583,7 @@ kbd {
 .table-wrap {
   margin: 28px 0;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow-x: auto;
 }
 
@@ -1618,11 +1642,12 @@ td code {
 .stat {
   padding: 16px 18px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   background: var(--bg-subtle);
 }
 
 .stat-v {
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -.02em;
@@ -1642,7 +1667,7 @@ td code {
   margin: 32px 0;
   padding: 28px 20px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   background:
     radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0) 0 0/20px 20px,
     var(--bg-subtle);
@@ -1668,7 +1693,7 @@ td code {
 
 .diagram .d-t {
   fill: var(--text);
-  font-family: var(--font);
+  font-family: var(--font-display);
   font-size: 12px;
   font-weight: 600;
 }
@@ -1702,7 +1727,7 @@ td code {
 .demo {
   margin: 32px 0;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--bg-subtle);
 }
@@ -1727,7 +1752,7 @@ td code {
   height: 34px;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-xs);
   background: none;
   cursor: pointer;
 }
@@ -1748,7 +1773,7 @@ td code {
   height: 34px;
   padding: 0 10px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-xs);
   background: var(--bg);
   color: var(--text);
   text-transform: uppercase;
@@ -1846,7 +1871,7 @@ td code {
   gap: 3px;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   transition: border-color .2s, background .2s, transform .2s var(--ease);
 }
 
@@ -1888,6 +1913,7 @@ td code {
 }
 
 .page-nav-name {
+  font-family: var(--font-display);
   font-size: 14.5px;
   font-weight: 600;
   color: var(--text);
@@ -1909,7 +1935,7 @@ td code {
   gap: 7px;
   height: 26px;
   padding: 0 10px 0 8px;
-  border-radius: 100px;
+  border-radius: var(--radius-full);
   background: var(--accent-wash);
   color: var(--primary-10);
   font-size: 12px;
@@ -1940,9 +1966,10 @@ td code {
 }
 
 .hero h1 {
+  font-family: var(--font-display);
   font-size: 44px;
   line-height: 1.15;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -.03em;
   margin: 0 0 16px;
   color: var(--text);
@@ -2011,6 +2038,7 @@ td code {
   display: flex;
   align-items: center;
   gap: 5px;
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 700;
   color: var(--text);
@@ -2042,8 +2070,9 @@ td code {
 }
 
 .sec h2 {
+  font-family: var(--font-display);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -.02em;
   margin: 0;
   color: var(--text);
@@ -2066,7 +2095,7 @@ td code {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--bg);
 }
@@ -2138,6 +2167,7 @@ td code {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
@@ -2159,7 +2189,7 @@ td code {
   font-size: 11px;
   font-weight: 600;
   padding: 2px 8px;
-  border-radius: 100px;
+  border-radius: var(--radius-full);
   background: var(--bg-subtle);
   border: 1px solid var(--border);
   color: var(--text-faint);
@@ -2206,7 +2236,7 @@ td code {
 
 .gh {
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   padding: 20px;
   background: var(--bg);
 }
@@ -2224,6 +2254,7 @@ td code {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
@@ -2423,7 +2454,7 @@ td code {
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--radius-xs);
   border: 1px solid var(--border);
   color: var(--text-faint);
   transition: all .2s var(--ease);
@@ -2558,6 +2589,7 @@ td code {
 }
 
 .pal-name {
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
