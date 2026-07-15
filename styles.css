@@ -2025,7 +2025,7 @@ td code {
 .hero-id-name svg {
   width: 14px;
   height: 14px;
-  fill: var(--accent);
+  fill: #1d9bf0;
   flex-shrink: 0;
 }
 
