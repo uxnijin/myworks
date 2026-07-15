@@ -1,5 +1,5 @@
 // ============================================================================
-//  blocks.js — icon set + the block renderer.
+//  blocks.js: icon set + the block renderer.
 //  Turns the `blocks` arrays in data.js into HTML. See data.js for the DSL.
 // ============================================================================
 
@@ -283,7 +283,7 @@ const renderBlock = (b) => {
 
     case 'quote':
       return `<blockquote class="callout"><div class="callout-body"><p>${b.x}</p>${
-        b.by ? `<p style="color:var(--text-faint) !important;font-size:13.5px !important">— ${esc(b.by)}</p>` : ''
+        b.by ? `<p style="color:var(--text-faint) !important;font-size:13.5px !important">- ${esc(b.by)}</p>` : ''
       }</div></blockquote>`;
 
     case 'demo':
@@ -314,7 +314,7 @@ function renderScaleDemo() {
     <div class="demo-scale" role="list"></div>
     <div class="demo-foot">
       <span>Click any swatch to copy its hex</span>
-      <span class="demo-note">Linear RGB interpolation — the plugin's actual formula</span>
+      <span class="demo-note">Linear RGB interpolation: the plugin's actual formula</span>
     </div>
   </div>`;
 }
@@ -341,7 +341,7 @@ const buildScale = (baseHex, steps) => {
   return [...shades, rgb, ...tints];
 };
 
-// YIQ brightness — same contrast heuristic the plugin's demo uses
+// YIQ brightness: same contrast heuristic the plugin's demo uses
 const readable = (rgb) => ((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000 >= 140 ? '#1d1d1d' : '#ffffff');
 
 const isHex = (v) => /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v.trim());

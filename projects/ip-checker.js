@@ -16,7 +16,7 @@ const PROJECT_IP_CHECKER = {
     { t: 'h2', x: 'Design decisions' },
     {
       t: 'p',
-      x: `<strong>The answer, immediately.</strong> No search box — you're asking about yourself, and the server already knows. Making someone press a button to learn their own IP is a small insult.`,
+      x: `<strong>The answer, immediately.</strong> No search box: you're asking about yourself, and the server already knows. Making someone press a button to learn their own IP is a small insult.`,
     },
     {
       t: 'p',
@@ -26,12 +26,12 @@ const PROJECT_IP_CHECKER = {
       t: 'callout',
       kind: 'warning',
       title: 'How wrong geolocation gets',
-      x: `IP geolocation resolves to whatever the registry says about that block — often the ISP's registered location rather than yours. Country is usually right. City is frequently wrong, sometimes by hundreds of kilometres, and mobile carriers can place you in a different region entirely. It's a hint, not a position.`,
+      x: `IP geolocation resolves to whatever the registry says about that block, which is often the ISP's registered location rather than yours. Country is usually right. City is frequently wrong, sometimes by hundreds of kilometres, and mobile carriers can place you in a different region entirely. It's a hint, not a position.`,
     },
     { t: 'h2', x: 'What it shows' },
     {
       t: 'p',
-      x: `Your public IP, the network it belongs to, and the location that databases associate with it. That's genuinely the whole product — and the discipline is in refusing to pad it out with a fingerprinting panel to look more substantial.`,
+      x: `Your public IP, the network it belongs to, and the location that databases associate with it. That's genuinely the whole product, and the discipline lies is in refusing to pad it out with a fingerprinting panel to look more substantial.`,
     },
     {
       t: 'image',

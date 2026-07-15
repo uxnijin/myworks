@@ -1,10 +1,10 @@
 // ============================================================================
 //  EDIT EVERYTHING HERE. Nothing else needs to change.
 //
-//  PROFILE  — who you are, shown on the homepage + topbar.
-//  PROJECTS — one object per product. Order here = order in the sidebar.
+//  PROFILE  - who you are, shown on the homepage + topbar.
+//  PROJECTS - one object per product. Order here = order in the sidebar.
 //
-//  Each project has a `blocks` array — the case study body. Available blocks
+//  Each project has a `blocks` array: the case study body. Available blocks
 //  are documented in blocks.js. Quick reference:
 //
 //    { t:'h2',  x:'Heading' }                     → section (appears in TOC)
@@ -27,7 +27,7 @@
 //    { t:'launch', title:'', desc:'', url:'', label:'' }
 //    { t:'hr' }
 //
-//  Image blocks with no `src` render a labelled placeholder frame — drop a
+//  Image blocks with no `src` render a labelled placeholder frame: drop a
 //  screenshot path in and it becomes a real figure. Nothing else to change.
 // ============================================================================
 

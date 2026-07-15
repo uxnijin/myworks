@@ -7,25 +7,25 @@ const PROJECT_DESIGN_SYSTEM_EXTRACTOR = {
   url: '/design-system-extractor/index.html',
   productUrl: 'https://chromewebstore.google.com/',
   summary: 'Extract colors, typography, images, icons, and CSS styles from any website in seconds.',
-  lede: 'A Chrome extension that reads a live page and hands back its design system — brand colors, fonts, asset URLs, clean SVGs, shadows and corner radii — in one click, without ever opening DevTools.',
+  lede: 'A Chrome extension that reads a live page and hands back its design system (brand colors, fonts, asset URLs, clean SVGs, shadows and corner radii) in one click, without ever opening DevTools.',
   status: 'Unlisted',
   blocks: [
     {
       t: 'p',
-      x: `Every designer has done this: you find a site with a palette you like, open DevTools, and start clicking through elements one at a time — copying a hex here, a <code>font-family</code> there, squinting at a <code>box-shadow</code> to work out how many layers it has. Twenty minutes later you have a Slack message to yourself full of half-remembered values.`,
+      x: `Every designer has done this: you find a site with a palette you like, open DevTools, and start clicking through elements one at a time: copying a hex here, a <code>font-family</code> there, squinting at a <code>box-shadow</code> to work out how many layers it has. Twenty minutes later you have a Slack message to yourself full of half-remembered values.`,
     },
     {
       t: 'p',
-      x: `The information is <em>right there</em> in the CSSOM. The browser has already parsed it, resolved it, and computed it. The only thing missing is something that reads it back to you in the shape a designer actually thinks in — grouped by role, deduplicated, and copyable.`,
+      x: `The information is <em>right there</em> in the CSSOM. The browser has already parsed it, resolved it, and computed it. The only thing missing is something that reads it back to you in the shape a designer actually thinks in: grouped by role, deduplicated, and copyable.`,
     },
     { t: 'h2', x: 'The problem' },
     {
       t: 'p',
-      x: `DevTools is an <strong>inspector</strong>, not a <strong>reporter</strong>. It's built to answer "why is this one element like this?" — a debugging question. Designers are asking a completely different question: "what are the rules of this whole system?"`,
+      x: `DevTools is an <strong>inspector</strong>, not a <strong>reporter</strong>. It's built to answer "why is this one element like this?" (a debugging question). Designers are asking a completely different question: "what are the rules of this whole system?"`,
     },
     {
       t: 'p',
-      x: `That mismatch shows up everywhere in the workflow. DevTools shows you one node at a time, so you can't see that a site actually only uses six colors across four hundred elements. It shows computed values without telling you which are CSS custom properties — the difference between a design <em>token</em> and a one-off. And it gives you SVGs as DOM nodes, not as files you can use.`,
+      x: `That mismatch shows up everywhere in the workflow. DevTools shows you one node at a time, so you can't see that a site actually only uses six colors across four hundred elements. It shows computed values without telling you which are CSS custom properties, highlighting the difference between a design <em>token</em> and a one-off. And it gives you SVGs as DOM nodes, not as files you can use.`,
     },
     {
       t: 'callout',
@@ -36,7 +36,7 @@ const PROJECT_DESIGN_SYSTEM_EXTRACTOR = {
     { t: 'h2', x: 'How it works' },
     {
       t: 'p',
-      x: `The extension runs entirely in your browser, after the page has finished rendering. It walks the document, reads computed styles off every element, and buckets what it finds into four categories — then deduplicates and ranks each bucket by how often the value appears.`,
+      x: `The extension runs entirely in your browser, after the page has finished rendering. It walks the document, reads computed styles off every element, and buckets what it finds into four categories, then deduplicates and ranks each bucket by how often the value appears.`,
     },
     {
       t: 'diagram',
@@ -51,7 +51,7 @@ const PROJECT_DESIGN_SYSTEM_EXTRACTOR = {
     </marker>
   </defs>
   <rect x="1" y="1" width="638" height="208" rx="12" class="d-box" stroke-dasharray="4 4"/>
-  <text x="16" y="22" class="d-s">Your browser tab — nothing leaves this box</text>
+  <text x="16" y="22" class="d-s">Your browser tab: nothing leaves this box</text>
 
   <rect x="26" y="72" width="118" height="62" rx="10" class="d-box"/>
   <text x="85" y="98" class="d-t" text-anchor="middle">Live page</text>
@@ -90,7 +90,7 @@ const PROJECT_DESIGN_SYSTEM_EXTRACTOR = {
         {
           icon: 'palette',
           title: 'Colors',
-          desc: 'Groups every color on the page. Detects hex values, RGBA layers and CSS color variables — so you can tell a token from a one-off.',
+          desc: 'Groups every color on the page. Detects hex values, RGBA layers and CSS color variables, so you can tell a token from a one-off.',
         },
         {
           icon: 'type',
@@ -105,20 +105,20 @@ const PROJECT_DESIGN_SYSTEM_EXTRACTOR = {
         {
           icon: 'layers',
           title: 'Shadows & radius',
-          desc: 'Box-shadow layers, border widths and corner rounding — the details that decide whether a rebuild reads as parity or as a knockoff.',
+          desc: 'Box-shadow layers, border widths and corner rounding: the details that decide whether a rebuild reads as parity or as a knockoff.',
         },
       ],
     },
     { t: 'h3', x: 'Reading a color, properly' },
     {
       t: 'p',
-      x: `Colors are the deceptively hard one. <code>getComputedStyle</code> resolves everything to <code>rgb()</code> or <code>rgba()</code>, which means by the time you read it, the <em>authored</em> value is gone — you've lost the distinction between a hardcoded color and a design token. So the extractor reads the custom-property layer separately and cross-references it, rather than trusting the computed value alone.`,
+      x: `Colors are the deceptively hard one. <code>getComputedStyle</code> resolves everything to <code>rgb()</code> or <code>rgba()</code>, which means by the time you read it, the <em>authored</em> value is gone, meaning you've lost the distinction between a hardcoded color and a design token. So the extractor reads the custom-property layer separately and cross-references it, rather than trusting the computed value alone.`,
     },
     {
       t: 'code',
       lang: 'js',
       file: 'the shape of the problem',
-      x: `// What the author wrote — a token, reused 200 times:
+      x: `// What the author wrote (a token, reused 200 times):
 //   color: var(--brand-primary)
 //
 // What getComputedStyle hands back:
@@ -138,13 +138,13 @@ const authored = getComputedStyle(document.documentElement)
       t: 'callout',
       kind: 'warning',
       title: 'Where this is still wrong',
-      x: `Frequency ranking treats a color used on 200 body-text nodes as more important than one used on a single hero CTA. That's usually right and occasionally very wrong. Weighting by rendered area rather than node count would fix it — that's the next thing I want to change.`,
+      x: `Frequency ranking treats a color used on 200 body-text nodes as more important than one used on a single hero CTA. That's usually right and occasionally very wrong. Weighting by rendered area rather than node count would fix it, which is the next thing I want to change.`,
     },
     { t: 'h2', x: 'Design decisions' },
     { t: 'h3', x: 'Two permissions, and no more' },
     {
       t: 'p',
-      x: `The extension requests exactly two permissions. That was a constraint I set before writing any code, because a tool that reads every page you visit has to be obviously trustworthy — not trustworthy-if-you-read-the-source.`,
+      x: `The extension requests exactly two permissions. That was a constraint I set before writing any code, because a tool that reads every page you visit has to be obviously trustworthy, not just trustworthy-if-you-read-the-source.`,
     },
     {
       t: 'table',
@@ -152,20 +152,20 @@ const authored = getComputedStyle(document.documentElement)
       rows: [
         [
           '<code>activeTab</code>',
-          'Reads layout, CSS and image metadata — but <strong>only for the tab you\'re on, only when you click the icon</strong>. It cannot read pages in the background.',
+          'Reads layout, CSS and image metadata, but <strong>only for the tab you\'re on, only when you click the icon</strong>. It cannot read pages in the background.',
         ],
         ['<code>storage</code>', 'Saves your preferences and favourites locally, via the Chrome Storage API.'],
       ],
     },
     {
       t: 'p',
-      x: `Notably absent: <code>host_permissions</code>, <code>tabs</code>, <code>webRequest</code>, and any network access at all. Parsing happens in the local browser sandbox. Nothing extracted — no colors, no fonts, no assets — is sent anywhere, because there's nowhere for it to be sent.`,
+      x: `Notably absent: <code>host_permissions</code>, <code>tabs</code>, <code>webRequest</code>, and any network access at all. Parsing happens in the local browser sandbox. Nothing extracted (no colors, no fonts, no assets) is sent anywhere, because there's nowhere for it to be sent.`,
     },
     {
       t: 'callout',
       kind: 'success',
       title: 'A side effect worth having',
-      x: `Because it runs in your browser context <em>after</em> the page loads, it works on anything you can already see — pages behind a login, staging environments, and <code>localhost</code>. A server-side scraper can't reach any of those.`,
+      x: `Because it runs in your browser context <em>after</em> the page loads, it works on anything you can already see: pages behind a login, staging environments, and <code>localhost</code>. A server-side scraper can't reach any of those.`,
     },
     { t: 'h3', x: 'No login, no account, no onboarding' },
     {
@@ -176,7 +176,7 @@ const authored = getComputedStyle(document.documentElement)
       t: 'steps',
       items: [
         { title: 'Install the extension', desc: 'One click from the Chrome Web Store.' },
-        { title: 'Navigate to any website', desc: 'Any page you want to pull colors, type or assets from — including private ones.' },
+        { title: 'Navigate to any website', desc: 'Any page you want to pull colors, type or assets from, including private ones.' },
         { title: 'Extract instantly', desc: 'Click the toolbar icon. The whole design system, formatted and grouped.' },
       ],
     },
@@ -185,7 +185,7 @@ const authored = getComputedStyle(document.documentElement)
       t: 'image',
       src: '',
       alt: 'The extension popup showing the Colors tab',
-      caption: 'The popup — Colors tab, grouped and ranked by usage.',
+      caption: 'The popup: Colors tab, grouped and ranked by usage.',
       ratio: '4-3',
     },
     {
@@ -203,7 +203,7 @@ const authored = getComputedStyle(document.documentElement)
     },
     {
       t: 'p',
-      x: `<strong>Area-weighted ranking.</strong> As above — node count is a proxy for importance, and a bad one.<br>
+      x: `<strong>Area-weighted ranking.</strong> As above: node count is a proxy for importance, and a bad one.<br>
 <strong>Export the whole system, not values.</strong> Right now you copy values one at a time. It should emit a <code>tailwind.config.js</code>, a block of CSS custom properties, or a Style Dictionary JSON in one action.<br>
 <strong>Shadow parity is approximate.</strong> Multi-layer shadows come back as a single computed string; splitting them back into authored layers is guesswork I haven't solved.`,
     },
@@ -211,7 +211,7 @@ const authored = getComputedStyle(document.documentElement)
       t: 'callout',
       kind: 'danger',
       title: 'Honest status',
-      x: `The Chrome Web Store link on the landing page currently points at the store homepage, not a listing — the extension isn't published yet. The landing page, the parser and the UI are real; distribution is the unfinished part.`,
+      x: `The Chrome Web Store link on the landing page currently points at the store homepage, not a listing, as the extension isn't published yet. The landing page, the parser and the UI are real; distribution is the unfinished part.`,
     },
   ],
   privacyBlocks: [

@@ -1,5 +1,5 @@
 // ============================================================================
-//  script.js — router, views, and interactions.
+//  script.js: router, views, and interactions.
 //  Content lives in data.js. Block rendering lives in blocks.js.
 // ============================================================================
 
@@ -138,7 +138,7 @@
             <h2>Projects</h2>
             <span class="sec-count">${PROJECTS.length} case studies</span>
           </div>
-          <p class="sec-sub">Every one has a doc page — the problem, the decisions, and what I'd change.</p>
+          <p class="sec-sub">Every one has a doc page: the problem, the decisions, and what I'd change.</p>
           <div class="index">${rows}</div>
         </section>
 
@@ -171,7 +171,7 @@
   // ------------------------------------------------------------- doc view
 
   function viewDoc(p) {
-    document.title = `${p.name} — ${PROFILE.name}`;
+    document.title = `${p.name} | ${PROFILE.name}`;
 
     const i = PROJECTS.indexOf(p);
     const prev = PROJECTS[i - 1];
@@ -277,7 +277,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // scrollspy — highlight the heading nearest the top of the viewport
+    // scrollspy: highlight the heading nearest the top of the viewport
     tocObserver?.disconnect();
     const seen = new Map();
     tocObserver = new IntersectionObserver(
@@ -307,7 +307,7 @@
           btn.classList.add('done');
           setTimeout(() => btn.classList.remove('done'), 1400);
         } catch {
-          /* clipboard blocked — nothing useful to do */
+          /* clipboard blocked: nothing useful to do */
         }
       });
     });
@@ -331,7 +331,7 @@
     document.body.style.overflow = '';
   };
 
-  // Window listeners are registered once at boot, not per render — otherwise
+  // Window listeners are registered once at boot, not per render; otherwise
   // every navigation would leave another set behind pointing at dead nodes.
   let dragTarget = null;
 
@@ -409,7 +409,7 @@
           const hex = rgbToHex(rgb);
           return `<button class="demo-cell${i === mid ? ' base' : ''}" role="listitem"
             style="background:${hex};color:${readable(rgb)}" data-hex="${hex}"
-            title="${hex} — click to copy" aria-label="${hex}"><span>${hex.slice(1)}</span></button>`;
+            title="${hex} (click to copy)" aria-label="${hex}"><span>${hex.slice(1)}</span></button>`;
         })
         .join('');
     };
@@ -511,7 +511,7 @@
         </div>
       </div>
       <div class="gh-foot">
-        <span class="gh-cached">${cached ? 'Showing cached data — GitHub is unreachable right now.' : ''}</span>
+        <span class="gh-cached">${cached ? 'Showing cached data, as GitHub is unreachable right now.' : ''}</span>
         <span class="gh-legend">
           Less
           ${[0, 1, 2, 3, 4].map((l) => `<span class="gh-cell" data-l="${l}"></span>`).join('')}
@@ -542,7 +542,7 @@
     try {
       cache = JSON.parse(localStorage.getItem(GH_CACHE) || 'null');
     } catch {
-      /* corrupt cache — ignore */
+      /* corrupt cache: ignore */
     }
     if (cache?.data) {
       try {
@@ -560,7 +560,7 @@
         try {
           localStorage.setItem(GH_CACHE, JSON.stringify({ ts: Date.now(), data }));
         } catch {
-          /* quota — the graph still works, it just won't survive a reload */
+          /* quota: the graph still works, it just won't survive a reload */
         }
       })
       .catch(() => {
@@ -671,7 +671,7 @@
   };
 
   function viewDocSubPage(p, title, blocks) {
-    document.title = `${title} — ${p.name} — ${PROFILE.name}`;
+    document.title = `${title} | ${p.name} | ${PROFILE.name}`;
 
     $('#view').innerHTML = `
       <div class="view">
@@ -735,7 +735,7 @@
   }
 
   function viewContact() {
-    document.title = `Contact — ${PROFILE.name}`;
+    document.title = `Contact | ${PROFILE.name}`;
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
@@ -816,12 +816,12 @@
   }
 
   function viewNotFound() {
-    document.title = `Not found — ${PROFILE.name}`;
+    document.title = `Not found | ${PROFILE.name}`;
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
         <h1 class="doc-h1">Page not found</h1>
-        <p class="doc-lede">That page doesn't exist — it may have been renamed.</p>
+        <p class="doc-lede">That page doesn't exist; it may have been renamed.</p>
         <div class="hero-actions">
           <a class="cta" href="${href('')}" data-link>Back to the index ${icon('arrowRight')}</a>
         </div>

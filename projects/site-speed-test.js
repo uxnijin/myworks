@@ -6,7 +6,7 @@ const PROJECT_SITE_SPEED_TEST = {
   group: 'Network Tools',
   url: 'https://sitespeedcheck.nijin.site/',
   summary: 'Checks page load time, size, and request waterfall for any website.',
-  lede: 'Load time, total weight, and the request waterfall — the three things that tell you why a page is slow, rather than just that it is.',
+  lede: 'Load time, total weight, and the request waterfall: the three things that tell you why a page is slow, rather than just that it is.',
   status: 'Live',
   blocks: [
     {
@@ -15,7 +15,7 @@ const PROJECT_SITE_SPEED_TEST = {
     },
     {
       t: 'p',
-      x: `The waterfall is the opposite. It's not a grade — it's a <strong>sequence</strong>. And slowness is almost always a sequencing problem.`,
+      x: `The waterfall is the opposite. It's not a grade; it's a <strong>sequence</strong>. And slowness is almost always a sequencing problem.`,
     },
     { t: 'h2', x: 'The three measurements' },
     {
@@ -23,7 +23,7 @@ const PROJECT_SITE_SPEED_TEST = {
       head: ['Metric', 'What it tells you'],
       rows: [
         ['<strong>Load time</strong>', 'The symptom. Useful for tracking, useless for diagnosis.'],
-        ['<strong>Page size</strong>', 'Total bytes. Usually the first surprise — an uncompressed hero image or a font you forgot to subset.'],
+        ['<strong>Page size</strong>', 'Total bytes. Usually the first surprise: an uncompressed hero image or a font you forgot to subset.'],
         ['<strong>Request waterfall</strong>', 'The cause. Every request, in order, with what blocked what.'],
       ],
     },
@@ -31,7 +31,7 @@ const PROJECT_SITE_SPEED_TEST = {
       t: 'callout',
       kind: 'info',
       title: 'Read the waterfall\'s shape, not its length',
-      x: `A long waterfall isn't automatically bad — a <strong>staircase</strong> is. Requests descending one after another means each one had to finish before the next could start, and you're paying full round-trip latency per step. A wide, flat block of parallel requests is a page loading efficiently. Same total bytes, completely different experience.`,
+      x: `A long waterfall isn't automatically bad, but a <strong>staircase</strong> is. Requests descending one after another means each one had to finish before the next could start, and you're paying full round-trip latency per step. A wide, flat block of parallel requests is a page loading efficiently. Same total bytes, completely different experience.`,
     },
     { t: 'h2', x: 'Design decisions' },
     {
@@ -46,7 +46,7 @@ const PROJECT_SITE_SPEED_TEST = {
       t: 'image',
       src: '',
       alt: 'Request waterfall visualisation',
-      caption: 'The waterfall — where the staircases show up.',
+      caption: 'The waterfall, where the staircases show up.',
       ratio: '16-9',
       bleed: true,
     },

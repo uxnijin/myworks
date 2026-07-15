@@ -7,7 +7,7 @@ const PROJECT_TASKS_EXTENSION = {
   url: '/tasks/index.html',
   productUrl: 'https://chromewebstore.google.com/',
   summary: 'A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.',
-  lede: 'Google Tasks is genuinely good and genuinely buried — three clicks deep in Gmail\'s sidebar. This puts it one keystroke from wherever you already are, with no database in the middle.',
+  lede: 'Google Tasks is genuinely good and genuinely buried, sitting three clicks deep in Gmail\'s sidebar. This puts it one keystroke from wherever you already are, with no database in the middle.',
   status: 'Unlisted',
   blocks: [
     {
@@ -16,7 +16,7 @@ const PROJECT_TASKS_EXTENSION = {
     },
     {
       t: 'p',
-      x: `And almost nobody uses it — because getting to it means opening Gmail, finding the right-hand rail, and clicking a small blue icon. The product is fine. The <strong>distance</strong> to the product is the problem.`,
+      x: `And almost nobody uses it, because getting to it means opening Gmail, finding the right-hand rail, and clicking a small blue icon. The product is fine. The <strong>distance</strong> to the product is the problem.`,
     },
     { t: 'h2', x: 'The bet' },
     {
@@ -25,7 +25,7 @@ const PROJECT_TASKS_EXTENSION = {
     },
     {
       t: 'p',
-      x: `That reframing kills an enormous amount of scope. No sync engine. No accounts. No conflict resolution. No mobile app — Google already ships one. The entire product is a rendering surface over an API you already have permission to call.`,
+      x: `That reframing kills an enormous amount of scope. No sync engine. No accounts. No conflict resolution. No mobile app, since Google already ships one. The entire product is a rendering surface over an API you already have permission to call.`,
     },
     {
       t: 'callout',
@@ -78,7 +78,7 @@ const PROJECT_TASKS_EXTENSION = {
       t: 'table',
       head: ['Permission', 'What it powers'],
       rows: [
-        ['<code>identity</code>', 'OAuth 2.0 with your Google account. Read and write your tasks — nothing else.'],
+        ['<code>identity</code>', 'OAuth 2.0 with your Google account. Read and write your tasks, and nothing else.'],
         ['<code>storage</code>', 'Preferences and task cache, in Chrome\'s sandboxed local storage.'],
         ['<code>alarms</code>', 'Background notifications for tasks with due dates.'],
       ],
@@ -94,7 +94,7 @@ const PROJECT_TASKS_EXTENSION = {
         {
           icon: 'window',
           title: 'Toolbar popup',
-          desc: 'Closed until you click it. For the ten-second interaction — add a thing, check a thing, leave.',
+          desc: 'Closed until you click it. For the ten-second interaction: add a thing, check a thing, leave.',
         },
         {
           icon: 'sidebar',
@@ -105,7 +105,7 @@ const PROJECT_TASKS_EXTENSION = {
     },
     {
       t: 'p',
-      x: `These aren't two modes of one UI — they're answers to two different questions. The popup optimises for <em>exit speed</em>. The side panel optimises for <em>staying open</em>. Trying to serve both with one layout is how you get an interface that's mediocre at each.`,
+      x: `These aren't two modes of one UI; they are answers to two different questions. The popup optimises for <em>exit speed</em>. The side panel optimises for <em>staying open</em>. Trying to serve both with one layout is how you get an interface that's mediocre at each.`,
     },
     { t: 'h3', x: 'Keyboard first' },
     {
@@ -126,14 +126,14 @@ const PROJECT_TASKS_EXTENSION = {
       t: 'callout',
       kind: 'success',
       title: 'The ecosystem does the heavy lifting',
-      x: `Because it writes through the official API, a task created here shows up in the Gmail sidebar, on Google Calendar if it has a due date, and in the Google Tasks mobile app — with no sync code on my side.`,
+      x: `Because it writes through the official API, a task created here shows up in the Gmail sidebar, on Google Calendar if it has a due date, and in the Google Tasks mobile app, with no sync code on my side.`,
     },
     { t: 'h2', x: 'Interface' },
     {
       t: 'image',
       src: '',
       alt: 'The Tasks popup open over a webpage',
-      caption: 'The popup — one list, one input, no chrome.',
+      caption: 'The popup: one list, one input, no chrome.',
       ratio: '4-3',
     },
     {
@@ -147,7 +147,7 @@ const PROJECT_TASKS_EXTENSION = {
     { t: 'h2', x: 'What I\'d change' },
     {
       t: 'p',
-      x: `<strong>Offline is unsolved.</strong> There's a local task cache, but it's a cache, not an offline mode — there's no write queue and no conflict resolution. Go offline, add a task, and you're relying on luck. This is the honest gap in the product and I've deliberately not claimed otherwise on the landing page.`,
+      x: `<strong>Offline is unsolved.</strong> There's a local task cache, but it's a cache, not an offline mode; there's no write queue and no conflict resolution. Go offline, add a task, and you're relying on luck. This is the honest gap in the product and I've deliberately not claimed otherwise on the landing page.`,
     },
     {
       t: 'p',
@@ -157,7 +157,7 @@ const PROJECT_TASKS_EXTENSION = {
       t: 'callout',
       kind: 'danger',
       title: 'Honest status',
-      x: `Like the extractor, the store link points at the Chrome Web Store homepage rather than a listing — this isn't published. The landing page ships a real working demo of the interface, but the extension itself is unreleased.`,
+      x: `Like the extractor, the store link points at the Chrome Web Store homepage rather than a listing, as this isn't published. The landing page ships a real working demo of the interface, but the extension itself is unreleased.`,
     },
   ],
   privacyBlocks: [

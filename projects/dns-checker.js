@@ -11,18 +11,18 @@ const PROJECT_DNS_CHECKER = {
   blocks: [
     {
       t: 'p',
-      x: `DNS is the thing that breaks your launch. You changed the record, it works on your machine, and someone on another continent is still hitting the old server — and you have no way to see what they see.`,
+      x: `DNS is the thing that breaks your launch. You changed the record, it works on your machine, and someone on another continent is still hitting the old server, leaving you with no way to see what they see.`,
     },
     { t: 'h2', x: 'Why "propagation" is the whole feature' },
     {
       t: 'p',
-      x: `There's no such thing as DNS propagation, strictly. Records don't <em>spread</em> — resolvers <strong>cache</strong> them, and each one independently forgets on its own TTL schedule. What people call propagation is really "the slowest cache between you and your users hasn't expired yet."`,
+      x: `There's no such thing as DNS propagation, strictly. Records don't <em>spread</em>; resolvers <strong>cache</strong> them, and each one independently forgets on its own TTL schedule. What people call propagation is really "the slowest cache between you and your users hasn't expired yet."`,
     },
     {
       t: 'callout',
       kind: 'info',
       title: 'Which is exactly why you need to check from elsewhere',
-      x: `Checking from your own machine tells you about <strong>your</strong> resolver's cache and nothing else. The only useful question is what resolvers <em>you don't control</em> are currently returning — and that's a question you can't answer locally, no matter how many times you flush your cache.`,
+      x: `Checking from your own machine tells you about <strong>your</strong> resolver's cache and nothing else. The only useful question is what resolvers <em>you don't control</em> are currently returning, and that's a question you can't answer locally, no matter how many times you flush your cache.`,
     },
     { t: 'h2', x: 'Design decisions' },
     {
@@ -45,7 +45,7 @@ const PROJECT_DNS_CHECKER = {
       t: 'callout',
       kind: 'warning',
       title: 'Public resolvers aren\'t your users',
-      x: `Checking a set of public resolvers is a good proxy and not a guarantee. Your visitors' ISP resolvers have their own caches and sometimes their own opinions about TTLs — a few ignore short ones entirely. All clear here means "probably fine", not "definitely done".`,
+      x: `Checking a set of public resolvers is a good proxy and not a guarantee. Your visitors' ISP resolvers have their own caches and sometimes their own opinions about TTLs; a few ignore short ones entirely. All clear here means "probably fine", not "definitely done".`,
     },
   ],
 };
