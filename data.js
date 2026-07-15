@@ -38,7 +38,7 @@ const PROFILE = {
   github: 'uxnijin',
   tagline: 'Design engineering, documented.',
   bio: `Product designer who ships the thing, not the mockup. I've worked with <strong>30+ clients</strong> and mentored <strong>500+ design students</strong> at <a href="https://harisandcoacademy.com" target="_blank" rel="noopener">HACA</a>.`,
-  intro: `Every project below is a real tool I designed and built — mostly browser extensions, Figma plugins and small network utilities. Each one has a case study covering the problem, the design decisions, and the tradeoffs I'd revisit.`,
+  intro: '',
   links: [
     { label: 'Instagram', url: 'https://instagram.com/uxnijin' },
     { label: 'LinkedIn', url: 'https://linkedin.com/in/nijinmuhammed' },

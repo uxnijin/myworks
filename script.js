@@ -111,7 +111,7 @@
 
           <h1>${esc(PROFILE.tagline).replace('documented.', '<em>documented.</em>')}</h1>
           <p class="hero-lede">${PROFILE.bio}</p>
-          <p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>
+          ${PROFILE.intro ? `<p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>` : ''}
 
           <div class="hero-actions">
             <a class="cta" href="${href(`docs/${PROJECTS[0].slug}`)}" data-link>Start reading ${icon('arrowRight')}</a>
