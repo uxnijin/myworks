@@ -33,6 +33,8 @@
 
   // ------------------------------------------------------------- sidebar nav
 
+  const collapsedGroups = new Set();
+
   function renderNav() {
     const path = currentPath();
     const groups = [];
@@ -61,13 +63,23 @@
       </div>
       ${groups
         .map(
-          (g) => `
-        <div class="nav-group">
-          <p class="nav-title">${esc(g.name)}</p>
-          <ul class="nav-list">
-            ${g.items.map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`)).join('')}
-          </ul>
-        </div>`
+          (g) => {
+            const hasActive = g.items.some((p) => path === `docs/${p.slug}`);
+            if (hasActive) {
+              collapsedGroups.delete(g.name);
+            }
+            const isOpen = !collapsedGroups.has(g.name);
+            return `
+              <details class="nav-group" ${isOpen ? 'open' : ''} data-group-name="${esc(g.name)}">
+                <summary class="nav-title">
+                  <span>${esc(g.name)}</span>
+                  <span class="nav-chevron">${icon('chevronRight')}</span>
+                </summary>
+                <ul class="nav-list">
+                  ${g.items.map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`)).join('')}
+                </ul>
+              </details>`;
+          }
         )
         .join('')}
       <div class="nav-group">
@@ -718,6 +730,19 @@
       $('#sidebar').classList.contains('open') ? closeNav() : openNav()
     );
     $('#scrim').addEventListener('click', closeNav);
+
+    // nav toggle for accordion
+    $('#nav').addEventListener('toggle', (e) => {
+      const details = e.target.closest('details');
+      if (!details) return;
+      const name = details.dataset.groupName;
+      if (!name) return;
+      if (details.open) {
+        collapsedGroups.delete(name);
+      } else {
+        collapsedGroups.add(name);
+      }
+    }, true);
 
     // intercept internal links
     document.addEventListener('click', (e) => {

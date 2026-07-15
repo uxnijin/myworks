@@ -444,6 +444,42 @@ kbd {
   color: var(--text-faint);
   padding: 0 12px 8px;
   margin: 0;
+  transition: color .15s;
+}
+
+summary.nav-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+}
+
+summary.nav-title::-webkit-details-marker,
+summary.nav-title::marker {
+  display: none;
+  content: "";
+}
+
+summary.nav-title:hover {
+  color: var(--text-muted);
+}
+
+.nav-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  color: var(--text-faint);
+}
+
+.nav-chevron svg {
+  width: 12px;
+  height: 12px;
+}
+
+details.nav-group[open] .nav-chevron {
+  transform: rotate(90deg);
 }
 
 .nav-list {
