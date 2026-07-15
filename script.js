@@ -191,7 +191,6 @@
             <h1 class="doc-h1">${esc(p.name)}</h1>
             <p class="doc-lede">${p.lede}</p>
             <div class="doc-meta">
-              <span class="pill accent">${icon(p.icon)}${esc(p.tag)}</span>
               ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}"><span class="dot"></span>${esc(p.status)}</span>` : ''}
               <div class="doc-meta-actions" style="margin-left:auto; display:flex; gap:8px;">
                 ${
