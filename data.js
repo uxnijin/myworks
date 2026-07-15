@@ -552,7 +552,7 @@ for (let i = 1; i <= steps; i++) {
     name: 'Design School',
     tag: 'Resource',
     icon: 'book',
-    group: 'Teaching',
+    group: 'Resources',
     url: 'https://design.nijin.site/',
     summary: 'A curated collection of resources for learning design.',
     lede: 'What I actually send students, instead of a bookmark folder with four hundred links and no opinion.',
