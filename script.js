@@ -193,10 +193,9 @@
             <div class="doc-meta">
               <div class="doc-meta-actions" style="display:flex; gap:8px;">
                 ${
-                  p.productUrl
-                    ? `<a class="cta" href="${esc(p.productUrl)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>
-                       <a class="cta ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Open Website</a>`
-                    : `<a class="cta" href="${esc(p.url)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>`
+                  p.productUrl || p.url
+                    ? `<a class="cta" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>`
+                    : ''
                 }
               </div>
               ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}" style="margin-left:auto;"><span class="dot"></span>${esc(p.status)}</span>` : ''}
