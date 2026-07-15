@@ -635,7 +635,7 @@ kbd {
 .doc-h1 {
   font-size: 36px;
   line-height: 1.25;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -.025em;
   color: var(--text);
   margin: 0 0 12px;
@@ -1951,7 +1951,7 @@ td code {
 .hero h1 {
   font-size: 44px;
   line-height: 1.15;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -.03em;
   margin: 0 0 16px;
   color: var(--text);
