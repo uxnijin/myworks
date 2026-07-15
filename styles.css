@@ -844,7 +844,7 @@ kbd {
   color: #fff;
   font-family: var(--font-display);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   border: none;
   cursor: pointer;
   transition: transform .15s var(--ease), background .15s, box-shadow .15s;

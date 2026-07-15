@@ -222,7 +222,7 @@ a {
   background: var(--primary);
   color: white !important;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.7rem 1.4rem;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-glow);
