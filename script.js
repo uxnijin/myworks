@@ -149,7 +149,7 @@
         </section>
 
         <footer class="foot">
-          <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. Built as documentation.</span>
+          <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}</span>
           <span class="socials">
             ${PROFILE.links
               .map(
