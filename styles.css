@@ -853,12 +853,6 @@ kbd {
 
 .cta:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px -4px var(--accent-ring);
-}
-
-.cta:active {
-  transform: translateY(0);
 }
 
 .cta svg {
@@ -1262,7 +1256,6 @@ kbd {
 }
 
 .gallery .frame:hover {
-  transform: translateY(-3px);
   border-color: var(--accent);
 }
 
@@ -1473,8 +1466,6 @@ kbd {
 
 .card:hover {
   border-color: var(--primary-8);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 
 .card:hover::before {
@@ -2464,7 +2455,6 @@ td code {
   color: var(--accent);
   border-color: var(--primary-8);
   background: var(--accent-wash);
-  transform: translateY(-2px);
 }
 
 .socials svg {
