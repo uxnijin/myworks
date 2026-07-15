@@ -722,7 +722,7 @@
               <textarea id="contact-message" name="message" rows="5" required placeholder="Tell me about your project..."></textarea>
             </div>
             
-            <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px;">Send Message</button>
+            <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px; height: 36px; font-size: 13px;">Send Message</button>
             <div class="form-status" id="form-status" style="margin-top: 16px; text-align: center; font-weight: 500;"></div>
           </form>
         </article>
