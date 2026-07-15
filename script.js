@@ -253,6 +253,7 @@
       return;
     }
 
+    const path = currentPath();
     $('#toc').innerHTML = `
       <p class="toc-title">On this page</p>
       <ul class="toc-list">
@@ -264,6 +265,8 @@
               }</a></li>`
           )
           .join('')}
+        ${p.privacyBlocks ? `<li><a class="toc-link lvl-2${path === `docs/${p.slug}/privacy` ? ' active' : ''}" href="${href(`docs/${p.slug}/privacy`)}" data-link>Privacy Policy</a></li>` : ''}
+        ${p.termsBlocks ? `<li><a class="toc-link lvl-2${path === `docs/${p.slug}/terms` ? ' active' : ''}" href="${href(`docs/${p.slug}/terms`)}" data-link>Terms of Service</a></li>` : ''}
       </ul>
       <div class="toc-foot">
         <a class="toc-action" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>
