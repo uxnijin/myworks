@@ -696,13 +696,17 @@
           <div class="contact-channels">
             <a href="mailto:uxnijin@gmail.com" class="channel-card">
               <span class="channel-ico">${icon('mail')}</span>
-              <span class="channel-label">Email</span>
-              <span class="channel-value">uxnijin@gmail.com</span>
+              <div class="channel-info">
+                <span class="channel-label">Email</span>
+                <span class="channel-value">uxnijin@gmail.com</span>
+              </div>
             </a>
             <a href="https://wa.me/916238417389" target="_blank" rel="noopener" class="channel-card">
               <span class="channel-ico">${icon('whatsapp')}</span>
-              <span class="channel-label">WhatsApp</span>
-              <span class="channel-value">62384 17389</span>
+              <div class="channel-info">
+                <span class="channel-label">WhatsApp</span>
+                <span class="channel-value">62384 17389</span>
+              </div>
             </a>
           </div>
           
@@ -722,7 +726,7 @@
               <textarea id="contact-message" name="message" rows="5" required placeholder="Tell me about your project..."></textarea>
             </div>
             
-            <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px; height: 36px; font-size: 13px;">Send Message</button>
+            <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px;">Send Message</button>
             <div class="form-status" id="form-status" style="margin-top: 16px; text-align: center; font-weight: 500;"></div>
           </form>
         </article>

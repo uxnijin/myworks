@@ -2977,12 +2977,13 @@ td code {
 
 .channel-card {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 16px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   text-decoration: none;
   color: var(--text);
   transition: border-color .15s, background .15s;
@@ -2995,25 +2996,35 @@ td code {
 
 .channel-ico {
   color: var(--accent);
-  margin-bottom: 4px;
+  flex-shrink: 0;
 }
 
 .channel-ico svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   display: block;
+}
+
+.channel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .channel-label {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   color: var(--text-muted);
+  line-height: 1;
 }
 
 .channel-value {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  line-height: 1.2;
 }
 
 @media (max-width: 640px) {
