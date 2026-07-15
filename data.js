@@ -19,6 +19,12 @@ Mentored <strong>500+ design students</strong> at <a href="https://harisandcoaca
 // Add one object per tool. Order here = order shown on the page.
 const TOOLS = [
   {
+    name: "Design System Extractor",
+    description: "Extract colors, typography, images, icons, and CSS styles from any website in seconds.",
+    url: "./design-system-extractor/index.html",
+    tag: "Chrome Extension",
+  },
+  {
     name: "Tasks Extension",
     description: "A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.",
     url: "./tasks/index.html",

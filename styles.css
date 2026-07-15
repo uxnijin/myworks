@@ -92,12 +92,17 @@ body {
   gap: 48px;
 }
 
+#home-view {
+  width: 100%;
+}
+
 .profile {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 10px;
+  margin-bottom: 48px;
 }
 
 .avatar {
@@ -226,6 +231,7 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
+  margin-bottom: 48px;
 }
 
 .card {
@@ -363,6 +369,7 @@ body {
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  margin-bottom: 48px;
 }
 
 .github-graph-header {
@@ -565,9 +572,4 @@ body {
   z-index: 100;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
-}
-
-.github-tooltip.show {
-  opacity: 1;
-  transform: translate(-50%, -125%) scale(1);
 }

@@ -235,4 +235,5 @@
         card.innerHTML = `<div style="text-align: center; color: var(--ink-dim); padding: 24px; font-size: 14px;">Could not load GitHub contributions. <a href="https://github.com/${PROFILE.github}" target="_blank" rel="noopener" style="color: var(--white); text-decoration: underline; margin-left: 4px;">View Profile</a></div>`;
       });
   }
+
 })();
