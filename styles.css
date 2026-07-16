@@ -448,29 +448,57 @@ kbd {
   transition: color .15s;
 }
 
-summary.nav-title {
+.nav-menu {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-menu-item {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  background: none;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  user-select: none;
+  text-align: left;
+  transition: color .15s, background .15s;
 }
 
-summary.nav-title::-webkit-details-marker,
-summary.nav-title::marker {
-  display: none;
-  content: "";
+.nav-menu-item:hover {
+  color: var(--accent);
+  background: var(--bg-subtle);
 }
 
-summary.nav-title:hover {
-  color: var(--text-muted);
+.nav-menu-item .nav-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: .7;
+}
+
+.nav-menu-item .nav-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-chevron {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
   color: var(--text-faint);
 }
 
@@ -479,8 +507,33 @@ summary.nav-title:hover {
   height: 12px;
 }
 
-details.nav-group[open] .nav-chevron {
-  transform: rotate(90deg);
+.nav-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 6px 8px 6px 4px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color .15s, background .15s;
+}
+
+.nav-back:hover {
+  color: var(--accent);
+  background: var(--bg-subtle);
+}
+
+.nav-back svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .nav-list {

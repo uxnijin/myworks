@@ -49,6 +49,28 @@ const PROFILE = {
 };
 
 // ============================================================================
+//  BUILDING / WRITINGS / EXPLORING - simple list pages, linked from the
+//  sidebar's Overview section. Each item: { icon, title, desc, tag, url? }.
+//  `icon` is any key from ICONS in blocks.js. `url` is optional - when set
+//  the row links out (opens in a new tab); otherwise it's just a list entry.
+// ============================================================================
+
+const BUILDING = [
+  { icon: 'zap', title: 'Placeholder project one', desc: 'A short description of what this is and why it exists.', tag: 'In progress' },
+  { icon: 'layers', title: 'Placeholder project two', desc: 'A short description of what this is and why it exists.', tag: 'Early' },
+];
+
+const WRITINGS = [
+  { icon: 'book', title: 'Placeholder writing title one', desc: 'A short summary of what this piece is about.', tag: 'Draft' },
+  { icon: 'file', title: 'Placeholder writing title two', desc: 'A short summary of what this piece is about.', tag: 'Draft' },
+];
+
+const EXPLORING = [
+  { icon: 'map', title: 'Placeholder topic one', desc: 'A short note on what you are looking into and why.', tag: 'Curious' },
+  { icon: 'globe', title: 'Placeholder topic two', desc: 'A short note on what you are looking into and why.', tag: 'Curious' },
+];
+
+// ============================================================================
 
 const PROJECTS = [
   PROJECT_FIGMA_CONTRAST_CHECKER,

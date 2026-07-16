@@ -48,9 +48,16 @@
 
   // ------------------------------------------------------------- sidebar nav
 
-  const collapsedGroups = new Set();
+  // null = show the main menu; a group name = show that group's submenu
+  let activeGroup = null;
 
-  function renderNav() {
+  // static top-level pages that live in the sidebar's Overview section
+  const OVERVIEW_PATHS = new Set(['', 'building', 'writings', 'exploring', 'contact']);
+
+  // syncRoute: true when called on a page navigation (auto drill into the
+  // group containing the current page); false for manual open/back clicks,
+  // which must not have their choice overridden by the route-sync logic
+  function renderNav(syncRoute = true) {
     const path = currentPath();
     const groups = [];
     PROJECTS.forEach((p) => {
@@ -60,7 +67,7 @@
 
     const link = (h, ico, label, active, ext) => `
       <li>
-        <a class="nav-link${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${
+        <a class="nav-item${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${
       active ? ' aria-current="page"' : ''
     }>
           <span class="nav-icon">${icon(ico)}</span>
@@ -69,43 +76,70 @@
         </a>
       </li>`;
 
+    if (syncRoute) {
+      // auto drill into the group containing the current page; drop back to
+      // the main menu on pages that don't belong to any group
+      const activeEntry = groups.find((g) =>
+        g.items.some((p) => path === `docs/${p.slug}` || path.startsWith(`docs/${p.slug}/`))
+      );
+      if (activeEntry) {
+        activeGroup = activeEntry.name;
+      } else if (OVERVIEW_PATHS.has(path)) {
+        activeGroup = null;
+      }
+    }
+
+    if (activeGroup) {
+      const isSocials = activeGroup === 'Socials';
+      const group = isSocials ? null : groups.find((g) => g.name === activeGroup);
+      if (!isSocials && !group) {
+        activeGroup = null;
+      } else {
+        const itemsHtml = isSocials
+          ? PROFILE.links.map((l) => link(l.url, (l.label || '').toLowerCase(), l.label, false, true)).join('')
+          : group.items.map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`)).join('');
+
+        $('#nav').innerHTML = `
+          <button type="button" class="nav-back" data-nav-back>
+            ${icon('chevronLeft')}
+            <span>${esc(activeGroup)}</span>
+          </button>
+          <ul class="nav-menu">
+            ${itemsHtml}
+          </ul>`;
+        return;
+      }
+    }
+
     $('#nav').innerHTML = `
-      <div class="nav-group">
-        <p class="nav-title">Overview</p>
-        <ul class="nav-list">
-          ${link(href(''), 'home', 'Index', path === '')}
-        </ul>
-      </div>
-      ${groups
-        .map(
-          (g) => {
-            const hasActive = g.items.some((p) => path === `docs/${p.slug}`);
-            if (hasActive) {
-              collapsedGroups.delete(g.name);
-            }
-            const isOpen = !collapsedGroups.has(g.name);
-            return `
-              <details class="nav-group" ${isOpen ? 'open' : ''} data-group-name="${esc(g.name)}">
-                <summary class="nav-title">
-                  <span>${esc(g.name)}</span>
+      <p class="nav-title">Overview</p>
+      <ul class="nav-menu">
+        ${link(href(''), 'home', 'Index', path === '')}
+        ${link(href('building'), 'zap', 'Building', path === 'building')}
+        ${link(href('writings'), 'book', 'Writings', path === 'writings')}
+        ${link(href('exploring'), 'map', "Things I'm Exploring", path === 'exploring')}
+      </ul>
+      <ul class="nav-menu">
+        ${groups
+          .map(
+            (g) => `
+              <li>
+                <button type="button" class="nav-item" data-open-group="${esc(g.name)}">
+                  <span class="nav-icon">${icon(g.items[0]?.icon || 'layers')}</span>
+                  <span class="nav-label">${esc(g.name)}</span>
                   <span class="nav-chevron">${icon('chevronRight')}</span>
-                </summary>
-                <ul class="nav-list">
-                  ${g.items.map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`)).join('')}
-                </ul>
-              </details>`;
-          }
-        )
-        .join('')}
-      <details class="nav-group" ${!collapsedGroups.has('Socials') ? 'open' : ''} data-group-name="Socials">
-        <summary class="nav-title">
-          <span>Socials</span>
-          <span class="nav-chevron">${icon('chevronRight')}</span>
-        </summary>
-        <ul class="nav-list">
-          ${PROFILE.links.map((l) => link(l.url, (l.label || '').toLowerCase(), l.label, false, true)).join('')}
-        </ul>
-      </details>`;
+                </button>
+              </li>`
+          )
+          .join('')}
+        <li>
+          <button type="button" class="nav-item" data-open-group="Socials">
+            <span class="nav-icon">${icon('link')}</span>
+            <span class="nav-label">Socials</span>
+            <span class="nav-chevron">${icon('chevronRight')}</span>
+          </button>
+        </li>
+      </ul>`;
   }
 
   // ------------------------------------------------------------- home view
@@ -700,6 +734,9 @@
 
   const searchable = () => [
     { name: 'Index', desc: 'All projects', path: '', icon: 'home' },
+    { name: 'Building', desc: "Things I'm currently building", path: 'building', icon: 'zap' },
+    { name: 'Writings', desc: 'Notes and write-ups', path: 'writings', icon: 'book' },
+    { name: "Things I'm Exploring", desc: 'Ideas and topics on my radar', path: 'exploring', icon: 'map' },
     { name: 'Contact', desc: 'Get in touch', path: 'contact', icon: 'mail' },
     ...PROJECTS.map((p) => ({ name: p.name, desc: p.summary, path: `docs/${p.slug}`, icon: p.icon, tag: p.tag })),
   ];
@@ -824,6 +861,12 @@
       viewHome();
     } else if (path === 'contact') {
       viewContact();
+    } else if (path === 'building') {
+      viewBuilding();
+    } else if (path === 'writings') {
+      viewWritings();
+    } else if (path === 'exploring') {
+      viewExploring();
     } else if (path.startsWith('docs/')) {
       const parts = path.slice(5).split('/');
       const slug = parts[0];
@@ -849,6 +892,51 @@
     renderNav();
     window.scrollTo(0, 0);
     updateProgress();
+  }
+
+  // ------------------------------------------------------------- simple list pages
+
+  function viewListPage(title, lede, items, emptyText) {
+    document.title = `${title} | ${PROFILE.name}`;
+    $('#toc').innerHTML = '';
+
+    const rows = items
+      .map((it) => {
+        const inner = `
+          <span class="row-ico">${icon(it.icon)}</span>
+          <span class="row-body">
+            <span class="row-name">${esc(it.title)}</span>
+            <span class="row-desc">${esc(it.desc)}</span>
+          </span>
+          ${it.tag ? `<span class="row-tag">${esc(it.tag)}</span>` : ''}`;
+        return it.url
+          ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
+          : `<div class="row">${inner}</div>`;
+      })
+      .join('');
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <h1 class="doc-h1">${esc(title)}</h1>
+            <p class="doc-lede">${esc(lede)}</p>
+          </header>
+          ${items.length ? `<div class="index">${rows}</div>` : `<p class="sec-sub">${esc(emptyText)}</p>`}
+        </article>
+      </div>`;
+  }
+
+  function viewBuilding() {
+    viewListPage('Building', "Things I'm currently building or shipping.", BUILDING, 'Nothing in progress right now — check back soon.');
+  }
+
+  function viewWritings() {
+    viewListPage('Writings', 'Notes and write-ups on design and building products.', WRITINGS, "Haven't published anything yet — check back soon.");
+  }
+
+  function viewExploring() {
+    viewListPage("Things I'm Exploring", 'Ideas, tools, and topics currently on my radar.', EXPLORING, 'Nothing new to share yet — check back soon.');
   }
 
   function viewContact() {
@@ -988,18 +1076,20 @@
     );
     $('#scrim').addEventListener('click', closeNav);
 
-    // nav toggle for accordion
-    $('#nav').addEventListener('toggle', (e) => {
-      const details = e.target.closest('details');
-      if (!details) return;
-      const name = details.dataset.groupName;
-      if (!name) return;
-      if (details.open) {
-        collapsedGroups.delete(name);
-      } else {
-        collapsedGroups.add(name);
+    // nav drill-in / back navigation
+    $('#nav').addEventListener('click', (e) => {
+      const openBtn = e.target.closest('[data-open-group]');
+      if (openBtn) {
+        activeGroup = openBtn.dataset.openGroup;
+        renderNav(false);
+        return;
       }
-    }, true);
+      const backBtn = e.target.closest('[data-nav-back]');
+      if (backBtn) {
+        activeGroup = null;
+        renderNav(false);
+      }
+    });
 
     // intercept internal links
     document.addEventListener('click', (e) => {
