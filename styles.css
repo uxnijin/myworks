@@ -3164,3 +3164,40 @@ td code {
 .users-item:hover .users-item-bar {
   opacity: 1;
 }
+
+.users-accordion {
+  margin-top: 28px;
+}
+
+.users-accordion summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.users-accordion summary::-webkit-details-marker,
+.users-accordion summary::marker {
+  display: none;
+}
+
+.users-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  color: var(--text-faint);
+  transition: transform 0.2s var(--ease);
+}
+
+.users-chevron svg {
+  width: 12px;
+  height: 12px;
+}
+
+.users-accordion[open] .users-chevron {
+  transform: rotate(90deg);
+}

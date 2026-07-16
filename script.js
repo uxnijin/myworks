@@ -173,27 +173,32 @@
           <span class="users-total-num">${totalUsers.toLocaleString()}</span>
           <span class="users-total-label">Active Users Combined</span>
         </div>
-        <h3 class="toc-title" style="margin-top: 28px;">By Product</h3>
-        <div class="users-list">
-          ${sortedProjects
-            .map((p) => {
-              const maxUsers = sortedProjects[0].users || 1;
-              const pct = Math.max(4, Math.round(((p.users || 0) / maxUsers) * 100));
-              return `
-                <a href="${href(`docs/${p.slug}`)}" class="users-item" data-link>
-                  <div class="users-item-header">
-                    <span class="users-item-icon">${icon(p.icon)}</span>
-                    <span class="users-item-name">${esc(p.name)}</span>
-                    <span class="users-item-count">${(p.users || 0).toLocaleString()}</span>
-                  </div>
-                  <div class="users-item-bar-bg">
-                    <div class="users-item-bar" style="width: ${pct}%;"></div>
-                  </div>
-                </a>
-              `;
-            })
-            .join('')}
-        </div>
+        <details class="users-accordion">
+          <summary class="toc-title">
+            <span>By Product</span>
+            <span class="users-chevron">${icon('chevronRight')}</span>
+          </summary>
+          <div class="users-list">
+            ${sortedProjects
+              .map((p) => {
+                const maxUsers = sortedProjects[0].users || 1;
+                const pct = Math.max(4, Math.round(((p.users || 0) / maxUsers) * 100));
+                return `
+                  <a href="${href(`docs/${p.slug}`)}" class="users-item" data-link>
+                    <div class="users-item-header">
+                      <span class="users-item-icon">${icon(p.icon)}</span>
+                      <span class="users-item-name">${esc(p.name)}</span>
+                      <span class="users-item-count">${(p.users || 0).toLocaleString()}</span>
+                    </div>
+                    <div class="users-item-bar-bg">
+                      <div class="users-item-bar" style="width: ${pct}%;"></div>
+                    </div>
+                  </a>
+                `;
+              })
+              .join('')}
+          </div>
+        </details>
       </div>
     `;
     $('#hero-search')?.addEventListener('click', openPalette);
