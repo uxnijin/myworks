@@ -48,14 +48,11 @@
 
   // ------------------------------------------------------------- sidebar nav
 
-  // null = show the main menu; a group name = show that group's submenu
-  let activeGroup = null;
+  // names of product groups currently expanded inline in the sidebar
+  const expandedGroups = new Set();
 
-  // static top-level pages that live in the sidebar's Overview section
-  const OVERVIEW_PATHS = new Set(['', 'building', 'writings', 'exploring', 'contact']);
-
-  // syncRoute: true when called on a page navigation (auto drill into the
-  // group containing the current page); false for manual open/back clicks,
+  // syncRoute: true when called on a page navigation (auto-expand the group
+  // containing the current page); false for manual expand/collapse clicks,
   // which must not have their choice overridden by the route-sync logic
   function renderNav(syncRoute = true) {
     const path = currentPath();
@@ -77,38 +74,11 @@
       </li>`;
 
     if (syncRoute) {
-      // auto drill into the group containing the current page; drop back to
-      // the main menu on pages that don't belong to any group
+      // auto-expand the group containing the current page
       const activeEntry = groups.find((g) =>
         g.items.some((p) => path === `docs/${p.slug}` || path.startsWith(`docs/${p.slug}/`))
       );
-      if (activeEntry) {
-        activeGroup = activeEntry.name;
-      } else if (OVERVIEW_PATHS.has(path)) {
-        activeGroup = null;
-      }
-    }
-
-    if (activeGroup) {
-      const isSocials = activeGroup === 'Socials';
-      const group = isSocials ? null : groups.find((g) => g.name === activeGroup);
-      if (!isSocials && !group) {
-        activeGroup = null;
-      } else {
-        const itemsHtml = isSocials
-          ? PROFILE.links.map((l) => link(l.url, (l.label || '').toLowerCase(), l.label, false, true)).join('')
-          : group.items.map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`)).join('');
-
-        $('#nav').innerHTML = `
-          <button type="button" class="nav-back" data-nav-back>
-            ${icon('chevronLeft')}
-            <span>${esc(activeGroup)}</span>
-          </button>
-          <ul class="nav-menu">
-            ${itemsHtml}
-          </ul>`;
-        return;
-      }
+      if (activeEntry) expandedGroups.add(activeEntry.name);
     }
 
     $('#nav').innerHTML = `
@@ -119,27 +89,37 @@
         ${link(href('writings'), 'book', 'Writings', path === 'writings')}
         ${link(href('exploring'), 'map', "Things I'm Exploring", path === 'exploring')}
       </ul>
+      <p class="nav-title">My Products</p>
       <ul class="nav-menu">
         ${groups
-          .map(
-            (g) => `
+          .map((g) => {
+            const isOpen = expandedGroups.has(g.name);
+            const itemsHtml = g.items
+              .map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`))
+              .join('');
+            return `
               <li>
-                <button type="button" class="nav-item" data-open-group="${esc(g.name)}">
+                <button type="button" class="nav-item${isOpen ? ' open' : ''}" data-toggle-group="${esc(g.name)}" aria-expanded="${isOpen}">
                   <span class="nav-icon">${icon(g.items[0]?.icon || 'layers')}</span>
                   <span class="nav-label">${esc(g.name)}</span>
                   <span class="nav-chevron">${icon('chevronRight')}</span>
                 </button>
-              </li>`
-          )
+                ${isOpen ? `<ul class="nav-submenu">${itemsHtml}</ul>` : ''}
+              </li>`;
+          })
           .join('')}
-        <li>
-          <button type="button" class="nav-item" data-open-group="Socials">
-            <span class="nav-icon">${icon('link')}</span>
-            <span class="nav-label">Socials</span>
-            <span class="nav-chevron">${icon('chevronRight')}</span>
-          </button>
-        </li>
       </ul>`;
+  }
+
+  function renderSidebarSocials() {
+    $('#sidebar-socials').innerHTML = PROFILE.links
+      .map(
+        (l) =>
+          `<a class="sidebar-social-link" href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(
+            l.label
+          )}">${icon((l.label || '').toLowerCase())}</a>`
+      )
+      .join('');
   }
 
   // ------------------------------------------------------------- home view
@@ -1076,20 +1056,20 @@
     );
     $('#scrim').addEventListener('click', closeNav);
 
-    // nav drill-in / back navigation
+    // nav accordion expand/collapse
     $('#nav').addEventListener('click', (e) => {
-      const openBtn = e.target.closest('[data-open-group]');
-      if (openBtn) {
-        activeGroup = openBtn.dataset.openGroup;
-        renderNav(false);
-        return;
+      const toggleBtn = e.target.closest('[data-toggle-group]');
+      if (!toggleBtn) return;
+      const name = toggleBtn.dataset.toggleGroup;
+      if (expandedGroups.has(name)) {
+        expandedGroups.delete(name);
+      } else {
+        expandedGroups.add(name);
       }
-      const backBtn = e.target.closest('[data-nav-back]');
-      if (backBtn) {
-        activeGroup = null;
-        renderNav(false);
-      }
+      renderNav(false);
     });
+
+    renderSidebarSocials();
 
     // intercept internal links
     document.addEventListener('click', (e) => {
