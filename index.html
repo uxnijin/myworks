@@ -44,18 +44,20 @@
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
   <script>
-    // Set the theme before first paint so there's no flash. A manual
-    // choice from the toggle button (localStorage) wins over the OS
-    // preference; otherwise the OS preference tracks live.
+    // Set the theme before first paint so there's no flash, and keep it
+    // tracking the OS preference live — there's no manual toggle.
     (() => {
       try {
-        const stored = localStorage.getItem('theme');
-        if (stored === 'light' || stored === 'dark') {
-          document.documentElement.dataset.theme = stored;
-          return;
-        }
         const query = window.matchMedia('(prefers-color-scheme: dark)');
+        let first = true;
         const update = () => {
+          // fade the swap instead of snapping, but not on the very first
+          // (pre-paint) call — there's nothing to fade from yet.
+          if (!first) {
+            document.documentElement.classList.add('theme-transitioning');
+            setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 400);
+          }
+          first = false;
           document.documentElement.dataset.theme = query.matches ? 'dark' : 'light';
         };
         update();
@@ -87,8 +89,6 @@
       <span class="search-label">Search projects…</span>
       <kbd id="search-kbd">⌘K</kbd>
     </button>
-
-    <button class="icon-btn theme-btn" id="theme-btn" aria-label="Toggle color theme"></button>
 
     <a class="contact-btn" href="/contact" data-link id="contact-btn" aria-label="Contact">
       <span class="contact-ico" id="contact-ico" aria-hidden="true"></span>
@@ -149,6 +149,11 @@
   <script src="/projects/site-speed-test.js"></script>
   <script src="/projects/dns-checker.js"></script>
   <script src="/projects/ip-checker.js"></script>
+  <script src="/projects/diecastkerala.js"></script>
+
+  <!-- Design Case Study Pages -->
+  <script src="/designs/mobile-demo.js"></script>
+  <script src="/designs/web-demo.js"></script>
 
   <script src="/data.js"></script>
   <script src="/blocks.js"></script>

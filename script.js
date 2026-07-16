@@ -37,34 +37,9 @@
     if (meta) meta.content = desc;
   }
 
-  // theme toggle: flips the data-theme attribute set by the pre-paint
-  // inline script in index.html, remembers the choice, and briefly forces
-  // every color/border transition on so the swap reads as a fade rather
-  // than a snap.
-  let themeTransitionTimer = null;
-  function setTheme(mode) {
-    document.documentElement.classList.add('theme-transitioning');
-    document.documentElement.dataset.theme = mode;
-    try {
-      localStorage.setItem('theme', mode);
-    } catch {
-      /* storage blocked: theme just won't persist across reloads */
-    }
-    $('#theme-btn').innerHTML = icon(mode === 'dark' ? 'sun' : 'moon');
-    clearTimeout(themeTransitionTimer);
-    themeTransitionTimer = setTimeout(() => {
-      document.documentElement.classList.remove('theme-transitioning');
-    }, 400);
-  }
-
-  function initTheme() {
-    const btn = $('#theme-btn');
-    if (!btn) return;
-    btn.innerHTML = icon(document.documentElement.dataset.theme === 'dark' ? 'sun' : 'moon');
-    btn.addEventListener('click', () => {
-      setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
-    });
-  }
+  // theme: the data-theme attribute is set by the pre-paint inline script
+  // in index.html and kept live there via a matchMedia listener — there's
+  // no manual toggle, so nothing to wire up here.
 
   // fades <img>s in once loaded instead of popping in mid-layout; images
   // already cached by the browser (img.complete) skip straight to visible.
@@ -156,22 +131,44 @@
   };
 
   const bySlug = (slug) => PROJECTS.find((p) => p.slug === slug);
+  const designBySlug = (slug) => DESIGNS.find((d) => d.slug === slug);
 
   // ------------------------------------------------------------- sidebar nav
 
   // names of product groups currently expanded inline in the sidebar
   const expandedGroups = new Set();
 
+  // bumped on every route render; async views (Medium fetches) capture it
+  // and bail if it has moved on by the time their promise resolves, so a
+  // slow fetch can't paint over whatever page the user has since opened
+  let asyncToken = 0;
+
   // syncRoute: true when called on a page navigation (auto-expand the group
   // containing the current page); false for manual expand/collapse clicks,
   // which must not have their choice overridden by the route-sync logic
+  // groups a collection of doc entries (projects or designs) by a key,
+  // preserving first-seen order unless an explicit priority list is given
+  function groupBy(items, keyFn, order = []) {
+    const groups = [];
+    items.forEach((it) => {
+      const name = keyFn(it);
+      const g = groups.find((x) => x.name === name);
+      g ? g.items.push(it) : groups.push({ name, items: [it] });
+    });
+    if (order.length) {
+      groups.sort((a, b) => {
+        const ai = order.indexOf(a.name);
+        const bi = order.indexOf(b.name);
+        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      });
+    }
+    return groups;
+  }
+
   function renderNav(syncRoute = true) {
     const path = currentPath();
-    const groups = [];
-    PROJECTS.forEach((p) => {
-      const g = groups.find((x) => x.name === (p.group || 'Projects'));
-      g ? g.items.push(p) : groups.push({ name: p.group || 'Projects', items: [p] });
-    });
+    const productGroups = groupBy(PROJECTS, (p) => p.group || 'Projects');
+    const designGroups = groupBy(DESIGNS, (d) => d.category || 'Design', ['Mobile App', 'Web']);
 
     const link = (h, ico, label, active, ext) => `
       <li>
@@ -184,12 +181,34 @@
         </a>
       </li>`;
 
+    const groupList = (groups, basePath) => groups
+      .map((g) => {
+        const isOpen = expandedGroups.has(g.name);
+        const itemsHtml = g.items
+          .map((it) => link(href(`${basePath}/${it.slug}`), it.icon, it.name, path === `${basePath}/${it.slug}`))
+          .join('');
+        return `
+          <li>
+            <button type="button" class="nav-item${isOpen ? ' open' : ''}" data-toggle-group="${esc(g.name)}" aria-expanded="${isOpen}">
+              <span class="nav-icon">${icon(g.items[0]?.icon || 'layers')}</span>
+              <span class="nav-label">${esc(g.name)}</span>
+              <span class="nav-chevron">${icon('chevronRight')}</span>
+            </button>
+            ${isOpen ? `<ul class="nav-submenu">${itemsHtml}</ul>` : ''}
+          </li>`;
+      })
+      .join('');
+
     if (syncRoute) {
       // auto-expand the group containing the current page
-      const activeEntry = groups.find((g) =>
+      const activeProductGroup = productGroups.find((g) =>
         g.items.some((p) => path === `docs/${p.slug}` || path.startsWith(`docs/${p.slug}/`))
       );
-      if (activeEntry) expandedGroups.add(activeEntry.name);
+      if (activeProductGroup) expandedGroups.add(activeProductGroup.name);
+      const activeDesignGroup = designGroups.find((g) =>
+        g.items.some((d) => path === `designs/${d.slug}` || path.startsWith(`designs/${d.slug}/`))
+      );
+      if (activeDesignGroup) expandedGroups.add(activeDesignGroup.name);
     }
 
     $('#nav').innerHTML = `
@@ -200,25 +219,14 @@
         ${link(href('writings'), 'book', 'Writings', path === 'writings')}
         ${link(href('exploring'), 'map', "Things I'm Exploring", path === 'exploring')}
       </ul>
+      ${designGroups.length ? `
+      <p class="nav-title">Designs</p>
+      <ul class="nav-menu">
+        ${groupList(designGroups, 'designs')}
+      </ul>` : ''}
       <p class="nav-title">My Products</p>
       <ul class="nav-menu">
-        ${groups
-          .map((g) => {
-            const isOpen = expandedGroups.has(g.name);
-            const itemsHtml = g.items
-              .map((p) => link(href(`docs/${p.slug}`), p.icon, p.name, path === `docs/${p.slug}`))
-              .join('');
-            return `
-              <li>
-                <button type="button" class="nav-item${isOpen ? ' open' : ''}" data-toggle-group="${esc(g.name)}" aria-expanded="${isOpen}">
-                  <span class="nav-icon">${icon(g.items[0]?.icon || 'layers')}</span>
-                  <span class="nav-label">${esc(g.name)}</span>
-                  <span class="nav-chevron">${icon('chevronRight')}</span>
-                </button>
-                ${isOpen ? `<ul class="nav-submenu">${itemsHtml}</ul>` : ''}
-              </li>`;
-          })
-          .join('')}
+        ${groupList(productGroups, 'docs')}
       </ul>`;
   }
 
@@ -233,15 +241,14 @@
       .join('');
   }
 
-  // ------------------------------------------------------------- home view
+  // ------------------------------------------------------------- shared row builders
 
-  function viewHome() {
-    document.title = `${PROFILE.name} ${PROFILE.role}`;
-    setDescription(`${PROFILE.tagline} Projects, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
-
-    const rows = PROJECTS.map(
-      (p, i) => `
-      <a class="row" href="${href(`docs/${p.slug}`)}" data-link data-cursor="View" style="--i:${i}">
+  // a PROJECTS/DESIGNS entry, linking internally via the router
+  const buildDocRows = (items, basePath) =>
+    items
+      .map(
+        (p) => `
+      <a class="row" href="${href(`${basePath}/${p.slug}`)}" data-link>
         <span class="row-ico">${icon(p.icon)}</span>
         <span class="row-body">
           <span class="row-name">${esc(p.name)}</span>
@@ -250,7 +257,72 @@
         <span class="row-tag">${esc(p.tag)}</span>
         <span class="row-go"><span>Read</span>${icon('arrowRight')}</span>
       </a>`
-    ).join('');
+      )
+      .join('');
+
+  // a { icon, title, desc, tag, url? } item, e.g. BUILDING/WRITINGS/Medium posts
+  const buildRows = (items) =>
+    items
+      .map((it) => {
+        const inner = `
+          <span class="row-ico">${icon(it.icon)}</span>
+          <span class="row-body">
+            <span class="row-name">${esc(it.title)}</span>
+            <span class="row-desc">${esc(it.desc)}</span>
+          </span>
+          ${it.tag ? `<span class="row-tag">${esc(it.tag)}</span>` : ''}`;
+        return it.url
+          ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
+          : `<div class="row">${inner}</div>`;
+      })
+      .join('');
+
+  // ------------------------------------------------------------- Medium
+
+  // fetches nijinmuhammed's Medium posts through rss2json (Medium's own
+  // feed has no CORS headers, so it can't be read directly from the
+  // browser). Cached for the session; a failed fetch clears the cache so
+  // the next visit to a Writings view retries instead of staying broken.
+  let mediumPostsPromise = null;
+  function fetchMediumPosts() {
+    if (mediumPostsPromise) return mediumPostsPromise;
+    const rssUrl = `https://medium.com/feed/@${MEDIUM_USERNAME}`;
+    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    mediumPostsPromise = fetch(api)
+      .then((res) => {
+        if (!res.ok) throw new Error('medium: bad response');
+        return res.json();
+      })
+      .then((data) => {
+        if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('medium: bad payload');
+        return data.items.map((item) => {
+          const text = (item.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+          return {
+            icon: 'book',
+            title: item.title,
+            desc: text.length > 150 ? `${text.slice(0, 150).trim()}…` : text,
+            url: item.link,
+            tag: item.pubDate
+              ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+              : '',
+          };
+        });
+      })
+      .catch((err) => {
+        mediumPostsPromise = null;
+        throw err;
+      });
+    return mediumPostsPromise;
+  }
+
+  // ------------------------------------------------------------- home view
+
+  function viewHome() {
+    document.title = `${PROFILE.name} ${PROFILE.role}`;
+    setDescription(`${PROFILE.tagline} Projects, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
+
+    const designRows = buildDocRows(DESIGNS, 'designs');
+    const productRows = buildDocRows(PROJECTS, 'docs');
 
     $('#view').innerHTML = `
       <div class="view">
@@ -274,13 +346,32 @@
           </div>
         </section>
 
+        ${DESIGNS.length ? `
         <section class="sec">
           <div class="sec-head">
-            <h2>Projects</h2>
-            <span class="sec-count">${PROJECTS.length} Projects</span>
+            <h2>Designs</h2>
+            <span class="sec-count">${DESIGNS.length} Case ${DESIGNS.length === 1 ? 'Study' : 'Studies'}</span>
+          </div>
+          <p class="sec-sub">Mobile app and web design case studies — the brief, the process, the outcome.</p>
+          <div class="index">${designRows}</div>
+        </section>` : ''}
+
+        <section class="sec">
+          <div class="sec-head">
+            <h2>My Products</h2>
+            <span class="sec-count">${PROJECTS.length} Products</span>
           </div>
           <p class="sec-sub">Every one has a doc page: the problem, the decisions, and what I'd change.</p>
-          <div class="index">${rows}</div>
+          <div class="index">${productRows}</div>
+        </section>
+
+        <section class="sec">
+          <div class="sec-head">
+            <h2>Writing</h2>
+            <a class="sec-count" href="${href('writings')}" data-link>All writings ${icon('arrowRight')}</a>
+          </div>
+          <p class="sec-sub">Notes on design and building products, live from Medium.</p>
+          <div class="index" id="home-writing-list"><p class="sec-sub">Loading posts from Medium…</p></div>
         </section>
 
         <section class="sec">
@@ -390,17 +481,30 @@
 
     $('#hero-search')?.addEventListener('click', openPalette);
     renderGitHub();
+
+    const homeWritingToken = asyncToken;
+    fetchMediumPosts()
+      .then((posts) => (posts.length ? posts.slice(0, 4) : WRITINGS))
+      .catch(() => WRITINGS)
+      .then((posts) => {
+        if (homeWritingToken !== asyncToken) return;
+        const list = $('#home-writing-list');
+        if (!list) return;
+        list.innerHTML = posts.length
+          ? buildRows(posts)
+          : `<p class="sec-sub">Haven't published anything yet — check back soon.</p>`;
+      });
   }
 
   // ------------------------------------------------------------- doc view
 
-  function viewDoc(p) {
+  function viewDoc(p, collection = PROJECTS, basePath = 'docs') {
     document.title = `${p.name} | ${PROFILE.name}`;
     setDescription(p.summary);
 
-    const i = PROJECTS.indexOf(p);
-    const prev = PROJECTS[i - 1];
-    const next = PROJECTS[i + 1];
+    const i = collection.indexOf(p);
+    const prev = collection[i - 1];
+    const next = collection[i + 1];
 
     const filteredBlocks = p.group === 'Figma Plugins'
       ? p.blocks.filter(b => {
@@ -417,7 +521,7 @@
             <nav class="crumbs" aria-label="Breadcrumb">
               <a href="${href('')}" data-link>Index</a>
               ${icon('chevronRight')}
-              <span>${esc(p.group || 'Projects')}</span>
+              <span>${esc(p.group || p.category || 'Projects')}</span>
               ${icon('chevronRight')}
               <span style="color:var(--text)">${esc(p.name)}</span>
             </nav>
@@ -451,8 +555,8 @@
           ${
             p.privacyBlocks || p.termsBlocks
               ? `<div class="doc-footer-links">
-                   ${p.privacyBlocks ? `<a class="doc-footer-link" href="${href(`docs/${p.slug}/privacy`)}" data-link>Privacy Policy</a>` : ''}
-                   ${p.termsBlocks ? `<a class="doc-footer-link" href="${href(`docs/${p.slug}/terms`)}" data-link>Terms of Service</a>` : ''}
+                   ${p.privacyBlocks ? `<a class="doc-footer-link" href="${href(`${basePath}/${p.slug}/privacy`)}" data-link>Privacy Policy</a>` : ''}
+                   ${p.termsBlocks ? `<a class="doc-footer-link" href="${href(`${basePath}/${p.slug}/terms`)}" data-link>Terms of Service</a>` : ''}
                  </div>`
               : ''
           }
@@ -460,7 +564,7 @@
           <nav class="page-nav" aria-label="Pagination">
             ${
               prev
-                ? `<a class="page-nav-link prev" href="${href(`docs/${prev.slug}`)}" data-link>
+                ? `<a class="page-nav-link prev" href="${href(`${basePath}/${prev.slug}`)}" data-link>
                      <span class="page-nav-dir">${icon('chevronLeft')} Previous</span>
                      <span class="page-nav-name">${esc(prev.name)}</span>
                    </a>`
@@ -468,7 +572,7 @@
             }
             ${
               next
-                ? `<a class="page-nav-link next" href="${href(`docs/${next.slug}`)}" data-link>
+                ? `<a class="page-nav-link next" href="${href(`${basePath}/${next.slug}`)}" data-link>
                      <span class="page-nav-dir">Next ${icon('chevronRight')}</span>
                      <span class="page-nav-name">${esc(next.name)}</span>
                    </a>`
@@ -478,7 +582,7 @@
         </article>
       </div>`;
 
-    renderTOC(p);
+    renderTOC(p, basePath);
     initCopy();
     initZoom();
     initTilt();
@@ -489,7 +593,7 @@
 
   let tocObserver = null;
 
-  function renderTOC(p) {
+  function renderTOC(p, basePath = 'docs') {
     const heads = $$('.prose h2, .prose h3');
     if (!heads.length) {
       $('#toc').innerHTML = '';
@@ -508,11 +612,11 @@
               }</a></li>`
           )
           .join('')}
-        ${p.privacyBlocks ? `<li><a class="toc-link lvl-2${path === `docs/${p.slug}/privacy` ? ' active' : ''}" href="${href(`docs/${p.slug}/privacy`)}" data-link>Privacy Policy</a></li>` : ''}
-        ${p.termsBlocks ? `<li><a class="toc-link lvl-2${path === `docs/${p.slug}/terms` ? ' active' : ''}" href="${href(`docs/${p.slug}/terms`)}" data-link>Terms of Service</a></li>` : ''}
+        ${p.privacyBlocks ? `<li><a class="toc-link lvl-2${path === `${basePath}/${p.slug}/privacy` ? ' active' : ''}" href="${href(`${basePath}/${p.slug}/privacy`)}" data-link>Privacy Policy</a></li>` : ''}
+        ${p.termsBlocks ? `<li><a class="toc-link lvl-2${path === `${basePath}/${p.slug}/terms` ? ' active' : ''}" href="${href(`${basePath}/${p.slug}/terms`)}" data-link>Terms of Service</a></li>` : ''}
       </ul>
       <div class="toc-foot">
-        <a class="toc-action" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>
+        ${p.productUrl || p.url ? `<a class="toc-action" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>` : ''}
         <a class="toc-action" href="#" data-top>${icon('chevronLeft')} Back to top</a>
       </div>`;
 
@@ -624,8 +728,8 @@
     });
   }
 
-  // true on desktop-with-mouse; touch/coarse pointers skip the custom
-  // cursor, magnetic pull, and 3D tilt entirely rather than faking hover.
+  // true on desktop-with-mouse; touch/coarse pointers skip the magnetic
+  // pull and 3D tilt entirely rather than faking hover.
   const HOVER_FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   // gentle 3D tilt on screenshots/thumbnails, capped well under a full
@@ -685,41 +789,6 @@
         apply();
       });
     });
-  }
-
-  // custom cursor: a small dot that swells into a ring over links/buttons,
-  // and into a labelled pill where a data-cursor hint is present (e.g. the
-  // project rows say "View", zoomable screenshots say "Zoom").
-  function initCursor() {
-    if (!HOVER_FINE) return;
-    document.documentElement.classList.add('has-custom-cursor');
-    const dot = document.createElement('div');
-    dot.className = 'cursor-dot';
-    dot.innerHTML = '<span class="cursor-label"></span>';
-    document.body.appendChild(dot);
-    const label = $('.cursor-label', dot);
-
-    let raf = null;
-    let x = -100;
-    let y = -100;
-    const paint = () => {
-      dot.style.left = `${x}px`;
-      dot.style.top = `${y}px`;
-      raf = null;
-    };
-
-    window.addEventListener('mousemove', (e) => {
-      x = e.clientX;
-      y = e.clientY;
-      if (!raf) raf = requestAnimationFrame(paint);
-      const target = e.target.closest('a, button, [data-cursor]');
-      const hint = target?.dataset.cursor;
-      dot.classList.toggle('on-link', !!target);
-      dot.classList.toggle('labeled', !!hint);
-      label.textContent = hint || '';
-    });
-    document.addEventListener('mouseleave', () => dot.classList.add('cursor-hidden'));
-    document.addEventListener('mouseenter', () => dot.classList.remove('cursor-hidden'));
   }
 
   // click-to-load facades keep third-party iframes out until asked
@@ -932,6 +1001,7 @@
     { name: "Things I'm Exploring", desc: 'Ideas and topics on my radar', path: 'exploring', icon: 'map' },
     { name: 'Contact', desc: 'Get in touch', path: 'contact', icon: 'mail' },
     ...PROJECTS.map((p) => ({ name: p.name, desc: p.summary, path: `docs/${p.slug}`, icon: p.icon, tag: p.tag })),
+    ...DESIGNS.map((d) => ({ name: d.name, desc: d.summary, path: `designs/${d.slug}`, icon: d.icon, tag: d.tag })),
   ];
 
   function paintPalette(q = '') {
@@ -1050,6 +1120,7 @@
   function render() {
     const path = currentPath();
     closeNav();
+    asyncToken++;
 
     if (path === '' || path === 'index.html') {
       viewHome();
@@ -1079,6 +1150,10 @@
       } else {
         viewNotFound();
       }
+    } else if (path.startsWith('designs/')) {
+      const slug = path.slice('designs/'.length);
+      const d = designBySlug(slug);
+      d ? viewDoc(d, DESIGNS, 'designs') : viewNotFound();
     } else {
       viewNotFound();
     }
@@ -1100,21 +1175,6 @@
     setDescription(lede);
     $('#toc').innerHTML = '';
 
-    const rows = items
-      .map((it, i) => {
-        const inner = `
-          <span class="row-ico">${icon(it.icon)}</span>
-          <span class="row-body">
-            <span class="row-name">${esc(it.title)}</span>
-            <span class="row-desc">${esc(it.desc)}</span>
-          </span>
-          ${it.tag ? `<span class="row-tag">${esc(it.tag)}</span>` : ''}`;
-        return it.url
-          ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener" style="--i:${i}">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
-          : `<div class="row" style="--i:${i}">${inner}</div>`;
-      })
-      .join('');
-
     $('#view').innerHTML = `
       <div class="view">
         <article>
@@ -1122,7 +1182,7 @@
             <h1 class="doc-h1">${esc(title)}</h1>
             <p class="doc-lede">${esc(lede)}</p>
           </header>
-          ${items.length ? `<div class="index">${rows}</div>` : `<p class="sec-sub">${esc(emptyText)}</p>`}
+          ${items.length ? `<div class="index">${buildRows(items)}</div>` : `<p class="sec-sub">${esc(emptyText)}</p>`}
         </article>
       </div>`;
   }
@@ -1132,11 +1192,61 @@
   }
 
   function viewWritings() {
-    viewListPage('Writings', 'Notes and write-ups on design and building products.', WRITINGS, "Haven't published anything yet — check back soon.");
+    const title = 'Writings';
+    const lede = 'Notes and write-ups on design and building products, live from Medium.';
+    document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
+    $('#toc').innerHTML = '';
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <h1 class="doc-h1">${esc(title)}</h1>
+            <p class="doc-lede">${esc(lede)}</p>
+          </header>
+          <div id="writings-body"><p class="sec-sub">Loading posts from Medium…</p></div>
+        </article>
+      </div>`;
+
+    const token = asyncToken;
+    fetchMediumPosts()
+      .then((posts) => ({ posts, empty: 'Nothing published on Medium yet — check back soon.' }))
+      .catch(() => ({ posts: WRITINGS, empty: "Couldn't load posts from Medium right now — check back soon." }))
+      .then(({ posts, empty }) => {
+        if (token !== asyncToken) return;
+        const body = $('#writings-body');
+        if (!body) return;
+        body.innerHTML = posts.length ? `<div class="index">${buildRows(posts)}</div>` : `<p class="sec-sub">${esc(empty)}</p>`;
+      });
   }
 
   function viewExploring() {
-    viewListPage("Things I'm Exploring", 'Ideas, tools, and topics currently on my radar.', EXPLORING, 'Nothing new to share yet — check back soon.');
+    const title = "Things I'm Exploring";
+    const lede = 'Tools and software in my day-to-day rotation right now.';
+    document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
+    $('#toc').innerHTML = '';
+
+    const chips = EXPLORING.map((t) => {
+      const glyph = t.icon ? icon(t.icon) : esc(t.letter || t.name.charAt(0));
+      const inner = `
+        <span class="tool-chip-ico" style="background:${esc(t.color || 'var(--accent)')}">${glyph}</span>
+        <span class="tool-chip-name">${esc(t.name)}</span>`;
+      return t.url
+        ? `<a class="tool-chip" href="${esc(t.url)}" target="_blank" rel="noopener">${inner}</a>`
+        : `<div class="tool-chip">${inner}</div>`;
+    }).join('');
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <h1 class="doc-h1">${esc(title)}</h1>
+            <p class="doc-lede">${esc(lede)}</p>
+          </header>
+          ${EXPLORING.length ? `<div class="tool-grid">${chips}</div>` : `<p class="sec-sub">Nothing new to share yet — check back soon.</p>`}
+        </article>
+      </div>`;
   }
 
   function viewContact() {
@@ -1246,7 +1356,6 @@
 
   function boot() {
     // topbar icons
-    initTheme();
     $('#menu-btn').innerHTML = icon('menu');
     $('.search-ico').innerHTML = icon('search');
     $('#contact-ico').innerHTML = icon('mail');
@@ -1337,7 +1446,6 @@
     $('#lb').addEventListener('click', closeLB);
 
     initCompareGlobals();
-    initCursor();
 
     // keys
     document.addEventListener('keydown', (e) => {
