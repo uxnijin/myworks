@@ -147,7 +147,7 @@
             <h2>Featured Video</h2>
           </div>
           <p class="sec-sub">A masterclass session from HACA Design School covering design process and principles.</p>
-          <div class="embed" data-embed="https://www.youtube-nocookie.com/embed/taRS6YUVZhM?autoplay=1">
+          <div class="embed" style="max-width: 480px; margin: 16px 0;" data-embed="https://www.youtube-nocookie.com/embed/taRS6YUVZhM?autoplay=1">
             <div class="facade" style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('https://img.youtube.com/vi/taRS6YUVZhM/maxresdefault.jpg') center/cover no-repeat;">
               <div class="facade-inner">
                 <span class="facade-play">${icon('play')}</span>
