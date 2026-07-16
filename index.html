@@ -44,9 +44,16 @@
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
   <script>
-    // Set the theme before first paint so there's no flash.
+    // Set the theme before first paint so there's no flash. A manual
+    // choice from the toggle button (localStorage) wins over the OS
+    // preference; otherwise the OS preference tracks live.
     (() => {
       try {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'light' || stored === 'dark') {
+          document.documentElement.dataset.theme = stored;
+          return;
+        }
         const query = window.matchMedia('(prefers-color-scheme: dark)');
         const update = () => {
           document.documentElement.dataset.theme = query.matches ? 'dark' : 'light';
@@ -80,6 +87,8 @@
       <span class="search-label">Search projects…</span>
       <kbd id="search-kbd">⌘K</kbd>
     </button>
+
+    <button class="icon-btn theme-btn" id="theme-btn" aria-label="Toggle color theme"></button>
 
     <a class="contact-btn" href="/contact" data-link id="contact-btn" aria-label="Contact">
       <span class="contact-ico" id="contact-ico" aria-hidden="true"></span>

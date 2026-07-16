@@ -37,6 +37,35 @@
     if (meta) meta.content = desc;
   }
 
+  // theme toggle: flips the data-theme attribute set by the pre-paint
+  // inline script in index.html, remembers the choice, and briefly forces
+  // every color/border transition on so the swap reads as a fade rather
+  // than a snap.
+  let themeTransitionTimer = null;
+  function setTheme(mode) {
+    document.documentElement.classList.add('theme-transitioning');
+    document.documentElement.dataset.theme = mode;
+    try {
+      localStorage.setItem('theme', mode);
+    } catch {
+      /* storage blocked: theme just won't persist across reloads */
+    }
+    $('#theme-btn').innerHTML = icon(mode === 'dark' ? 'sun' : 'moon');
+    clearTimeout(themeTransitionTimer);
+    themeTransitionTimer = setTimeout(() => {
+      document.documentElement.classList.remove('theme-transitioning');
+    }, 400);
+  }
+
+  function initTheme() {
+    const btn = $('#theme-btn');
+    if (!btn) return;
+    btn.innerHTML = icon(document.documentElement.dataset.theme === 'dark' ? 'sun' : 'moon');
+    btn.addEventListener('click', () => {
+      setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+  }
+
   // fades <img>s in once loaded instead of popping in mid-layout; images
   // already cached by the browser (img.complete) skip straight to visible.
   function initImageFade(root = document) {
@@ -211,8 +240,8 @@
     setDescription(`${PROFILE.tagline} Projects, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
 
     const rows = PROJECTS.map(
-      (p) => `
-      <a class="row" href="${href(`docs/${p.slug}`)}" data-link>
+      (p, i) => `
+      <a class="row" href="${href(`docs/${p.slug}`)}" data-link data-cursor="View" style="--i:${i}">
         <span class="row-ico">${icon(p.icon)}</span>
         <span class="row-body">
           <span class="row-name">${esc(p.name)}</span>
@@ -411,7 +440,7 @@
 
           ${
             p.group === 'Figma Plugins'
-              ? `<div class="doc-hero-thumbnail" style="margin-bottom:40px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); aspect-ratio:16/9; background:var(--bg-subtle);">
+              ? `<div class="doc-hero-thumbnail" data-tilt-3d style="margin-bottom:40px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); aspect-ratio:16/9; background:var(--bg-subtle); transition:transform .3s var(--ease);">
                    <img src="/images/${p.slug}-cover.png" alt="${esc(p.name)} Thumbnail" style="width:100%; height:100%; object-fit:cover; display:block;" />
                  </div>`
               : ''
@@ -515,10 +544,12 @@
   function initCopy() {
     $$('[data-copy]').forEach((btn) => {
       btn.addEventListener('click', async () => {
-        const code = btn.closest('.code')?.querySelector('code');
-        if (!code) return;
+        // a non-empty data-copy value copies itself (e.g. an email address);
+        // the bare attribute (code blocks) copies the adjacent <code>.
+        const text = btn.dataset.copy || btn.closest('.code')?.querySelector('code')?.innerText;
+        if (!text) return;
         try {
-          await navigator.clipboard.writeText(code.innerText);
+          await navigator.clipboard.writeText(text);
           btn.classList.add('done');
           setTimeout(() => btn.classList.remove('done'), 1400);
         } catch {
@@ -591,6 +622,104 @@
         card.style.setProperty('--my', `${e.clientY - r.top}px`);
       });
     });
+  }
+
+  // true on desktop-with-mouse; touch/coarse pointers skip the custom
+  // cursor, magnetic pull, and 3D tilt entirely rather than faking hover.
+  const HOVER_FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // gentle 3D tilt on screenshots/thumbnails, capped well under a full
+  // perspective flip so it reads as "photo on a desk", not a gimmick.
+  function initTilt3D(root = document) {
+    if (!HOVER_FINE) return;
+    const MAX_DEG = 6;
+    $$('[data-tilt-3d]', root).forEach((el) => {
+      if (el.dataset.tilt3dInit) return;
+      el.dataset.tilt3dInit = '1';
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        const ry = (px - 0.5) * MAX_DEG * 2;
+        const rx = (0.5 - py) * MAX_DEG * 2;
+        el.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'perspective(700px) rotateX(0) rotateY(0)';
+      });
+    });
+  }
+
+  // primary buttons drift toward the cursor within a small radius, then
+  // spring back; :active still contributes a press-scale via the same
+  // inline transform so the two effects don't fight over the property.
+  function initMagnetic(root = document) {
+    if (!HOVER_FINE) return;
+    $$('.cta, .search-btn, .contact-btn', root).forEach((btn) => {
+      if (btn.dataset.magnetInit) return;
+      btn.dataset.magnetInit = '1';
+      let mx = 0;
+      let my = 0;
+      let pressed = false;
+      const apply = () => {
+        btn.style.transform = `translate(${mx}px, ${my}px) scale(${pressed ? 0.96 : 1})`;
+      };
+      btn.addEventListener('mousemove', (e) => {
+        const r = btn.getBoundingClientRect();
+        mx = (e.clientX - (r.left + r.width / 2)) * 0.25;
+        my = (e.clientY - (r.top + r.height / 2)) * 0.25;
+        apply();
+      });
+      btn.addEventListener('mouseleave', () => {
+        mx = 0;
+        my = 0;
+        pressed = false;
+        apply();
+      });
+      btn.addEventListener('mousedown', () => {
+        pressed = true;
+        apply();
+      });
+      window.addEventListener('mouseup', () => {
+        pressed = false;
+        apply();
+      });
+    });
+  }
+
+  // custom cursor: a small dot that swells into a ring over links/buttons,
+  // and into a labelled pill where a data-cursor hint is present (e.g. the
+  // project rows say "View", zoomable screenshots say "Zoom").
+  function initCursor() {
+    if (!HOVER_FINE) return;
+    document.documentElement.classList.add('has-custom-cursor');
+    const dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    dot.innerHTML = '<span class="cursor-label"></span>';
+    document.body.appendChild(dot);
+    const label = $('.cursor-label', dot);
+
+    let raf = null;
+    let x = -100;
+    let y = -100;
+    const paint = () => {
+      dot.style.left = `${x}px`;
+      dot.style.top = `${y}px`;
+      raf = null;
+    };
+
+    window.addEventListener('mousemove', (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(paint);
+      const target = e.target.closest('a, button, [data-cursor]');
+      const hint = target?.dataset.cursor;
+      dot.classList.toggle('on-link', !!target);
+      dot.classList.toggle('labeled', !!hint);
+      label.textContent = hint || '';
+    });
+    document.addEventListener('mouseleave', () => dot.classList.add('cursor-hidden'));
+    document.addEventListener('mouseenter', () => dot.classList.remove('cursor-hidden'));
   }
 
   // click-to-load facades keep third-party iframes out until asked
@@ -960,6 +1089,8 @@
     updateCanonical(path);
     initImageFade($('#view'));
     animateHeading($('#view h1'));
+    initTilt3D($('#view'));
+    initMagnetic();
   }
 
   // ------------------------------------------------------------- simple list pages
@@ -970,7 +1101,7 @@
     $('#toc').innerHTML = '';
 
     const rows = items
-      .map((it) => {
+      .map((it, i) => {
         const inner = `
           <span class="row-ico">${icon(it.icon)}</span>
           <span class="row-body">
@@ -979,8 +1110,8 @@
           </span>
           ${it.tag ? `<span class="row-tag">${esc(it.tag)}</span>` : ''}`;
         return it.url
-          ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
-          : `<div class="row">${inner}</div>`;
+          ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener" style="--i:${i}">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
+          : `<div class="row" style="--i:${i}">${inner}</div>`;
       })
       .join('');
 
@@ -1021,13 +1152,18 @@
           </header>
           
           <div class="contact-channels">
-            <a href="mailto:uxnijin@gmail.com" class="channel-card">
-              <span class="channel-ico">${icon('mail')}</span>
-              <div class="channel-info">
-                <span class="channel-label">Email</span>
-                <span class="channel-value">uxnijin@gmail.com</span>
-              </div>
-            </a>
+            <div class="channel-card">
+              <a href="mailto:uxnijin@gmail.com" class="channel-card-main">
+                <span class="channel-ico">${icon('mail')}</span>
+                <div class="channel-info">
+                  <span class="channel-label">Email</span>
+                  <span class="channel-value">uxnijin@gmail.com</span>
+                </div>
+              </a>
+              <button class="copy-btn" type="button" aria-label="Copy email address" data-copy="uxnijin@gmail.com">
+                ${icon('copy', 'copy')}${icon('check', 'check')}
+              </button>
+            </div>
             <a href="https://wa.me/916238417389" target="_blank" rel="noopener" class="channel-card">
               <span class="channel-ico">${icon('whatsapp')}</span>
               <div class="channel-info">
@@ -1054,10 +1190,12 @@
             </div>
             
             <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px;">Send Message</button>
-            <div class="form-status" id="form-status" style="margin-top: 16px; text-align: center; font-weight: 500;"></div>
+            <div class="form-status" id="form-status"></div>
           </form>
         </article>
       </div>`;
+
+    initCopy();
 
     const form = $('#contact-form');
     form?.addEventListener('submit', async (e) => {
@@ -1065,8 +1203,8 @@
       const status = $('#form-status');
       if (!status) return;
 
-      status.textContent = 'Sending...';
-      status.style.color = 'var(--text-muted)';
+      status.className = 'form-status';
+      status.textContent = 'Sending…';
 
       const formData = new FormData(form);
       formData.append('access_key', '09b72f4a-458d-47f1-8e83-1f8d118a6a64');
@@ -1077,15 +1215,15 @@
           body: formData
         });
         if (res.ok) {
-          status.textContent = 'Thank you! Your message has been sent.';
-          status.style.color = 'var(--accent)';
+          status.innerHTML = `${icon('check')}<span>Thank you! Your message has been sent.</span>`;
+          status.className = 'form-status success';
           form.reset();
         } else {
           throw new Error();
         }
       } catch {
         status.textContent = 'Something went wrong. Please try again.';
-        status.style.color = 'var(--danger-9)';
+        status.className = 'form-status error';
       }
     });
   }
@@ -1108,6 +1246,7 @@
 
   function boot() {
     // topbar icons
+    initTheme();
     $('#menu-btn').innerHTML = icon('menu');
     $('.search-ico').innerHTML = icon('search');
     $('#contact-ico').innerHTML = icon('mail');
@@ -1198,6 +1337,7 @@
     $('#lb').addEventListener('click', closeLB);
 
     initCompareGlobals();
+    initCursor();
 
     // keys
     document.addEventListener('keydown', (e) => {

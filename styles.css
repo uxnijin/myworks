@@ -388,7 +388,7 @@ kbd {
   gap: 0;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
 }
 
 .sidebar {
@@ -1246,6 +1246,7 @@ kbd {
   border: 1px solid var(--border);
   background: var(--bg-subtle);
   cursor: zoom-in;
+  transition: transform .3s var(--ease), border-color .2s;
 }
 
 .frame img {
@@ -2161,37 +2162,39 @@ td code {
   margin: 0 0 20px;
 }
 
-/* project index rows */
+/* project index rows: each is its own sticky card, so the list stacks as
+   you scroll past it instead of just scrolling away. --i (set in script.js)
+   staggers each card's stick point and paints later cards over earlier
+   ones. Falls back to plain flow wherever position:sticky isn't honoured. */
 .index {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--bg);
+  gap: 10px;
 }
 
 .row {
-  position: relative;
+  position: sticky;
+  top: calc(var(--topbar-h) + 12px + var(--i, 0) * 10px);
+  z-index: calc(var(--i, 0) + 1);
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 16px 18px;
-  border-bottom: 1px solid var(--border);
-  transition: background .15s;
-}
-
-.row:last-child {
-  border-bottom: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+  transition: background .15s, border-color .15s;
 }
 
 .row::after {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
   width: 2px;
+  border-radius: 2px;
   background: var(--accent);
   transform: scaleY(0);
   transition: transform .25s var(--ease);
@@ -2863,6 +2866,79 @@ img.img-loaded {
   background-size: 100% 1px;
 }
 
+/* ============================================================ THEME TRANSITION */
+/* script.js adds this class for ~400ms around a theme flip so every
+   color/border swap fades instead of snapping, then removes it — so it
+   never interferes with per-component transitions during normal use. */
+
+html.theme-transitioning,
+html.theme-transitioning * {
+  transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease) !important;
+}
+
+/* ============================================================ CUSTOM CURSOR */
+/* Only ever added when script.js detects a fine pointer with real hover,
+   so touch devices never lose their native cursor. */
+
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+html.has-custom-cursor input,
+html.has-custom-cursor textarea {
+  cursor: text !important;
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width .2s var(--ease), height .2s var(--ease), background .2s, border-color .2s, opacity .15s;
+}
+
+.cursor-dot.cursor-hidden {
+  opacity: 0;
+}
+
+.cursor-dot.on-link:not(.labeled) {
+  width: 32px;
+  height: 32px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid var(--accent);
+}
+
+.cursor-dot .cursor-label {
+  display: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.cursor-dot.labeled {
+  width: auto;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--radius-full);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.cursor-dot.labeled .cursor-label {
+  display: block;
+}
+
 /* ============================================================ RESPONSIVE */
 
 @media (max-width: 1279px) {
@@ -3114,7 +3190,77 @@ img.img-loaded {
 .form-status {
   min-height: 20px;
   font-size: 14px;
+  font-weight: 500;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-muted);
   transition: opacity .15s;
+}
+
+.form-status:empty {
+  margin-top: 0;
+  min-height: 0;
+}
+
+.form-status:not(:empty) {
+  animation: rise .3s var(--ease) both;
+}
+
+.form-status.success {
+  color: var(--success-9);
+}
+
+.form-status.success svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  animation: status-pop .4s var(--ease) both;
+}
+
+.form-status.error {
+  color: var(--danger-9);
+  animation: status-shake .4s var(--ease) both;
+}
+
+@keyframes status-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes status-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-6px);
+  }
+
+  40% {
+    transform: translateX(6px);
+  }
+
+  60% {
+    transform: translateX(-4px);
+  }
+
+  80% {
+    transform: translateX(4px);
+  }
 }
 
 /* Contact channels */
@@ -3142,6 +3288,22 @@ img.img-loaded {
 .channel-card:hover {
   border-color: var(--accent);
   background: var(--bg-raised);
+}
+
+/* the email card nests a link (mailto) plus a standalone copy button;
+   the WhatsApp card has no copy button and stays a plain <a class="channel-card"> */
+.channel-card-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.channel-card .copy-btn {
+  color: var(--text-faint);
 }
 
 .channel-ico {

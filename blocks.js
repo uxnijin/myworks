@@ -176,7 +176,7 @@ const renderBlock = (b) => {
         : placeholder(b.alt || 'Screenshot');
       const ratio = b.src ? '' : ` ratio-${b.ratio || '16-9'}`;
       return `<figure class="figure${b.bleed ? ' bleed' : ''}">
-        <div class="frame${ratio}"${b.src ? ' data-zoom' : ''}>${inner}</div>
+        <div class="frame${ratio}"${b.src ? ' data-zoom data-tilt-3d data-cursor="Zoom"' : ''}>${inner}</div>
         ${b.caption ? `<figcaption>${b.caption}</figcaption>` : ''}
       </figure>`;
     }
@@ -184,7 +184,7 @@ const renderBlock = (b) => {
     case 'gallery':
       return `<div class="gallery">${(b.items || [])
         .map(
-          (it) => `<div class="frame"${it.src ? ' data-zoom' : ''}>${
+          (it) => `<div class="frame"${it.src ? ' data-zoom data-tilt-3d data-cursor="Zoom"' : ''}>${
             it.src
               ? `<img src="${esc(it.src)}" alt="${esc(it.alt || '')}" loading="lazy" decoding="async">`
               : placeholder(it.alt || 'Screenshot')
