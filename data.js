@@ -50,6 +50,7 @@ const PROFILE = {
 // ============================================================================
 
 const PROJECTS = [
+  PROJECT_FIGMA_BACKGROUND_REMOVER,
   PROJECT_DESIGN_SYSTEM_EXTRACTOR,
   PROJECT_TASKS_EXTENSION,
   PROJECT_TINTS_AND_SHADES,
