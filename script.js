@@ -144,8 +144,9 @@
 
         <section class="sec">
           <div class="sec-head">
-            <h2>Featured Video</h2>
+            <h2>Videos</h2>
           </div>
+          <p class="sec-sub">Watch sessions and talks from HACA Design School.</p>
           <div class="embed" style="max-width: 480px; margin: 16px 0;">
             <iframe src="https://www.youtube.com/embed/taRS6YUVZhM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
