@@ -3074,7 +3074,7 @@ td code {
 .users-total-num {
   font-family: var(--font-display);
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--accent);
   line-height: 1.1;
 }
@@ -3082,7 +3082,7 @@ td code {
 .users-total-label {
   font-size: 12px;
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .users-list {
@@ -3224,6 +3224,7 @@ td code {
     transform: translateY(16px) scaleY(1.08);
     filter: blur(8px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scaleY(1);
@@ -3237,6 +3238,7 @@ td code {
     transform: translateY(0) scaleY(1);
     filter: blur(0);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-16px) scaleY(0.92);
