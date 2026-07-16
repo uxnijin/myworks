@@ -184,7 +184,7 @@
                 const maxUsers = sortedProjects[0].users || 1;
                 const pct = Math.max(4, Math.round(((p.users || 0) / maxUsers) * 100));
                 return `
-                  <a href="${href(`docs/${p.slug}`)}" class="users-item" data-link style="animation-delay: ${i * 45}ms;">
+                  <a href="${href(`docs/${p.slug}`)}" class="users-item" data-link style="animation-delay: ${i * 20}ms;">
                     <div class="users-item-header">
                       <span class="users-item-icon">${icon(p.icon)}</span>
                       <span class="users-item-name">${esc(p.name)}</span>
@@ -201,6 +201,24 @@
         </details>
       </div>
     `;
+
+    const accordion = $('.users-accordion');
+    const summary = $('summary', accordion);
+    if (accordion && summary) {
+      summary.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (accordion.hasAttribute('open')) {
+          accordion.classList.add('closing');
+          setTimeout(() => {
+            accordion.removeAttribute('open');
+            accordion.classList.remove('closing');
+          }, 500);
+        } else {
+          accordion.setAttribute('open', '');
+        }
+      });
+    }
+
     $('#hero-search')?.addEventListener('click', openPalette);
     renderGitHub();
   }

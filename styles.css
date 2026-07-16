@@ -3202,12 +3202,20 @@ td code {
   transform: rotate(90deg);
 }
 
+.users-accordion.closing .users-chevron {
+  transform: rotate(0deg);
+}
+
 .users-accordion .users-item {
   opacity: 0;
 }
 
 .users-accordion[open] .users-item {
-  animation: revealItem 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: revealItem 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.users-accordion.closing .users-item {
+  animation: hideItem 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes revealItem {
@@ -3220,5 +3228,18 @@ td code {
     opacity: 1;
     transform: translateY(0) scaleY(1);
     filter: blur(0);
+  }
+}
+
+@keyframes hideItem {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(16px) scaleY(1.08);
+    filter: blur(8px);
   }
 }
