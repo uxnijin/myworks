@@ -44,6 +44,7 @@ const PROFILE = {
     { label: 'LinkedIn', url: 'https://linkedin.com/in/nijinmuhammed' },
     { label: 'YouTube', url: 'https://www.youtube.com/@designschoolmalayalam' },
     { label: 'GitHub', url: 'https://github.com/uxnijin' },
+    { label: 'Figma', url: 'https://www.figma.com/@uxnijin' },
   ],
 };
 
