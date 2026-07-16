@@ -3239,7 +3239,7 @@ td code {
   }
   100% {
     opacity: 0;
-    transform: translateY(16px) scaleY(1.08);
+    transform: translateY(-16px) scaleY(0.92);
     filter: blur(8px);
   }
 }

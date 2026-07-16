@@ -207,13 +207,20 @@
     if (accordion && summary) {
       summary.addEventListener('click', (e) => {
         e.preventDefault();
+        const items = $$('.users-item', accordion);
         if (accordion.hasAttribute('open')) {
+          items.forEach((item, idx) => {
+            item.style.animationDelay = `${(items.length - 1 - idx) * 20}ms`;
+          });
           accordion.classList.add('closing');
           setTimeout(() => {
             accordion.removeAttribute('open');
             accordion.classList.remove('closing');
           }, 500);
         } else {
+          items.forEach((item, idx) => {
+            item.style.animationDelay = `${idx * 20}ms`;
+          });
           accordion.setAttribute('open', '');
         }
       });
