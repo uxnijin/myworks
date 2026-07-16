@@ -421,6 +421,7 @@ kbd {
   min-width: 0;
   max-width: var(--reading-w);
   padding: 40px 0 96px;
+  margin-left: 48px;
 }
 
 .toc {
@@ -2838,6 +2839,7 @@ td code {
   .content {
     max-width: 100%;
     padding-top: 32px;
+    margin-left: 0;
   }
 
   .figure.bleed {
