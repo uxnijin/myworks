@@ -178,7 +178,11 @@
     const next = PROJECTS[i + 1];
 
     const filteredBlocks = p.group === 'Figma Plugins'
-      ? p.blocks.filter(b => !(b.t === 'image' && (b.src.includes('thumbnail?resource_id=') || b.src.includes('-cover'))))
+      ? p.blocks.filter(b => {
+          if (b.t === 'image' && (b.src.includes('thumbnail?resource_id=') || b.src.includes('-cover'))) return false;
+          if (b.t === 'p' && b.x.includes('icon?resource_id=')) return false;
+          return true;
+        })
       : p.blocks;
 
     $('#view').innerHTML = `
