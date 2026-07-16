@@ -3541,3 +3541,33 @@ html.theme-transitioning * {
     filter: blur(8px);
   }
 }
+
+/* Medium content styles */
+.Medium-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin: 32px auto;
+  display: block;
+}
+
+.Medium-prose figure {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.Medium-prose figcaption {
+  font-size: 14px;
+  color: var(--text-faint);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+.Medium-prose iframe {
+  max-width: 100%;
+  border: none;
+  border-radius: var(--radius-md);
+  margin: 32px auto;
+  display: block;
+}

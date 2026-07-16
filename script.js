@@ -271,6 +271,9 @@
             <span class="row-desc">${esc(it.desc)}</span>
           </span>
           ${it.tag ? `<span class="row-tag">${esc(it.tag)}</span>` : ''}`;
+        if (it.slug) {
+          return `<a class="row" href="${href(`writings/${it.slug}`)}" data-link>${inner}<span class="row-go"><span>Read</span>${icon('arrowRight')}</span></a>`;
+        }
         return it.url
           ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
           : `<div class="row">${inner}</div>`;
@@ -300,8 +303,10 @@
           return {
             icon: 'book',
             title: item.title,
+            slug: slugify(item.title),
             desc: text.length > 150 ? `${text.slice(0, 150).trim()}…` : text,
             url: item.link,
+            content: item.content || item.description || '',
             tag: item.pubDate
               ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
               : '',
@@ -1130,6 +1135,39 @@
       viewBuilding();
     } else if (path === 'writings') {
       viewWritings();
+    } else if (path.startsWith('writings/')) {
+      const slug = path.slice('writings/'.length);
+      const token = asyncToken;
+      $('#view').innerHTML = `
+        <div class="view">
+          <article>
+            <header class="doc-head">
+              <nav class="crumbs" aria-label="Breadcrumb">
+                <a href="${href('')}" data-link>Index</a>
+                ${icon('chevronRight')}
+                <a href="${href('writings')}" data-link>Writings</a>
+              </nav>
+              <h1 class="doc-h1">Loading article…</h1>
+            </header>
+            <div class="prose"><p>Fetching article content from Medium…</p></div>
+          </article>
+        </div>`;
+      $('#toc').innerHTML = '';
+
+      fetchMediumPosts()
+        .then((posts) => {
+          if (token !== asyncToken) return;
+          const post = posts.find((p) => p.slug === slug);
+          if (post) {
+            viewWriting(post);
+          } else {
+            viewNotFound();
+          }
+        })
+        .catch(() => {
+          if (token !== asyncToken) return;
+          viewNotFound();
+        });
     } else if (path === 'exploring') {
       viewExploring();
     } else if (path.startsWith('docs/')) {
@@ -1218,6 +1256,55 @@
         if (!body) return;
         body.innerHTML = posts.length ? `<div class="index">${buildRows(posts)}</div>` : `<p class="sec-sub">${esc(empty)}</p>`;
       });
+  }
+
+  function viewWriting(post) {
+    document.title = `${post.title} | ${PROFILE.name}`;
+    setDescription(post.desc);
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <nav class="crumbs" aria-label="Breadcrumb">
+              <a href="${href('')}" data-link>Index</a>
+              ${icon('chevronRight')}
+              <a href="${href('writings')}" data-link>Writings</a>
+              ${icon('chevronRight')}
+              <span style="color:var(--text)">${esc(post.title)}</span>
+            </nav>
+            <h1 class="doc-h1">${esc(post.title)}</h1>
+            <div class="doc-meta">
+              ${post.tag ? `<span class="doc-meta-date" style="color:var(--text-faint); font-size:14px;">${esc(post.tag)}</span>` : ''}
+              <div class="doc-meta-actions" style="display:flex; gap:8px; margin-left:auto;">
+                ${
+                  post.url
+                    ? `<a class="cta" href="${esc(post.url)}" target="_blank" rel="noopener">Read on Medium ${icon('external')}</a>`
+                    : ''
+                }
+              </div>
+            </div>
+          </header>
+
+          <div class="prose Medium-prose">${post.content}</div>
+        </article>
+      </div>`;
+
+    // Ensure all h2 and h3 elements inside the Medium content have IDs for TOC
+    $$('.prose h2, .prose h3').forEach((h, idx) => {
+      if (!h.id) {
+        h.id = slugify(h.textContent) || `heading-${idx}`;
+      }
+    });
+
+    renderTOC({
+      name: post.title,
+      productUrl: post.url
+    }, 'writings');
+
+    initCopy();
+    initZoom();
+    initTilt();
   }
 
   function viewExploring() {
