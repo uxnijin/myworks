@@ -464,6 +464,10 @@ kbd {
   margin-top: 20px;
 }
 
+.nav-menu + .nav-title {
+  margin-top: 24px;
+}
+
 .nav-item {
   position: relative;
   width: 100%;
