@@ -143,6 +143,22 @@
         </section>
 
         <section class="sec">
+          <div class="sec-head">
+            <h2>Featured Video</h2>
+          </div>
+          <p class="sec-sub">A masterclass session from HACA Design School covering design process and principles.</p>
+          <div class="embed" data-embed="https://www.youtube-nocookie.com/embed/taRS6YUVZhM?autoplay=1">
+            <div class="facade" style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('https://img.youtube.com/vi/taRS6YUVZhM/maxresdefault.jpg') center/cover no-repeat;">
+              <div class="facade-inner">
+                <span class="facade-play">${icon('play')}</span>
+                <span class="facade-label" style="color: #fff; font-size: 15px; font-weight: 600;">Watch HACA Design School Session</span>
+                <span class="facade-sub" style="color: rgba(255, 255, 255, 0.8); font-size: 12px;">Loads YouTube when you click</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sec">
           <div class="sec-head"><h2>Activity</h2></div>
           <p class="sec-sub">Most of this is the tools above, being built in public.</p>
           <div class="gh" id="gh"><div class="gh-skel">Loading contributions…</div></div>
