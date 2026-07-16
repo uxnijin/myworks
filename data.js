@@ -50,6 +50,7 @@ const PROFILE = {
 // ============================================================================
 
 const PROJECTS = [
+  PROJECT_FIGMA_CMYK_EXPORT,
   PROJECT_FIGMA_BACKGROUND_REMOVER,
   PROJECT_FIGMA_TYPOGRAPHY_CREATOR,
   PROJECT_FIGMA_TABLE_CREATOR,
