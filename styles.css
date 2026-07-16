@@ -422,6 +422,7 @@ kbd {
   top: var(--topbar-h);
   height: calc(100vh - var(--topbar-h));
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 40px 0 48px 32px;
   scrollbar-width: none;
 }
