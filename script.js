@@ -7,6 +7,21 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+  const animateCount = (el, target, duration = 1500) => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const currentValue = Math.floor(easeProgress * target);
+      el.textContent = currentValue.toLocaleString();
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  };
+
   // ------------------------------------------------------------- routing
   // History API when served over http(s); hash fallback for file:// so the
   // site still works when opened straight off disk.
@@ -180,7 +195,7 @@
       <div class="toc-users">
         <h3 class="toc-title">Community Reach</h3>
         <div class="users-total-card">
-          <span class="users-total-num">${totalUsers.toLocaleString()}</span>
+          <span class="users-total-num">0</span>
           <span class="users-total-label">Active Users Combined</span>
         </div>
         <details class="users-accordion">
@@ -198,7 +213,7 @@
                     <div class="users-item-header">
                       <span class="users-item-icon">${icon(p.icon)}</span>
                       <span class="users-item-name">${esc(p.name)}</span>
-                      <span class="users-item-count">${(p.users || 0).toLocaleString()}</span>
+                      <span class="users-item-count" data-val="${p.users || 0}">0</span>
                     </div>
                     <div class="users-item-bar-bg">
                       <div class="users-item-bar" style="width: ${pct}%;"></div>
@@ -211,6 +226,11 @@
         </details>
       </div>
     `;
+
+    const totalNumEl = $('.users-total-num');
+    if (totalNumEl) {
+      animateCount(totalNumEl, totalUsers, 1500);
+    }
 
     const accordion = $('.users-accordion');
     const summary = $('summary', accordion);
@@ -232,6 +252,12 @@
             item.style.animationDelay = `${idx * 20}ms`;
           });
           accordion.setAttribute('open', '');
+          $$('.users-item-count', accordion).forEach((el) => {
+            const val = parseInt(el.dataset.val, 10);
+            if (!isNaN(val)) {
+              animateCount(el, val, 1000);
+            }
+          });
         }
       });
     }
