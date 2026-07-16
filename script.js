@@ -177,6 +177,10 @@
     const prev = PROJECTS[i - 1];
     const next = PROJECTS[i + 1];
 
+    const filteredBlocks = p.group === 'Figma Plugins'
+      ? p.blocks.filter(b => !(b.t === 'image' && (b.src.includes('thumbnail?resource_id=') || b.src.includes('-cover'))))
+      : p.blocks;
+
     $('#view').innerHTML = `
       <div class="view">
         <article>
@@ -188,7 +192,10 @@
               ${icon('chevronRight')}
               <span style="color:var(--text)">${esc(p.name)}</span>
             </nav>
-            <h1 class="doc-h1">${esc(p.name)}</h1>
+            <h1 class="doc-h1" style="display:flex; align-items:center; gap:12px;">
+              ${p.group === 'Figma Plugins' ? `<img src="/images/${p.slug}-logo.png" alt="" style="width:36px; height:36px; border-radius:8px; border:1px solid var(--border); flex-shrink:0;" />` : ''}
+              <span>${esc(p.name)}</span>
+            </h1>
             <p class="doc-lede">${p.lede}</p>
             <div class="doc-meta">
               <div class="doc-meta-actions" style="display:flex; gap:8px;">
@@ -202,7 +209,15 @@
             </div>
           </header>
 
-          <div class="prose">${renderBlocks(p.blocks)}</div>
+          ${
+            p.group === 'Figma Plugins'
+              ? `<div class="doc-hero-thumbnail" style="margin-bottom:40px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); aspect-ratio:16/9; background:var(--bg-subtle);">
+                   <img src="/images/${p.slug}-cover.png" alt="${esc(p.name)} Thumbnail" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                 </div>`
+              : ''
+          }
+
+          <div class="prose">${renderBlocks(filteredBlocks)}</div>
 
           ${
             p.privacyBlocks || p.termsBlocks
