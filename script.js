@@ -194,7 +194,7 @@
               <div class="doc-meta-actions" style="display:flex; gap:8px;">
                 ${
                   p.productUrl || p.url
-                    ? `<a class="cta" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">Open Product ${icon('external')}</a>`
+                    ? `<a class="cta" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${p.group === 'Figma Plugins' ? 'Open in Figma' : 'Open Product'} ${icon('external')}</a>`
                     : ''
                 }
               </div>
