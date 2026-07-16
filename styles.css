@@ -421,7 +421,7 @@ kbd {
   min-width: 0;
   max-width: var(--reading-w);
   padding: 40px 0 96px;
-  margin-left: 48px;
+  margin-left: 28px;
 }
 
 .toc {
@@ -2773,6 +2773,94 @@ td code {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Native crossfade between routes (Chrome/Edge/Safari 18+); script.js only
+   opens a transition when the API exists, so this is additive everywhere
+   else. The incoming view still plays .rise above once it lands in the DOM. */
+::view-transition-old(root) {
+  animation: view-out .2s var(--ease) both;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes view-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
+/* ============================================================ IMAGE LOAD-IN */
+
+img.img-loading {
+  opacity: 0;
+}
+
+img.img-loaded {
+  opacity: 1;
+  transition: opacity .35s var(--ease);
+}
+
+/* ============================================================ TYPOGRAPHY REVEAL */
+
+.word-in {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: word-in .38s var(--ease) both;
+}
+
+@keyframes word-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================ MICRO-INTERACTIONS */
+
+.cta:active,
+.icon-btn:active,
+.search-btn:active,
+.contact-btn:active,
+.row-go:active,
+.channel-card:active {
+  transform: scale(.96);
+}
+
+.socials svg,
+.sidebar-social-link svg,
+.channel-ico svg {
+  transition: transform .2s var(--ease);
+}
+
+.socials a:hover svg,
+.sidebar-social-link:hover svg,
+.channel-card:hover .channel-ico svg {
+  transform: rotate(8deg) scale(1.08);
+}
+
+.doc-footer-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size .25s var(--ease), color .2s;
+}
+
+.doc-footer-link:hover {
+  background-size: 100% 1px;
 }
 
 /* ============================================================ RESPONSIVE */

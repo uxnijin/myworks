@@ -7,6 +7,88 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+  const SITE_URL = 'https://nijin.site';
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // wraps a route render in the View Transitions API where supported, so the
+  // outgoing page crossfades instead of just vanishing; falls back to a bare
+  // call everywhere else (older Safari/Firefox, or reduced-motion users).
+  const withTransition = (fn) => {
+    if (document.startViewTransition && !reduceMotion()) {
+      document.startViewTransition(fn);
+    } else {
+      fn();
+    }
+  };
+
+  function updateCanonical(path) {
+    let link = $('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'canonical';
+      document.head.appendChild(link);
+    }
+    link.href = path ? `${SITE_URL}/${path}` : `${SITE_URL}/`;
+  }
+
+  function setDescription(desc) {
+    if (!desc) return;
+    const meta = $('meta[name="description"]');
+    if (meta) meta.content = desc;
+  }
+
+  // fades <img>s in once loaded instead of popping in mid-layout; images
+  // already cached by the browser (img.complete) skip straight to visible.
+  function initImageFade(root = document) {
+    $$('img', root).forEach((img) => {
+      if (img.dataset.fadeInit || img.closest('#lb')) return;
+      img.dataset.fadeInit = '1';
+      if (img.complete && img.naturalWidth > 0) {
+        img.classList.add('img-loaded');
+        return;
+      }
+      img.classList.add('img-loading');
+      const reveal = () => img.classList.add('img-loaded');
+      img.addEventListener('load', reveal, { once: true });
+      img.addEventListener('error', reveal, { once: true });
+    });
+  }
+
+  // splits a heading's text into per-word spans with a staggered fade+rise,
+  // walking into child elements (e.g. the <em> in the hero h1) so markup
+  // inside the heading survives.
+  function animateHeading(el) {
+    if (!el || reduceMotion()) return;
+    const STAGGER = 28;
+    const MAX_DELAY = 260;
+    let i = 0;
+    const walk = (node) => {
+      [...node.childNodes].forEach((child) => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          if (!child.textContent.trim()) return;
+          const frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach((part) => {
+            if (part === '') return;
+            if (/^\s+$/.test(part)) {
+              frag.appendChild(document.createTextNode(part));
+              return;
+            }
+            const span = document.createElement('span');
+            span.className = 'word-in';
+            span.textContent = part;
+            span.style.animationDelay = `${Math.min(i * STAGGER, MAX_DELAY)}ms`;
+            i++;
+            frag.appendChild(span);
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          walk(child);
+        }
+      });
+    };
+    walk(el);
+  }
+
   const animateCount = (el, target, duration = 1500) => {
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -40,7 +122,7 @@
       replace ? location.replace(url) : (location.hash = `/${path}`);
     } else {
       history[replace ? 'replaceState' : 'pushState']({}, '', url);
-      render();
+      withTransition(render);
     }
   };
 
@@ -126,6 +208,7 @@
 
   function viewHome() {
     document.title = `${PROFILE.name} ${PROFILE.role}`;
+    setDescription(`${PROFILE.tagline} Projects, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
 
     const rows = PROJECTS.map(
       (p) => `
@@ -284,6 +367,7 @@
 
   function viewDoc(p) {
     document.title = `${p.name} | ${PROFILE.name}`;
+    setDescription(p.summary);
 
     const i = PROJECTS.indexOf(p);
     const prev = PROJECTS[i - 1];
@@ -806,6 +890,7 @@
 
   function viewDocSubPage(p, title, blocks) {
     document.title = `${title} | ${p.name} | ${PROFILE.name}`;
+    setDescription(`Legal documentation for ${p.name}.`);
 
     $('#view').innerHTML = `
       <div class="view">
@@ -872,12 +957,16 @@
     renderNav();
     window.scrollTo(0, 0);
     updateProgress();
+    updateCanonical(path);
+    initImageFade($('#view'));
+    animateHeading($('#view h1'));
   }
 
   // ------------------------------------------------------------- simple list pages
 
   function viewListPage(title, lede, items, emptyText) {
     document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
     $('#toc').innerHTML = '';
 
     const rows = items
@@ -921,6 +1010,7 @@
 
   function viewContact() {
     document.title = `Contact | ${PROFILE.name}`;
+    setDescription(`Get in touch with ${PROFILE.name} for collaborations, project inquiries, or just to say hi.`);
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
@@ -1002,6 +1092,7 @@
 
   function viewNotFound() {
     document.title = `Not found | ${PROFILE.name}`;
+    setDescription(`That page doesn't exist; it may have been renamed.`);
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
@@ -1158,8 +1249,8 @@
       { passive: true }
     );
 
-    window.addEventListener('popstate', render);
-    window.addEventListener('hashchange', render);
+    window.addEventListener('popstate', () => withTransition(render));
+    window.addEventListener('hashchange', () => withTransition(render));
 
     render();
   }

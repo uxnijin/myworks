@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://nijin.site/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://nijin.site/building</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://nijin.site/writings</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://nijin.site/exploring</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://nijin.site/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <url><loc>https://nijin.site/docs/figma-contrast-checker</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/figma-cmyk-export</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/figma-background-remover</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/figma-typography-creator</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/figma-table-creator</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <url><loc>https://nijin.site/docs/design-system-extractor</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/design-system-extractor/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://nijin.site/docs/design-system-extractor/terms</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+
+  <url><loc>https://nijin.site/docs/tasks-extension</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/tasks-extension/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://nijin.site/docs/tasks-extension/terms</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+
+  <url><loc>https://nijin.site/docs/tints-and-shades</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/design-school</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/speed-test</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/site-speed-test</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/dns-checker</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/docs/ip-checker</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

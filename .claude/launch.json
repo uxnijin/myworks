@@ -4,8 +4,9 @@
     {
       "name": "portfolio",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-s", "-l", "4321", "."],
-      "port": 4321
+      "runtimeArgs": ["-y", "serve", "-s", "."],
+      "port": 4321,
+      "autoPort": true
     }
   ]
 }
