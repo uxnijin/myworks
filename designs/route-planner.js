@@ -11,7 +11,8 @@ const DESIGN_ROUTE_PLANNER = {
   tag: 'Case Study',
   status: 'Shipped',
   summary: 'Designing the ultimate route planning & delivery experience for India\'s gig-economy drivers.',
-  lede: 'End-to-end product design for a native iOS app that consolidates 5+ delivery tools into one — from route import and optimization to proof-of-delivery and daily performance insights.',
+  lede: 'End-to-end product design AND development for a native iOS app that consolidates 5+ delivery tools into one — from route import and optimisation to proof-of-delivery and daily performance insights. Designed in Figma, then built from scratch in Swift with full mock-data functionality.',
+  tech: ['Swift', 'SwiftUI', 'MapKit', 'Core Data', 'Combine', 'AVFoundation'],
   blocks: [
 
     // ── Meta ──────────────────────────────────────────────────────────────────
@@ -32,6 +33,14 @@ const DESIGN_ROUTE_PLANNER = {
       alt: 'Route Planner hero — app on a bike handlebar at golden hour',
       caption: '[PLACEHOLDER — HERO: Full-width cinematic banner. App running on a phone mounted on a bike handlebar, blurred city street at golden hour. 1920×1080px, MP4 loop or PNG @2x]',
       ratio: '16-9',
+    },
+
+    // ── Swift Badge ───────────────────────────────────────────────────────────
+    {
+      t: 'callout',
+      kind: 'tip',
+      title: 'This app is real — written in Swift, not just designed in Figma.',
+      x: 'Every screen, animation, and interaction you see in this case study was fully built using Swift and SwiftUI. The app runs on a real iOS device with mock delivery data, demonstrating complete end-to-end functionality. Scroll to Section 0 to see the engineering story.',
     },
 
     // ── 1. The Problem Space ──────────────────────────────────────────────────
@@ -513,6 +522,102 @@ const DESIGN_ROUTE_PLANNER = {
       alt: 'Before/After impact infographic',
       caption: '[PLACEHOLDER — IMPACT INFOGRAPHIC: Visually designed infographic — 5 key "Before vs. After" metrics as large-format stat comparisons. Green accents for improvements, brand colours. 1200×600px, PNG 1:1 square]',
       ratio: '2-1',
+    },
+
+    // ── 0. Built in Swift — Not Just a Figma File ────────────────────────────
+    { t: 'h2', x: '0. Built in Swift — Not Just a Figma File' },
+    {
+      t: 'p',
+      x: 'Most portfolio case studies stop at the prototype. This one doesn\'t. After completing the full design in Figma, every screen was coded from scratch in Swift and SwiftUI — complete with real animations, physics-based interactions, haptic patterns, map integration, and a rich mock-data layer that makes the app behave exactly as it would in production.',
+    },
+    {
+      t: 'callout',
+      kind: 'tip',
+      title: 'Design → Code. No handoff. No loss in translation.',
+      x: 'Because the same person who designed every pixel also wrote every line of Swift, there is zero gap between intention and implementation. The spring curves in the spec file are the exact values in the codebase. The haptic map became literal UIFeedbackGenerator calls. The design system tokens became SwiftUI Color extensions.',
+    },
+    {
+      t: 'stats',
+      items: [
+        { v: '6',       l: 'SwiftUI screens built' },
+        { v: '150+',    l: 'Mock delivery stops' },
+        { v: '100%',    l: 'Spec-to-code fidelity' },
+        { v: '0',       l: 'Third-party UI libraries' },
+      ],
+    },
+
+    { t: 'h3', x: 'Tech Stack' },
+    {
+      t: 'cards',
+      items: [
+        { icon: 'code',      title: 'Swift & SwiftUI',    desc: 'Declarative UI across all 6 screens. No UIKit fallbacks except where strictly needed for camera and haptics.' },
+        { icon: 'map',       title: 'MapKit',             desc: 'Custom-styled map canvas, polyline route overlays, numbered squircle annotations, and camera tracking during navigation.' },
+        { icon: 'database',  title: 'Core Data',          desc: 'Persistent storage for routes, stops, and delivery logs — survives app restarts mid-route.' },
+        { icon: 'zap',       title: 'Combine',            desc: 'Reactive data flow between the route optimisation engine, map state, and delivery sheet UI.' },
+        { icon: 'camera',    title: 'AVFoundation',       desc: 'Custom camera viewfinder embedded inline in the delivery sheet for proof-of-delivery photo capture.' },
+        { icon: 'layers',    title: 'Mock Data Engine',   desc: 'A seeded JSON dataset of 150 realistic Indian delivery addresses, customer names, and order references — hot-swappable for production APIs.' },
+      ],
+    },
+
+    { t: 'h3', x: 'How the Mock Data Layer Works' },
+    {
+      t: 'steps',
+      items: [
+        { title: 'Seed file loaded at launch',       desc: 'A bundled <code>mock_routes.json</code> contains 3 pre-built routes with 50 stops each — covering apartment complexes, commercial areas, and residential lanes across Bengaluru and Mumbai.' },
+        { title: 'Decoded into Core Data',            desc: 'Stops are decoded into <code>DeliveryStop</code> managed objects on first launch, giving the app full offline persistence with no backend dependency.' },
+        { title: 'RouteOptimiser runs nearest-neighbour', desc: 'A pure-Swift greedy nearest-neighbour algorithm reorders stops to minimise total travel distance. This is the same logic that would call a real routing API in production.' },
+        { title: 'State machine drives the UI',       desc: 'A <code>RouteSessionStore</code> ObservableObject tracks the active stop, delivery status per stop, and session stats. Every view observes it via <code>@EnvironmentObject</code>.' },
+        { title: 'All flows are fully exercisable',   desc: 'You can import a route, optimise it, navigate stop-by-stop, complete or fail each delivery, capture a photo, and reach the end-of-day summary — all on device, fully offline.' },
+      ],
+    },
+
+    { t: 'h3', x: 'A Taste of the Code' },
+    {
+      t: 'code',
+      file: 'RouteSessionStore.swift',
+      lang: 'swift',
+      x: `// Marks a stop as delivered, triggers haptics, and auto-advances.
+func completeStop(_ stop: DeliveryStop, photo: UIImage?) {
+    withAnimation(.spring(response: 0.50, dampingFraction: 0.86)) {
+        stop.status = .delivered
+        stop.completedAt = Date()
+        if let img = photo {
+            stop.photoProof = img.jpegData(compressionQuality: 0.8)
+        }
+        try? context.save()
+    }
+
+    // Paired haptics — heavy "thud" followed by success pattern
+    let impact = UIImpactFeedbackGenerator(style: .heavy)
+    let notify  = UINotificationFeedbackGenerator()
+    impact.impactOccurred()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
+        notify.notificationOccurred(.success)
+    }
+
+    advanceToNextStop()
+}`,
+    },
+
+    { t: 'h3', x: 'Screens Built in Swift' },
+    {
+      t: 'table',
+      head: ['Screen', 'Key SwiftUI Techniques'],
+      rows: [
+        ['Home Screen',              'LazyVStack, matched geometry transitions, shimmer modifier via PhaseAnimator'],
+        ['Import & Scan Sheet',      'AVCaptureSession in a UIViewRepresentable, custom laser overlay via Canvas, inline validation state machine'],
+        ['Route Preview Map',        'MapKit MKPolylineRenderer, custom MKAnnotationView, UISlider for before/after comparison'],
+        ['Active Navigation',        'MapCameraPosition tracking, glassmorphic .ultraThinMaterial bottom sheet, live progress bar'],
+        ['Delivery Completion Sheet', 'Custom DragGesture swipe-to-complete, gradient fill via GeometryReader, AVCapturePhoto inline'],
+        ['Daily Summary',            'CAShapeLayer completion ring via UIViewRepresentable, TimelineView counter animation, shareable snapshot via ImageRenderer'],
+      ],
+    },
+    {
+      t: 'image',
+      src: '',
+      alt: 'App running on device — all 6 screens',
+      caption: '[PLACEHOLDER — DEVICE RECORDING: Screen recording of the full app running on iPhone — import → optimise → navigate → complete → summary. Portrait 390×844px, MP4, 60fps]',
+      ratio: '9-16',
     },
 
     // ── 12. Lessons Learned ──────────────────────────────────────────────────
