@@ -225,9 +225,8 @@
 
     const link = (h, ico, label, active, ext) => `
       <li>
-        <a class="nav-item${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${
-      active ? ' aria-current="page"' : ''
-    }>
+        <a class="nav-item${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${active ? ' aria-current="page"' : ''
+      }>
           <span class="nav-icon">${icon(ico)}</span>
           <span class="nav-label">${esc(label)}</span>
           ${ext ? `<span class="nav-ext">${icon('external')}</span>` : ''}
@@ -452,13 +451,13 @@
           <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}</span>
           <span class="socials">
             ${PROFILE.links
-              .map(
-                (l) =>
-                  `<a href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)}">${icon(
-                    (l.label || '').toLowerCase()
-                  )}</a>`
-              )
-              .join('')}
+        .map(
+          (l) =>
+            `<a href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)}">${icon(
+              (l.label || '').toLowerCase()
+            )}</a>`
+        )
+        .join('')}
           </span>
         </footer>
       </div>`;
@@ -480,10 +479,10 @@
           </summary>
           <div class="users-list">
             ${sortedProjects
-              .map((p, i) => {
-                const maxUsers = sortedProjects[0].users || 1;
-                const pct = Math.max(4, Math.round(((p.users || 0) / maxUsers) * 100));
-                return `
+        .map((p, i) => {
+          const maxUsers = sortedProjects[0].users || 1;
+          const pct = Math.max(4, Math.round(((p.users || 0) / maxUsers) * 100));
+          return `
                   <a href="${href(`docs/${p.slug}`)}" class="users-item" data-link style="animation-delay: ${i * 20}ms;">
                     <div class="users-item-header">
                       <span class="users-item-icon">${icon(p.icon)}</span>
@@ -495,8 +494,8 @@
                     </div>
                   </a>
                 `;
-              })
-              .join('')}
+        })
+        .join('')}
           </div>
         </details>
       </div>
@@ -621,10 +620,10 @@
 
     const filteredBlocks = p.group === 'Figma Plugins'
       ? p.blocks.filter(b => {
-          if (b.t === 'image' && (b.src.includes('thumbnail?resource_id=') || b.src.includes('-cover'))) return false;
-          if (b.t === 'p' && b.x.includes('icon?resource_id=')) return false;
-          return true;
-        })
+        if (b.t === 'image' && (b.src.includes('thumbnail?resource_id=') || b.src.includes('-cover'))) return false;
+        if (b.t === 'p' && b.x.includes('icon?resource_id=')) return false;
+        return true;
+      })
       : p.blocks;
 
     $('#view').innerHTML = `
@@ -645,52 +644,47 @@
             <p class="doc-lede">${p.lede}</p>
             <div class="doc-meta">
               <div class="doc-meta-actions" style="display:flex; gap:8px;">
-                ${
-                  p.productUrl || p.url
-                    ? `<a class="cta" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${p.group === 'Figma Plugins' ? 'Open in Figma' : 'Open Product'} ${icon('external')}</a>`
-                    : ''
-                }
+                ${p.productUrl || p.url
+        ? `<a class="cta" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${p.group === 'Figma Plugins' ? 'Open in Figma' : 'Open Product'} ${icon('external')}</a>`
+        : ''
+      }
               </div>
               ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}" style="margin-left:auto;"><span class="dot"></span>${esc(p.status)}</span>` : ''}
             </div>
           </header>
 
-          ${
-            p.group === 'Figma Plugins'
-              ? `<div class="doc-hero-thumbnail" data-tilt-3d style="margin-bottom:40px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); aspect-ratio:16/9; background:var(--bg-subtle); transition:transform .3s var(--ease);">
+          ${p.group === 'Figma Plugins'
+        ? `<div class="doc-hero-thumbnail" data-tilt-3d style="margin-bottom:40px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); aspect-ratio:16/9; background:var(--bg-subtle); transition:transform .3s var(--ease);">
                    <img src="/images/${p.slug}-cover.png" alt="${esc(p.name)} Thumbnail" style="width:100%; height:100%; object-fit:cover; display:block;" />
                  </div>`
-              : ''
-          }
+        : ''
+      }
 
           <div class="prose">${renderBlocks(filteredBlocks)}</div>
 
-          ${
-            p.privacyBlocks || p.termsBlocks
-              ? `<div class="doc-footer-links">
+          ${p.privacyBlocks || p.termsBlocks
+        ? `<div class="doc-footer-links">
                    ${p.privacyBlocks ? `<a class="doc-footer-link" href="${href(`${basePath}/${p.slug}/privacy`)}" data-link>Privacy Policy</a>` : ''}
                    ${p.termsBlocks ? `<a class="doc-footer-link" href="${href(`${basePath}/${p.slug}/terms`)}" data-link>Terms of Service</a>` : ''}
                  </div>`
-              : ''
-          }
+        : ''
+      }
 
           <nav class="page-nav" aria-label="Pagination">
-            ${
-              prev
-                ? `<a class="page-nav-link prev" href="${href(`${basePath}/${prev.slug}`)}" data-link>
+            ${prev
+        ? `<a class="page-nav-link prev" href="${href(`${basePath}/${prev.slug}`)}" data-link>
                      <span class="page-nav-dir">${icon('chevronLeft')} Previous</span>
                      <span class="page-nav-name">${esc(prev.name)}</span>
                    </a>`
-                : '<span></span>'
-            }
-            ${
-              next
-                ? `<a class="page-nav-link next" href="${href(`${basePath}/${next.slug}`)}" data-link>
+        : '<span></span>'
+      }
+            ${next
+        ? `<a class="page-nav-link next" href="${href(`${basePath}/${next.slug}`)}" data-link>
                      <span class="page-nav-dir">Next ${icon('chevronRight')}</span>
                      <span class="page-nav-name">${esc(next.name)}</span>
                    </a>`
-                : ''
-            }
+        : ''
+      }
           </nav>
         </article>
       </div>`;
@@ -718,13 +712,12 @@
       <p class="toc-title">On this page</p>
       <ul class="toc-list">
         ${heads
-          .map(
-            (h) =>
-              `<li><a class="toc-link lvl-${h.tagName === 'H3' ? 3 : 2}" href="#${h.id}" data-toc="${h.id}">${
-                h.textContent.replace(/^#/, '').trim()
-              }</a></li>`
-          )
-          .join('')}
+        .map(
+          (h) =>
+            `<li><a class="toc-link lvl-${h.tagName === 'H3' ? 3 : 2}" href="#${h.id}" data-toc="${h.id}">${h.textContent.replace(/^#/, '').trim()
+            }</a></li>`
+        )
+        .join('')}
         ${p.privacyBlocks ? `<li><a class="toc-link lvl-2${path === `${basePath}/${p.slug}/privacy` ? ' active' : ''}" href="${href(`${basePath}/${p.slug}/privacy`)}" data-link>Privacy Policy</a></li>` : ''}
         ${p.termsBlocks ? `<li><a class="toc-link lvl-2${path === `${basePath}/${p.slug}/terms` ? ' active' : ''}" href="${href(`${basePath}/${p.slug}/terms`)}" data-link>Terms of Service</a></li>` : ''}
       </ul>
@@ -989,27 +982,11 @@
     const weeks = (data.contributions || []).filter((w) => Array.isArray(w) && w.length);
     if (!weeks.length) throw new Error('unexpected shape');
 
-    // Filter to last 3 months
-    let latestDate = new Date();
-    if (weeks.length > 0) {
-      const lastWeek = weeks[weeks.length - 1];
-      if (lastWeek.length > 0) {
-        latestDate = new Date(lastWeek[lastWeek.length - 1].date);
-      }
-    }
-    const cutoffDate = new Date(latestDate);
-    cutoffDate.setMonth(cutoffDate.getMonth() - 3);
-
-    const filteredWeeks = weeks.filter((w) => {
-      const lastDay = w[w.length - 1];
-      return new Date(lastDay.date) >= cutoffDate;
-    });
-
-    const total = filteredWeeks.reduce((sum, w) => sum + w.reduce((s, d) => s + (d.contributionCount || 0), 0), 0);
+    const total = data.totalContributions || 0;
 
     let months = '';
     let last = -1;
-    filteredWeeks.forEach((w, col) => {
+    weeks.forEach((w, col) => {
       const d = new Date(w[0].date);
       if (d.getMonth() !== last) {
         months += `<span style="grid-column-start:${col + 1}">${MONTHS[d.getMonth()]}</span>`;
@@ -1017,7 +994,7 @@
       }
     });
 
-    const cells = filteredWeeks
+    const cells = weeks
       .map((w) =>
         w
           .map((d) => {
@@ -1041,14 +1018,14 @@
           ${icon('github')}
           <a href="https://github.com/${esc(PROFILE.github)}" target="_blank" rel="noopener">@${esc(PROFILE.github)}</a>
         </h3>
-        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last 3 months</span>
+        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last year</span>
       </div>
       <div class="gh-scroll">
         <div class="gh-wrap">
-          <div class="gh-months" style="grid-template-columns:repeat(${filteredWeeks.length},1fr)">${months}</div>
+          <div class="gh-months" style="grid-template-columns:repeat(${weeks.length},1fr)">${months}</div>
           <div class="gh-body">
             <div class="gh-days"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-            <div class="gh-grid" style="grid-template-columns:repeat(${filteredWeeks.length},1fr)">${cells}</div>
+            <div class="gh-grid" style="grid-template-columns:repeat(${weeks.length},1fr)">${cells}</div>
           </div>
         </div>
       </div>
@@ -1401,11 +1378,10 @@
             <div class="doc-meta">
               ${post.tag ? `<span class="doc-meta-date" style="color:var(--text-faint); font-size:14px;">${esc(post.tag)}</span>` : ''}
               <div class="doc-meta-actions" style="display:flex; gap:8px; margin-left:auto;">
-                ${
-                  post.url
-                    ? `<a class="cta" href="${esc(post.url)}" target="_blank" rel="noopener">Read on Medium ${icon('external')}</a>`
-                    : ''
-                }
+                ${post.url
+        ? `<a class="cta" href="${esc(post.url)}" target="_blank" rel="noopener">Read on Medium ${icon('external')}</a>`
+        : ''
+      }
               </div>
             </div>
           </header>

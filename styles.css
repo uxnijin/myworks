@@ -466,11 +466,11 @@ kbd {
   gap: 2px;
 }
 
-.nav-menu + .nav-menu {
+.nav-menu+.nav-menu {
   margin-top: 20px;
 }
 
-.nav-menu + .nav-title {
+.nav-menu+.nav-title {
   margin-top: 24px;
 }
 
@@ -2471,7 +2471,7 @@ a.sec-count:hover {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  width: 100%;
+  min-width: 660px;
 }
 
 .gh-months {
@@ -3281,7 +3281,9 @@ html.theme-transitioning * {
 }
 
 @keyframes status-shake {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
 
