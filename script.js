@@ -341,7 +341,7 @@
             </span>
           </div>
 
-          <h1>${esc(PROFILE.tagline).replace('documented.', '<em>documented.</em>')}</h1>
+          <h1>${esc(PROFILE.tagline).replace('documented.', '<span class="rotating-word-wrapper"><em class="rotating-word active" style="position: relative;">documented.</em></span>')}</h1>
           <p class="hero-lede">${PROFILE.bio}</p>
           ${PROFILE.intro ? `<p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>` : ''}
 
@@ -499,6 +499,70 @@
           ? buildRows(posts)
           : `<p class="sec-sub">Haven't published anything yet — check back soon.</p>`;
       });
+
+    initRotatingHeadline();
+  }
+
+  function initRotatingHeadline() {
+    const wrapper = $('.rotating-word-wrapper');
+    if (!wrapper) return;
+
+    const words = [
+      'documented.', 'crafted.', 'refined.', 'tested.', 'validated.', 'polished.', 'shipped.',
+      'thoughtful.', 'intentional.', 'practical.', 'reliable.', 'human.', 'curious.', 'simple.',
+      'useful.', 'measurable.', 'scalable.', 'accessible.', 'maintainable.', 'production-ready.',
+      'user-first.', 'research-driven.', 'data-backed.', 'shipped.', 'validated.', 'refined.',
+      'scalable.', 'practical.', 'intentional.', 'production-ready.', 'done right.', 'for products.',
+      'without fluff.', 'that ships.'
+    ];
+
+    let currentIndex = 0;
+
+    const intervalId = setInterval(() => {
+      if (!document.body.contains(wrapper)) {
+        clearInterval(intervalId);
+        return;
+      }
+
+      const currentSpan = wrapper.querySelector('.rotating-word.active');
+      if (!currentSpan) return;
+
+      currentIndex = (currentIndex + 1) % words.length;
+      const nextWord = words[currentIndex];
+
+      const currentWidth = currentSpan.offsetWidth;
+
+      const newSpan = document.createElement('em');
+      newSpan.className = 'rotating-word enter';
+      newSpan.style.position = 'absolute';
+      newSpan.style.left = '0';
+      newSpan.style.top = '0';
+      newSpan.textContent = nextWord;
+      wrapper.appendChild(newSpan);
+
+      const newWidth = newSpan.offsetWidth;
+
+      wrapper.style.width = `${currentWidth}px`;
+
+      wrapper.offsetHeight; // force reflow
+
+      currentSpan.classList.remove('active');
+      currentSpan.classList.add('exit');
+
+      newSpan.classList.remove('enter');
+      newSpan.classList.add('active');
+
+      wrapper.style.width = `${newWidth}px`;
+
+      setTimeout(() => {
+        if (!document.body.contains(wrapper)) return;
+        currentSpan.remove();
+        newSpan.style.position = 'relative';
+        newSpan.style.left = '';
+        newSpan.style.top = '';
+        wrapper.style.width = '';
+      }, 600);
+    }, 4000);
   }
 
   // ------------------------------------------------------------- doc view

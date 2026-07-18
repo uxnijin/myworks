@@ -2105,6 +2105,36 @@ td code {
   color: var(--accent);
 }
 
+.rotating-word-wrapper {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: baseline;
+  transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rotating-word {
+  display: inline-block;
+  white-space: nowrap;
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1), opacity 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.rotating-word.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.rotating-word.enter {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.rotating-word.exit {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
 .hero-lede {
   font-size: 19px;
   line-height: 1.65;
