@@ -572,8 +572,7 @@ kbd {
 }
 
 .nav-submenu .nav-item .nav-icon {
-  width: 15px;
-  height: 15px;
+  display: none;
 }
 
 .sidebar-socials {

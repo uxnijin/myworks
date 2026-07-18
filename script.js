@@ -223,11 +223,11 @@
     const productGroups = groupBy(PROJECTS, (p) => p.group || 'Projects');
     const designGroups = groupBy(DESIGNS, (d) => d.category || 'Design', ['Mobile App', 'Web']);
 
-    const link = (h, ico, label, active, ext) => `
+    const link = (h, ico, label, active, ext, showIcon = true) => `
       <li>
         <a class="nav-item${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${active ? ' aria-current="page"' : ''
       }>
-          <span class="nav-icon">${icon(ico)}</span>
+          ${showIcon ? `<span class="nav-icon">${icon(ico)}</span>` : ''}
           <span class="nav-label">${esc(label)}</span>
           ${ext ? `<span class="nav-ext">${icon('external')}</span>` : ''}
         </a>
@@ -237,7 +237,7 @@
       .map((g) => {
         const isOpen = expandedGroups.has(g.name);
         const itemsHtml = g.items
-          .map((it) => link(href(`${basePath}/${it.slug}`), it.icon, it.name, path === `${basePath}/${it.slug}`))
+          .map((it) => link(href(`${basePath}/${it.slug}`), it.icon, it.name, path === `${basePath}/${it.slug}`, false, false))
           .join('');
         return `
           <li>
