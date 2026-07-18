@@ -239,7 +239,11 @@
         const itemsHtml = g.items
           .map((it) => link(href(`${basePath}/${it.slug}`), it.icon, it.name, path === `${basePath}/${it.slug}`, false, false))
           .join('');
-        const grpIcon = g.name === 'Mobile App' ? 'smartphone' : (g.items[0]?.icon || 'layers');
+        const groupIcons = {
+          'Mobile App': 'smartphone',
+          'Resources': 'file',
+        };
+        const grpIcon = groupIcons[g.name] || g.items[0]?.icon || 'layers';
         return `
           <li>
             <button type="button" class="nav-item${isOpen ? ' open' : ''}" data-toggle-group="${esc(g.name)}" aria-expanded="${isOpen}">
