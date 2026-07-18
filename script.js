@@ -741,7 +741,7 @@
   // perspective flip so it reads as "photo on a desk", not a gimmick.
   function initTilt3D(root = document) {
     if (!HOVER_FINE) return;
-    const MAX_DEG = 6;
+    const MAX_DEG = 2;
     $$('[data-tilt-3d]', root).forEach((el) => {
       if (el.dataset.tilt3dInit) return;
       el.dataset.tilt3dInit = '1';
