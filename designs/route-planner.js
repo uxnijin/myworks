@@ -1,17 +1,17 @@
 // ============================================================================
-//  Route Planner — Co-Pilot for the Last Mile
+//  Route Planner: Last-Mile Delivery App
 //  Mobile App Design Case Study
 // ============================================================================
 
 const DESIGN_ROUTE_PLANNER = {
   slug: 'route-planner',
-  name: 'Route Planner — Co-Pilot for the Last Mile',
+  name: 'Route Planner: Last-Mile Delivery App',
   category: 'Mobile App',
   icon: 'map',
   tag: 'Case Study',
   status: 'Shipped',
   summary: 'Designing the ultimate route planning & delivery experience for India\'s gig-economy drivers.',
-  lede: 'End-to-end product design AND development for a native iOS app that consolidates 5+ delivery tools into one — from route import and optimisation to proof-of-delivery and daily performance insights. Designed in Figma, then built from scratch in Swift with full mock-data functionality.',
+  lede: 'End-to-end product design AND development for a native iOS app that consolidates 5+ delivery tools into one, from route import and optimisation to proof-of-delivery and daily performance insights. Designed in Figma, then built from scratch in Swift with full mock-data functionality.',
   tech: ['Swift', 'SwiftUI', 'MapKit', 'Core Data', 'Combine', 'AVFoundation'],
   blocks: [
 
@@ -19,7 +19,7 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'meta',
       items: [
-        { label: 'Role',     value: 'Lead Product Designer — End-to-End' },
+        { label: 'Role',     value: 'Lead Product Designer (End-to-End)' },
         { label: 'Platform', value: 'Native iOS' },
         { label: 'Timeline', value: '6 Weeks' },
         { label: 'Industry', value: 'Logistics / Last-Mile Delivery' },
@@ -38,7 +38,7 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'callout',
       kind: 'tip',
-      title: 'This app is real — written in Swift, not just designed in Figma.',
+      title: 'This app is real: written in Swift, not just designed in Figma.',
       x: 'Every screen, animation, and interaction you see in this case study was fully built using Swift and SwiftUI. The app runs on a real iOS device with mock delivery data, demonstrating complete end-to-end functionality. Scroll to Section 0 to see the engineering story.',
     },
 
@@ -95,12 +95,12 @@ const DESIGN_ROUTE_PLANNER = {
       t: 'callout',
       kind: 'tip',
       title: 'Our Opportunity',
-      x: 'Build the "just right" tool — powerful enough to replace 5 apps but simple enough to learn in one shift.',
+      x: 'Build the "just right" tool: powerful enough to replace 5 apps but simple enough to learn in one shift.',
     },
     {
       t: 'image',
       src: '/route-planner-assets/competitive_matrix.png',
-      alt: '2×2 matrix — "Complexity (Simple → Enterprise)" vs "Completeness (Navigation-only → Full Workflow)". Our product in the top-left sweet spot.',
+      alt: '2x2 matrix showing Complexity (Simple vs. Enterprise) against Completeness (Navigation-only vs. Full Workflow).',
       ratio: '1-1',
     },
 
@@ -122,7 +122,7 @@ const DESIGN_ROUTE_PLANNER = {
         { icon: 'hand',        title: 'The One-Thumb Rule',     desc: 'Every driver operated their phone one-handed. All critical actions must be reachable by a single thumb in the bottom 40% of the screen.' },
         { icon: 'sun',         title: 'The Glare Problem',      desc: 'Standard light-mode interfaces became unreadable in direct Indian summer sunlight. Dark-first + high-contrast is a safety requirement, not a style choice.' },
         { icon: 'volumeX',     title: 'Sound Is Useless',       desc: 'Traffic noise meant audio alerts were consistently missed. Haptic feedback is the primary notification channel.' },
-        { icon: 'alertCircle', title: 'Address Chaos',          desc: '34% of addresses were incomplete or ambiguous — missing block numbers, landmark-only descriptions, multilingual text.' },
+        { icon: 'alertCircle', title: 'Address Chaos',          desc: '34% of addresses were incomplete or ambiguous, missing block numbers, landmark-only descriptions, or multilingual text.' },
         { icon: 'cpu',         title: 'The Memory Tax',         desc: 'Drivers memorise 3–4 next stops to avoid unlocking their phone. The app must proactively push what\'s next.' },
       ],
     },
@@ -141,12 +141,12 @@ const DESIGN_ROUTE_PLANNER = {
 
     // ── 4. Personas & User Journey ───────────────────────────────────────────
     { t: 'h2', x: '4. Personas & User Journey' },
-    { t: 'h3', x: 'Primary Persona — Ramesh Kumar, Solo Gig Rider' },
+    { t: 'h3', x: 'Primary Persona: Ramesh Kumar, Solo Gig Rider' },
     {
       t: 'callout',
       kind: 'info',
       title: '"Bro, if the app just tells me where to go and takes the delivery photo right there — life would be so much easier."',
-      x: '— Ramesh Kumar, 26, Bengaluru. 80–160 deliveries/day on a Redmi Note 11. Core frustration: wrong addresses, app-switching, no daily summary.',
+      x: 'Ramesh Kumar, 26, Bengaluru. 80–160 deliveries/day on a Redmi Note 11. Core frustration: wrong addresses, app-switching, no daily summary.',
     },
     {
       t: 'table',
@@ -167,7 +167,7 @@ const DESIGN_ROUTE_PLANNER = {
       alt: 'Persona card with Ramesh\'s illustration, bio stats, a quote, and a "day in the life" timeline strip',
       ratio: '16-9',
     },
-    { t: 'h3', x: 'Secondary Persona — Priya Nair, Small Fleet Manager' },
+    { t: 'h3', x: 'Secondary Persona: Priya Nair, Small Fleet Manager' },
     {
       t: 'table',
       head: ['Attribute', 'Detail'],
@@ -206,8 +206,8 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'cards',
       items: [
-        { icon: 'eye',        title: 'Peripheral Vision First',    desc: 'Information must be scannable at a glance — colour, size, and spatial position replace text labels wherever possible.' },
-        { icon: 'zap',        title: 'Physical-World Physics',     desc: 'All animations use spring curves — heavy enough to feel intentional. Completing a delivery triggers paired haptic .heavy + .success.' },
+        { icon: 'eye',        title: 'Peripheral Vision First',    desc: 'Information must be scannable at a glance. Colour, size, and spatial position replace text labels wherever possible.' },
+        { icon: 'zap',        title: 'Physical-World Physics',     desc: 'All animations use spring curves that are heavy enough to feel intentional. Completing a delivery triggers paired haptic .heavy + .success.' },
         { icon: 'refreshCw',  title: 'Zero Dead Ends',             desc: 'Every action has a clear recovery path. "Mark as Delivered" can be undone for 30 seconds. No destructive actions without undo.' },
         { icon: 'moon',       title: 'Dark-First, Light-Adaptive', desc: 'Designed in dark mode first, then adapted to light. Light mode uses #F5F7FA (not pure white) to reduce glare in direct sunlight.' },
       ],
@@ -235,7 +235,7 @@ const DESIGN_ROUTE_PLANNER = {
     { t: 'h3', x: 'Flow 2: Active Delivery Stop Completion' },
     {
       t: 'p',
-      x: 'Goal: complete a delivery — including proof photo — in under 10 seconds. GPS auto-detects arrival within 50 m → Arrival Card slides up → Swipe-to-Complete → inline Camera Quick-Sheet → snap photo → Success animation + haptic → auto-advance to next stop. Failed delivery: tap red button → reason code sheet → optional photo/note → log & advance.',
+      x: 'Goal: complete a delivery, including proof photo, in under 10 seconds. GPS auto-detects arrival within 50 m → Arrival Card slides up → Swipe-to-Complete → inline Camera Quick-Sheet → snap photo → Success animation + haptic → auto-advance to next stop. Failed delivery: tap red button → reason code sheet → optional photo/note → log & advance.',
     },
     {
       t: 'image',
@@ -273,7 +273,7 @@ const DESIGN_ROUTE_PLANNER = {
     { t: 'h3', x: 'Screen 2 — Route Import & Scanning' },
     {
       t: 'p',
-      x: 'The Bottom Sheet pattern maintains spatial context (map visible behind). Scan Mode uses a full-screen camera with a custom scanning overlay — a bright #3D7DFF laser line sweeps the frame. Address validation happens inline: valid addresses show a green ✓, unresolvable ones show a red ⚠ with a fix prompt. Shimmer loading states prevent the UI from feeling stuck.',
+      x: 'The Bottom Sheet pattern maintains spatial context (map visible behind). Scan Mode uses a full-screen camera with a custom scanning overlay. A bright #3D7DFF laser line sweeps the frame. Address validation happens inline: valid addresses show a green ✓, unresolvable ones show a red ⚠ with a fix prompt. Shimmer loading states prevent the UI from feeling stuck.',
     },
     {
       t: 'gallery',
@@ -281,7 +281,7 @@ const DESIGN_ROUTE_PLANNER = {
         { src: '', alt: 'Empty import bottom sheet' },
         { src: '', alt: 'Scanning camera with laser animation' },
         { src: '', alt: 'Populated address list with mixed valid/invalid states' },
-        { src: '', alt: 'All addresses resolved — ready to optimise state' },
+        { src: '', alt: 'All addresses resolved and ready to optimise state' },
       ],
     },
     {
@@ -306,7 +306,7 @@ const DESIGN_ROUTE_PLANNER = {
     { t: 'h3', x: 'Screen 4 — Active Navigation View' },
     {
       t: 'p',
-      x: 'The most critical screen — drivers look at this 90% of their working day. Minimalist top card shows only turn instruction, distance, and street name. A thin animated blue progress bar tracks delivery progress. Glassmorphic bottom card (.ultraThinMaterial) shows customer name, address, and Complete / Failed action buttons. "Open in Maps" pill lets drivers launch their preferred navigation engine.',
+      x: 'The most critical screen. Drivers look at this 90% of their working day. Minimalist top card shows only turn instruction, distance, and street name. A thin animated blue progress bar tracks delivery progress. Glassmorphic bottom card (.ultraThinMaterial) shows customer name, address, and Complete / Failed action buttons. "Open in Maps" pill lets drivers launch their preferred navigation engine.',
     },
     {
       t: 'image',
@@ -318,14 +318,14 @@ const DESIGN_ROUTE_PLANNER = {
     { t: 'h3', x: 'Screen 5 — Delivery Completion Sheet' },
     {
       t: 'p',
-      x: 'Swipe-to-Complete: a draggable slider (not a button) prevents accidental completion while handling packages. Gradient fill (#30D158 → #1FA347) builds as the user drags. Inline Camera expands the sheet to a compact viewfinder — driver never leaves the screen. Failed reason codes are a grid of colored chips — red-tinted with clear labels.',
+      x: 'Swipe-to-Complete: a draggable slider (not a button) prevents accidental completion while handling packages. Gradient fill (#30D158 → #1FA347) builds as the user drags. Inline Camera expands the sheet to a compact viewfinder so the driver never leaves the screen. Failed reason codes are a grid of colored chips, red-tinted with clear labels.',
     },
     {
       t: 'gallery',
       items: [
         { src: '', alt: 'Swipe-to-complete at rest' },
         { src: '', alt: 'Mid-swipe with fill animation' },
-        { src: '', alt: 'Success state — green checkmark and micro-animation' },
+        { src: '', alt: 'Success state with a green checkmark and micro-animation' },
       ],
     },
     {
@@ -338,7 +338,7 @@ const DESIGN_ROUTE_PLANNER = {
     { t: 'h3', x: 'Screen 6 — Daily Summary / End-of-Shift Celebration' },
     {
       t: 'p',
-      x: 'Full-screen celebration gradient (#4D8BFF → #6C5CE7 → #B06CE7). All numbers count up using a Bouncy spring curve. Circular completion ring draws itself via CAShapeLayer path animation. The single most impactful metric — "You saved X hours today" — is displayed at twice the font size of other stats. Share button generates a shareable image card for WhatsApp.',
+      x: 'Full-screen celebration gradient (#4D8BFF → #6C5CE7 → #B06CE7). All numbers count up using a Bouncy spring curve. Circular completion ring draws itself via CAShapeLayer path animation. The single most impactful metric, "You saved X hours today", is displayed at twice the font size of other stats. Share button generates a shareable image card for WhatsApp.',
     },
     {
       t: 'image',
@@ -427,7 +427,7 @@ const DESIGN_ROUTE_PLANNER = {
       rows: [
         ['Tap any button',               '.light impact',              'Subtle acknowledgement'],
         ['Drag swipe-to-complete',        '.rigid as it snaps',         'Tactile snap confirmation'],
-        ['Complete a delivery',           '.heavy + .success',          'Significant moment — earned reward'],
+        ['Complete a delivery',           '.heavy + .success',          'Significant moment representing an earned reward'],
         ['Failed delivery logged',        '.warning notification',       'Alert without being alarming'],
         ['Route optimisation done',       '.success notification',       'Route is ready — reassurance'],
         ['Arrive at stop (auto)',          '.medium impact',             '"You\'re here" physical nudge'],
@@ -502,10 +502,10 @@ const DESIGN_ROUTE_PLANNER = {
     },
 
     // ── 0. Built in Swift — Not Just a Figma File ────────────────────────────
-    { t: 'h2', x: '0. Built in Swift — Not Just a Figma File' },
+    { t: 'h2', x: '0. Built in Swift, Not Just a Figma File' },
     {
       t: 'p',
-      x: 'Most portfolio case studies stop at the prototype. This one doesn\'t. After completing the full design in Figma, every screen was coded from scratch in Swift and SwiftUI — complete with real animations, physics-based interactions, haptic patterns, map integration, and a rich mock-data layer that makes the app behave exactly as it would in production.',
+      x: 'Most portfolio case studies stop at the prototype. This one doesn\'t. After completing the full design in Figma, every screen was coded from scratch in Swift and SwiftUI, complete with real animations, physics-based interactions, haptic patterns, map integration, and a rich mock-data layer that makes the app behave exactly as it would in production.',
     },
     {
       t: 'callout',
@@ -544,7 +544,7 @@ const DESIGN_ROUTE_PLANNER = {
         { title: 'Decoded into Core Data',            desc: 'Stops are decoded into <code>DeliveryStop</code> managed objects on first launch, giving the app full offline persistence with no backend dependency.' },
         { title: 'RouteOptimiser runs nearest-neighbour', desc: 'A pure-Swift greedy nearest-neighbour algorithm reorders stops to minimise total travel distance. This is the same logic that would call a real routing API in production.' },
         { title: 'State machine drives the UI',       desc: 'A <code>RouteSessionStore</code> ObservableObject tracks the active stop, delivery status per stop, and session stats. Every view observes it via <code>@EnvironmentObject</code>.' },
-        { title: 'All flows are fully exercisable',   desc: 'You can import a route, optimise it, navigate stop-by-stop, complete or fail each delivery, capture a photo, and reach the end-of-day summary — all on device, fully offline.' },
+        { title: 'All flows are fully exercisable',   desc: 'You can import a route, optimise it, navigate stop-by-stop, complete or fail each delivery, capture a photo, and reach the end-of-day summary, all on device, fully offline.' },
       ],
     },
 
@@ -564,7 +564,7 @@ func completeStop(_ stop: DeliveryStop, photo: UIImage?) {
         try? context.save()
     }
 
-    // Paired haptics — heavy "thud" followed by success pattern
+    // Paired haptics: heavy "thud" followed by success pattern
     let impact = UIImpactFeedbackGenerator(style: .heavy)
     let notify  = UINotificationFeedbackGenerator()
     impact.impactOccurred()
@@ -602,7 +602,7 @@ func completeStop(_ stop: DeliveryStop, photo: UIImage?) {
     {
       t: 'cards',
       items: [
-        { icon: 'map',         title: 'Designing in the Field',         desc: 'The most critical insights — thumb-zone layout, haptics as primary feedback, dark-first — came from 2-hour ride-alongs, not desk research.' },
+        { icon: 'map',         title: 'Designing in the Field',         desc: 'The most critical insights (thumb-zone layout, haptics as primary feedback, dark-first) came from 2-hour ride-alongs, not desk research.' },
         { icon: 'activity',    title: 'Physicality as a Design Language', desc: 'Spring physics and haptics that match real-world task completion made the app intuitive without explanation. Drivers didn\'t read onboarding. They just used it.' },
         { icon: 'minimize2',   title: 'Respecting Cognitive Load',       desc: 'The delivery completion flow was initially 5 steps. After testing, reduced to 2 (swipe + photo). Every step removed increased speed and confidence.' },
       ],

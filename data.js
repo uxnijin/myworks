@@ -103,8 +103,8 @@ const EXPLORING = [
 
 const DESIGNS = [
   DESIGN_ROUTE_PLANNER,
+  DESIGN_SHIPFLOW,
   DESIGN_MOBILE_DEMO,
-  DESIGN_WEB_DEMO,
 ];
 
 // ============================================================================
