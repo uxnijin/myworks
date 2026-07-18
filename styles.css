@@ -47,6 +47,9 @@
   --danger-9: #d33d3d;
   --danger-4: #ffece9;
   --danger-11: #955d58;
+  --info-9: #0284c7;
+  --info-4: #f0f9ff;
+  --info-11: #0369a1;
 
   /* Roles */
   --bg: var(--tint-1);
@@ -121,6 +124,8 @@
   --success-11: #7fc79b;
   --danger-4: #2a1817;
   --danger-11: #e8a09b;
+  --info-4: #122035;
+  --info-11: #7dd3fc;
 
   --bg: #1d1d1d;
   --bg-subtle: #222222;
@@ -1042,16 +1047,16 @@ kbd {
 }
 
 .callout.info {
-  background: var(--primary-2);
-  border-color: var(--primary-6);
+  background: var(--info-4);
+  border-color: color-mix(in srgb, var(--info-9) 25%, transparent);
 }
 
 .callout.info .callout-ico {
-  color: var(--accent);
+  color: var(--info-9);
 }
 
 .callout.info .callout-title {
-  color: var(--primary-10);
+  color: var(--info-11);
 }
 
 .callout.success {
