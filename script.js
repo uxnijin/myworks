@@ -10,6 +10,59 @@
   const SITE_URL = 'https://nijin.site';
   const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  const ROTATING_WORDS = [
+    'that ships.',
+    'without fluff.',
+    'done right.',
+    'for products.',
+    'made practical.',
+    'built better.',
+    'made simple.',
+    'with purpose.',
+    'that works.',
+    'that delivers.',
+    'that scales.',
+    'that lasts.',
+    'with impact.',
+    'by design.',
+    'for real.',
+    'made to last.',
+    'production-ready.',
+    'user-first.',
+    'business-driven.',
+    'engineered well.',
+    'beyond mockups.',
+    'beyond pixels.',
+    'built to scale.',
+    'built to ship.',
+    'built for growth.',
+    'built for users.',
+    'built with care.',
+    'shipped fast.',
+    'shipped often.',
+    'validated.',
+    'refined.',
+    'polished.',
+    'intentional.',
+    'practical.',
+    'measurable.',
+    'reliable.',
+    'accessible.',
+    'scalable.',
+    'human-centered.',
+    'worth using.',
+    'worth building.',
+    'made for teams.',
+    'with clarity.',
+    'with confidence.',
+    'with precision.',
+    'with empathy.',
+    'with intention.',
+    'with evidence.',
+    'with quality.',
+    'for people.',
+  ];
+
   // wraps a route render in the View Transitions API where supported, so the
   // outgoing page crossfades instead of just vanishing; falls back to a bare
   // call everywhere else (older Safari/Firefox, or reduced-motion users).
@@ -341,7 +394,7 @@
             </span>
           </div>
 
-          <h1>${esc(PROFILE.tagline).replace('documented.', '<span class="rotating-word-wrapper"><em class="rotating-word active" style="position: relative;">documented.</em></span>')}</h1>
+          <h1>${esc(PROFILE.tagline).replace('documented.', '<span class="rotating-word-wrapper"><em class="rotating-word active" style="position: relative;">' + ROTATING_WORDS[0] + '</em></span>')}</h1>
           <p class="hero-lede">${PROFILE.bio}</p>
           ${PROFILE.intro ? `<p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>` : ''}
 
@@ -507,93 +560,6 @@
     const wrapper = $('.rotating-word-wrapper');
     if (!wrapper) return;
 
-    const words = [
-      'documented.',
-      'that ships.',
-      'without fluff.',
-      'done right.',
-      'for products.',
-      'made practical.',
-      'built better.',
-      'made simple.',
-      'with purpose.',
-      'that works.',
-      'that delivers.',
-      'that scales.',
-      'that lasts.',
-      'with impact.',
-      'without guesswork.',
-      'by design.',
-      'for real.',
-      'made to last.',
-      'production-ready.',
-      'thoughtfully built.',
-      'user-first.',
-      'business-driven.',
-      'backed by research.',
-      'crafted carefully.',
-      'engineered well.',
-      'beyond mockups.',
-      'beyond pixels.',
-      'beyond aesthetics.',
-      'from idea to launch.',
-      'from concept to code.',
-      'from insight to impact.',
-      'from strategy to shipping.',
-      'built to scale.',
-      'built to ship.',
-      'built for growth.',
-      'built for users.',
-      'built with intent.',
-      'built with care.',
-      'built on research.',
-      'shipped fast.',
-      'shipped often.',
-      'tested thoroughly.',
-      'validated.',
-      'refined.',
-      'polished.',
-      'intentional.',
-      'practical.',
-      'measurable.',
-      'reliable.',
-      'accessible.',
-      'scalable.',
-      'human-centered.',
-      'always improving.',
-      'worth using.',
-      'worth building.',
-      'made for teams.',
-      'made for startups.',
-      'solving problems.',
-      'creating clarity.',
-      'reducing complexity.',
-      'turning ideas real.',
-      'bringing ideas alive.',
-      'shipping outcomes.',
-      'solving real problems.',
-      'one decision at a time.',
-      'one pixel at a time.',
-      'one product at a time.',
-      'one iteration better.',
-      'with every detail.',
-      'with clarity.',
-      'with confidence.',
-      'with precision.',
-      'with empathy.',
-      'with intention.',
-      'with evidence.',
-      'without shortcuts.',
-      'with quality.',
-      'for ambitious teams.',
-      'for growing startups.',
-      'for modern products.',
-      'for better experiences.',
-      'for people.',
-      'for the long run.',
-      'for what\'s next.'
-    ];
-
     let currentIndex = 0;
 
     const intervalId = setInterval(() => {
@@ -605,8 +571,8 @@
       const currentSpan = wrapper.querySelector('.rotating-word.active');
       if (!currentSpan) return;
 
-      currentIndex = (currentIndex + 1) % words.length;
-      const nextWord = words[currentIndex];
+      currentIndex = (currentIndex + 1) % ROTATING_WORDS.length;
+      const nextWord = ROTATING_WORDS[currentIndex];
 
       const currentWidth = currentSpan.offsetWidth;
 
