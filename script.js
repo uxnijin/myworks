@@ -1045,10 +1045,10 @@
       </div>
       <div class="gh-scroll">
         <div class="gh-wrap">
-          <div class="gh-months" style="grid-template-columns:repeat(${filteredWeeks.length},10px)">${months}</div>
+          <div class="gh-months" style="grid-template-columns:repeat(${filteredWeeks.length},1fr)">${months}</div>
           <div class="gh-body">
             <div class="gh-days"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-            <div class="gh-grid" style="grid-template-columns:repeat(${filteredWeeks.length},10px)">${cells}</div>
+            <div class="gh-grid" style="grid-template-columns:repeat(${filteredWeeks.length},1fr)">${cells}</div>
           </div>
         </div>
       </div>
