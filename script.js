@@ -989,11 +989,27 @@
     const weeks = (data.contributions || []).filter((w) => Array.isArray(w) && w.length);
     if (!weeks.length) throw new Error('unexpected shape');
 
-    const total = data.totalContributions || 0;
+    // Filter to last 3 months
+    let latestDate = new Date();
+    if (weeks.length > 0) {
+      const lastWeek = weeks[weeks.length - 1];
+      if (lastWeek.length > 0) {
+        latestDate = new Date(lastWeek[lastWeek.length - 1].date);
+      }
+    }
+    const cutoffDate = new Date(latestDate);
+    cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+
+    const filteredWeeks = weeks.filter((w) => {
+      const lastDay = w[w.length - 1];
+      return new Date(lastDay.date) >= cutoffDate;
+    });
+
+    const total = filteredWeeks.reduce((sum, w) => sum + w.reduce((s, d) => s + (d.contributionCount || 0), 0), 0);
 
     let months = '';
     let last = -1;
-    weeks.forEach((w, col) => {
+    filteredWeeks.forEach((w, col) => {
       const d = new Date(w[0].date);
       if (d.getMonth() !== last) {
         months += `<span style="grid-column-start:${col + 1}">${MONTHS[d.getMonth()]}</span>`;
@@ -1001,7 +1017,7 @@
       }
     });
 
-    const cells = weeks
+    const cells = filteredWeeks
       .map((w) =>
         w
           .map((d) => {
@@ -1025,14 +1041,14 @@
           ${icon('github')}
           <a href="https://github.com/${esc(PROFILE.github)}" target="_blank" rel="noopener">@${esc(PROFILE.github)}</a>
         </h3>
-        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last year</span>
+        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last 3 months</span>
       </div>
       <div class="gh-scroll">
         <div class="gh-wrap">
-          <div class="gh-months" style="grid-template-columns:repeat(${weeks.length},1fr)">${months}</div>
+          <div class="gh-months" style="grid-template-columns:repeat(${filteredWeeks.length},10px)">${months}</div>
           <div class="gh-body">
             <div class="gh-days"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-            <div class="gh-grid" style="grid-template-columns:repeat(${weeks.length},1fr)">${cells}</div>
+            <div class="gh-grid" style="grid-template-columns:repeat(${filteredWeeks.length},10px)">${cells}</div>
           </div>
         </div>
       </div>

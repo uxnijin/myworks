@@ -2471,7 +2471,7 @@ a.sec-count:hover {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  min-width: 660px;
+  width: max-content;
 }
 
 .gh-months {
