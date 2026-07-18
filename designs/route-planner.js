@@ -29,9 +29,8 @@ const DESIGN_ROUTE_PLANNER = {
     // ── Hero ──────────────────────────────────────────────────────────────────
     {
       t: 'image',
-      src: '/images/hero.png',
-      alt: 'Route Planner running on a phone mounted on a bike handlebar with a blurred city street at golden hour',
-      caption: 'Route Planner running on a phone mounted on a bike handlebar with a blurred city street at golden hour',
+      src: '/route-planner-assets/light-mode.png',
+      alt: 'Route Planner in light mode',
       ratio: '16-9',
     },
 
