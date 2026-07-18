@@ -68,9 +68,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Today\'s Reality vs Our Vision split diagram',
-      caption: '[PLACEHOLDER — PROBLEM VISUALISATION: Split-image diagram — "Today\'s Reality" (driver juggling 5 app icons) vs. "Our Vision" (single unified interface). 1200×600px, SVG / PNG]',
+      src: '/route-planner-assets/split_reality_vision.png',
+      alt: 'Split-image diagram showing "Today\'s Reality" (driver juggling 5 app icons) vs. "Our Vision" (single unified interface)',
       ratio: '2-1',
     },
 
@@ -101,9 +100,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Competitive 2×2 matrix',
-      caption: '[PLACEHOLDER — COMPETITIVE MAP: 2×2 matrix — "Complexity (Simple → Enterprise)" vs "Completeness (Navigation-only → Full Workflow)". Our product in the top-left sweet spot. 800×800px, SVG / PNG]',
+      src: '/route-planner-assets/competitive_matrix.png',
+      alt: '2×2 matrix — "Complexity (Simple → Enterprise)" vs "Completeness (Navigation-only → Full Workflow)". Our product in the top-left sweet spot.',
       ratio: '1-1',
     },
 
@@ -131,16 +129,14 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Field research photo strip',
-      caption: '[PLACEHOLDER — FIELD RESEARCH PHOTOS: Horizontal photo strip (3–4 images) — phone in handlebar mount, driver squinting in sunlight, juggling packages outside an apartment gate. 1200×400px, JPG collage]',
+      src: '/route-planner-assets/field_strip.jpg',
+      alt: 'Horizontal photo strip showing phone in handlebar mount, driver squinting in sunlight, juggling packages outside an apartment gate',
       ratio: '3-1',
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Affinity map from user interviews',
-      caption: '[PLACEHOLDER — AFFINITY MAP: Digital affinity board with clustered sticky notes under "Navigation", "Address Issues", "Tech Literacy", "Time Pressure", "Emotional State". 1600×900px, PNG screenshot]',
+      src: '/route-planner-assets/affinity_board.png',
+      alt: 'Digital affinity board with clustered sticky notes under "Navigation", "Address Issues", "Tech Literacy", "Time Pressure", "Emotional State"',
       ratio: '16-9',
     },
 
@@ -168,9 +164,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Ramesh Kumar persona card',
-      caption: '[PLACEHOLDER — PERSONA CARD: Beautifully designed persona card with Ramesh\'s illustration/photo, bio stats, a quote, and a "day in the life" timeline strip. 800×500px, PNG]',
+      src: '/route-planner-assets/persona_ramesh.png',
+      alt: 'Persona card with Ramesh\'s illustration, bio stats, a quote, and a "day in the life" timeline strip',
       ratio: '16-9',
     },
     { t: 'h3', x: 'Secondary Persona — Priya Nair, Small Fleet Manager' },
@@ -189,9 +184,8 @@ const DESIGN_ROUTE_PLANNER = {
     { t: 'h3', x: 'Complete User Journey Map' },
     {
       t: 'image',
-      src: '',
-      alt: 'Full emotional user journey map',
-      caption: '[PLACEHOLDER — JOURNEY MAP VISUAL: Full-width journey map — 10 stages across a delivery workday. Each stage: action, emotional state (emoji + curve graph), app touchpoint. 2400×800px, SVG / Wide PNG]',
+      src: '/route-planner-assets/journey_map.png',
+      alt: 'Full-width journey map showing 10 stages across a delivery workday with actions, emotional states, and app touchpoints',
       ratio: '3-1',
     },
 
@@ -203,9 +197,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Information architecture sitemap',
-      caption: '[PLACEHOLDER — IA DIAGRAM: Clean tree-diagram / sitemap. Blue (#3D7DFF) for primary flows, purple (#6C5CE7) for secondary, grey for tertiary. 1200×800px, SVG / PNG]',
+      src: '/route-planner-assets/ia_sitemap.png',
+      alt: 'Clean sitemap and tree-diagram of the information architecture showing primary, secondary, and tertiary flows',
       ratio: '3-2',
     },
 
@@ -222,9 +215,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Design principles 4-panel illustration',
-      caption: '[PLACEHOLDER — DESIGN PRINCIPLES GRAPHIC: 4-panel illustration card — one panel per principle with a small supporting visual. 1200×600px, PNG / Figma screenshot]',
+      src: '/route-planner-assets/design_principles.png',
+      alt: '4-panel illustration card representing the design principles with supporting visual sketches',
       ratio: '2-1',
     },
 
@@ -238,8 +230,7 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'image',
       src: '',
-      alt: 'Import flow screen recording',
-      caption: '[PLACEHOLDER — FLOW DIAGRAM VIDEO: Screen recording of the full import flow — tapping "Import" to seeing the optimised route on the map. Portrait 390×844px, MP4, 30fps]',
+      alt: 'Screen recording showing the full import flow from tapping "Import" to displaying the optimized route on the map',
       ratio: '9-16',
     },
     { t: 'h3', x: 'Flow 2: Active Delivery Stop Completion' },
@@ -250,8 +241,7 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'image',
       src: '',
-      alt: 'Swipe-to-complete and failed delivery interaction demo',
-      caption: '[PLACEHOLDER — INTERACTION DEMO: Side-by-side recording — "Successful Delivery" swipe (left) vs. "Failed Delivery" reason logging (right) with animation callouts. MP4 with captions, portrait]',
+      alt: 'Side-by-side recording showing successful delivery swipe-to-complete and failed delivery reason logging',
       ratio: '9-16',
     },
     { t: 'h3', x: 'Flow 3: End-of-Day Summary' },
@@ -262,8 +252,7 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'image',
       src: '',
-      alt: 'Summary screen celebration animation',
-      caption: '[PLACEHOLDER — SUMMARY SCREEN RECORDING: 5-second Lottie or screen recording — celebration transition, ring animation, number count-up. Portrait 390×844px, MP4 / .lottie, dark mode]',
+      alt: 'Celebration transition, completion ring animation, and counting up statistics on the summary screen',
       ratio: '9-16',
     },
 
@@ -277,9 +266,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Home screen — empty, active, and completed states',
-      caption: '[PLACEHOLDER — HOME SCREEN: 3 screenshots — (1) Empty state with onboarding CTA, (2) Active route card with progress bar, (3) End-of-day completed state. PNG, portrait, iPhone 15 Pro frame optional]',
+      src: '/route-planner-assets/home_states.png',
+      alt: 'Home screen screenshots showing empty state with onboarding CTA, active route card, and completed state',
       ratio: '9-16',
     },
 
@@ -300,8 +288,7 @@ const DESIGN_ROUTE_PLANNER = {
     {
       t: 'image',
       src: '',
-      alt: 'Scan animation video',
-      caption: '[PLACEHOLDER — SCAN ANIMATION VIDEO: Scanner in action — camera feed in background, blue laser line sweeping, address text lifts into the list. 3–4 sec MP4 loop, 60fps]',
+      alt: 'Scanner animation showing camera feed, blue laser sweeping line, and address text lifting into the list',
       ratio: '9-16',
     },
 
@@ -312,9 +299,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Route preview map dark mode and before/after slider',
-      caption: '[PLACEHOLDER — ROUTE PREVIEW: 2 screenshots — (1) Route map in dark mode with custom styling and polyline overlay, (2) "Before vs. After" slider comparison view. PNG @2x, portrait iPhone frame]',
+      src: '/route-planner-assets/route_preview.png',
+      alt: 'Route preview map in dark mode with custom styling, polyline overlay, and before/after comparison',
       ratio: '9-16',
     },
 
@@ -325,9 +311,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Annotated navigation screen dark and light mode',
-      caption: '[PLACEHOLDER — NAVIGATION SCREEN: Side-by-side dark mode / light mode screenshots with annotations — (A) Progress bar, (B) Turn card, (C) Map canvas, (D) Glassmorphic delivery card, (E) Action buttons in thumb zone. Annotated PNG]',
+      src: '/route-planner-assets/navigation_annotated.png',
+      alt: 'Side-by-side dark and light mode navigation screens with annotations indicating progress bar, turn card, map canvas, and glassmorphic delivery card',
       ratio: '16-9',
     },
 
@@ -346,9 +331,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Failed delivery reason code grid',
-      caption: '[PLACEHOLDER — FAILED DELIVERY SCREEN: Reason-code grid — "Not Home" (amber), "Wrong Address" (red), "Refused" (red), "Damaged" (orange), "Other" (grey). PNG portrait]',
+      src: '/route-planner-assets/reason_grid.png',
+      alt: 'Failed delivery screen showing the reason-code chip grid with options like Not Home, Wrong Address, Refused, Damaged, and Other',
       ratio: '9-16',
     },
 
@@ -359,9 +343,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Full-bleed daily summary screen',
-      caption: '[PLACEHOLDER — SUMMARY SCREEN: Full-screen screenshot — celebration gradient, animated ring at ~75% filled, all stat cards visible. PNG, portrait, no device frame (full bleed)]',
+      src: '/route-planner-assets/daily_summary.png',
+      alt: 'Full-bleed daily summary screen showing the celebration gradient, completion ring, and statistics cards',
       ratio: '9-16',
     },
 
@@ -389,9 +372,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Color token swatch grid',
-      caption: '[PLACEHOLDER — COLOR SWATCHES: Styled swatch grid showing all tokens — name, hex values, and small usage example (mini button, card, status badge). 1200×500px, PNG wide landscape]',
+      src: '/route-planner-assets/color_swatches.png',
+      alt: 'Color token swatch grid showing all color swatches, names, hex values, and usage examples',
       ratio: '12-5',
     },
     { t: 'h3', x: 'Typography' },
@@ -415,9 +397,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Typography scale specimen sheet',
-      caption: '[PLACEHOLDER — TYPOGRAPHY SCALE: Specimen sheet showing all 8 styles in dark and light mode on their respective surfaces. 1200×700px, PNG landscape]',
+      src: '/route-planner-assets/typography_specimen.png',
+      alt: 'Typography scale specimen sheet showing all 8 font styles in dark and light modes',
       ratio: '16-9',
     },
     { t: 'h3', x: 'Animation Curves' },
@@ -436,9 +417,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Animation spring curve diagrams',
-      caption: '[PLACEHOLDER — ANIMATION CURVES VISUAL: Side-by-side spring graphs (X = time, Y = displacement) for Standard, Bouncy, and Sheet curves. 900×400px, SVG / PNG]',
+      src: '/route-planner-assets/animation_curves.png',
+      alt: 'Animation spring curve diagrams showing displacement vs time graphs for Standard, Bouncy, and Sheet curves',
       ratio: '9-4',
     },
     { t: 'h3', x: 'Haptic Map' },
@@ -481,9 +461,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Accessibility callout annotations',
-      caption: '[PLACEHOLDER — ACCESSIBILITY CALLOUTS: Annotated screenshot of Navigation and Delivery Completion screens with 6–8 accessibility annotations (tap target sizes, VoiceOver labels, icon+colour redundancy). 800×900px, Annotated PNG]',
+      src: '/route-planner-assets/accessibility_annotated.png',
+      alt: 'Annotated screenshot of Navigation and Delivery screens showing accessibility touch targets, VoiceOver labels, and color redundancy',
       ratio: '16-9',
     },
 
@@ -518,9 +497,8 @@ const DESIGN_ROUTE_PLANNER = {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Before/After impact infographic',
-      caption: '[PLACEHOLDER — IMPACT INFOGRAPHIC: Visually designed infographic — 5 key "Before vs. After" metrics as large-format stat comparisons. Green accents for improvements, brand colours. 1200×600px, PNG 1:1 square]',
+      src: '/route-planner-assets/impact_infographic.png',
+      alt: 'Infographic showing the 5 key Before vs. After metrics as large-format stat comparison cards with green accents',
       ratio: '2-1',
     },
 
@@ -614,9 +592,8 @@ func completeStop(_ stop: DeliveryStop, photo: UIImage?) {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'App running on device — all 6 screens',
-      caption: '[PLACEHOLDER — DEVICE RECORDING: Screen recording of the full app running on iPhone — import → optimise → navigate → complete → summary. Portrait 390×844px, MP4, 60fps]',
+      src: '/route-planner-assets/hero_banner.png',
+      alt: 'Overview banner showing the Route Planner app running on device screens',
       ratio: '9-16',
     },
 
@@ -642,9 +619,8 @@ func completeStop(_ stop: DeliveryStop, photo: UIImage?) {
     },
     {
       t: 'image',
-      src: '',
-      alt: 'Process collage — sketches, wireframes, field visits',
-      caption: '[PLACEHOLDER — PROCESS COLLAGE: 2×3 grid — whiteboard sketches, paper wireframes, early wireframe screenshots, field visit photos, user testing sessions. 1200×800px, photo collage, muted colours]',
+      src: '/route-planner-assets/process_collage.png',
+      alt: 'Process collage showing a 2×3 grid of whiteboard sketches, paper wireframes, early wireframes, field visits, and user testing sessions',
       ratio: '3-2',
     },
 
