@@ -2782,7 +2782,7 @@ a.sec-count:hover {
   position: fixed;
   inset: 0;
   z-index: 110;
-  background: color-mix(in srgb, var(--tint-12) 88%, transparent);
+  background: color-mix(in srgb, #1d1d1d 88%, transparent);
   backdrop-filter: blur(8px);
   display: grid;
   place-items: center;
@@ -2821,8 +2821,8 @@ a.sec-count:hover {
   place-items: center;
   border-radius: 50%;
   border: none;
-  background: color-mix(in srgb, var(--tint-1) 12%, transparent);
-  color: var(--tint-1);
+  background: color-mix(in srgb, #ffffff 12%, transparent);
+  color: #ffffff;
   cursor: pointer;
 }
 
