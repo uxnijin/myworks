@@ -29,9 +29,9 @@ const DESIGN_ROUTE_PLANNER = {
     // ── Hero ──────────────────────────────────────────────────────────────────
     {
       t: 'image',
-      src: '',
-      alt: 'Route Planner hero — app on a bike handlebar at golden hour',
-      caption: '[PLACEHOLDER — HERO: Full-width cinematic banner. App running on a phone mounted on a bike handlebar, blurred city street at golden hour. 1920×1080px, MP4 loop or PNG @2x]',
+      src: 'https://assets.nijn.dev/portfolio/route-planner/hero-bike.png',
+      alt: 'Route Planner running on a phone mounted on a bike handlebar with a blurred city street at golden hour',
+      caption: 'Route Planner running on a phone mounted on a bike handlebar with a blurred city street at golden hour',
       ratio: '16-9',
     },
 
