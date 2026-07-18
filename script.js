@@ -883,8 +883,8 @@
       };
       btn.addEventListener('mousemove', (e) => {
         const r = btn.getBoundingClientRect();
-        mx = (e.clientX - (r.left + r.width / 2)) * 0.25;
-        my = (e.clientY - (r.top + r.height / 2)) * 0.25;
+        mx = (e.clientX - (r.left + r.width / 2)) * 0.08;
+        my = (e.clientY - (r.top + r.height / 2)) * 0.08;
         apply();
       });
       btn.addEventListener('mouseleave', () => {
