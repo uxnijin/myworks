@@ -6,6 +6,14 @@
 //  behind it, not a Figma file.
 // ============================================================================
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  THE ONLY LINE TO EDIT WHEN THE BUILD GOES LIVE.
+//  Paste the URL here and every product button turns on at once: the CTA in
+//  the page header, "Open the product" in the TOC rail, and the launch card
+//  at the end of the case study. '#' is a placeholder.
+// ─────────────────────────────────────────────────────────────────────────────
+const AEROS_URL = '#';
+
 const DESIGN_AEROS = {
   slug: 'aeros',
   name: 'Aeros: Smart Home Climate Control',
@@ -13,6 +21,7 @@ const DESIGN_AEROS = {
   icon: 'gauge',
   tag: 'Case Study',
   status: 'Prototype',
+  url: AEROS_URL,
   summary: 'A dark, sensor-driven climate dashboard for the connected home — designed and coded end to end, with a live simulation running underneath every number.',
   lede: 'End-to-end product design and front-end engineering for a smart-home climate dashboard. Aeros reads temperature, humidity, CO₂, particulates and air quality across four rooms and turns them into something a person can actually act on. I designed every screen and interaction, then built it in React. Every value on screen is driven by a running simulation — turn the ventilation up and CO₂ really does fall.',
   tech: ['React 19', 'Vite', 'Tailwind CSS', 'Framer Motion', 'Hand-rolled SVG', 'No chart library'],
@@ -147,6 +156,12 @@ const DESIGN_AEROS = {
         ['Elevation', 'Inset hairline + long soft shadow', 'Depth without borders, which would fight the dark surfaces'],
       ],
     },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-eco-toggle.webp',
+      alt: 'Close-up of the Aeros eco mode toggle showing the hairline border and raised sub-surface',
+      caption: 'One control, up close: a sub-surface panel at 5% white, a hairline border, and a state line under the label rather than beside it.',
+    },
 
     // ── 4. Core Screens ───────────────────────────────────────────────────────
     { t: 'h2', x: '4. Core Screens' },
@@ -206,6 +221,12 @@ const DESIGN_AEROS = {
       caption: 'Twenty-five devices across four rooms, each with real toggle state.',
       ratio: '16-9',
     },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-device-row.webp',
+      alt: 'Close-up of a single Aeros device row showing icon, name, state and status dot',
+      caption: 'A single device row: icon tile, name, live state line, and a status dot that carries the only colour.',
+    },
 
     { t: 'h3', x: 'AI Insights' },
     {
@@ -218,6 +239,12 @@ const DESIGN_AEROS = {
       alt: 'Aeros AI Insights screen with ranked recommendations, confidence meters and apply actions',
       caption: 'Every card states the observation, the confidence, the expected change, and the action.',
       ratio: '16-9',
+    },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-confidence.webp',
+      alt: 'Close-up of a single AI insight card with its confidence meter and apply action',
+      caption: 'One insight card up close. The confidence meter is the reason the Apply button is trustworthy.',
     },
 
     // ── 5. Detail Screens ─────────────────────────────────────────────────────
@@ -235,6 +262,22 @@ const DESIGN_AEROS = {
       caption: 'Current reading above, target below, and a live estimate of how long it will take to get there.',
       ratio: '16-9',
     },
+    { t: 'h3', x: 'Up close: the tick slider' },
+    {
+      t: 'p',
+      x: 'The target control is 64 hairlines rather than a bar. Their heights ramp along the track so the ruler reads as a gradient of density, the passed portion fills with increasing opacity, and past 72% it crosses from oxygen blue into warm ether — you feel yourself entering the expensive end of the range before you read the number.',
+    },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-tick-slider.webp',
+      alt: 'Extreme close-up of the Aeros tick slider showing 64 graded hairlines and the ether handle',
+      caption: 'Captured at 2.5×. Every tick is a 1px span with its own computed height and fill.',
+    },
+    {
+      t: 'p',
+      x: 'Here is the real thing, rebuilt in plain JavaScript with the same geometry and the same easing. Drag it, click anywhere on the track, or focus it and use the arrow keys.',
+    },
+    { t: 'demo', kind: 'aeros-slider' },
 
     { t: 'h3', x: 'Air Composition — five gases made comparable' },
     {
@@ -254,6 +297,17 @@ const DESIGN_AEROS = {
       title: 'Gauge columns scale to the action threshold, not the sensor range',
       x: 'Each column is drawn so that a reading sitting exactly at its warning value lands exactly on the "Normal" gridline. That one rule makes five gases with wildly different units directly comparable: anything above the line needs attention, anything below it does not. You no longer need to know what a bad VOC number looks like — the chart tells you.',
     },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-gauges.webp',
+      alt: 'Close-up of the Aeros gauge columns showing hatched bars, hairline stems and value pills',
+      caption: 'The stem-and-pill construction up close: a hairline drops from each pill to its hatched column.',
+    },
+    {
+      t: 'p',
+      x: 'Drag the room condition below. Every gas is scaled by the same factor, but each one crosses the Normal line at its own warning threshold — PM2.5 at 25 µg/m³, CO₂ at 1000 ppm, HCHO at 0.1 mg/m³. Watch which one turns first.',
+    },
+    { t: 'demo', kind: 'aeros-gauge' },
 
     { t: 'h3', x: 'Metric detail' },
     {
@@ -286,6 +340,18 @@ const DESIGN_AEROS = {
         { icon: 'droplet', title: 'Donut and split bar', desc: 'Share-of-total breakdowns for energy by device class.' },
       ],
     },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-sparkline.webp',
+      alt: 'Close-up of the Aeros sparkline showing the blue to ether gradient stroke and area fill',
+      caption: 'The sparkline stroke shifts blue → ether across its width, so the recent end reads warm without a second series.',
+    },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-hatchbars.webp',
+      alt: 'Close-up of the diagonal-hatched weekly bars with the selected day capped solid',
+      caption: 'Diagonal hatching at 2.2px on a 6px pitch — texture doing the work a second accent colour would otherwise do.',
+    },
     { t: 'h3', x: 'Highlight by rank, not by threshold' },
     {
       t: 'p',
@@ -312,6 +378,17 @@ const hotSet = useMemo(
   [data, hotCount],
 )`,
     },
+    {
+      t: 'image',
+      src: '/aeros-assets/crop-tickbars.webp',
+      alt: 'Close-up of the tick bars with six ranked bars accented in ether among the blue',
+      caption: 'Six accents, scattered across the series — not a block at the tall end.',
+    },
+    {
+      t: 'p',
+      x: 'The difference is easier to feel than to read. Switch between the two rules below on the same trending data, and generate a new series to confirm it holds however the numbers move.',
+    },
+    { t: 'demo', kind: 'aeros-rank' },
     {
       t: 'callout',
       kind: 'warning',
@@ -410,6 +487,13 @@ const healthTarget = clamp(comfort * 0.3 + humComfort * 0.2 + aq * 0.5, 20, 99)`
       kind: 'info',
       title: 'Designed in code, on purpose',
       x: 'Threshold-normalised gauges, rank-based highlighting and a coupled simulation are not things you can evaluate in a static mockup. They only reveal themselves as good or bad once the data is moving — which is the argument for designing this kind of product in code in the first place.',
+    },
+    {
+      t: 'launch',
+      title: 'Open the live build',
+      desc: 'Walk the five screens, hit ⌘K, turn the ventilation up and watch CO₂ fall.',
+      url: AEROS_URL,
+      label: 'Launch Aeros',
     },
 
   ],

@@ -290,6 +290,9 @@ const renderBlock = (b) => {
 
     case 'demo':
       if (b.kind === 'scale') return renderScaleDemo();
+      if (b.kind === 'aeros-slider') return renderAerosSlider();
+      if (b.kind === 'aeros-gauge') return renderAerosGauge();
+      if (b.kind === 'aeros-rank') return renderAerosRank();
       return '';
 
     default:
@@ -317,6 +320,84 @@ function renderScaleDemo() {
     <div class="demo-foot">
       <span>Click any swatch to copy its hex</span>
       <span class="demo-note">Linear RGB interpolation: the plugin's actual formula</span>
+    </div>
+  </div>`;
+}
+
+// ------------------------------------------------- live Aeros components
+//
+//  Faithful vanilla rebuilds of three components from the Aeros dashboard,
+//  so the case study can be tried rather than only looked at. Geometry and
+//  easing are copied from the React source; each renders on its own dark
+//  Aeros surface regardless of the site theme, because that is the context
+//  the components were designed for.
+
+function renderAerosSlider() {
+  return `<div class="demo ademo" data-demo="aeros-slider">
+    <div class="demo-bar">
+      <label>Temperature target</label>
+      <span class="ademo-readout"><b class="ademo-val">24.0</b><span class="ademo-unit">°C</span></span>
+      <span class="ademo-hint">drag, click, or focus and use &larr; &rarr;</span>
+    </div>
+    <div class="ademo-stage">
+      <div class="ademo-slider" role="slider" tabindex="0" aria-label="Temperature target"
+           aria-valuemin="16" aria-valuemax="32" aria-valuenow="24">
+        <div class="ademo-ticks"></div>
+        <div class="ademo-handle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M4 8h10M18 8h2M4 16h4M12 16h8"/>
+            <circle cx="16" cy="8" r="2"/><circle cx="10" cy="16" r="2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="ademo-axis"><span>16&deg;C</span><span>24&deg;C</span><span>32&deg;C</span></div>
+    </div>
+    <div class="demo-foot">
+      <span>64 hairlines, height graded along the track</span>
+      <span class="demo-note">Past 72% the fill turns warm &mdash; the app's own rule</span>
+    </div>
+  </div>`;
+}
+
+function renderAerosGauge() {
+  return `<div class="demo ademo" data-demo="aeros-gauge">
+    <div class="demo-bar">
+      <label for="ademo-mult">Room condition</label>
+      <input type="range" id="ademo-mult" min="30" max="190" value="80" aria-label="Room condition">
+      <span class="ademo-cond">Comfortable</span>
+      <button type="button" class="ademo-btn" data-replay>Replay motion</button>
+    </div>
+    <div class="ademo-stage ademo-gauge-stage">
+      <div class="ademo-grid">
+        <span style="bottom:75%"></span>
+        <span style="bottom:50%"><i>Normal</i></span>
+        <span style="bottom:25%"></span>
+      </div>
+      <div class="ademo-cols"></div>
+    </div>
+    <div class="demo-foot">
+      <span>Five gases, five unit systems, one comparison</span>
+      <span class="demo-note">Each column crosses the line at <em>its own</em> warning value</span>
+    </div>
+  </div>`;
+}
+
+function renderAerosRank() {
+  return `<div class="demo ademo" data-demo="aeros-rank">
+    <div class="demo-bar">
+      <span class="ademo-seg">
+        <button type="button" data-mode="rank" class="is-on">Top-6 by rank</button>
+        <button type="button" data-mode="threshold">Above average</button>
+      </span>
+      <button type="button" class="ademo-btn" data-reshuffle>New series</button>
+      <span class="ademo-hint ademo-count"></span>
+    </div>
+    <div class="ademo-stage">
+      <svg class="ademo-bars" viewBox="0 0 440 120" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+    <div class="demo-foot">
+      <span>The same trending series, highlighted two ways</span>
+      <span class="demo-note">Switch to "above average" and watch the accent become a solid block</span>
     </div>
   </div>`;
 }

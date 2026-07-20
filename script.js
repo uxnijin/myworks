@@ -699,6 +699,9 @@
     initZoom();
     initTilt();
     initScaleDemo();
+    initAerosSlider();
+    initAerosGauge();
+    initAerosRank();
   }
 
   // ------------------------------------------------------------- TOC
@@ -971,6 +974,242 @@
     });
 
     paint(color.value);
+  }
+
+  // --------------------------------------------------- live Aeros components
+  //
+  // Vanilla rebuilds of three Aeros dashboard components. Geometry, easing and
+  // colour rules are lifted from the React source so the demos behave like the
+  // real thing rather than merely resembling it.
+
+  function initAerosSlider() {
+    const demo = $('[data-demo="aeros-slider"]');
+    if (!demo) return;
+
+    const TICKS = 64, MIN = 16, MAX = 32, STEP = 0.5;
+    const track = $('.ademo-slider', demo);
+    const handle = $('.ademo-handle', demo);
+    const out = $('.ademo-val', demo);
+    const ticksWrap = $('.ademo-ticks', demo);
+    let value = 24;
+
+    // Tick heights are fixed; only the fill changes as the target moves.
+    const ticks = [];
+    for (let i = 0; i < TICKS; i++) {
+      const t = i / (TICKS - 1);
+      const el = document.createElement('span');
+      el.className = 'ademo-tick';
+      el.style.height = `${i % 10 === 0 ? 22 : 10 + t * 14}px`;
+      ticksWrap.appendChild(el);
+      ticks.push({ el, t });
+    }
+
+    function paint() {
+      const pct = (value - MIN) / (MAX - MIN);
+      for (const { el, t } of ticks) {
+        el.style.background = t <= pct
+          ? `rgba(${t > 0.72 ? '241,141,116' : '91,138,245'},${0.35 + t * 0.55})`
+          : 'rgba(255,255,255,0.09)';
+      }
+      handle.style.left = `${pct * 100}%`;
+      out.textContent = value.toFixed(1);
+      track.setAttribute('aria-valuenow', String(value));
+    }
+
+    const commit = (clientX) => {
+      const r = track.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+      value = Math.round((MIN + p * (MAX - MIN)) / STEP) * STEP;
+      paint();
+    };
+
+    const move = (e) => commit(e.touches ? e.touches[0].clientX : e.clientX);
+    const up = () => {
+      track.classList.remove('is-dragging');
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+
+    track.addEventListener('pointerdown', (e) => {
+      track.classList.add('is-dragging');
+      commit(e.clientX);
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    });
+
+    track.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      value = e.key === 'ArrowRight'
+        ? Math.min(MAX, value + STEP)
+        : Math.max(MIN, value - STEP);
+      paint();
+    });
+
+    paint();
+  }
+
+  // Warn thresholds are the dashboard's real GASES values. Baselines are spaced
+  // so the five gases cross the Normal line one at a time as the slider rises —
+  // which is the whole point the chart is making.
+  const AEROS_GASES = [
+    { label: 'PM2.5', unit: 'µg/m³', base: 18, warn: 25, dec: 0 },
+    { label: 'CO₂', unit: 'ppm', base: 870, warn: 1000, dec: 0 },
+    { label: 'VOC', unit: 'ppb', base: 333, warn: 500, dec: 0 },
+    { label: 'HCHO', unit: 'mg/m³', base: 0.06, warn: 0.1, dec: 2 },
+    { label: 'CO', unit: 'ppm', base: 1.1, warn: 2, dec: 1 },
+  ];
+
+  function initAerosGauge() {
+    const demo = $('[data-demo="aeros-gauge"]');
+    if (!demo) return;
+
+    const H = 300, PILL_BOTTOM = 92;
+    const wrap = $('.ademo-cols', demo);
+    const range = $('#ademo-mult', demo);
+    const cond = $('.ademo-cond', demo);
+
+    wrap.innerHTML = AEROS_GASES.map((g, i) => `
+      <div class="ademo-col" style="--i:${i}">
+        <div class="ademo-head">
+          <div class="ademo-glabel">${g.label}</div>
+          <div class="ademo-gstatus"></div>
+          <div class="ademo-pill"></div>
+        </div>
+        <div class="ademo-stem"></div>
+        <span class="ademo-warn">!</span>
+        <div class="ademo-bar"></div>
+      </div>`).join('');
+
+    const cols = $$('.ademo-col', demo).map((el) => ({
+      el,
+      pill: $('.ademo-pill', el),
+      status: $('.ademo-gstatus', el),
+      stem: $('.ademo-stem', el),
+      bar: $('.ademo-bar', el),
+      warn: $('.ademo-warn', el),
+    }));
+
+    function paint() {
+      const mult = Number(range.value) / 100;
+      cond.textContent =
+        mult < 0.7 ? 'Fresh' : mult < 1.05 ? 'Comfortable'
+          : mult < 1.4 ? 'Above average' : 'Needs attention';
+
+      AEROS_GASES.forEach((g, i) => {
+        const c = cols[i];
+        const value = g.base * mult;
+        const ratio = value / g.warn;
+        const bad = ratio >= 1;
+
+        // A reading at its warn value lands exactly on the 50% "Normal" line.
+        const barH = Math.min(H * 0.82, Math.max(38, ratio * H * 0.5));
+        const stemH = Math.max(0, H - barH - PILL_BOTTOM);
+
+        c.bar.style.height = `${barH}px`;
+        c.stem.style.height = `${stemH}px`;
+        c.warn.style.bottom = `${barH + 8}px`;
+        c.pill.textContent = `${value.toFixed(g.dec)} ${g.unit}`;
+        c.status.textContent = bad ? 'Above average' : ratio > 0.6 ? 'Normal' : 'Low';
+        c.el.classList.toggle('is-bad', bad);
+      });
+    }
+
+    // Replay re-triggers the staggered entrance by restarting the animation.
+    function replay() {
+      wrap.classList.remove('is-in');
+      void wrap.offsetWidth;
+      wrap.classList.add('is-in');
+    }
+
+    range.addEventListener('input', paint);
+    $('[data-replay]', demo).addEventListener('click', replay);
+    paint();
+    replay();
+  }
+
+  function initAerosRank() {
+    const demo = $('[data-demo="aeros-rank"]');
+    if (!demo) return;
+
+    const N = 44, W = 440, HGT = 120, GAP = 1.6, HOT = 6;
+    const svg = $('.ademo-bars', demo);
+    const count = $('.ademo-count', demo);
+    let mode = 'rank';
+    let data = series();
+
+    // A dependably rising series — the premise of the argument — carrying
+    // enough per-sample jitter that neighbouring readings swap order. The
+    // jitter is what keeps the top N interleaved instead of contiguous; a
+    // smooth ramp would park them in one block and hide the point. Trend and
+    // jitter are deliberately close in magnitude, as real sensor data is.
+    function series() {
+      const phase = Math.random() * Math.PI * 2;
+      const out = [];
+      for (let i = 0; i < N; i++) {
+        const t = i / (N - 1);
+        const trend = t * 55;
+        const wave = Math.sin(t * Math.PI * 2.2 + phase) * 9;
+        const jitter = (Math.random() - 0.5) * 26;
+        out.push(Math.max(4, 30 + trend + wave + jitter));
+      }
+      return out;
+    }
+
+    function hotSet() {
+      if (mode === 'rank') {
+        return new Set(
+          data.map((v, i) => [v, i])
+            .sort((a, b) => b[0] - a[0])
+            .slice(0, HOT)
+            .map(([, i]) => i),
+        );
+      }
+      // The naive rule: accent anything above average. On a rising series that
+      // is roughly half the bars, which is exactly how you end up with a block.
+      const mean = data.reduce((a, b) => a + b, 0) / data.length;
+      return new Set(data.map((v, i) => (v > mean ? i : -1)).filter((i) => i >= 0));
+    }
+
+    function paint(rebuild) {
+      const min = Math.min(...data), max = Math.max(...data);
+      const span = (max - min) || 1;
+      const bw = Math.max(1.2, W / N - GAP);
+      const hot = hotSet();
+
+      if (rebuild) {
+        svg.innerHTML = data.map((v, i) => {
+          const norm = (v - min) / span;
+          const h = 6 + norm * (HGT - 10);
+          return `<rect style="--i:${i}" x="${(i * (bw + GAP)).toFixed(2)}" y="${(HGT - h).toFixed(2)}"
+            width="${bw.toFixed(2)}" height="${h.toFixed(2)}" rx="${(bw / 2).toFixed(2)}"></rect>`;
+        }).join('');
+      }
+
+      $$('rect', svg).forEach((r, i) => {
+        const norm = (data[i] - min) / span;
+        const isHot = hot.has(i);
+        r.setAttribute('fill', isHot ? '#F18D74' : '#3B72ED');
+        r.setAttribute('fill-opacity', isHot ? '0.95' : (0.34 + norm * 0.42).toFixed(3));
+      });
+
+      count.textContent = `${hot.size} of ${N} bars accented`;
+    }
+
+    $$('[data-mode]', demo).forEach((btn) => {
+      btn.addEventListener('click', () => {
+        mode = btn.dataset.mode;
+        $$('[data-mode]', demo).forEach((b) => b.classList.toggle('is-on', b === btn));
+        paint(false);
+      });
+    });
+
+    $('[data-reshuffle]', demo).addEventListener('click', () => {
+      data = series();
+      paint(true);
+    });
+
+    paint(true);
   }
 
   // ------------------------------------------------------------- github graph
