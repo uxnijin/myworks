@@ -102,6 +102,7 @@ const EXPLORING = [
 // ============================================================================
 
 const DESIGNS = [
+  DESIGN_AEROS,
   DESIGN_PARCEL,
   DESIGN_ROUTE_PLANNER,
   DESIGN_SHIPFLOW,
