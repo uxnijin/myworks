@@ -23,6 +23,14 @@ const DESIGN_OPPAM = {
   tech: ['SwiftUI', 'iOS 18', 'SwiftData (on-device only)', 'Observation', 'Custom character system', 'Face ID', 'Mock data · no cloud'],
   blocks: [
 
+    // ── Hero ─────────────────────────────────────────────────────────────────
+    {
+      t: 'image',
+      src: '/oppam-assets/hero.webp',
+      alt: 'Three screens from Oppam - the onboarding sunrise, the home veranda, and therapist matching',
+      caption: 'The sunrise that opens the app, the "veranda" home, and Care - where you meet people, not a directory.',
+    },
+
     // ── Disclaimer & Real App text ──────────────────────────────────────────
     { t: 'h3', x: 'A concept redesign of an existing product.' },
     {
@@ -33,14 +41,6 @@ const DESIGN_OPPAM = {
     {
       t: 'p',
       x: 'This isn\'t a Figma file exported to images. It is a working SwiftUI app running on an iPhone - the companion actually breathes and blinks, the breathing exercise really counts you through 4–2–6, the journal really locks behind Face ID, and the therapist matching really reorders people around the feelings you pick. <strong>17 Swift files, ~4,100 lines, zero third-party UI libraries.</strong>',
-    },
-
-    // ── Hero ─────────────────────────────────────────────────────────────────
-    {
-      t: 'image',
-      src: '/oppam-assets/hero.webp',
-      alt: 'Three screens from Oppam - the onboarding sunrise, the home veranda, and therapist matching',
-      caption: 'The sunrise that opens the app, the "veranda" home, and Care - where you meet people, not a directory.',
     },
 
     // ── At a glance ──────────────────────────────────────────────────────────
