@@ -29,7 +29,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/hero.webp',
       alt: 'Three screens from Oppam - the welcome sunrise, the home veranda, and a therapist introduction',
       caption: 'The sunrise that opens the app, the "veranda" home, and Care - where you meet a person, not a directory.',
-      bleed: true,
     },
 
     // ── Disclaimer & Real App text ──────────────────────────────────────────
@@ -170,14 +169,12 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/home-anatomy.webp',
       alt: 'Annotated anatomy of the Oppam home screen with three numbered zoom callouts',
       caption: 'Home, annotated. Warmth is doing a job here - every element answers something the research asked for.',
-      bleed: true,
     },
     {
       t: 'image',
       src: '/oppam-assets/home-times.webp',
       alt: 'The home screen at morning, afternoon, evening and night - the sky and companion change with the hour',
       caption: 'The same screen across the day. The sky shifts, and after 9 PM the companion grows sleepy-lidded and holds a lantern - it stays up with you.',
-      bleed: true,
     },
 
     // ══ 4. The companion - the signature idea ════════════════════════════════
@@ -217,7 +214,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/moods.webp',
       alt: 'The five companion moods: peaceful, listening, happy, comforting, sleeping',
       caption: 'Peaceful, listening, happy, comforting, sleeping - the same geometry, re-curved. This board is generated live by the app, not drawn by hand.',
-      bleed: true,
     },
     { t: 'h3', x: 'It breathes - and this is where the motion lives' },
     {
@@ -229,7 +225,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/companion-motion.webp',
       alt: 'The static companion beside an empty framed space reserved for a motion clip',
       caption: 'The static face, and the space where it comes alive. ▶ Motion clip to be dropped in here.',
-      bleed: true,
     },
     { t: 'h3', x: 'The rules it never breaks' },
     {
@@ -259,7 +254,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/onboarding.webp',
       alt: 'The five onboarding steps: welcome sunrise, a name, language of the heart, what brings you, and the privacy promise',
       caption: 'Arrival → a name (any name) → language of the heart → what\'s sitting with you (optional) → one privacy promise. No email. No password. "Just let me look around" skips it all.',
-      bleed: true,
     },
 
     // ══ 6. Care ══════════════════════════════════════════════════════════════
@@ -273,7 +267,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/care.webp',
       alt: 'Care: the gentle start with feeling chips, and the matched introductions',
       caption: 'Left: you name a feeling (with the platform\'s real trust strip). Right: three introductions, each with a plain reason why them - and a live session waiting at the top if you have one.',
-      bleed: true,
     },
     { t: 'h3', x: 'The profile that dissolves the fear' },
     {
@@ -285,7 +278,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/care-anatomy.webp',
       alt: 'A therapist profile annotated: voice intro, plain-language fit tags, and the how-I-work note',
       caption: 'Their voice and plain-language fit come first; logistics last. The "how I work" note is set in serif, like a letter.',
-      bleed: true,
     },
     { t: 'h3', x: 'Booking - three taps, zero forms' },
     {
@@ -297,7 +289,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/therapist-booking.webp',
       alt: 'A therapist profile, the plan-choosing booking sheet, and the warm confirmation',
       caption: 'Profile → choose a rhythm (single or a gentle plan) → "You\'re booked." Come exactly as you are - that\'s the whole point.',
-      bleed: true,
     },
     {
       t: 'p',
@@ -308,7 +299,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/booking-steps.webp',
       alt: 'The four booking steps: session type, choosing a slot, choosing a mode, and the review with an itemised bill',
       caption: 'Session type → slot → how you\'ll meet → review. Four calm steps, each doing one thing, with a progress dot that never rushes you.',
-      bleed: true,
     },
     { t: 'h3', x: 'For those who\'d rather look themselves' },
     {
@@ -320,7 +310,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/directory-edges.webp',
       alt: 'The full searchable therapist directory, and the edge-case gallery of empty and error states',
       caption: 'Left: the full list, one tap deeper. Right: the edge-case room - offline, card declined, a dropped call, empty searches - each held gently, none left to a default alert.',
-      bleed: true,
     },
 
     // ══ 7. Sessions ══════════════════════════════════════════════════════════
@@ -334,7 +323,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/session-flow.webp',
       alt: 'The live session flow: the join card, the connected video room, and the kind rating screen',
       caption: 'Join → a calm, connected room → "How was your time?" Rating is an invitation, never a demand - "Maybe later" is always there, and a low rating offers a different fit with no awkwardness.',
-      bleed: true,
     },
     { t: 'h3', x: 'A history that invites you back' },
     {
@@ -346,7 +334,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/history.webp',
       alt: 'Session history with per-session ratings and rebooking, and the session detail sheet',
       caption: 'Left: your sessions so far, each rebookable in a tap. Right: a session\'s details - nothing to prepare, one quiet reminder an hour before.',
-      bleed: true,
     },
 
     // ══ 8. Pages ═════════════════════════════════════════════════════════════
@@ -360,7 +347,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/pages.webp',
       alt: 'The Pages journal with the memory garden, the writing composer, and the future-letter composer',
       caption: 'The garden and your entries; a composer where the only prompt is one you can turn off; and a letter you can seal for one, three or six months.',
-      bleed: true,
     },
 
     // ══ 9. Privacy ═══════════════════════════════════════════════════════════
@@ -374,14 +360,12 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/you-privacy.webp',
       alt: 'The You tab and the Privacy Room with self-explaining toggles and a live notification preview',
       caption: 'The You tab is deliberately tiny; the Privacy Room is the hero. Note the live notification preview: it shows the actual harmless text a family member would see on the lock screen - never the word "therapy."',
-      bleed: true,
     },
     {
       t: 'image',
       src: '/oppam-assets/privacy-signature.webp',
       alt: 'Three privacy signatures: the app-switcher sunrise cover, the Face-ID locked door, and the Privacy Room',
       caption: 'Three signatures of one principle: switch away and the app switcher shows only a sunrise; your pages sit behind a Face-ID door ("these pages are only yours"); and inside the Privacy Room, every protection is a toggle you can see and understand.',
-      bleed: true,
     },
 
     // ══ 10. Edge & error states ══════════════════════════════════════════════
@@ -395,14 +379,12 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/edge-connection.webp',
       alt: 'Five failure states: offline page, card declined, network dropped mid-payment, offline booking, and the call-can\'t-connect screen',
       caption: 'When the signal drops, a card is declined, or a call won\'t connect. Every failure reassures first ("nothing was charged," "your slot is safe") and offers one calm retry.',
-      bleed: true,
     },
     {
       t: 'image',
       src: '/oppam-assets/edge-empty.webp',
       alt: 'The offline ribbon and five empty states: nothing booked, no history, no search results, blank pages, and the generic fallback',
       caption: 'Empty is never a dead end. The companion waits in every blank space with a warm line and a gentle way forward - the app-wide offline ribbon, no sessions yet, no results, blank pages, and the catch-all "something went sideways."',
-      bleed: true,
     },
     {
       t: 'p',
@@ -413,7 +395,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/edge-dark.webp',
       alt: 'The same error and empty states rendered in lamplight dark mode',
       caption: 'The same rough edges, re-lit for night - warm, never cold grey, even when something breaks.',
-      bleed: true,
     },
 
     // ══ 11. Widget ═══════════════════════════════════════════════════════════
@@ -427,7 +408,6 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/widget.webp',
       alt: 'The Oppam home-screen widget in light and dark, small and medium sizes',
       caption: 'Small and medium widgets, in daylight and lamplight. No account, no data - just the companion and a greeting that follows the hour.',
-      bleed: true,
     },
 
     // ══ 11. Design system ════════════════════════════════════════════════════
@@ -472,14 +452,12 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/dark-showcase.webp',
       alt: 'Four screens in lamplight dark mode: home, care, a therapist profile and the journal',
       caption: 'Home, Care, a therapist, and Pages in lamplight. The sunlit palette was the daytime hero, so lamplight simply proves the system holds together at night.',
-      bleed: true,
     },
     {
       t: 'image',
       src: '/oppam-assets/dark-showcase-2.webp',
       alt: 'Four more lamplight screens: You, session history, booking confirmed, and the night home',
       caption: 'You, your session history, a confirmed booking, and the night veranda - warm, never cold grey.',
-      bleed: true,
     },
     {
       t: 'p',
@@ -490,21 +468,18 @@ const DESIGN_OPPAM = {
       src: '/oppam-assets/dark-onboarding.webp',
       alt: 'All five onboarding steps in lamplight dark mode',
       caption: 'The entire onboarding arc in lamplight - the same warmth, from the first sunrise to the privacy promise.',
-      bleed: true,
     },
     {
       t: 'image',
       src: '/oppam-assets/dark-sessions.webp',
       alt: 'The session flow in dark mode: night home, the live call, rating, and history',
       caption: 'The session loop at night - the "Still up?" veranda, the live call, the rating, and your history.',
-      bleed: true,
     },
     {
       t: 'image',
       src: '/oppam-assets/dark-flows.webp',
       alt: 'Care flows in dark mode: the gentle start, the full directory, choosing a plan, and the booking review',
       caption: 'Care in lamplight - from the gentle start through the full directory, plan and review.',
-      bleed: true,
     },
 
     // ══ 14. How it compares ══════════════════════════════════════════════════

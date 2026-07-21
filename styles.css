@@ -1241,8 +1241,6 @@ kbd {
   /* break out of the reading column, gently */
   margin-left: -48px;
   margin-right: -48px;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .frame {
@@ -2332,13 +2330,25 @@ td code {
 }
 
 @keyframes ademo-rise {
-  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 @keyframes ademo-grow {
-  from { transform: scaleY(0); }
-  to { transform: scaleY(1); }
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
 }
 
 /* ---- rank vs threshold bars ---- */
@@ -2362,11 +2372,28 @@ td code {
 }
 
 @media (max-width: 720px) {
-  .ademo-stage { padding: 24px 16px 20px; }
-  .ademo-cols { height: 230px; gap: 6px; }
-  .ademo-glabel { font-size: 12px; }
-  .ademo-pill { font-size: 10px; padding: 2px 7px; }
-  .ademo-hint { margin-left: 0; flex-basis: 100%; }
+  .ademo-stage {
+    padding: 24px 16px 20px;
+  }
+
+  .ademo-cols {
+    height: 230px;
+    gap: 6px;
+  }
+
+  .ademo-glabel {
+    font-size: 12px;
+  }
+
+  .ademo-pill {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+
+  .ademo-hint {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
 }
 
 /* Legal links at document footer */
