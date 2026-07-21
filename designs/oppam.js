@@ -19,7 +19,7 @@ const DESIGN_OPPAM = {
   tag: 'Case Study',
   status: 'Prototype',
   summary: 'Reimagining a Kerala therapy platform as a warm iOS companion - a living mascot, a sunlit design system, and privacy built for shared homes. Designed and shipped as a running SwiftUI app.',
-  lede: 'In Kerala, most people who need therapy wait - not because help is missing, but because asking for it is heavy. Stigma, shared phones, cost confusion, the fear of the unknown first session. Oppam (ഒപ്പം - "beside you") is a redesign concept that answers those fears with a single idea: not a therapy app, but the digital embodiment of someone quietly coming and sitting beside you. This is that idea built all the way into a real, runnable iOS app - with a companion character that breathes, a design system made of sunlight, and privacy designed for a house where the phone gets borrowed.',
+  lede: 'In Kerala, asking for therapy is heavy - slowed by stigma, shared phones, and fear of the unknown. Oppam (ഒപ്പം - "beside you") is a concept redesign built to soften that moment: not a therapy app, but the feeling of someone quietly sitting beside you - brought to life in a runnable iOS app with an animated companion, a sunlit design system, and privacy built for shared homes.',
   tech: ['SwiftUI', 'iOS 18', 'SwiftData (on-device only)', 'Observation', 'Custom character system', 'Face ID', 'Mock data · no cloud'],
   blocks: [
 
