@@ -1241,6 +1241,8 @@ kbd {
   /* break out of the reading column, gently */
   margin-left: -48px;
   margin-right: -48px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .frame {
