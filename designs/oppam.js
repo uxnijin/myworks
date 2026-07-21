@@ -207,9 +207,9 @@ const DESIGN_OPPAM = {
   <circle cx="750" cy="220" r="118" fill="#FFC13B" opacity="0.10"/>
   <circle cx="750" cy="220" r="96" fill="#FFC13B" opacity="0.14"/>
   <circle cx="750" cy="220" r="78" fill="#FFFDF4" stroke="#F0E4C4" stroke-width="1.5"/>
-  <path d="M716 214 Q732 196 748 214" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
-  <path d="M752 214 Q768 196 784 214" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
-  <path d="M704 232 C734 286 766 286 796 232" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
+  <path d="M714 182 Q730 162 746 182" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
+  <path d="M754 182 Q770 162 786 182" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
+  <path d="M704 208 C734 274 766 274 796 208" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
   <text x="640" y="386" font-family="Helvetica, sans-serif" font-size="16" fill="#6E675C">A soft sun with dawn-light halos. The same face -</text>
   <text x="640" y="410" font-family="Helvetica, sans-serif" font-size="16" fill="#6E675C">now able to breathe (~8s), blink, and feel.</text>
 </svg>`,
