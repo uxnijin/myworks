@@ -1572,17 +1572,43 @@ kbd {
 
 /* ============================================================ TOOL CHIP GRID (Exploring page) */
 
+.tool-section {
+  margin-top: 40px;
+}
+
+.tool-section:first-of-type {
+  margin-top: 28px;
+}
+
+.tool-section-head {
+  margin-bottom: 14px;
+}
+
+.tool-section-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.tool-section-blurb {
+  margin: 3px 0 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
 .tool-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
 .tool-chip {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px;
+  gap: 12px;
+  padding: 13px 14px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg);
@@ -1601,25 +1627,46 @@ a.tool-chip:hover {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
   color: #fff;
-  font-family: var(--font-display);
-  font-size: 12.5px;
-  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
 }
 
 .tool-chip-ico svg {
-  width: 18px;
-  height: 18px;
-  stroke: #fff;
+  width: 21px;
+  height: 21px;
+  fill: #fff;
+  color: #fff;
+}
+
+.tool-chip-mono {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.tool-chip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .tool-chip-name {
   font-family: var(--font-display);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tool-chip-use {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-muted);
 }
 
 /* ============================================================ BLOCK: steps */

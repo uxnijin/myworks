@@ -1653,20 +1653,41 @@
 
   function viewExploring() {
     const title = "Things I'm Exploring";
-    const lede = 'Tools and software in my day-to-day rotation right now.';
+    const lede = 'The tools, languages and services in my day-to-day rotation — from designing the thing to shipping it.';
     document.title = `${title} | ${PROFILE.name}`;
     setDescription(lede);
     $('#toc').innerHTML = '';
 
-    const chips = EXPLORING.map((t) => {
-      const glyph = t.icon ? icon(t.icon) : esc(t.letter || t.name.charAt(0));
+    const chip = (t) => {
+      const glyph = t.brand
+        ? brandGlyph(t.brand)
+        : `<span class="tool-chip-mono">${esc(t.letter || t.name.charAt(0))}</span>`;
       const inner = `
         <span class="tool-chip-ico" style="background:${esc(t.color || 'var(--accent)')}">${glyph}</span>
-        <span class="tool-chip-name">${esc(t.name)}</span>`;
+        <span class="tool-chip-body">
+          <span class="tool-chip-name">${esc(t.name)}</span>
+          ${t.use ? `<span class="tool-chip-use">${esc(t.use)}</span>` : ''}
+        </span>`;
       return t.url
         ? `<a class="tool-chip" href="${esc(t.url)}" target="_blank" rel="noopener">${inner}</a>`
         : `<div class="tool-chip">${inner}</div>`;
-    }).join('');
+    };
+
+    // Back-compat: support both the grouped shape and a flat array.
+    const groups = Array.isArray(EXPLORING) && EXPLORING[0] && EXPLORING[0].items
+      ? EXPLORING
+      : [{ items: EXPLORING }];
+
+    const total = groups.reduce((n, g) => n + (g.items ? g.items.length : 0), 0);
+
+    const sections = groups.map((g) => `
+      <section class="tool-section">
+        ${g.group ? `<div class="tool-section-head">
+          <h2 class="tool-section-title">${esc(g.group)}</h2>
+          ${g.blurb ? `<p class="tool-section-blurb">${esc(g.blurb)}</p>` : ''}
+        </div>` : ''}
+        <div class="tool-grid">${g.items.map(chip).join('')}</div>
+      </section>`).join('');
 
     $('#view').innerHTML = `
       <div class="view">
@@ -1675,7 +1696,7 @@
             <h1 class="doc-h1">${esc(title)}</h1>
             <p class="doc-lede">${esc(lede)}</p>
           </header>
-          ${EXPLORING.length ? `<div class="tool-grid">${chips}</div>` : `<p class="sec-sub">Nothing new to share yet — check back soon.</p>`}
+          ${total ? sections : `<p class="sec-sub">Nothing new to share yet — check back soon.</p>`}
         </article>
       </div>`;
   }

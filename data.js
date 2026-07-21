@@ -72,25 +72,76 @@ const WRITINGS = [
 const MEDIUM_USERNAME = 'nijinmuhammed';
 
 // ============================================================================
-//  EXPLORING - "Things I'm Exploring" page. Right now it's rendered as a
-//  grid of tool chips rather than the row list BUILDING/WRITINGS use.
-//  Each item: { name, icon?, letter?, color, url? }. `icon` is a key from
-//  ICONS; when omitted, `letter` (defaults to the first character of
-//  `name`) is shown in a colored monogram tile instead.
+//  EXPLORING - "Things I'm Exploring" page: the tools, languages and services
+//  in my day-to-day rotation, grouped into labelled sections.
+//
+//  Shape: an array of { group, blurb?, items:[…] }. Each item is
+//    { name, brand?, letter?, color, use?, url? }
+//    - `brand`  a key from BRAND_ICONS (blocks.js) → renders the real logo.
+//    - `letter` a 1-2 char monogram, shown when there's no brand logo.
+//    - `color`  the tile colour (the logo/letter sits on it in white).
+//    - `use`    one-line note on what I actually reach for it for.
 // ============================================================================
 
 const EXPLORING = [
-  { name: 'Figma', icon: 'figma', color: '#a259ff', url: 'https://figma.com' },
-  { name: 'Notion', letter: 'N', color: '#1d1d1d', url: 'https://notion.so' },
-  { name: 'Linear', letter: 'L', color: '#5e6ad2', url: 'https://linear.app' },
-  { name: 'Claude', letter: 'C', color: '#da7756', url: 'https://claude.ai' },
-  { name: 'Antigravity', letter: 'A', color: '#4285f4', url: 'https://antigravity.google' },
-  { name: 'Firebase', letter: 'F', color: '#ffca28', url: 'https://firebase.google.com' },
-  { name: 'Supabase', letter: 'S', color: '#3ecf8e', url: 'https://supabase.com' },
-  { name: 'Photoshop', letter: 'Ps', color: '#001e36', url: 'https://adobe.com/products/photoshop.html' },
-  { name: 'Linearity Curve', letter: 'Lc', color: '#7c3aed', url: 'https://linearity.io/curve' },
-  { name: 'Shopify', icon: 'cart', color: '#95bf47', url: 'https://shopify.com' },
-  { name: 'Framer', letter: 'Fr', color: '#0055ff', url: 'https://framer.com' },
+  {
+    group: 'Design & Prototyping',
+    blurb: 'Where the pixels and flows get worked out.',
+    items: [
+      { name: 'Figma', brand: 'figma', color: '#f24e1e', use: 'UI design, prototyping & design systems', url: 'https://figma.com' },
+      { name: 'Framer', brand: 'framer', color: '#0f0f0f', use: 'Interactive prototypes & marketing sites', url: 'https://framer.com' },
+      { name: 'Photoshop', letter: 'Ps', color: '#31a8ff', use: 'Photo editing, retouching & compositing', url: 'https://adobe.com/products/photoshop.html' },
+      { name: 'Illustrator', letter: 'Ai', color: '#ff9a00', use: 'Vector illustration & iconography', url: 'https://adobe.com/products/illustrator.html' },
+      { name: 'Linearity Curve', letter: 'Lc', color: '#7c3aed', use: 'Vector design on the iPad', url: 'https://linearity.io/curve' },
+    ],
+  },
+  {
+    group: 'Languages & Frameworks',
+    blurb: 'What I write when the mockup needs to become a real thing.',
+    items: [
+      { name: 'JavaScript', brand: 'javascript', color: '#f0b400', use: 'The glue for plugins, tools & prototypes', url: 'https://developer.mozilla.org/docs/Web/JavaScript' },
+      { name: 'TypeScript', brand: 'typescript', color: '#3178c6', use: 'Typed JS for anything non-trivial', url: 'https://www.typescriptlang.org' },
+      { name: 'HTML', brand: 'html5', color: '#e34f26', use: 'Semantic structure for the web', url: 'https://developer.mozilla.org/docs/Web/HTML' },
+      { name: 'CSS', brand: 'css', color: '#1572b6', use: 'Layout, motion & fine-grained styling', url: 'https://developer.mozilla.org/docs/Web/CSS' },
+      { name: 'React', brand: 'react', color: '#0a7ea4', use: 'Component-driven web app UIs', url: 'https://react.dev' },
+      { name: 'Tailwind CSS', brand: 'tailwind', color: '#0891b2', use: 'Utility-first styling that stays consistent', url: 'https://tailwindcss.com' },
+      { name: 'Swift', brand: 'swift', color: '#f05138', use: 'Native iOS prototypes & motion studies', url: 'https://developer.apple.com/swift' },
+      { name: 'Python', brand: 'python', color: '#3776ab', use: 'Scripting, automation & quick data work', url: 'https://www.python.org' },
+    ],
+  },
+  {
+    group: 'Dev Tools & AI',
+    blurb: 'The editors and copilots I build inside every day.',
+    items: [
+      { name: 'VS Code', letter: 'Vs', color: '#0078d4', use: 'My main editor', url: 'https://code.visualstudio.com' },
+      { name: 'Cursor', brand: 'cursor', color: '#0f0f0f', use: 'AI-native editor for larger changes', url: 'https://cursor.com' },
+      { name: 'Claude', brand: 'claude', color: '#d97757', use: 'Pair-programming, writing & thinking out loud', url: 'https://claude.ai' },
+      { name: 'Antigravity', letter: 'Ag', color: '#4285f4', use: 'Agentic coding experiments', url: 'https://antigravity.google' },
+      { name: 'Git', brand: 'git', color: '#f05032', use: 'Version control on everything', url: 'https://git-scm.com' },
+      { name: 'GitHub', brand: 'github', color: '#181717', use: 'Hosting, reviews & shipping in the open', url: 'https://github.com' },
+    ],
+  },
+  {
+    group: 'Backend & Hosting',
+    blurb: 'What backs the prototypes and puts them online.',
+    items: [
+      { name: 'Firebase', brand: 'firebase', color: '#f5820d', use: 'Auth, realtime data & quick backends', url: 'https://firebase.google.com' },
+      { name: 'Supabase', brand: 'supabase', color: '#3ecf8e', use: 'Postgres backend with less setup', url: 'https://supabase.com' },
+      { name: 'Node.js', brand: 'nodejs', color: '#5fa04e', use: 'Server-side JS & build tooling', url: 'https://nodejs.org' },
+      { name: 'Vercel', brand: 'vercel', color: '#0f0f0f', use: 'Zero-fuss deploys for web projects', url: 'https://vercel.com' },
+      { name: 'Netlify', brand: 'netlify', color: '#00c7b7', use: 'Static hosting & preview builds', url: 'https://netlify.com' },
+      { name: 'Cloudflare', brand: 'cloudflare', color: '#f38020', use: 'DNS, edge & keeping sites fast', url: 'https://cloudflare.com' },
+    ],
+  },
+  {
+    group: 'Product & Workspace',
+    blurb: 'Where the work gets organised, tracked and sold.',
+    items: [
+      { name: 'Notion', brand: 'notion', color: '#0f0f0f', use: 'Notes, docs & project wikis', url: 'https://notion.so' },
+      { name: 'Linear', brand: 'linear', color: '#5e6ad2', use: 'Issue tracking & planning', url: 'https://linear.app' },
+      { name: 'Shopify', brand: 'shopify', color: '#95bf47', use: 'Storefronts & commerce experiments', url: 'https://shopify.com' },
+    ],
+  },
 ];
 
 // ============================================================================
