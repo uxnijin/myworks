@@ -384,28 +384,8 @@ const DESIGN_OPPAM = {
       ],
     },
 
-    // ══ 11. Where the founders would take it ═════════════════════════════════
-    { t: 'h2', x: '11. Where This Goes Next' },
-    {
-      t: 'p',
-      x: 'Thinking as an Oppam founder, not just a designer: the companion and the four rooms are a <strong>platform</strong>, not a finished feature set. Because the character and the design system already exist, each new idea below can arrive feeling native on day one - the companion simply picks up a new way to sit beside you.',
-    },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'activity', title: 'A breathing library', desc: 'The 4-2-6 exercise grows into a small collection - box breathing, a 3 AM panic reset, a pre-session settle - the companion guiding each. Calm on demand, in the app you already trust.' },
-        { icon: 'book', title: 'A deeper journal', desc: 'Guided reflections after a session, gratitude prompts, and "letters to future me" maturing into a genuine keepsake. Private by construction, always on-device.' },
-        { icon: 'sun', title: 'A weather log with gentle insight', desc: 'The daily inner-weather check-ins become a felt timeline - "your skies have been clearer since you started with Farsana" - insight that encourages, never diagnoses.' },
-        { icon: 'moon', title: 'Sleep-aware night companion', desc: 'With HealthKit, the companion knows you\'re up at 3 AM and softens accordingly - a lantern, a breath, a helpline - without ever being asked.' },
-        { icon: 'globe', title: 'Circles &amp; family mode', desc: 'Opt-in, anonymous peer circles (new mothers, students, NRI spouses) and a gentle "family understanding" primer - carefully, because privacy is the whole promise.' },
-        { icon: 'home', title: 'Home-screen presence', desc: 'A WidgetKit sunrise widget and a Live Activity that quietly counts down to a session - the companion on your home screen, still just… beside you.' },
-        { icon: 'image', title: 'Alternate app icons', desc: 'The companion in different lights (dawn, lamplight, monsoon) - so even the icon on a shared phone is one you chose, and one that feels like yours.' },
-        { icon: 'verified', title: 'The companion, one register wiser', desc: 'Carefully-scoped, on-device warmth - remembering your name, your weather, your language - always handing real feelings to real people. Never a therapist; always a companion.' },
-      ],
-    },
-
-    // ══ 12. Scope & honesty ══════════════════════════════════════════════════
-    { t: 'h2', x: '12. Prototype Scope' },
+    // ══ 11. Scope & honesty ══════════════════════════════════════════════════
+    { t: 'h2', x: '11. Prototype Scope' },
     {
       t: 'p',
       x: 'Built with SwiftUI on iOS 18 - SwiftData for on-device storage, the Observation framework for state, async/await, and a hand-built character and motion system. All data is mock or drawn from the public oppam.me site. A few items were <strong>deliberately deferred</strong> as a later pass, and naming them is part of the design: the WidgetKit widget, the Live Activity, alternate app icons (needs asset variants), HealthKit sleep-awareness, and Apple Sign In - the last one kept out of onboarding on purpose, because trust should come before identity.',
