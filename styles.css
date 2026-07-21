@@ -1874,6 +1874,10 @@ td code {
   fill: var(--accent);
 }
 
+.diagram .d-smile {
+  stroke: var(--text);
+}
+
 /* ============================================================ BLOCK: live scale demo (tints & shades) */
 
 .demo {

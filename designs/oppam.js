@@ -195,9 +195,9 @@ const DESIGN_OPPAM = {
   <text x="378" y="209" class="d-s">smile · 52% height</text>
   <line x1="160" y1="100" x2="160" y2="300" class="d-l" stroke-dasharray="4 6"/>
   <line x1="280" y1="100" x2="280" y2="300" class="d-l" stroke-dasharray="4 6"/>
-  <path d="M144 162 Q160 142 176 162" fill="none" stroke="#33302A" stroke-width="8" stroke-linecap="round"/>
-  <path d="M264 162 Q280 142 296 162" fill="none" stroke="#33302A" stroke-width="8" stroke-linecap="round"/>
-  <path d="M100 188 C156 266 284 266 340 188" fill="none" stroke="#33302A" stroke-width="8" stroke-linecap="round"/>
+  <path d="M144 162 Q160 142 176 162" fill="none" stroke="var(--text)" stroke-width="8" stroke-linecap="round" class="d-smile"/>
+  <path d="M264 162 Q280 142 296 162" fill="none" stroke="var(--text)" stroke-width="8" stroke-linecap="round" class="d-smile"/>
+  <path d="M100 188 C156 266 284 266 340 188" fill="none" stroke="var(--text)" stroke-width="8" stroke-linecap="round" class="d-smile"/>
   <circle cx="100" cy="188" r="4.5" fill="#FFC13B"/><circle cx="340" cy="188" r="4.5" fill="#FFC13B"/>
   <circle cx="160" cy="142" r="4.5" fill="#FFC13B"/><circle cx="280" cy="142" r="4.5" fill="#FFC13B"/>
   <text x="40" y="360" class="d-s" style="font-size:14px">Two upward arcs (eyes) + one long smile whose</text>
