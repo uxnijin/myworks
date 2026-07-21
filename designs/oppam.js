@@ -176,42 +176,28 @@ const DESIGN_OPPAM = {
     {
       t: 'diagram',
       caption: 'The companion is drawn as animatable geometry (a SwiftUI Shape), never an imported image - which is the entire reason it can breathe, blink, and change mood in real time.',
-      svg: `<svg viewBox="0 0 920 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Construction of the companion face - two upward eye arcs and one lifted smile">
-  <rect x="2" y="2" width="916" height="466" rx="28" fill="#FFFDF6" stroke="#EADFC8" stroke-width="2"/>
-  <!-- LEFT: construction -->
-  <text x="60" y="60" font-family="Georgia, serif" font-size="26" fill="#33302A" font-weight="bold">How it's built</text>
+      svg: `<svg viewBox="0 0 560 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Construction of the companion face - two upward eye arcs and one lifted smile">
+  <text x="40" y="50" font-family="Georgia, serif" font-size="24" fill="#33302A" font-weight="bold">How it's built</text>
   <!-- guide frame -->
-  <rect x="90" y="120" width="300" height="200" rx="6" fill="none" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="5 6"/>
+  <rect x="70" y="100" width="300" height="200" rx="6" fill="none" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="5 6"/>
   <!-- horizontal guides -->
-  <line x1="90" y1="180" x2="390" y2="180" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
-  <line x1="90" y1="224" x2="390" y2="224" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
-  <text x="398" y="185" font-family="Helvetica, sans-serif" font-size="15" fill="#9C9384">eyes · 30% height</text>
-  <text x="398" y="229" font-family="Helvetica, sans-serif" font-size="15" fill="#9C9384">smile · 52% height</text>
+  <line x1="70" y1="160" x2="370" y2="160" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <line x1="70" y1="204" x2="370" y2="204" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <text x="378" y="165" font-family="Helvetica, sans-serif" font-size="14" fill="#9C9384">eyes · 30% height</text>
+  <text x="378" y="209" font-family="Helvetica, sans-serif" font-size="14" fill="#9C9384">smile · 52% height</text>
   <!-- vertical guides -->
-  <line x1="180" y1="120" x2="180" y2="320" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
-  <line x1="300" y1="120" x2="300" y2="320" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <line x1="160" y1="100" x2="160" y2="300" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <line x1="280" y1="100" x2="280" y2="300" stroke="#E3D6B8" stroke-width="1.5" stroke-dasharray="4 6"/>
   <!-- eyes: two upward arcs -->
-  <path d="M164 182 Q180 162 196 182" fill="none" stroke="#33302A" stroke-width="9" stroke-linecap="round"/>
-  <path d="M284 182 Q300 162 316 182" fill="none" stroke="#33302A" stroke-width="9" stroke-linecap="round"/>
+  <path d="M144 162 Q160 142 176 162" fill="none" stroke="#33302A" stroke-width="8" stroke-linecap="round"/>
+  <path d="M264 162 Q280 142 296 162" fill="none" stroke="#33302A" stroke-width="8" stroke-linecap="round"/>
   <!-- smile: wide curve, tips lifted -->
-  <path d="M120 208 C176 286 304 286 360 208" fill="none" stroke="#33302A" stroke-width="9" stroke-linecap="round"/>
+  <path d="M100 188 C156 266 284 266 340 188" fill="none" stroke="#33302A" stroke-width="8" stroke-linecap="round"/>
   <!-- control-point dots -->
-  <circle cx="120" cy="208" r="5" fill="#FFC13B"/><circle cx="360" cy="208" r="5" fill="#FFC13B"/>
-  <circle cx="180" cy="162" r="5" fill="#FFC13B"/><circle cx="300" cy="162" r="5" fill="#FFC13B"/>
-  <text x="60" y="386" font-family="Helvetica, sans-serif" font-size="16" fill="#6E675C">Two upward arcs (eyes) + one long smile whose</text>
-  <text x="60" y="410" font-family="Helvetica, sans-serif" font-size="16" fill="#6E675C">tips lift past the eyes - lifted straight from the logo.</text>
-  <!-- divider -->
-  <line x1="600" y1="70" x2="600" y2="400" stroke="#EADFC8" stroke-width="1.5"/>
-  <!-- RIGHT: result -->
-  <text x="640" y="60" font-family="Georgia, serif" font-size="26" fill="#33302A" font-weight="bold">What it becomes</text>
-  <circle cx="750" cy="220" r="118" fill="#FFC13B" opacity="0.10"/>
-  <circle cx="750" cy="220" r="96" fill="#FFC13B" opacity="0.14"/>
-  <circle cx="750" cy="220" r="78" fill="#FFFDF4" stroke="#F0E4C4" stroke-width="1.5"/>
-  <path d="M714 182 Q730 162 746 182" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
-  <path d="M754 182 Q770 162 786 182" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
-  <path d="M704 208 C734 274 766 274 796 208" fill="none" stroke="#33302A" stroke-width="7.5" stroke-linecap="round"/>
-  <text x="640" y="386" font-family="Helvetica, sans-serif" font-size="16" fill="#6E675C">A soft sun with dawn-light halos. The same face -</text>
-  <text x="640" y="410" font-family="Helvetica, sans-serif" font-size="16" fill="#6E675C">now able to breathe (~8s), blink, and feel.</text>
+  <circle cx="100" cy="188" r="4.5" fill="#FFC13B"/><circle cx="340" cy="188" r="4.5" fill="#FFC13B"/>
+  <circle cx="160" cy="142" r="4.5" fill="#FFC13B"/><circle cx="280" cy="142" r="4.5" fill="#FFC13B"/>
+  <text x="40" y="360" font-family="Helvetica, sans-serif" font-size="15" fill="#6E675C">Two upward arcs (eyes) + one long smile whose</text>
+  <text x="40" y="384" font-family="Helvetica, sans-serif" font-size="15" fill="#6E675C">tips lift past the eyes - lifted straight from the logo.</text>
 </svg>`,
     },
     { t: 'h3', x: 'One face, five registers' },
