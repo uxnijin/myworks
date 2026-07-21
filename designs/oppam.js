@@ -21,22 +21,17 @@ const DESIGN_OPPAM = {
   summary: 'Reimagining a Kerala therapy platform as a warm iOS companion - a living mascot, a sunlit design system, and privacy built for shared homes. Designed and shipped as a running SwiftUI app.',
   lede: 'In Kerala, most people who need therapy wait - not because help is missing, but because asking for it is heavy. Stigma, shared phones, cost confusion, the fear of the unknown first session. Oppam (ഒപ്പം - "beside you") is a redesign concept that answers those fears with a single idea: not a therapy app, but the digital embodiment of someone quietly coming and sitting beside you. This is that idea built all the way into a real, runnable iOS app - with a companion character that breathes, a design system made of sunlight, and privacy designed for a house where the phone gets borrowed.',
   tech: ['SwiftUI', 'iOS 18', 'SwiftData (on-device only)', 'Observation', 'Custom character system', 'Face ID', 'Mock data · no cloud'],
-  blocks: [
-
-    // ── Disclaimer - non-negotiable ──────────────────────────────────────────
+      // ── Disclaimer & Real App text ──────────────────────────────────────────
+    { t: 'h3', x: 'A concept redesign of an existing product.' },
     {
-      t: 'callout',
-      kind: 'warning',
-      title: 'A concept redesign of an existing product.',
+      t: 'p',
       x: 'Oppam is a real therapy platform (<strong>oppam.me</strong>). This is an <strong>independent design exploration</strong> - a reimagining of what their product could feel like as a native app. Therapist names, photos, prices, concern areas and platform stats are drawn from the live oppam.me site so the work is grounded in a real service; bios, reviews and session copy are prototype writing in Oppam\'s voice. Nothing here is shipped, no real booking is made, and no payment is taken. It is offered constructively, as a founder-minded proposal.',
     },
-
-    // ── This is real ─────────────────────────────────────────────────────────
+    { t: 'h3', x: 'Every screen here is a real app, not a mockup.' },
     {
-      t: 'callout',
-      kind: 'success',
-      title: 'Every screen here is a real app, not a mockup.',
+      t: 'p',
       x: 'This isn\'t a Figma file exported to images. It is a working SwiftUI app running on an iPhone - the companion actually breathes and blinks, the breathing exercise really counts you through 4–2–6, the journal really locks behind Face ID, and the therapist matching really reorders people around the feelings you pick. <strong>17 Swift files, ~4,100 lines, zero third-party UI libraries.</strong>',
+    },gh 4–2–6, the journal really locks behind Face ID, and the therapist matching really reorders people around the feelings you pick. <strong>17 Swift files, ~4,100 lines, zero third-party UI libraries.</strong>',
     },
 
     // ── Hero ─────────────────────────────────────────────────────────────────
