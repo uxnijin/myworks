@@ -102,6 +102,8 @@ const EXPLORING = [
 // ============================================================================
 
 const DESIGNS = [
+  DESIGN_OPPAM,
+  DESIGN_NETTI,
   DESIGN_KSRTC,
   DESIGN_AEROS,
   DESIGN_PARCEL,
