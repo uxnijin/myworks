@@ -715,6 +715,12 @@
       return;
     }
 
+    heads.forEach((h, idx) => {
+      if (!h.id) {
+        h.id = slugify(h.textContent) || `heading-${idx}`;
+      }
+    });
+
     const path = currentPath();
     $('#toc').innerHTML = `
       <p class="toc-title">On this page</p>
@@ -1864,6 +1870,20 @@
 
     // intercept internal links
     document.addEventListener('click', (e) => {
+      const tocLink = e.target.closest('a.toc-link[data-toc], a.heading-anchor');
+      if (tocLink) {
+        e.preventDefault();
+        const id = tocLink.dataset.toc || tocLink.getAttribute('href')?.replace(/^#/, '');
+        const target = id ? document.getElementById(id) : null;
+        if (target) {
+          const headerOffset = 80;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+        return;
+      }
+
       const a = e.target.closest('a[data-link]');
       if (!a) return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return; // let cmd-click open a tab
