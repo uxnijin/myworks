@@ -5,7 +5,7 @@ const PROJECT_DESIGN_SYSTEM_EXTRACTOR = {
   icon: 'palette',
   group: 'Browser Extensions',
   url: '/design-system-extractor/index.html',
-  productUrl: 'https://chromewebstore.google.com/',
+  productUrl: 'https://chromewebstore.google.com/detail/design-system-extractor/fehaokomfecdgndiccdcmiakdionlhko',
   summary: 'Extract colors, typography, images, icons, and CSS styles from any website in seconds.',
   lede: 'A Chrome extension that reads a live page and hands back its design system (brand colors, fonts, asset URLs, clean SVGs, shadows and corner radii) in one click, without ever opening DevTools.',
   status: 'Unlisted',
