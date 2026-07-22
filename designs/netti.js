@@ -11,6 +11,7 @@
 
 const DESIGN_NETTI = {
   slug: 'netti',
+  hidden: true,
   name: 'Netti: One Instrument, Four Screens',
   category: 'Mobile App',
   icon: 'gauge',
