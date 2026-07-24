@@ -272,7 +272,6 @@
       <p class="nav-title">Overview</p>
       <ul class="nav-menu">
         ${link(href(''), 'home', 'Index', path === '')}
-        ${link(href('building'), 'zap', 'Building', path === 'building')}
         ${link(href('writings'), 'book', 'Writings', path === 'writings')}
         ${link(href('exploring'), 'map', "Things I'm Exploring", path === 'exploring')}
       </ul>
@@ -1460,7 +1459,6 @@
 
   const searchable = () => [
     { name: 'Index', desc: 'All projects', path: '', icon: 'home' },
-    { name: 'Building', desc: "Things I'm currently building", path: 'building', icon: 'zap' },
     { name: 'Writings', desc: 'Notes and write-ups', path: 'writings', icon: 'book' },
     { name: "Things I'm Exploring", desc: 'Ideas and topics on my radar', path: 'exploring', icon: 'map' },
     { name: 'Contact', desc: 'Get in touch', path: 'contact', icon: 'mail' },
@@ -1591,7 +1589,7 @@
     } else if (path === 'contact') {
       viewContact();
     } else if (path === 'building') {
-      viewBuilding();
+      viewNotFound();
     } else if (path === 'writings') {
       viewWritings();
     } else if (path.startsWith('writings/')) {
