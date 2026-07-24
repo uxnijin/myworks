@@ -382,11 +382,14 @@
   let threadsPostsPromise = null;
   function fetchThreadsPosts() {
     if (threadsPostsPromise) return threadsPostsPromise;
-    const rssUrl = `https://www.threads.net/@${THREADS_USERNAME}/rss`;
-    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    const targetUrl = (typeof THREADS_RSS_URL === 'string' && THREADS_RSS_URL.trim())
+      ? THREADS_RSS_URL.trim()
+      : `https://www.threads.net/@${THREADS_USERNAME}/rss`;
+    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(targetUrl)}`;
+
     threadsPostsPromise = fetch(api)
       .then((res) => {
-        if (!res.ok) throw new Error('threads: bad response');
+        if (!res.ok) throw new Error(`threads: HTTP ${res.status}`);
         return res.json();
       })
       .then((data) => {
@@ -405,12 +408,15 @@
           };
         });
       })
-      .catch((err) => {
-        threadsPostsPromise = null;
-        throw err;
+      .catch(() => {
+        return fetch('./threads.json')
+          .then((res) => (res.ok ? res.json() : []))
+          .catch(() => []);
       });
+
     return threadsPostsPromise;
   }
+
 
 
   // ------------------------------------------------------------- home view

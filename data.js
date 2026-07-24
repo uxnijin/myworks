@@ -58,10 +58,7 @@ const PROFILE = {
 //  fetch fails.
 // ============================================================================
 
-const BUILDING = [
-  { icon: 'zap', title: 'Placeholder project one', desc: 'A short description of what this is and why it exists.', tag: 'In progress' },
-  { icon: 'layers', title: 'Placeholder project two', desc: 'A short description of what this is and why it exists.', tag: 'Early' },
-];
+const BUILDING = [];
 
 const WRITINGS = [
   { icon: 'book', title: 'Placeholder writing title one', desc: 'A short summary of what this piece is about.', tag: 'Draft' },
@@ -71,8 +68,11 @@ const WRITINGS = [
 // Medium username the Writings pages fetch live posts from.
 const MEDIUM_USERNAME = 'nijinmuhammed';
 
-// Threads username the Building page fetches live feed from.
+// Threads username and RSS Feed URL for the Building page.
 const THREADS_USERNAME = 'uxnijin';
+// If you generate an RSS feed URL via RSS.app or custom proxy, paste the RSS feed link here:
+const THREADS_RSS_URL = '';
+
 
 
 // ============================================================================
