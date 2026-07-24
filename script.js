@@ -377,6 +377,42 @@
     return mediumPostsPromise;
   }
 
+  // ------------------------------------------------------------- Threads
+
+  let threadsPostsPromise = null;
+  function fetchThreadsPosts() {
+    if (threadsPostsPromise) return threadsPostsPromise;
+    const rssUrl = `https://www.threads.net/@${THREADS_USERNAME}/rss`;
+    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+    threadsPostsPromise = fetch(api)
+      .then((res) => {
+        if (!res.ok) throw new Error('threads: bad response');
+        return res.json();
+      })
+      .then((data) => {
+        if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('threads: bad payload');
+        return data.items.map((item) => {
+          const rawText = (item.description || item.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+          const titleText = item.title && item.title !== 'Thread' ? item.title : rawText;
+          return {
+            icon: 'zap',
+            title: titleText.length > 90 ? `${titleText.slice(0, 90).trim()}…` : (titleText || 'Threads Post'),
+            desc: rawText.length > 180 ? `${rawText.slice(0, 180).trim()}…` : rawText,
+            url: item.link || `https://www.threads.net/@${THREADS_USERNAME}`,
+            tag: item.pubDate
+              ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+              : 'Threads',
+          };
+        });
+      })
+      .catch((err) => {
+        threadsPostsPromise = null;
+        throw err;
+      });
+    return threadsPostsPromise;
+  }
+
+
   // ------------------------------------------------------------- home view
 
   function viewHome() {
@@ -1577,7 +1613,32 @@
   }
 
   function viewBuilding() {
-    viewListPage('Building', "Things I'm currently building or shipping.", BUILDING, 'Nothing in progress right now — check back soon.');
+    const title = 'Building';
+    const lede = "Things I'm currently building or shipping, live from Threads.";
+    document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
+    $('#toc').innerHTML = '';
+    $('#view').innerHTML = `
+      <div class="view">
+        <article>
+          <header class="doc-head">
+            <h1 class="doc-h1">${esc(title)}</h1>
+            <p class="doc-lede">${esc(lede)}</p>
+          </header>
+          <div id="building-body"><p class="sec-sub">Loading updates from Threads…</p></div>
+        </article>
+      </div>`;
+
+    const token = asyncToken;
+    fetchThreadsPosts()
+      .then((posts) => ({ posts, empty: 'Nothing posted on Threads yet — check back soon.' }))
+      .catch(() => ({ posts: BUILDING, empty: "Couldn't load updates from Threads right now — check back soon." }))
+      .then(({ posts, empty }) => {
+        if (token !== asyncToken) return;
+        const body = $('#building-body');
+        if (!body) return;
+        body.innerHTML = posts.length ? `<div class="index">${buildRows(posts)}</div>` : `<p class="sec-sub">${esc(empty)}</p>`;
+      });
   }
 
   function viewWritings() {

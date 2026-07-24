@@ -71,6 +71,10 @@ const WRITINGS = [
 // Medium username the Writings pages fetch live posts from.
 const MEDIUM_USERNAME = 'nijinmuhammed';
 
+// Threads username the Building page fetches live feed from.
+const THREADS_USERNAME = 'uxnijin';
+
+
 // ============================================================================
 //  EXPLORING - "Things I'm Exploring" page: the tools, languages and services
 //  in my day-to-day rotation, grouped into labelled sections.
