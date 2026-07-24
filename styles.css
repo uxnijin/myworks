@@ -4052,21 +4052,22 @@ html.theme-transitioning * {
 }
 
 /* ============================================================================
-   THREADS FEED CARDS
+   THREADS FEED CARDS (Compact Threads UI)
    ============================================================================ */
 
 .threads-feed {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 12px;
+  max-width: 520px;
+  margin-top: 16px;
 }
 
 .thread-card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 18px 20px;
+  gap: 10px;
+  padding: 14px 16px;
   border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--bg);
@@ -4082,18 +4083,18 @@ html.theme-transitioning * {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
 }
 
 .thread-card-author {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .thread-card-avatar {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--bg-subtle);
@@ -4111,24 +4112,18 @@ html.theme-transitioning * {
 
 .thread-card-meta {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.thread-card-name-row {
-  display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.thread-card-name {
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text);
+  gap: 5px;
 }
 
 .thread-card-handle {
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.thread-card-dot {
+  font-size: 11px;
   color: var(--text-faint);
 }
 
@@ -4140,43 +4135,47 @@ html.theme-transitioning * {
 .thread-card-link {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-sub);
-  padding: 5px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg);
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--text-faint);
   text-decoration: none;
   transition: all .15s ease;
 }
 
 .thread-card-link:hover {
   color: var(--text);
-  border-color: var(--text-faint);
   background: var(--bg-subtle);
 }
 
 .thread-card-link svg {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
 }
 
 .thread-card-text {
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 13.5px;
+  line-height: 1.48;
   color: var(--text);
   word-break: break-word;
 }
 
+.thread-card-text p {
+  margin: 0 0 6px 0;
+}
+
+.thread-card-text p:last-child {
+  margin-bottom: 0;
+}
+
 .thread-card-media {
-  margin-top: 4px;
+  margin-top: 2px;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--bg-subtle);
-  max-height: 480px;
+  max-height: 280px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -4185,7 +4184,7 @@ html.theme-transitioning * {
 .thread-card-media img {
   width: 100%;
   height: auto;
-  max-height: 480px;
+  max-height: 280px;
   object-fit: cover;
   display: block;
 }
@@ -4193,26 +4192,26 @@ html.theme-transitioning * {
 .thread-card-foot {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-top: 4px;
-  padding-top: 6px;
+  gap: 16px;
+  margin-top: 2px;
+  padding-top: 2px;
 }
 
 .thread-action {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
   color: var(--text-faint);
   text-decoration: none;
-  font-size: 12px;
-  transition: color .15s ease;
+  transition: color .15s ease, transform .1s ease;
 }
 
 .thread-action:hover {
   color: var(--text);
+  transform: scale(1.08);
 }
 
 .thread-action svg {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
 }
