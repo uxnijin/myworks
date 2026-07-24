@@ -71,7 +71,8 @@ const MEDIUM_USERNAME = 'nijinmuhammed';
 // Threads username and RSS Feed URL for the Building page.
 const THREADS_USERNAME = 'uxnijin';
 // If you generate an RSS feed URL via RSS.app or custom proxy, paste the RSS feed link here:
-const THREADS_RSS_URL = '';
+const THREADS_RSS_URL = 'https://rss.app/feeds/UtjdRm4YhfxqOWOT.xml';
+
 
 
 
