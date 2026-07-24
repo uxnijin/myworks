@@ -4050,3 +4050,169 @@ html.theme-transitioning * {
   margin: 32px auto;
   display: block;
 }
+
+/* ============================================================================
+   THREADS FEED CARDS
+   ============================================================================ */
+
+.threads-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.thread-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+.thread-card:hover {
+  border-color: var(--border-hover, var(--border));
+  background: var(--bg-subtle);
+}
+
+.thread-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.thread-card-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.thread-card-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-subtle);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.thread-card-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thread-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.thread-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.thread-card-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.thread-card-handle {
+  font-size: 13px;
+  color: var(--text-faint);
+}
+
+.thread-card-date {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.thread-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-sub);
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  text-decoration: none;
+  transition: all .15s ease;
+}
+
+.thread-card-link:hover {
+  color: var(--text);
+  border-color: var(--text-faint);
+  background: var(--bg-subtle);
+}
+
+.thread-card-link svg {
+  width: 13px;
+  height: 13px;
+}
+
+.thread-card-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.thread-card-media {
+  margin-top: 4px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  max-height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thread-card-media img {
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: cover;
+  display: block;
+}
+
+.thread-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+.thread-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-faint);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color .15s ease;
+}
+
+.thread-action:hover {
+  color: var(--text);
+}
+
+.thread-action svg {
+  width: 16px;
+  height: 16px;
+}

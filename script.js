@@ -395,16 +395,29 @@
       .then((data) => {
         if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('threads: bad payload');
         return data.items.map((item) => {
-          const rawText = (item.description || item.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-          const titleText = item.title && item.title !== 'Thread' ? item.title : rawText;
+          let imageUrl = item.enclosure && item.enclosure.link ? item.enclosure.link : '';
+          const htmlContent = item.description || item.content || '';
+          if (!imageUrl && htmlContent) {
+            const match = htmlContent.match(/src=["']([^"']+)["']/i);
+            if (match) imageUrl = match[1];
+          }
+          if (imageUrl) {
+            imageUrl = imageUrl.replace(/&amp;/g, '&');
+          }
+
+          const cleanHtml = htmlContent.replace(/<img[^>]*>/gi, '');
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = cleanHtml;
+          const rawText = (tempDiv.textContent || tempDiv.innerText || item.title || '').trim();
+
           return {
-            icon: 'zap',
-            title: titleText.length > 90 ? `${titleText.slice(0, 90).trim()}…` : (titleText || 'Threads Post'),
-            desc: rawText.length > 180 ? `${rawText.slice(0, 180).trim()}…` : rawText,
+            author: item.author || `@${THREADS_USERNAME}`,
+            text: rawText,
+            image: imageUrl,
             url: item.link || `https://www.threads.net/@${THREADS_USERNAME}`,
-            tag: item.pubDate
+            date: item.pubDate
               ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              : 'Threads',
+              : '',
           };
         });
       })
@@ -416,6 +429,47 @@
 
     return threadsPostsPromise;
   }
+
+  const buildThreadsCards = (posts) =>
+    `<div class="threads-feed">
+      ${posts
+        .map((p) => {
+          const bodyHtml = esc(p.text || '').replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>');
+          return `
+            <article class="thread-card">
+              <header class="thread-card-head">
+                <div class="thread-card-author">
+                  <div class="thread-card-avatar">
+                    ${PROFILE.avatar ? `<img src="${esc(PROFILE.avatar)}" alt="${esc(PROFILE.name)}" />` : icon('at-sign')}
+                  </div>
+                  <div class="thread-card-meta">
+                    <div class="thread-card-name-row">
+                      <span class="thread-card-name">${esc(PROFILE.name)}</span>
+                      <span class="thread-card-handle">@${esc(THREADS_USERNAME)}</span>
+                    </div>
+                    ${p.date ? `<span class="thread-card-date">${esc(p.date)}</span>` : ''}
+                  </div>
+                </div>
+                <a class="thread-card-link" href="${esc(p.url)}" target="_blank" rel="noopener">
+                  <span>Threads</span>
+                  ${icon('external')}
+                </a>
+              </header>
+
+              <div class="thread-card-text"><p>${bodyHtml}</p></div>
+
+              ${
+                p.image
+                  ? `<div class="thread-card-media">
+                      <img src="${esc(p.image)}" alt="Threads post attachment" loading="lazy" onerror="this.parentElement.style.display='none'" />
+                    </div>`
+                  : ''
+              }
+            </article>`;
+        })
+        .join('')}
+    </div>`;
+
 
 
 
@@ -1643,7 +1697,7 @@
         if (token !== asyncToken) return;
         const body = $('#building-body');
         if (!body) return;
-        body.innerHTML = posts.length ? `<div class="index">${buildRows(posts)}</div>` : `<p class="sec-sub">${esc(empty)}</p>`;
+        body.innerHTML = posts.length ? buildThreadsCards(posts) : `<p class="sec-sub">${esc(empty)}</p>`;
       });
   }
 
