@@ -101,7 +101,7 @@ const DESIGN_TRACKWISE = {
       t: 'cards',
       items: [
         { icon: 'search', title: 'The anxious buyer', desc: 'Has one number and no account. Wants an answer in <strong>under five seconds</strong>, then wants to leave. Never sees a dashboard — the public page is the whole product.' },
-        { icon: 'cart', title: 'The heavy shopper', desc: 'Eleven parcels in flight, half of them international. Needs <strong>triage</strong>: what needs me, what lands today, what can wait. Lives on the workspace home.' },
+        { icon: 'cart', title: 'The heavy shopper', desc: 'Dozens of parcels in flight, half of them international. Needs <strong>triage</strong>: what needs me, what lands today, what can wait. Lives on the workspace home.' },
         { icon: 'gauge', title: 'The store owner', desc: 'Ships hundreds a month and eats the WISMO tickets. Needs a <strong>branded page</strong>, carrier performance, and proof the subscription pays for itself.' },
       ],
     },
@@ -159,6 +159,16 @@ const DESIGN_TRACKWISE = {
       alt: 'The share sheet on the public page with copy, WhatsApp, mail and OS-sheet options, beside the shareable link card inside the workspace',
       caption: '"Status only — no address, no tracking number," stated where it matters. The same sentence appears on the public share sheet and on the owner\'s copy of the link.',
     },
+    {
+      t: 'p',
+      x: 'When someone does decide to sign up, it is one route with two modes rather than two screens that slowly drift apart — and the page argues for itself alongside the form using the product\'s own components, not stock illustration.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/auth.webp',
+      alt: 'The sign-in screen beside the create-account screen, sharing a layout and differing only in copy',
+      caption: 'One route, switched by <code>?mode=</code>. Same fields, same rail of reasons — only the copy and the destination persona change.',
+    },
     { t: 'h3', x: 'And the merchant\'s version of the same page' },
     {
       t: 'p',
@@ -199,7 +209,7 @@ const DESIGN_TRACKWISE = {
     { t: 'h3', x: 'The same screen, three plans' },
     {
       t: 'p',
-      x: 'Home reads the persona rather than checking plan flags screen by screen, so a free shopper with eleven parcels, a Pro user with sixty-four, and a store with a hundred and forty-eight all get a page shaped to their volume — the same components, different density, different first sentence.',
+      x: 'Home reads the persona rather than checking plan flags screen by screen, so a free shopper with 22 parcels, a Pro user with 64, and a store with 148 all get a page shaped to their volume — the same components, different density, different first sentence.',
     },
     {
       t: 'image',
@@ -274,6 +284,12 @@ const DESIGN_TRACKWISE = {
     {
       t: 'p',
       x: 'A prediction engine that only reports its wins is marketing. So the Business analytics carry a <strong>scoreboard</strong> that publishes the number a vendor would normally bury: <em>false positives — 41 parcels we warned about that arrived on time anyway.</em> Alongside it, the median lead time (how far ahead of the carrier the warning came) and the raw hit rate. The copy states the trade-off in one line: we would rather over-warn slightly than let a delay surprise a customer — and here is the count, so you can judge that for yourself.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/analytics.webp',
+      alt: 'The full Business analytics page — deflection stats, page views versus tickets, carrier performance, status mix, the prediction scoreboard and lanes worth fixing',
+      caption: 'The whole Analytics page. It opens with what the plan bought and closes with what to go and fix — the charts in between are evidence, not the point.',
     },
     {
       t: 'image',
@@ -501,7 +517,7 @@ const DESIGN_TRACKWISE = {
       t: 'cards',
       items: [
         { icon: 'map', title: 'The route rail', desc: 'Origin → destination with live progress. Needs arbitrary non-token colour to read as a journey rather than a progress bar.' },
-        { icon: 'image', title: 'The illustration set', desc: 'Blade ships icons but no illustrations — and empty states, feature gates and summary cards are where a dashboard earns its character. <strong>1,355 lines of hand-written SVG</strong>, each resolving its palette per colour scheme.' },
+        { icon: 'image', title: 'The illustration set', desc: 'Blade ships icons but no illustrations — and empty states, feature gates and summary cards are where a dashboard earns its character. A <strong>1,355-line hand-written SVG set</strong>, each illustration resolving its palette per colour scheme.' },
         { icon: 'window', title: 'The context tab strip', desc: 'Each tab is a real link with a sliding indicator, so scopes are shareable URLs rather than component state.' },
         { icon: 'droplet', title: 'The branded page', desc: 'A merchant\'s palette can\'t come from a token system. It gets a deliberate escape hatch from the design system, and only there.' },
       ],
