@@ -158,6 +158,7 @@ const EXPLORING = [
 // ============================================================================
 
 const DESIGNS = [
+  DESIGN_TRACKWISE,
   DESIGN_OPPAM,
   DESIGN_NETTI,
   DESIGN_KSRTC,
