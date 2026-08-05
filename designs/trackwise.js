@@ -6,8 +6,9 @@
 //  Razorpay's real production design system (@razorpay/blade v12). 82 files,
 //  ~27,900 lines, 34 routes, 9 personas × 7 backend conditions.
 //
-//  Every screenshot in this case study is captured from the running app at 2x.
-//  Nothing here is a mockup and nothing is redrawn.
+//  Every figure is captured from the running app at 2x. Long pages are shown
+//  as sequences of 16:9 panels rather than one endless image — cuts are
+//  snapped to the gutters between cards so no panel bisects a component.
 // ============================================================================
 
 const DESIGN_TRACKWISE = {
@@ -26,8 +27,8 @@ const DESIGN_TRACKWISE = {
     {
       t: 'image',
       src: '/trackwise-assets/hero.webp',
-      alt: 'Three Trackwise screens — the public landing page, the workspace home, and a parcel detail page',
-      caption: 'One product, three altitudes: the public front door that needs no account, the workspace that triages a hundred parcels, and the single parcel that explains itself.',
+      alt: 'Three Trackwise screens — the workspace home, a parcel detail page, and the public tracking page',
+      caption: 'One product, three altitudes: the workspace that triages a hundred parcels, the single parcel that explains itself, and the public page that answers a stranger with no account.',
     },
 
     // ══ Framing ══════════════════════════════════════════════════════════════
@@ -49,7 +50,7 @@ const DESIGN_TRACKWISE = {
       rows: [
         ['Role', 'Product Designer &amp; front-end engineer — problem framing, IA, interaction design, UI, copy, illustration, build'],
         ['Type', 'Self-directed product concept · working prototype'],
-        ['Platform', 'Responsive web app — 390px to 1440px+'],
+        ['Platform', 'Responsive web app'],
         ['Domain', 'Logistics · post-purchase experience · WISMO deflection'],
         ['The problem', '"Where is my order?" — the most-asked, least-well-answered question after checkout'],
         ['The constraint', 'Use a real production design system (Razorpay Blade) rather than inventing one'],
@@ -87,7 +88,7 @@ const DESIGN_TRACKWISE = {
         ['<strong>"In transit" is not an answer.</strong> The status is technically true and practically useless.', 'The page leads with a date and a place — <em>expected Friday, currently at Mumbai Foreign Post Office</em> — and the status is a secondary badge.'],
         ['<strong>Bad news arrives last.</strong> The carrier keeps promising Friday until Friday evening.', 'A delay prediction that flags the slip roughly 19 hours before the carrier revises, and shows why it thinks so.'],
         ['<strong>Sharing the page leaks your address.</strong> Forwarding a carrier link hands over the recipient name and full delivery address.', 'A share link that is status-only by construction — address, recipient and full tracking number are structurally excluded, and the sheet says so at the moment of sharing.'],
-        ['<strong>Tracking is an ad surface.</strong> Free trackers monetise a moment of anxiety with ads and data broking.', '"No account. No card. No ads." on the landing page, and a Privacy page that says what is and is not stored.'],
+        ['<strong>Tracking is an ad surface.</strong> Free trackers monetise a moment of anxiety with ads and data broking.', 'No account, no card, no ads — and a Privacy page that says what is and is not stored.'],
         ['<strong>The merchant loses the moment.</strong> The most-visited page after checkout is on someone else\'s domain, in someone else\'s brand.', 'A branded tracking page on the merchant\'s own domain and palette — and analytics that tie it to deflected tickets.'],
       ],
     },
@@ -112,28 +113,21 @@ const DESIGN_TRACKWISE = {
       x: 'Everything that follows comes from one sentence: <strong>answer first, ask later.</strong> Most tracking products treat the answer as the reward for signing up. Trackwise gives the answer to a stranger with no account, and only then makes a case for itself — which turns out to be the only moment the case is persuasive.',
     },
 
-    // ══ 2. The front door ════════════════════════════════════════════════════
-    { t: 'h2', x: '2. The Front Door Has One Job' },
+    // ══ 2. Detection ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '2. One Field, No Dropdown' },
     {
       t: 'p',
-      x: 'The landing page originally carried a hero, a feature grid, testimonials, a pricing teaser and a footer — the standard SaaS stack. Then I watched what someone actually arrives to do: paste a number. Everything that wasn\'t that got cut from above the fold, and the marketing moved to <em>after</em> the answer, where it can point at something real.',
+      x: 'The single most common friction in tracking is the carrier picker: a dropdown of 14 logos asking a question the number already answers. Tracking numbers have formats — <code>1Z</code> prefixes for UPS, a 12-digit block for FedEx, <code>RP…IN</code> for India Post. So the field reads the format and names the carrier while you type, and the picker disappears entirely.',
+    },
+    {
+      t: 'p',
+      x: 'The interesting half is the <em>other</em> state. When the field can\'t tell yet, it must not guess — a confident wrong logo costs more trust than no logo at all. So it says the one useful thing it actually knows: this isn\'t long enough to be a tracking number yet, keep going.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/landing.webp',
-      alt: 'The full Trackwise landing page — headline, one tracking field, carrier strip, and the three-persona entry cards below',
-      caption: 'One question, one field, and the fourteen carriers it covers. Everything below the fold exists to get a first-time reviewer into the right persona — not to sell.',
-    },
-    { t: 'h3', x: 'Detection instead of a dropdown' },
-    {
-      t: 'p',
-      x: 'The single most common friction in tracking is the carrier picker: a dropdown of 14 logos asking a question the number already answers. Tracking numbers have formats — <code>1Z</code> prefixes for UPS, a 12-digit block for FedEx, <code>RP…IN</code> for India Post. So the field reads the format and names the carrier while you type. When it can\'t tell yet, it says nothing at all rather than guessing — silence is a better state than a wrong logo.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/detection.webp',
-      alt: 'The tracking field with a UPS number detected, beside the same field with only two digits typed and nothing claimed',
-      caption: 'Left: eighteen characters in, the carrier is named and confirmed. Right: two digits in, the field stays quiet. A confident wrong answer here costs more than no answer.',
+      src: '/trackwise-assets/detect.webp',
+      alt: 'The tracking field with a UPS number typed and auto-detected, above the same field with two digits typed and a keep-typing hint',
+      caption: 'Top: eighteen characters in, the carrier is named and marked auto-detected. Bottom: two digits in, no carrier is claimed — just the reason nothing has happened yet.',
     },
 
     // ══ 3. The answer ════════════════════════════════════════════════════════
@@ -144,9 +138,15 @@ const DESIGN_TRACKWISE = {
     },
     {
       t: 'image',
-      src: '/trackwise-assets/public-answer.webp',
-      alt: 'The full public tracking page — arrival date, route, journey timeline, and the sign-up case at the bottom',
-      caption: 'Date and place first, at display size. The timeline second. The pitch last, and only after the page has been useful. No account was required to reach any of it.',
+      src: '/trackwise-assets/answer-1.webp',
+      alt: 'The top of the public tracking page — status pill, item name, expected arrival date, route bar and carrier facts',
+      caption: 'The top of the page does the whole job: the date at display size on the right, the route underneath, and a line stating that this link shows status only.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/answer-2.webp',
+      alt: 'The lower half of the public tracking page — the journey timeline and the sign-up case beneath it',
+      caption: 'And only then the journey, and only after that the pitch. The marketing that used to sit on the landing page lives here instead — after the page has been useful.',
     },
     { t: 'h3', x: 'Sharing without leaking' },
     {
@@ -169,20 +169,44 @@ const DESIGN_TRACKWISE = {
       alt: 'The sign-in screen beside the create-account screen, sharing a layout and differing only in copy',
       caption: 'One route, switched by <code>?mode=</code>. Same fields, same rail of reasons — only the copy and the destination persona change.',
     },
-    { t: 'h3', x: 'And the merchant\'s version of the same page' },
+
+    // ══ 4. Branded ═══════════════════════════════════════════════════════════
+    { t: 'h2', x: '4. The Merchant\'s Version of the Same Page' },
     {
       t: 'p',
-      x: 'For a store, the tracking page is the highest-traffic page after checkout — and handing that traffic to a third-party domain is a small brand donation made several thousand times a month. The branded page runs on the merchant\'s own domain, palette, typography and support contacts, with their FAQ and their shop links. The builder behind it is a live preview: the palette presets, the domain, and the support details update the real page as you change them.',
+      x: 'For a store, the tracking page is the highest-traffic page after checkout — and handing that traffic to a third-party domain is a small brand donation made several thousand times a month. The branded page runs on the merchant\'s own domain, palette, typography and support contacts, with their FAQ and their shop links.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/branded.webp',
-      alt: 'The branded merchant tracking page in a dark green palette, beside the branded-page builder with live preview',
-      caption: 'Same data, entirely different clothes — a deliberately non-Blade palette, because a merchant\'s brand is not the design system\'s job. The builder shows the customer\'s view while you edit it.',
+      src: '/trackwise-assets/branded-1.webp',
+      alt: 'The top of the branded merchant tracking page in a dark green palette on the merchant\'s own domain',
+      caption: 'Same data, entirely different clothes. The palette is deliberately non-Blade — a merchant\'s brand is not the design system\'s job, and this is the one place the system gets an escape hatch.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/branded-2.webp',
+      alt: 'The lower half of the branded page — journey detail, a help block with the merchant\'s own contacts and FAQ chips',
+      caption: 'And the bottom of it: the merchant\'s support channels and their four most-asked questions, so the page deflects the ticket instead of forwarding it.',
+    },
+    {
+      t: 'p',
+      x: 'The builder behind it is a live preview rather than a form with a save button — palette presets, domain, identity and support details update the customer-facing page as you change them, next to the deflection numbers that page is producing.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/branded-builder-1.webp',
+      alt: 'The branded-page builder — setup steps, deflection stats, domain verification and a live preview of the customer page',
+      caption: 'Three setup steps, the numbers the page is earning, DNS verification, and a live preview that is the real component rather than a picture of it.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/branded-builder-2.webp',
+      alt: 'The lower half of the builder — palette presets, what-to-show toggles, and a panel listing what will never be put on the page',
+      caption: 'The panel I care most about: <strong>"What we\'ll never put on this page"</strong> — no advertising, no third-party pixels, no reselling. A constraint is worth more written down than assumed.',
     },
 
-    // ══ 4. Navigation ════════════════════════════════════════════════════════
-    { t: 'h2', x: '4. Three Levels of Navigation, Three Different Questions' },
+    // ══ 5. Navigation ════════════════════════════════════════════════════════
+    { t: 'h2', x: '5. Three Levels of Navigation, Three Different Questions' },
     {
       t: 'p',
       x: 'A workspace with 34 routes gets lost quickly if navigation is one flat list. The structure here is three strips, each answering a different question, and the rule is that no strip ever answers another strip\'s question.',
@@ -198,13 +222,19 @@ const DESIGN_TRACKWISE = {
     },
     {
       t: 'p',
-      x: 'The parcel scopes — Active, Needs attention, Delivered, Archive — began as a second-level side-nav panel. Moved to a tab strip they cost no horizontal width, show their counts without a hover, and read as the filters they always were. That is the whole argument for the change, and the counts are the tell: <strong>Needs attention 29</strong> is a piece of information, not a label.',
+      x: 'The parcel scopes — Active, Needs attention, Delivered, Archive — began as a second-level side-nav panel. Moved to a tab strip they cost no horizontal width, show their counts without a hover, and read as the filters they always were. The counts are the tell: <strong>Needs attention 29</strong> is a piece of information, not a label.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/home.webp',
-      alt: 'The full workspace home page — greeting, four stat tiles, the needs-a-look panel, arriving next, and latest activity',
+      src: '/trackwise-assets/home-1.webp',
+      alt: 'The top of the workspace home — a count-led greeting, four stat tiles, and the needs-a-look panel',
       caption: 'Home is triage, in order: <strong>what needs you</strong>, then what lands today, then everything moving as expected. The headline is a count and a name, not a welcome.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/home-2.webp',
+      alt: 'The lower half of the workspace home — delivery insights, the finish-setting-up card, and a jump-to row',
+      caption: 'Further down, the week in three numbers with a plain-language note under each, an honest line about where the data comes from, and shortcuts to the rest of the product.',
     },
     { t: 'h3', x: 'The same screen, three plans' },
     {
@@ -218,11 +248,17 @@ const DESIGN_TRACKWISE = {
       caption: 'Free, Pro, Business — one screen, three densities. The quota meter in the rail changes with them, and so does what the page thinks is worth putting first.',
     },
 
-    // ══ 5. The list ══════════════════════════════════════════════════════════
-    { t: 'h2', x: '5. A Hundred Parcels, and the One You Meant' },
+    // ══ 6. The list ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '6. A Hundred Parcels, and the One You Meant' },
     {
       t: 'p',
       x: 'The list is where a store owner spends their day, so the row had to carry a lot without becoming a spreadsheet: carrier, item, merchant, tracking number, status, a route bar with origin and destination, the expected date, and a delay flag when there is one. Everything else — search, status, carrier, sort, and quick filters for starred, international, delay-predicted and shared — sits above it.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/parcels.webp',
+      alt: 'The parcels list with search, status, carrier and sort controls, quick filters, and rows carrying carrier, status, route and arrival',
+      caption: 'Four scopes as tabs with live counts, four quick filters, and a row that answers "which one is this and is it fine" without opening anything.',
     },
     {
       t: 'p',
@@ -230,28 +266,40 @@ const DESIGN_TRACKWISE = {
     },
     {
       t: 'image',
-      src: '/trackwise-assets/parcels.webp',
-      alt: 'The parcels list with filters and quick filters, beside a parcel peek drawer opened over it',
+      src: '/trackwise-assets/peek.webp',
+      alt: 'A parcel peek drawer opened over the list, showing arrival, route, current location and recent journey',
       caption: 'Scan, peek, dismiss, next. The list stays exactly where you left it — the drawer is the answer, not a destination.',
     },
 
-    // ══ 6. The parcel ════════════════════════════════════════════════════════
-    { t: 'h2', x: '6. One Parcel, Two Carriers, One Timeline' },
+    // ══ 7. The parcel ════════════════════════════════════════════════════════
+    { t: 'h2', x: '7. One Parcel, Two Carriers, One Timeline' },
     {
       t: 'p',
       x: 'This is the screen the whole product exists to produce. A parcel from London to Kochi is carried by Royal Mail, handed to India Post for the last mile, and tracked in two databases that don\'t know about each other. On the carriers\' own sites the trail stops mid-journey. Here the two scan histories are merged into one timeline, ordered by time, and the handover is <strong>marked as an event rather than hidden as a gap</strong> — because "handed over to India Post" is the single most reassuring line on the page when you are watching a parcel go quiet.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/detail.webp',
-      alt: 'The full parcel detail page — expected date, route rail, delay callout, journey timeline, shipment facts, alerts and shareable link',
-      caption: 'The full page. Expected date and route at the top, the delay prediction next because it changes what you do, the journey below it, and the facts in a column that never competes with the story.',
+      src: '/trackwise-assets/detail-1.webp',
+      alt: 'The top of the parcel detail page — expected date, original promise, route rail, and the start of the delay callout',
+      caption: 'The answer first: expected Friday, originally promised Monday, currently at Mumbai Foreign Post Office, carried by Royal Mail then India Post.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/detail-2.webp',
+      alt: 'The middle of the parcel detail page — the full delay callout, the journey timeline and the shipment facts panel',
+      caption: 'Then the disagreement with the carrier, then the journey, with the shipment facts in a column that never competes with the story.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/detail-3.webp',
+      alt: 'The lower part of the parcel detail page — the end of the journey, per-parcel alert switches, and the shareable link card',
+      caption: 'And at the end: which alerts are on for <em>this</em> parcel, and the status-only link you can hand to someone else.',
     },
     {
       t: 'image',
       src: '/trackwise-assets/timeline.webp',
-      alt: 'The journey timeline showing ten scans across Royal Mail and India Post with a carrier handover marked',
-      caption: 'Ten scans, two carriers, one column. Every entry carries its place and which carrier reported it — so "who has my parcel right now" is answerable at a glance.',
+      alt: 'The journey timeline, shown as two columns — ten scans across Royal Mail and India Post with the carrier handover marked',
+      caption: 'The full timeline, split into two columns to read here. Ten scans, two carriers, one order — each entry carrying its place and which carrier reported it.',
     },
     {
       t: 'p',
@@ -264,38 +312,57 @@ const DESIGN_TRACKWISE = {
       caption: 'The unedited source, one row per scan. Nothing here is interpreted — which is the point of putting it directly under something that is.',
     },
 
-    // ══ 7. The prediction ════════════════════════════════════════════════════
-    { t: 'h2', x: '7. The Hardest Screen: Telling Someone Bad News Early' },
+    // ══ 8. The prediction ════════════════════════════════════════════════════
+    { t: 'h2', x: '8. The Hardest Screen: Telling Someone Bad News Early' },
     {
       t: 'p',
       x: 'The feature that makes Trackwise worth paying for is also the one most likely to be distrusted: it tells you a parcel will be late <em>while the carrier is still promising it on time</em>. That is a direct contradiction on screen — the carrier says Friday, we say Tuesday — and the design problem is entirely one of credibility.',
     },
     {
       t: 'p',
-      x: 'Four decisions carry it. <strong>Show both dates</strong>, and attribute each: what the carrier still promises, and what we expect. <strong>Show the reasoning</strong> in one plain sentence — "origin hub is running 1.8 days behind on outbound sorting this week" — because an unexplained prediction is a horoscope. <strong>Show the confidence</strong> as a number and a bar, so a 91% and a 60% don\'t look identical. And <strong>show when it changed</strong>: flagged a day ago, carrier has since confirmed. The badge that reads "carrier has since confirmed" is the most valuable pixel on the page, because it is the product being proved right in public.',
+      x: 'Four decisions carry it. <strong>Show both dates</strong>, and attribute each: what the carrier still promises, and what we expect. <strong>Show the reasoning</strong> in one plain sentence — "origin hub is running 1.8 days behind on outbound sorting this week" — because an unexplained prediction is a horoscope. <strong>Show the confidence</strong> as a number and a bar, so a 91% and a 60% don\'t look identical. And <strong>show when it changed</strong>: flagged a day ago, carrier has since confirmed. That last badge is the most valuable pixel on the page, because it is the product being proved right in public.',
     },
     {
       t: 'image',
       src: '/trackwise-assets/delay.webp',
-      alt: 'The expected-date header showing the original promise struck through, and the delay callout with reasoning and a 91% confidence bar',
+      alt: 'The expected-date header with the original promise beneath it, above the delay callout with its reasoning and a 91% confidence bar',
       caption: 'Top: the date, and the date it replaced. Bottom: the disagreement stated plainly — carrier still promises Friday, we expect Tuesday, flagged a day ago, 91% confident, and here is why.',
     },
     { t: 'h3', x: 'And then publishing your own error rate' },
     {
       t: 'p',
-      x: 'A prediction engine that only reports its wins is marketing. So the Business analytics carry a <strong>scoreboard</strong> that publishes the number a vendor would normally bury: <em>false positives — 41 parcels we warned about that arrived on time anyway.</em> Alongside it, the median lead time (how far ahead of the carrier the warning came) and the raw hit rate. The copy states the trade-off in one line: we would rather over-warn slightly than let a delay surprise a customer — and here is the count, so you can judge that for yourself.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/analytics.webp',
-      alt: 'The full Business analytics page — deflection stats, page views versus tickets, carrier performance, status mix, the prediction scoreboard and lanes worth fixing',
-      caption: 'The whole Analytics page. It opens with what the plan bought and closes with what to go and fix — the charts in between are evidence, not the point.',
+      x: 'A prediction engine that only reports its wins is marketing. So the Business analytics carry a <strong>scoreboard</strong> that publishes the number a vendor would normally bury: <em>false positives — 41 parcels we warned about that arrived on time anyway.</em> Alongside it, the median lead time and the raw hit rate. The copy states the trade-off in one line: we would rather over-warn slightly than let a delay surprise a customer — and here is the count, so you can judge that for yourself.',
     },
     {
       t: 'image',
       src: '/trackwise-assets/scoreboard.webp',
-      alt: 'Analytics panels — tickets deflected and support cost saved, the delay prediction scoreboard, and lanes ranked by exception rate',
-      caption: 'Three panels doing three different jobs: what the plan bought, how often the prediction was right — including when it wasn\'t — and which shipping lanes are actually worth fixing. Figures are from the seeded demo dataset.',
+      alt: 'The deflection stat row above the delay prediction scoreboard, which shows predictions made, hit rate, median lead time and false positives',
+      caption: 'What the plan bought, and how often the prediction was right — including when it wasn\'t. Figures are from the seeded demo dataset.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/lanes.webp',
+      alt: 'The lanes-worth-fixing table ranked by exception rate, with carrier, volume, exception rate and median transit',
+      caption: 'And the one table a store owner can act on: lanes ranked by exception rate rather than volume, because the small painful ones are the ones nobody notices.',
+    },
+    { t: 'h3', x: 'The rest of the analytics page' },
+    {
+      t: 'image',
+      src: '/trackwise-assets/analytics-1.webp',
+      alt: 'The top of the analytics page — deflection stats, a return-on-subscription bar, and page views versus tickets over time',
+      caption: 'It opens with the argument for its own price: support cost avoided against the subscription, then the two lines that should diverge — more self-service, fewer contacts.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/analytics-2.webp',
+      alt: 'Carrier delivery performance bars beside a status mix donut, above the delay prediction scoreboard',
+      caption: 'Carrier performance ranked against the original promise, the current status mix, and the scoreboard underneath.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/analytics-3.webp',
+      alt: 'The bottom of the analytics page — the lanes worth fixing table',
+      caption: 'And it closes on somewhere to go and fix something. Evidence at the top, an action at the bottom.',
     },
     {
       t: 'callout',
@@ -304,8 +371,8 @@ const DESIGN_TRACKWISE = {
       x: 'Because the alternative is worse. A merchant who gets one false alarm and has never been told false alarms exist concludes the feature is broken. A merchant who was told upfront that ~10% of warnings are precautionary concludes it is working as described. <strong>Naming your error rate converts a bug report into an expectation</strong> — and it is the cheapest trust the product ever buys.',
     },
 
-    // ══ 8. Getting parcels in ════════════════════════════════════════════════
-    { t: 'h2', x: '8. Three Ways In, for Three Different Volumes' },
+    // ══ 9. Getting parcels in ════════════════════════════════════════════════
+    { t: 'h2', x: '9. Three Ways In, for Three Different Volumes' },
     {
       t: 'p',
       x: 'A shopper adds one number. A store pastes forty out of a spreadsheet. A serious store never adds anything at all, because the parcels arrive through a Shopify sync or an inbox scan. Those are three different jobs, so they are three tabs rather than one clever field that tries to be all of them.',
@@ -318,13 +385,35 @@ const DESIGN_TRACKWISE = {
     },
     {
       t: 'image',
-      src: '/trackwise-assets/integrations.webp',
-      alt: 'The integrations page with inbox, store, channel and developer connections, beside the inbox scans queue',
-      caption: 'Where parcels come from, and what the mail scanner found. Every connection carries a real state — connected, expired, needs reconnect — because integrations are where products quietly break.',
+      src: '/trackwise-assets/integrations-1.webp',
+      alt: 'The integrations page — connected inbox accounts, one of them showing an expired token with a reconnect action',
+      caption: 'Where parcels come from. Every connection carries a real state — connected, expired, needs reconnect — because integrations are where products quietly break.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/integrations-2.webp',
+      alt: 'The lower half of the integrations page — store platforms, notification channels and developer connections',
+      caption: 'Store platforms, the channels alerts go out on, and the developer surface, grouped by what they do rather than by who built them.',
+    },
+    {
+      t: 'p',
+      x: 'The inbox scanner is the one that needs the most care, because it reads mail. So it is built as a <strong>queue you approve</strong>, not an automation that acts: it finds shipping confirmations, shows what it matched and how confident it is, and nothing joins your parcel list until you accept it.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/inbox-1.webp',
+      alt: 'The inbox scans page — how it works in three steps, a reconnect warning, and counts waiting for review',
+      caption: 'Three sentences explaining exactly what it reads and what it ignores, then the queue: waiting, needs a closer look, added.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/inbox-2.webp',
+      alt: 'The inbox scan queue rows — matched merchants and carriers with accept and dismiss actions, some flagged for review',
+      caption: 'Each row shows the match and its doubt in plain words — "the carrier isn\'t certain, check it before accepting" — with accept and dismiss side by side.',
     },
 
-    // ══ 9. Alerts ════════════════════════════════════════════════════════════
-    { t: 'h2', x: '9. Alerts: a Matrix, Not a Pile of Switches' },
+    // ══ 10. Alerts ═══════════════════════════════════════════════════════════
+    { t: 'h2', x: '10. Alerts: a Matrix, Not a Pile of Switches' },
     {
       t: 'p',
       x: 'Notification settings usually decay into a long column of toggles that answers "do you want emails?" — the wrong question. The real question has two axes: <strong>which event</strong>, and <strong>which channel</strong>. Out-for-delivery deserves a push and nothing more; an exception deserves push, email and SMS; a carrier handover deserves nothing at all unless you ask. So the settings are a grid: triggers down the side, channels across the top, one master switch per row.',
@@ -332,27 +421,49 @@ const DESIGN_TRACKWISE = {
     {
       t: 'image',
       src: '/trackwise-assets/matrix.webp',
-      alt: 'The notification rules matrix — seven triggers down the side, five channels across the top, with checkboxes and per-row master switches',
+      alt: 'The alert rules matrix — seven triggers down the side, five channels across the top, with checkboxes and per-row master switches',
       caption: 'Seven triggers × five channels, with the scope of each rule stated underneath it ("applies to starred parcels"). Channels the plan doesn\'t include are visible but disabled — the ceiling is shown, not hidden.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/alerts.webp',
-      alt: 'The alerts feed grouped by day, each alert showing which channel it went out on',
-      caption: 'And the feed those rules produce — grouped by day, each entry showing the channel it actually went out on. Rules you can\'t audit are rules you stop trusting.',
+      src: '/trackwise-assets/alerts-1.webp',
+      alt: 'The top of the alerts page — how alerting works in three steps, and counts for needs action, early warnings and delivered',
+      caption: 'And the feed those rules produce. It opens by explaining itself in three steps, then splits the day into what needs action and what is just news.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/alerts-2.webp',
+      alt: 'The alerts feed grouped by day, each alert showing the channel it went out on',
+      caption: 'Grouped by day, each entry showing the channel it actually went out on. Rules you can\'t audit are rules you stop trusting.',
     },
 
-    // ══ 10. Developers ═══════════════════════════════════════════════════════
-    { t: 'h2', x: '10. The Developer Surface Is Three Jobs, Not One Settings Page' },
+    // ══ 11. Developers ═══════════════════════════════════════════════════════
+    { t: 'h2', x: '11. The Developer Surface Is Three Jobs, Not One Settings Page' },
     {
       t: 'p',
       x: 'API access started life as a single settings page and was wrong there, because three unrelated jobs were sharing one screen: <em>getting credentials</em>, <em>configuring where events go</em>, and <em>working out why one didn\'t arrive</em>. The third one happens at 2am under pressure and deserves its own room. So Developers became its own product area with three sections — and everything in it mutates real state.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/keys.webp',
-      alt: 'The API keys page with a start-here panel and key list, beside the modal that shows a newly created secret exactly once',
-      caption: 'Keys carry a mode (live or test) and a fixed scope set, so a read-only test key can never touch live data even if it leaks. The secret is shown <strong>exactly once</strong> — the only honest way to model a key that is stored as a hash.',
+      src: '/trackwise-assets/keys-1.webp',
+      alt: 'The API keys page — a start-here panel with a copyable curl example, and the list of keys with modes and last-used times',
+      caption: 'A working request before anything else, then the keys themselves — each with its mode, its scopes, and when it was last used.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/keys-2.webp',
+      alt: 'The lower half of the API keys page — four permission cards explaining what a key can be allowed to do',
+      caption: 'Permissions explained as sentences with the scope string underneath, and a count of how many of your keys hold each one.',
+    },
+    {
+      t: 'p',
+      x: 'Keys carry a mode (live or test) and a fixed scope set, so a read-only test key can never touch live data even if it leaks. And the secret is shown <strong>exactly once</strong> — the only honest way to model a credential the server stores as a hash.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/key-secret.webp',
+      alt: 'The modal shown after creating a key — copy your key now, this is the only time you will see it, with a secret-manager warning',
+      caption: '"This is the only time you\'ll see it," and the reason underneath: we store a hash, not the key. If a dialog can only be honest or convenient, it should be honest.',
     },
     {
       t: 'p',
@@ -360,9 +471,15 @@ const DESIGN_TRACKWISE = {
     },
     {
       t: 'image',
-      src: '/trackwise-assets/webhooks.webp',
-      alt: 'The webhooks page — endpoint URL, sending toggle, signing secret, event subscriptions and recent deliveries',
-      caption: 'One endpoint, fully specified: where, whether it is sending, what it is subscribed to, the secret it is signed with, and what happened last time.',
+      src: '/trackwise-assets/webhooks-1.webp',
+      alt: 'The webhooks page — an explainer with the exact JSON payload, and a warning that one message did not get through',
+      caption: 'It leads with the actual payload you will receive and the retry policy in one sentence — then tells you immediately if something didn\'t land.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/webhooks-2.webp',
+      alt: 'The endpoint list and settings — URL, sending toggle, signing secret, and the grid of events to send',
+      caption: 'One endpoint, fully specified: where, whether it is sending, the secret it is signed with, and exactly which events it is subscribed to.',
     },
     {
       t: 'p',
@@ -371,12 +488,12 @@ const DESIGN_TRACKWISE = {
     {
       t: 'image',
       src: '/trackwise-assets/eventlog.webp',
-      alt: 'The event log with one failed delivery expanded, showing the request JSON we sent and the 500 response the server returned',
+      alt: 'The event log with a failed delivery expanded, showing the request JSON sent and the 500 response returned',
       caption: 'The request, the response, the status code, the retry count and the event id — one row, expanded. Everything a developer would otherwise ask support for.',
     },
 
-    // ══ 11. Money ════════════════════════════════════════════════════════════
-    { t: 'h2', x: '11. The Money Moments — Designed, Not Bolted On' },
+    // ══ 12. Money ════════════════════════════════════════════════════════════
+    { t: 'h2', x: '12. The Money Moments — Designed, Not Bolted On' },
     {
       t: 'p',
       x: 'Plan limits, trials and failed payments are where products get ugly: hard walls, disabled screens, red modals. These states only exist for a week or two in a user\'s life, which is exactly why they go unreviewed and end up being the worst screens in the product. I designed them as a sequence with one rule — <strong>never take away what is already working</strong>.',
@@ -400,7 +517,7 @@ const DESIGN_TRACKWISE = {
     {
       t: 'image',
       src: '/trackwise-assets/quota.webp',
-      alt: 'The quota meter in the sidebar showing 8 parcels left, and the banner shown once the limit is reached',
+      alt: 'The quota meter in the sidebar showing 8 parcels left, above the banner shown once the limit is reached',
       caption: '"8 parcels left" is a countdown. "92% used" is a statistic. Only one of them tells you what to do next — and the banner that follows it is careful to say what still works.',
     },
     { t: 'h3', x: 'Gating without lying' },
@@ -416,13 +533,25 @@ const DESIGN_TRACKWISE = {
     },
     {
       t: 'image',
-      src: '/trackwise-assets/pricing.webp',
-      alt: 'The full public pricing page with three plans, a comparison table and an FAQ',
-      caption: 'Every limit on one page, including the awkward questions — what happens at the limit, what happens when you downgrade, what happens to data. Pricing pages that dodge those get read as traps.',
+      src: '/trackwise-assets/pricing-1.webp',
+      alt: 'The public pricing page — three plan cards with limits and what each includes',
+      caption: 'Three plans, every limit on the card rather than behind a "see details" link. The page is titled after the thing pricing pages usually do wrong.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/pricing-2.webp',
+      alt: 'The full plan comparison table with every limit and feature across the three plans',
+      caption: 'And the full comparison underneath, including the rows a vendor would rather leave out — history retention, polling frequency, seats.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/pricing-3.webp',
+      alt: 'The pricing FAQ answering what happens at the limit, on downgrade, and to your data',
+      caption: 'The awkward questions, answered on the pricing page itself: what happens at the limit, on downgrade, and to your data. Pages that dodge those get read as traps.',
     },
 
-    // ══ 12. States ═══════════════════════════════════════════════════════════
-    { t: 'h2', x: '12. Every Way It Can Fail, Drawn on Purpose' },
+    // ══ 13. States ═══════════════════════════════════════════════════════════
+    { t: 'h2', x: '13. Every Way It Can Fail, Drawn on Purpose' },
     {
       t: 'p',
       x: 'The product depends on 14 third-party carrier APIs, which means it is broken somewhere almost all of the time. Designing only the happy path would have left the most-seen screens to a default spinner and an <code>alert()</code>. So the app models <strong>seven backend conditions</strong>, and every screen renders honestly in each of them.',
@@ -450,11 +579,11 @@ const DESIGN_TRACKWISE = {
       t: 'image',
       src: '/trackwise-assets/errors.webp',
       alt: 'The 404 page inside the workspace, the public 404, and the help and support panel',
-      caption: 'Two different kinds of lost, and the way out of both. Every route in the app is also wrapped in an error boundary — a single bad prop once took the whole app to a blank white page, which is how the API screen got fixed.',
+      caption: 'Two different kinds of lost, and the way out of both. Every route is also wrapped in an error boundary — a single bad prop once took the whole app to a blank white page, which is how the API screen got fixed.',
     },
 
-    // ══ 13. Craft ════════════════════════════════════════════════════════════
-    { t: 'h2', x: '13. Dark, Responsive, and the Details That Cost the Most Time' },
+    // ══ 14. Craft ════════════════════════════════════════════════════════════
+    { t: 'h2', x: '14. Dark Mode, Search, and the Rest of the Surface' },
     {
       t: 'p',
       x: 'Dark mode is Blade\'s <code>onDark</code> scheme rather than an inverted stylesheet — but the hand-built pieces had to be taught it. The custom illustrations resolve their own palette per scheme, because the pastel blues that read as soft on white glow unpleasantly on a dark surface, and the route rails and carrier tiles use non-token colour that needed a second pass.',
@@ -462,24 +591,8 @@ const DESIGN_TRACKWISE = {
     {
       t: 'image',
       src: '/trackwise-assets/dark.webp',
-      alt: 'The landing page, workspace home and parcel detail page in dark mode',
-      caption: 'The same three screens as the top of this page, in Blade\'s dark scheme. The illustrations aren\'t recoloured — each resolves its own palette for the scheme it\'s rendered in.',
-    },
-    {
-      t: 'p',
-      x: 'Responsively, the shell degrades in a fixed order rather than all at once: the side rail collapses to icons, then the product tabs overflow into <em>More</em>, then the rail becomes a drawer, then the table becomes a stack of rows. Each break happens at the width where the thing it protects actually stops fitting.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/responsive.webp',
-      alt: 'The parcels list at 1280, 960, 820 and 680 pixels wide, showing the navigation degrading in stages',
-      caption: '1280 → 960 → 820 → 680. Four stages, each losing exactly one thing: the rail\'s labels, then the tab labels, then the rail itself, then the table\'s columns.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/mobile.webp',
-      alt: 'Four Trackwise screens at 390 pixels wide — landing, public tracking page, workspace home and parcel list',
-      caption: 'At 390px the public pages matter most — that\'s where a tracking link opens when it arrives by WhatsApp. The workspace follows the same rules, one column at a time.',
+      alt: 'The workspace home, a parcel detail page and the public tracking page in dark mode',
+      caption: 'Three of the screens from the top of this page, in Blade\'s dark scheme. The illustrations aren\'t recoloured — each resolves its own palette for the scheme it\'s rendered in.',
     },
     {
       t: 'image',
@@ -488,14 +601,24 @@ const DESIGN_TRACKWISE = {
       caption: 'One field over parcels, pages and actions — because in a 34-route product, search is navigation for anyone who has used it more than twice.',
     },
     {
+      t: 'p',
+      x: 'Settings is six sections rather than one long page, and each one is a real screen rather than a stub. Privacy in particular is a page with sentences on it — in a product that watches your parcels, that is a feature, not a legal obligation.',
+    },
+    {
       t: 'image',
-      src: '/trackwise-assets/settings.webp',
-      alt: 'Six settings sections — profile, plan and billing, notifications, team, privacy, and developer options',
-      caption: 'Six sections, each one a real screen rather than a stub. Privacy is a page with sentences, not a link to a PDF — in a product that watches your parcels, it is a feature.',
+      src: '/trackwise-assets/settings-1.webp',
+      alt: 'Three settings sections — profile, plan and billing, and notifications',
+      caption: 'Profile, plan &amp; billing, notifications.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/settings-2.webp',
+      alt: 'Three more settings sections — team, privacy, and developer options',
+      caption: 'Team, privacy, and the developer options that make the whole thing reviewable.',
     },
 
-    // ══ 14. Built on Blade ═══════════════════════════════════════════════════
-    { t: 'h2', x: '14. Designing Inside Someone Else\'s System' },
+    // ══ 15. Built on Blade ═══════════════════════════════════════════════════
+    { t: 'h2', x: '15. Designing Inside Someone Else\'s System' },
     {
       t: 'p',
       x: 'I built this on <strong>Razorpay Blade</strong> deliberately. Designing a product with a bespoke design system is a pleasant exercise where every problem has the answer "add a token." Designing inside a real, opinionated, production system is the actual job — you inherit its type scale, its spacing, its colour semantics and its component API, and your taste has to show up in composition and behaviour instead of in decoration.',
@@ -533,21 +656,27 @@ const DESIGN_TRACKWISE = {
       x: 'Motion is the same story. The custom transitions in <code>motion.css</code> use Blade\'s own motion-token values rather than invented ones — the content column has to match the side nav\'s two easing curves exactly, or the seam between them tears open mid-transition. Everything collapses to a cross-fade under <code>prefers-reduced-motion</code>, and the review panel can force that on to check it.',
     },
 
-    // ══ 15. Designed for review ══════════════════════════════════════════════
-    { t: 'h2', x: '15. A Prototype Nobody Can Review Is a Prototype Nobody Believes' },
+    // ══ 16. Designed for review ══════════════════════════════════════════════
+    { t: 'h2', x: '16. A Prototype Nobody Can Review Is a Prototype Nobody Believes' },
     {
       t: 'p',
       x: 'Nine personas and seven backend conditions is 63 combinations. If reaching the "payment failed on a Business account during a partial carrier outage" state requires a code change, then in practice nobody ever looks at it — including me. So the product carries its own switchboard: persona, backend condition, appearance and forced reduced motion, plus a complete route index so no screen is reachable only by accident. Choices persist across reloads.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/devpanel.webp',
-      alt: 'The developer options screen — persona switcher, backend condition switcher, appearance controls and a full route index',
-      caption: 'The reviewer\'s switchboard. Every state in this case study was reached from this panel — and every screenshot on this page is one click from a reviewer\'s own browser.',
+      src: '/trackwise-assets/devpanel-1.webp',
+      alt: 'The developer options screen — nine persona cards with a note on what each one exists to exercise',
+      caption: 'Nine personas, each with one line on why it exists — "zero parcels, so every list renders its empty state." The panel documents itself.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/devpanel-2.webp',
+      alt: 'The lower half of the developer options screen — backend condition switches, appearance controls and the full route index',
+      caption: 'Seven backend conditions, dark mode, forced reduced motion, and every route in the product as a link. Every figure in this case study was reached from here.',
     },
     {
       t: 'p',
-      x: 'The same idea appears in a form a first-time visitor will actually find: under the landing hero, three cards for the three user types and a row of chips for the states that only exist for a week — near a quota, mid-trial, past due. Those are precisely the states that otherwise go unreviewed, so the product volunteers them.',
+      x: 'The same idea appears in a form a first-time visitor will actually find: three cards for the three user types and a row of chips for the states that only exist for a week — near a quota, mid-trial, past due. Those are precisely the states that otherwise go unreviewed, so the product volunteers them.',
     },
     {
       t: 'callout',
@@ -556,8 +685,8 @@ const DESIGN_TRACKWISE = {
       x: 'One seeded generator produces four parcel pools — 22, 64, 148 and a separate 6 for test mode — with coherent scan histories, carrier handovers, ETAs and delay predictions. <strong>Seeded, so the dataset is identical on every reload.</strong> A demo that reshuffles between screenshots cannot be reviewed, compared, or trusted — and neither can a case study built on one.',
     },
 
-    // ══ 16. Reflection ═══════════════════════════════════════════════════════
-    { t: 'h2', x: '16. What I Actually Learned' },
+    // ══ 17. Reflection ═══════════════════════════════════════════════════════
+    { t: 'h2', x: '17. What I Actually Learned' },
     {
       t: 'cards',
       items: [
@@ -578,7 +707,7 @@ const DESIGN_TRACKWISE = {
     {
       t: 'launch',
       title: 'Trackwise on GitHub',
-      desc: 'The full source — 82 files, 34 routes, and the seeded dataset every screenshot on this page came from. Clone it, run it, and click through all 63 persona × condition combinations yourself.',
+      desc: 'The full source — 82 files, 34 routes, and the seeded dataset every figure on this page came from. Clone it, run it, and click through all 63 persona × condition combinations yourself.',
       url: 'https://github.com/uxnijin/razorpay',
       label: 'View the repo',
     },
