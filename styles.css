@@ -994,95 +994,72 @@ kbd {
 }
 
 /* ============================================================ BLOCK: callout */
+/* A note beside the argument, not a coloured box around it: one hairline
+   rule, a lead-in line, and the text. Kind only tints the rule — enough to
+   mark a caution as a caution, never enough to shout. */
 
 .callout {
-  display: flex;
-  gap: 12px;
-  padding: 16px 18px;
-  margin: 28px 0;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--bg-subtle);
-  font-size: 15.5px;
-  line-height: 1.6;
+  margin: 30px 0;
+  padding-left: 20px;
+  border-left: 2px solid var(--border-strong, var(--border));
   color: var(--text-muted);
 }
 
-.callout-ico {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-  color: var(--text-faint);
-}
-
-.callout-ico svg {
-  width: 18px;
-  height: 18px;
-}
-
-.callout-body>*:first-child {
-  margin-top: 0;
-}
-
-.callout-body>*:last-child {
-  margin-bottom: 0;
-}
-
-.callout-body p {
+.callout p {
   font-size: 15.5px !important;
-  line-height: 1.6 !important;
-  margin-bottom: 8px !important;
+  line-height: 1.68 !important;
+  margin: 0 0 8px !important;
   color: inherit !important;
+}
+
+.callout p:last-child {
+  margin-bottom: 0 !important;
 }
 
 .callout-title {
   display: block;
   font-family: var(--font-display);
   font-weight: 600;
+  font-size: 15.5px;
+  line-height: 1.5;
   color: var(--text);
-  margin-bottom: 4px;
-  font-size: 15px;
-}
-
-.callout.info {
-  background: var(--info-4);
-  border-color: color-mix(in srgb, var(--info-9) 25%, transparent);
-}
-
-.callout.info .callout-ico {
-  color: var(--info-9);
-}
-
-.callout.info .callout-title {
-  color: var(--info-11);
-}
-
-.callout.success {
-  background: var(--success-4);
-  border-color: color-mix(in srgb, var(--success-9) 25%, transparent);
-}
-
-.callout.success .callout-ico {
-  color: var(--success-9);
+  margin-bottom: 6px;
 }
 
 .callout.warning {
-  background: var(--warning-4);
-  border-color: color-mix(in srgb, var(--warning-9) 28%, transparent);
-}
-
-.callout.warning .callout-ico {
-  color: var(--warning-9);
+  border-left-color: color-mix(in srgb, var(--warning-9) 55%, transparent);
 }
 
 .callout.danger {
-  background: var(--danger-4);
-  border-color: color-mix(in srgb, var(--danger-9) 25%, transparent);
+  border-left-color: color-mix(in srgb, var(--danger-9) 55%, transparent);
 }
 
-.callout.danger .callout-ico {
-  color: var(--danger-9);
+.callout.success {
+  border-left-color: color-mix(in srgb, var(--success-9) 45%, transparent);
+}
+
+/* ============================================================ BLOCK: quote */
+
+.pullquote {
+  margin: 34px 0;
+  padding-left: 20px;
+  border-left: 2px solid var(--border-strong, var(--border));
+}
+
+.pullquote p {
+  font-family: var(--font-display);
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+  color: var(--text) !important;
+  margin: 0 !important;
+}
+
+.pullquote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 13.5px;
+  color: var(--text-faint);
 }
 
 /* ============================================================ BLOCK: code */
@@ -2007,397 +1984,6 @@ td code {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-}
-
-/* ==================================================== BLOCK: Aeros demos */
-/* Live rebuilds of Aeros components. These always render on the app's own
-   dark surface, in both site themes, because that is the context they were
-   designed for and the accent rules only read correctly against it. */
-
-.ademo {
-  --ox: #3B72ED;
-  --ox-soft: #5B8AF5;
-  --ether: #F18D74;
-  --deep: #0B1020;
-  --swift: cubic-bezier(.22, 1, .36, 1);
-}
-
-.ademo .demo-bar {
-  background: #0F1526;
-  border-bottom-color: rgba(255, 255, 255, .07);
-  color: #EEF2FC;
-}
-
-.ademo .demo-bar label {
-  color: #8E9BBF;
-}
-
-.ademo .demo-foot {
-  background: #0F1526;
-  border-top-color: rgba(255, 255, 255, .07);
-  color: #5B678E;
-}
-
-.ademo .demo-note {
-  color: #8E9BBF;
-}
-
-.ademo-stage {
-  position: relative;
-  padding: 34px 26px 26px;
-  background:
-    radial-gradient(120% 90% at 18% 0%, rgba(59, 114, 237, .1), transparent 60%),
-    var(--deep);
-}
-
-.ademo-readout {
-  font-size: 15px;
-  color: #EEF2FC;
-  font-variant-numeric: tabular-nums;
-}
-
-.ademo-readout b {
-  font-size: 20px;
-  font-weight: 400;
-}
-
-.ademo-unit {
-  color: #8E9BBF;
-  margin-left: 2px;
-}
-
-.ademo-hint {
-  margin-left: auto;
-  font-size: 12px;
-  color: #5B678E;
-}
-
-.ademo-btn {
-  border: 1px solid rgba(255, 255, 255, .12);
-  background: rgba(255, 255, 255, .045);
-  color: #8E9BBF;
-  border-radius: var(--radius-full);
-  padding: 6px 14px;
-  font: inherit;
-  font-size: 12.5px;
-  cursor: pointer;
-  transition: background .2s, color .2s, border-color .2s;
-}
-
-.ademo-btn:hover {
-  background: rgba(255, 255, 255, .09);
-  color: #EEF2FC;
-}
-
-.ademo-seg {
-  display: inline-flex;
-  gap: 2px;
-  padding: 3px;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, .05);
-  border: 1px solid rgba(255, 255, 255, .08);
-}
-
-.ademo-seg button {
-  border: 0;
-  background: transparent;
-  color: #8E9BBF;
-  border-radius: var(--radius-full);
-  padding: 5px 13px;
-  font: inherit;
-  font-size: 12.5px;
-  cursor: pointer;
-  transition: background .25s var(--swift), color .25s;
-}
-
-.ademo-seg button.is-on {
-  background: var(--ox);
-  color: #fff;
-}
-
-/* ---- tick slider ---- */
-
-.ademo-slider {
-  position: relative;
-  height: 64px;
-  cursor: pointer;
-  touch-action: none;
-  user-select: none;
-  outline: none;
-}
-
-.ademo-slider:focus-visible {
-  box-shadow: 0 0 0 2px rgba(91, 138, 245, .5);
-  border-radius: var(--radius-xs);
-}
-
-.ademo-ticks {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 16px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-
-.ademo-tick {
-  width: 1px;
-  border-radius: var(--radius-full);
-  transition: background .3s;
-}
-
-.ademo-handle {
-  position: absolute;
-  bottom: 16px;
-  transform: translate(-50%, 50%);
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(241, 141, 116, .7);
-  background: var(--deep);
-  color: var(--ether);
-  transition: transform .28s var(--swift), background .2s, border-color .2s, box-shadow .2s;
-}
-
-.ademo-handle svg {
-  width: 16px;
-  height: 16px;
-}
-
-.ademo-slider.is-dragging .ademo-handle {
-  transform: translate(-50%, 50%) scale(1.18);
-  border-color: var(--ether);
-  background: rgba(241, 141, 116, .25);
-  box-shadow: 0 0 0 1px rgba(241, 141, 116, .35), 0 12px 40px -8px rgba(241, 141, 116, .45);
-}
-
-.ademo-axis {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-size: 11.5px;
-  color: #5B678E;
-}
-
-/* ---- gauge columns ---- */
-
-.ademo-gauge-stage {
-  padding-top: 20px;
-}
-
-.ademo-grid {
-  position: absolute;
-  inset: 20px 26px 26px;
-  pointer-events: none;
-}
-
-.ademo-grid span {
-  position: absolute;
-  inset-inline: 0;
-  border-top: 1px dashed rgba(255, 255, 255, .06);
-}
-
-.ademo-grid i {
-  position: absolute;
-  top: -8px;
-  left: 0;
-  font-style: normal;
-  font-size: 10px;
-  color: #5B678E;
-}
-
-.ademo-cols {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  height: 300px;
-}
-
-.ademo-col {
-  position: relative;
-  flex: 1;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.ademo-head {
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.ademo-glabel {
-  font-size: 14px;
-  color: #EEF2FC;
-}
-
-.ademo-gstatus {
-  font-size: 11px;
-  color: #8E9BBF;
-}
-
-.ademo-col.is-bad .ademo-gstatus {
-  color: var(--ether);
-}
-
-.ademo-pill {
-  border-radius: var(--radius-full);
-  padding: 3px 10px;
-  font-size: 11px;
-  font-weight: 500;
-  background: rgba(59, 114, 237, .85);
-  color: #fff;
-  font-variant-numeric: tabular-nums;
-  transition: background .3s, color .3s;
-}
-
-.ademo-col.is-bad .ademo-pill {
-  background: var(--ether);
-  color: #3A1B12;
-}
-
-.ademo-stem {
-  position: absolute;
-  top: 92px;
-  left: 50%;
-  width: 1px;
-  transform: translateX(-50%);
-  background: rgba(59, 114, 237, .35);
-  transition: height .45s var(--swift), background .3s;
-}
-
-.ademo-col.is-bad .ademo-stem {
-  background: rgba(241, 141, 116, .45);
-}
-
-.ademo-warn {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) scale(0);
-  z-index: 1;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(241, 141, 116, .5);
-  background: var(--deep);
-  padding: 0 6px;
-  font-size: 10px;
-  line-height: 16px;
-  color: var(--ether);
-  opacity: 0;
-  transition: opacity .25s, transform .25s var(--swift), bottom .45s var(--swift);
-}
-
-.ademo-col.is-bad .ademo-warn {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-}
-
-.ademo-bar {
-  width: 52%;
-  border-radius: 6px 6px 3px 3px;
-  border: 1px solid rgba(91, 138, 245, .22);
-  /* Hatching is a repeating gradient, not an SVG pattern — a <pattern> in a
-     detached <svg> cannot be referenced from a DOM element's background. */
-  background: repeating-linear-gradient(45deg,
-      rgba(91, 138, 245, .5) 0 2.2px, rgba(59, 114, 237, .08) 2.2px 6px);
-  transition: height .45s var(--swift), background .3s, border-color .3s;
-}
-
-.ademo-col.is-bad .ademo-bar {
-  border-color: rgba(241, 141, 116, .4);
-  background: repeating-linear-gradient(45deg,
-      rgba(241, 141, 116, .62) 0 2.2px, rgba(241, 141, 116, .1) 2.2px 6px);
-}
-
-/* Staggered entrance, replayable from the toolbar. */
-.ademo-cols.is-in .ademo-head {
-  animation: ademo-rise .5s var(--swift) both;
-  animation-delay: calc(.1s + var(--i) * .06s);
-}
-
-.ademo-cols.is-in .ademo-stem,
-.ademo-cols.is-in .ademo-bar {
-  animation: ademo-grow .7s var(--swift) both;
-  animation-delay: calc(.25s + var(--i) * .06s);
-  transform-origin: bottom;
-}
-
-@keyframes ademo-rise {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-@keyframes ademo-grow {
-  from {
-    transform: scaleY(0);
-  }
-
-  to {
-    transform: scaleY(1);
-  }
-}
-
-/* ---- rank vs threshold bars ---- */
-
-.ademo-bars {
-  display: block;
-  width: 100%;
-  height: 120px;
-}
-
-.ademo-bars rect {
-  transform-box: fill-box;
-  transform-origin: bottom;
-  animation: ademo-grow .7s var(--swift) both;
-  animation-delay: calc(.12s + var(--i) * 8ms);
-  transition: fill .35s, fill-opacity .35s;
-}
-
-.ademo-count {
-  font-variant-numeric: tabular-nums;
-}
-
-@media (max-width: 720px) {
-  .ademo-stage {
-    padding: 24px 16px 20px;
-  }
-
-  .ademo-cols {
-    height: 230px;
-    gap: 6px;
-  }
-
-  .ademo-glabel {
-    font-size: 12px;
-  }
-
-  .ademo-pill {
-    font-size: 10px;
-    padding: 2px 7px;
-  }
-
-  .ademo-hint {
-    margin-left: 0;
-    flex-basis: 100%;
-  }
 }
 
 /* Legal links at document footer */
@@ -3356,6 +2942,51 @@ img.img-loading {
 img.img-loaded {
   opacity: 1;
   transition: opacity .35s var(--ease);
+}
+
+/* skeleton: holds the space and sweeps a soft highlight while loading */
+.is-skeleton {
+  position: relative;
+  background: var(--bg-subtle);
+}
+
+.is-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg,
+      transparent 20%,
+      color-mix(in srgb, var(--text) 13%, transparent) 50%,
+      transparent 80%);
+  background-size: 220% 100%;
+  animation: skeleton-sweep 1.5s linear infinite;
+}
+
+/* unratioed frames collapse to nothing before the image has a size — give
+   them the shape most of these figures actually are */
+.frame.is-skeleton {
+  aspect-ratio: 16/9;
+}
+
+.gallery .frame.is-skeleton {
+  aspect-ratio: 4/3;
+}
+
+@keyframes skeleton-sweep {
+  from {
+    background-position: 220% 0;
+  }
+
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-skeleton::after {
+    animation: none;
+  }
 }
 
 /* ============================================================ TYPOGRAPHY REVEAL */

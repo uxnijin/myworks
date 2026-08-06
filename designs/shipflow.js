@@ -262,13 +262,6 @@ const DESIGN_SHIPFLOW = {
         { icon: 'activity', title: 'Undo actions', desc: 'Batch edits and archiving feature instant undo functionality.' },
       ],
     },
-    {
-      t: 'image',
-      src: '/shipflow-assets/404-light.png',
-      alt: 'ShipFlow 404 page',
-      caption: 'Even error screens offer clear navigation to guide users back.',
-      ratio: '16-9',
-    },
 
     // ── 7. Speed & keyboard ───────────────────────────────────────────────────
     { t: 'h2', x: '7. Keyboard Navigation' },

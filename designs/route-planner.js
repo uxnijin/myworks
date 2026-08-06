@@ -1,626 +1,346 @@
 // ============================================================================
-//  Route Planner: Last-Mile Delivery App
+//  Route Planner — A Day's Deliveries on One Surface
 //  Mobile App Design Case Study
+//
+//  A self-directed product exercise, built end-to-end as a runnable SwiftUI
+//  app: 44 Swift files, ~6,800 lines, no third-party UI libraries and no
+//  MapKit — the map is drawn from scratch.
+//
+//  Every figure in this case study is a screenshot of the real app running in
+//  the iOS simulator. Nothing here is a rendering or a mockup.
 // ============================================================================
 
 const DESIGN_ROUTE_PLANNER = {
   slug: 'route-planner',
-  name: 'Route Planner: Last-Mile Delivery App',
+  name: 'Route Planner: A Day of Deliveries',
   category: 'Mobile App',
   icon: 'map',
   tag: 'Case Study',
-  status: 'Shipped',
-  summary: 'Designing the ultimate route planning & delivery experience for India\'s gig-economy drivers.',
-  lede: 'End-to-end product design AND development for a native iOS app that consolidates 5+ delivery tools into one, from route import and optimisation to proof-of-delivery and daily performance insights. Designed in Figma, then built from scratch in Swift with full mock-data functionality.',
-  tech: ['Swift', 'SwiftUI', 'MapKit', 'Core Data', 'Combine', 'AVFoundation'],
+  status: 'Prototype',
+  summary: 'A last-mile delivery app that holds a 120-stop day on one surface — designed and built as a running SwiftUI prototype.',
+  lede: 'A driver with 120 stops is running a small logistics operation from a phone mount, using tools built for someone driving to one place. This is a self-directed exercise in designing the whole day instead of the next turn: import, validate, optimise, drive, prove, recap. Designed and built end-to-end in SwiftUI, on mock data, with a map drawn from scratch.',
+  tech: ['Swift', 'SwiftUI', 'Canvas', 'Observation', 'Core Haptics patterns'],
   blocks: [
 
-    // ── Meta ──────────────────────────────────────────────────────────────────
-    {
-      t: 'meta',
-      items: [
-        { label: 'Role',     value: 'Lead Product Designer (End-to-End)' },
-        { label: 'Platform', value: 'Native iOS' },
-        { label: 'Timeline', value: '6 Weeks' },
-        { label: 'Industry', value: 'Logistics / Last-Mile Delivery' },
-      ],
-    },
-
-    // ── Hero ──────────────────────────────────────────────────────────────────
-    {
-      t: 'image',
-      src: '/route-planner-assets/light-mode.png',
-      alt: 'Route Planner in light mode',
-      ratio: '16-9',
-    },
-
-    // ── Swift Badge ───────────────────────────────────────────────────────────
+    // ── Framing ───────────────────────────────────────────────────────────────
     {
       t: 'callout',
-      kind: 'tip',
-      title: 'This app is real: written in Swift, not just designed in Figma.',
-      x: 'Every screen, animation, and interaction you see in this case study was fully built using Swift and SwiftUI. The app runs on a real iOS device with mock delivery data, demonstrating complete end-to-end functionality. Scroll to Section 0 to see the engineering story.',
-    },
-
-    // ── 1. The Problem Space ──────────────────────────────────────────────────
-    { t: 'h2', x: '1. The Problem Space' },
-    {
-      t: 'p',
-      x: 'Last-mile delivery is the final, most expensive, and most chaotic leg of any supply chain. In India alone, companies like Swiggy, Zomato, Amazon Flex, and Dunzo have onboarded 4+ million gig-economy delivery partners. Yet the tools these workers use every day haven\'t evolved beyond basic navigation apps.',
-    },
-    { t: 'h3', x: 'The Real Day of a Delivery Driver' },
-    {
-      t: 'p',
-      x: 'At 9 AM, Ramesh receives 150 delivery orders for the day. Before he even gets on his bike, he must screenshot his delivery list from 3 different WhatsApp groups, manually paste addresses into Google Maps one by one, try to figure out an efficient order — by memory — and juggle calls, photo proof, and failed-delivery logging between stops. By 9 PM he has context-switched between 5+ apps hundreds of times. That is not a workflow. That is organised chaos.',
-    },
-    { t: 'h3', x: 'The Five Core Problems' },
-    {
-      t: 'table',
-      head: ['#', 'Problem', 'Real-World Impact'],
-      rows: [
-        ['P1', 'Manual route ordering with no optimisation', 'Drivers criss-cross the city, wasting 40–60 min/day in extra travel'],
-        ['P2', 'Constant app-switching (Maps → Camera → Chat → Tracker)', '15–25 sec lost per stop × 150 stops = 45–60 min lost daily'],
-        ['P3', 'Unstructured addresses (no flat number, landmark-based directions)', 'Drivers call customers 3–5 times per route to find locations'],
-        ['P4', 'No in-app proof-of-delivery workflow', 'Delivery disputes are common; drivers have no evidence to defend themselves'],
-        ['P5', 'Zero daily feedback or performance insights', 'Drivers have no way to improve; businesses can\'t measure driver efficiency'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/split_reality_vision.png',
-      alt: 'Split-image diagram showing "Today\'s Reality" (driver juggling 5 app icons) vs. "Our Vision" (single unified interface)',
-      ratio: '2-1',
-    },
-
-    // ── 2. Market Research & Competitive Analysis ─────────────────────────────
-    { t: 'h2', x: '2. Market Research & Competitive Analysis' },
-    {
-      t: 'p',
-      x: 'We studied 7 existing tools used by delivery drivers globally and locally. No tool combines route optimisation + navigation + delivery completion + daily summary in a single, self-serve mobile app. None are designed for India-specific constraints: unstructured addresses, shared-PIN codes for societies, landmark-based navigation, and low-end device support.',
-    },
-    {
-      t: 'table',
-      head: ['Product', 'Strengths', 'Critical Gaps'],
-      rows: [
-        ['Google Maps', 'Trusted navigation, offline maps', 'No multi-stop optimisation, no delivery workflow'],
-        ['Circuit Route Planner', 'Good optimisation engine, CSV import', 'Western UX patterns, paid wall for basics, no Indian address handling'],
-        ['Onfleet', 'Business-grade dispatch', 'Too complex for solo drivers, subscription cost prohibitive'],
-        ['Routific', 'Strong fleet optimisation', 'Desktop-first, not field-usable on a phone'],
-        ['Dunzo / Swiggy Driver App', 'Integrates with platform orders', 'Siloed — can\'t import external orders'],
-        ['Locus Dispatch', 'Enterprise AI routing', 'Requires enterprise IT setup, no self-serve'],
-        ['MapMyIndia', 'Indian geography expertise', 'Navigation-only; no delivery management'],
-      ],
+      kind: 'warning',
+      title: 'A self-directed exercise, not a client project.',
+      x: 'Nobody commissioned this and no delivery company was involved. There was no user research programme, no pilot, and no production data — the arguments below are design reasoning, not findings. Everything runs on a local mock data layer.',
     },
     {
       t: 'callout',
-      kind: 'tip',
-      title: 'Our Opportunity',
-      x: 'Build the "just right" tool: powerful enough to replace 5 apps but simple enough to learn in one shift.',
+      kind: 'success',
+      title: 'This is a working iOS app, not a mockup.',
+      x: 'Every image on this page is a screenshot of the app running on an iPhone. The map pans and zooms, the route line draws itself, stops re-sequence when you drag them, validation really rejects rows, and completing a stop advances the day. <strong>44 Swift files, ~6,800 lines, zero third-party UI libraries</strong> — and no MapKit; the map is drawn from scratch.',
     },
     {
       t: 'image',
-      src: '/route-planner-assets/competitive_matrix.png',
-      alt: '2x2 matrix showing Complexity (Simple vs. Enterprise) against Completeness (Navigation-only vs. Full Workflow).',
-      ratio: '1-1',
+      src: '/route-planner-assets/day.webp',
+      alt: 'Four screens of Route Planner: home, route overview, active navigation, and the end-of-day summary',
+      caption: 'The whole day in four screens: what today is, what the route looks like, where you are now, and how it went.',
+    },
+    {
+      t: 'table',
+      head: ['At a glance', ''],
+      rows: [
+        ['Role', 'Design and build, end to end'],
+        ['Platform', 'Native iOS (iPhone), dark-first'],
+        ['Built with', 'SwiftUI · a custom vector map · seeded mock data'],
+        ['Scope', '9 screens, 44 Swift files, ~6,800 lines'],
+        ['Status', 'Runnable prototype — no backend, no network, no accounts'],
+      ],
     },
 
-    // ── 3. User Research & Field Insights ────────────────────────────────────
-    { t: 'h2', x: '3. User Research & Field Insights' },
+    // ── 1. The problem ────────────────────────────────────────────────────────
+    { t: 'h2', x: '1. The Job Is the Day, Not the Turn' },
+    {
+      t: 'p',
+      x: 'Consumer navigation is built around a single question: <em>how do I get to this one place?</em> A delivery driver\'s question is different and much larger: <em>what is the best order for these 120 places, and how do I prove I did each one?</em> The gap between those two questions is where the working day leaks — into a spreadsheet, a chat thread, a camera roll, and a notes app that never talk to each other.',
+    },
+    {
+      t: 'p',
+      x: 'So the design premise here is narrow and testable: <strong>put the entire day on one surface</strong>, from a raw list of addresses to a signed-off recap, and see whether the flow holds together when you actually build it and use it. Four things follow from that premise, and they shaped every screen.',
+    },
     {
       t: 'cards',
       items: [
-        { icon: 'users',       title: 'Ride-Along Sessions',  desc: '6 sessions with delivery riders in Bengaluru and Mumbai (2–4 hours each).' },
-        { icon: 'messageSquare', title: 'Contextual Interviews', desc: '12 semi-structured interviews with solo drivers and 4 small fleet managers.' },
-        { icon: 'clipboard',   title: 'Diary Studies',        desc: '5 drivers documented their workflow for 3 consecutive workdays via WhatsApp voice notes.' },
-        { icon: 'monitor',     title: 'App Usage Analysis',   desc: 'Screen recordings and session analysis of drivers using Google Maps during deliveries.' },
+        { icon: 'smartphone', title: 'One thumb, one loud action', desc: 'Each screen commits to a single primary action pinned to the bottom — Import Route, Start Route, I\'ve Arrived, Finish Day. Everything else is quieter and further up.' },
+        { icon: 'moon', title: 'Dark first, light adaptive', desc: 'Designed in dark and adapted to light rather than the other way round — a phone on a windscreen mount lives at high brightness, and the map is the screen.' },
+        { icon: 'checkCircle', title: 'Nothing enters the route unchecked', desc: 'Import is deliberately a two-step move: bring addresses in, then review what the app found wrong before any of it becomes a stop.' },
+        { icon: 'activity', title: 'Physical confirmation', desc: 'Actions that end a stop are gestures with weight — a slide, not a tap — each paired with a specific haptic so the phone can confirm without being looked at.' },
       ],
     },
-    { t: 'h3', x: 'Five Key Field Observations' },
+
+    // ── 2. Getting the stops in ──────────────────────────────────────────────
+    { t: 'h2', x: '2. Getting the Stops In' },
+    {
+      t: 'p',
+      x: 'Addresses arrive in whatever form the sender had to hand, so the app takes five: a CSV from a dispatcher or spreadsheet (marked as the fast path for a full day), dictation, a pasted block of text, a camera scan of a label, or one typed by hand. The point of offering five is not completeness — it is that the fastest one changes depending on whether you have 120 stops or one.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/import.webp',
+      alt: 'Import Route, Review Stops, and Reorder Stops screens from the app',
+      caption: 'Import → review → reorder. The route only exists after the middle screen has been read and confirmed.',
+    },
+    { t: 'h3', x: 'Review is where the design earns its keep' },
+    {
+      t: 'p',
+      x: 'The interesting screen is the second one. Imported addresses are checked before they become stops, and the summary leads with the count that actually matters — <strong>what is broken</strong> — rather than a reassuring total. Warnings ("missing unit number") are still addable; errors ("address not found") are not, and the primary button says so plainly: <em>Add 13 stops to route</em>, with the skipped row spelled out underneath.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/validation.webp',
+      alt: 'The import validation summary card: 11 ready, 2 warnings, 1 error',
+      caption: 'The prototype seeds real failures on purpose — a missing unit, an address not found, one outside the zone — because an import screen that only ever succeeds has not been designed.',
+    },
+    { t: 'h3', x: 'Optimise, then argue with it' },
+    {
+      t: 'p',
+      x: 'Ordering runs a greedy nearest-neighbour pass from the depot and reports the result as a plain-language saving rather than a score. Crucially, optimisation is a suggestion: <strong>Reorder</strong> sits next to it, and dragging a stop re-sequences the route instantly. A driver who knows that one gate closes at noon must be able to overrule the algorithm without leaving the screen.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/optimize.webp',
+      alt: 'The optimisation result banner: optimised route saves 4h 37m, 58 km less driving today',
+      caption: 'The result is stated in hours and kilometres — the two units the day is actually measured in.',
+    },
+
+    // ── 3. Driving and delivering ────────────────────────────────────────────
+    { t: 'h2', x: '3. Driving, Arriving, Proving' },
+    {
+      t: 'p',
+      x: 'Navigation strips back to what is legible at a glance: where you are on the line, who is next, and one green action. The stop card carries the customer, the address, the ETA, and four small utilities — call, message, notes, skip — because the alternative to putting them here is another app.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/drive.webp',
+      alt: 'Route overview, active navigation, and the arrival sheet',
+      caption: 'Overview → driving → arrived. The same map carries all three; only the sheet on top of it changes.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/arrival.webp',
+      alt: 'The arrival sheet: You\'ve arrived, Theo Novak, with Deliver and Couldn\'t deliver actions',
+      caption: 'Arrival offers both outcomes at equal reach. A failed delivery is a normal event, not an error state buried behind the happy path.',
+    },
+    { t: 'h3', x: 'Proof is optional, and asked for in that order' },
+    {
+      t: 'p',
+      x: 'Photo, signature and note are all marked <em>Optional</em>, with a "left at door / safe place" toggle beneath them. That ordering is the argument: the app should never block a driver from closing a stop because a customer would not sign. Capture what you can, in the order it is easiest to capture, and move.',
+    },
+    {
+      t: 'p',
+      x: 'The stop is finally closed by sliding, not tapping. A 120-stop day is a day of handling parcels with one hand on a phone; a slide is the cheapest way to make an irreversible action impossible to trigger by accident — and it pairs with a heavy impact plus a success notification so the confirmation lands without a glance.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/slide.webp',
+      alt: 'The slide-to-confirm control at the bottom of the delivery sheet',
+      caption: 'Slide to mark Delivered. The one control in the app that cannot be triggered by a stray thumb.',
+    },
+
+    // ── 4. After the last stop ───────────────────────────────────────────────
+    { t: 'h2', x: '4. After the Last Stop' },
+    {
+      t: 'p',
+      x: 'Completing the final stop moves the app to a recap on its own, without asking. It leads with delivered and failed side by side at the same size — a day is not summarised honestly by its successes alone — then distance, time on road, fuel and time saved. History keeps the last seven working days as a bar chart and a per-day breakdown, so "was today unusual?" is answerable.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/after.webp',
+      alt: 'Daily summary, history, and settings screens',
+      caption: 'Summary, history, settings. Settings is deliberately small: vehicle, navigation preferences, and what to optimise for.',
+    },
+
+    // ── 5. Light and dark ────────────────────────────────────────────────────
+    { t: 'h2', x: '5. One System, Two Appearances' },
+    {
+      t: 'p',
+      x: 'Every colour is a semantic token that resolves per appearance, so light mode is a re-render rather than a second design. The background is <code>#0A0B0E</code> in dark and <code>#F5F7FA</code> in light — near-black with a hint of blue, and a grey-blue rather than pure white, because a pure-white map surface at full brightness is the one thing guaranteed to be unreadable outdoors.',
+    },
+    {
+      t: 'image',
+      src: '/route-planner-assets/theme.webp',
+      alt: 'Home and navigation screens shown in light and dark mode side by side',
+      caption: 'The same two screens in both appearances. The map, the route line and the accent survive the switch; only the surfaces move.',
+    },
+
+    // ── 6. Design system ─────────────────────────────────────────────────────
+    { t: 'h2', x: '6. The Design System' },
+    { t: 'h3', x: 'Colour' },
+    {
+      t: 'table',
+      head: ['Token', 'Light', 'Dark', 'Used for'],
+      rows: [
+        ['accent', '#3D7DFF', '#3D7DFF', 'Primary actions, the route line'],
+        ['accentSoft / accentDeep', '#6FA0FF / #2C5CE0', '#6FA0FF / #2C5CE0', 'Gradient ends, pressed states'],
+        ['indigo', '#6C5CE7', '#6C5CE7', 'Selection, secondary brand tint'],
+        ['success', '#30D158', '#30D158', 'Delivered, arrival, the slide control'],
+        ['warning', '#FFB020', '#FFB020', 'Addable-but-flagged rows, priority'],
+        ['danger', '#FF453A', '#FF453A', 'Blocking errors, failed stops'],
+        ['background', '#F5F7FA', '#0A0B0E', 'App-wide background'],
+        ['surface / surfaceRaised', '#FFFFFF / #F9FAFC', '#171A21 / #1E222B', 'Cards and elevated cards'],
+        ['textPrimary', '#0C0D12', '#FFFFFF', 'Primary text'],
+        ['textSecondary / tertiary', '62% / 38%', '62% / 38%', 'Supporting text and hints'],
+      ],
+    },
+    { t: 'h3', x: 'Geometry and type' },
     {
       t: 'cards',
       items: [
-        { icon: 'hand',        title: 'The One-Thumb Rule',     desc: 'Every driver operated their phone one-handed. All critical actions must be reachable by a single thumb in the bottom 40% of the screen.' },
-        { icon: 'sun',         title: 'The Glare Problem',      desc: 'Standard light-mode interfaces became unreadable in direct Indian summer sunlight. Dark-first + high-contrast is a safety requirement, not a style choice.' },
-        { icon: 'volumeX',     title: 'Sound Is Useless',       desc: 'Traffic noise meant audio alerts were consistently missed. Haptic feedback is the primary notification channel.' },
-        { icon: 'alertCircle', title: 'Address Chaos',          desc: '34% of addresses were incomplete or ambiguous, missing block numbers, landmark-only descriptions, or multilingual text.' },
-        { icon: 'cpu',         title: 'The Memory Tax',         desc: 'Drivers memorise 3–4 next stops to avoid unlocking their phone. The app must proactively push what\'s next.' },
+        { icon: 'type', title: 'SF Pro Rounded throughout', desc: 'The rounded system face, at system sizes, so Dynamic Type keeps working. Rounded terminals keep a dense, data-heavy screen from reading as industrial.' },
+        { icon: 'layers', title: 'Continuous corners, 10–34pt', desc: 'Squircles rather than rounded rectangles at every level: 10 for chips, 16 standard, 22 and 28 for cards, 34 for sheets, full pill for buttons.' },
+        { icon: 'slider', title: '4pt spacing, 20pt gutter', desc: 'A single 4pt scale with a 20pt screen gutter. Primary buttons are 56pt tall, chips 38pt, and no hit target goes below 44pt.' },
+        { icon: 'droplet', title: 'One shadow, one glow', desc: 'Cards get a single soft floating shadow; the accent glow is reserved for live pins and the primary button, so "glowing" always means "act on this".' },
       ],
     },
+    { t: 'h3', x: 'Motion' },
     {
-      t: 'image',
-      src: '/route-planner-assets/field_strip.jpg',
-      alt: 'Horizontal photo strip showing phone in handlebar mount, driver squinting in sunlight, juggling packages outside an apartment gate',
-      ratio: '3-1',
+      t: 'p',
+      x: 'Seven named curves, defined once and referenced everywhere. Naming them is what keeps a sheet from opening with a counter\'s bounce.',
     },
     {
-      t: 'image',
-      src: '/route-planner-assets/affinity_board.png',
-      alt: 'Digital affinity board with clustered sticky notes under "Navigation", "Address Issues", "Tech Literacy", "Time Pressure", "Emotional State"',
-      ratio: '16-9',
+      t: 'code',
+      file: 'DesignSystem/Motion.swift',
+      lang: 'swift',
+      x: `/// Named animation curves so motion feels consistent and physical across the app.
+enum Motion {
+    /// Standard content transition — quick, lightly springy.
+    static let standard = Animation.spring(response: 0.42, dampingFraction: 0.82)
+    /// Snappy UI feedback (chips, toggles, small state).
+    static let snappy = Animation.spring(response: 0.30, dampingFraction: 0.78)
+    /// Bouncy, playful — celebrations, counters.
+    static let bouncy = Animation.spring(response: 0.5, dampingFraction: 0.62)
+    /// Smooth, heavy — bottom sheets and large surfaces.
+    static let sheet = Animation.spring(response: 0.5, dampingFraction: 0.86)
+    /// Interactive drag-follow (no bounce).
+    static let interactive = Animation.interactiveSpring(response: 0.28,
+                                                         dampingFraction: 0.86,
+                                                         blendDuration: 0.1)
+    /// Slow ambient loops (map pulse, gradients).
+    static let ambient = Animation.easeInOut(duration: 2.4)
+    /// Gentle ease for opacity crossfades.
+    static let fade = Animation.easeInOut(duration: 0.25)
+}`,
     },
-
-    // ── 4. Personas & User Journey ───────────────────────────────────────────
-    { t: 'h2', x: '4. Personas & User Journey' },
-    { t: 'h3', x: 'Primary Persona: Ramesh Kumar, Solo Gig Rider' },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: '"Bro, if the app just tells me where to go and takes the delivery photo right there — life would be so much easier."',
-      x: 'Ramesh Kumar, 26, Bengaluru. 80–160 deliveries/day on a Redmi Note 11. Core frustration: wrong addresses, app-switching, no daily summary.',
-    },
+    { t: 'h3', x: 'Haptics' },
     {
       t: 'table',
-      head: ['Attribute', 'Detail'],
+      head: ['Moment', 'Feedback', 'Why'],
       rows: [
-        ['Age', '26'],
-        ['Location', 'Bengaluru (HSR Layout)'],
-        ['Device', 'Redmi Note 11 (4 GB RAM)'],
-        ['Tech Literacy', 'High (social media savvy, UPI pro)'],
-        ['Daily Deliveries', '80–160'],
-        ['Motivation', 'Earn ₹800–₹1500/day; get home early'],
-        ['Core Frustration', 'Wrong addresses, app-switching, no daily summary'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/persona_ramesh.png',
-      alt: 'Persona card with Ramesh\'s illustration, bio stats, a quote, and a "day in the life" timeline strip',
-      ratio: '16-9',
-    },
-    { t: 'h3', x: 'Secondary Persona: Priya Nair, Small Fleet Manager' },
-    {
-      t: 'table',
-      head: ['Attribute', 'Detail'],
-      rows: [
-        ['Age', '34'],
-        ['Location', 'Pune'],
-        ['Business', 'Local pharmacy chain (3 delivery riders)'],
-        ['Device', 'iPhone 14'],
-        ['Tech Literacy', 'Very high (Notion, Sheets daily)'],
-        ['Core Need', 'Proof of delivery, driver performance data, fast dispatch'],
-      ],
-    },
-    { t: 'h3', x: 'Complete User Journey Map' },
-    {
-      t: 'image',
-      src: '/route-planner-assets/journey_map.png',
-      alt: 'Full-width journey map showing 10 stages across a delivery workday with actions, emotional states, and app touchpoints',
-      ratio: '3-1',
-    },
-
-    // ── 5. Information Architecture ──────────────────────────────────────────
-    { t: 'h2', x: '5. Information Architecture' },
-    {
-      t: 'p',
-      x: 'The app is structured across five primary areas: Home (active route card, quick stats, recent routes, import CTA), Route Creation (manual entry, paste, CSV, scan OCR, voice), Route Review (stop list, map preview, optimisation toggle, start CTA), Active Navigation (map canvas, stop card, progress bar, delivery bottom sheet), and Daily Summary (completion ring, stats, share / export).',
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/ia_sitemap.png',
-      alt: 'Clean sitemap and tree-diagram of the information architecture showing primary, secondary, and tertiary flows',
-      ratio: '3-2',
-    },
-
-    // ── 6. Design Principles ─────────────────────────────────────────────────
-    { t: 'h2', x: '6. Design Principles & System Foundation' },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'eye',        title: 'Peripheral Vision First',    desc: 'Information must be scannable at a glance. Colour, size, and spatial position replace text labels wherever possible.' },
-        { icon: 'zap',        title: 'Physical-World Physics',     desc: 'All animations use spring curves that are heavy enough to feel intentional. Completing a delivery triggers paired haptic .heavy + .success.' },
-        { icon: 'refreshCw',  title: 'Zero Dead Ends',             desc: 'Every action has a clear recovery path. "Mark as Delivered" can be undone for 30 seconds. No destructive actions without undo.' },
-        { icon: 'moon',       title: 'Dark-First, Light-Adaptive', desc: 'Designed in dark mode first, then adapted to light. Light mode uses #F5F7FA (not pure white) to reduce glare in direct sunlight.' },
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/design_principles.png',
-      alt: '4-panel illustration card representing the design principles with supporting visual sketches',
-      ratio: '2-1',
-    },
-
-    // ── 7. UX Flow & Interaction Architecture ────────────────────────────────
-    { t: 'h2', x: '7. UX Flow & Interaction Architecture' },
-    { t: 'h3', x: 'Flow 1: Import & Optimise' },
-    {
-      t: 'p',
-      x: 'Goal: get from "I have a list of addresses" to "optimised route ready" in under 60 seconds. Home Screen → Tap "Import Route" → Import Options Sheet (paste / scan / CSV / voice) → Address Review → Optimise → Route Preview → Start Deliveries.',
-    },
-    {
-      t: 'image',
-      src: '',
-      alt: 'Screen recording showing the full import flow from tapping "Import" to displaying the optimized route on the map',
-      ratio: '9-16',
-    },
-    { t: 'h3', x: 'Flow 2: Active Delivery Stop Completion' },
-    {
-      t: 'p',
-      x: 'Goal: complete a delivery, including proof photo, in under 10 seconds. GPS auto-detects arrival within 50 m → Arrival Card slides up → Swipe-to-Complete → inline Camera Quick-Sheet → snap photo → Success animation + haptic → auto-advance to next stop. Failed delivery: tap red button → reason code sheet → optional photo/note → log & advance.',
-    },
-    {
-      t: 'image',
-      src: '',
-      alt: 'Side-by-side recording showing successful delivery swipe-to-complete and failed delivery reason logging',
-      ratio: '9-16',
-    },
-    { t: 'h3', x: 'Flow 3: End-of-Day Summary' },
-    {
-      t: 'p',
-      x: 'Last stop completed → Full-screen celebration transition (gradient burst #4D8BFF → #6C5CE7 → #B06CE7) → Daily Summary Screen with animated completion ring, count-up stats, and "You saved ~1.5 hours vs. manual routing!" insight → Share / Export CTA.',
-    },
-    {
-      t: 'image',
-      src: '',
-      alt: 'Celebration transition, completion ring animation, and counting up statistics on the summary screen',
-      ratio: '9-16',
-    },
-
-    // ── 8. Visual Design & UI Breakdown ──────────────────────────────────────
-    { t: 'h2', x: '8. Visual Design & UI Breakdown' },
-
-    { t: 'h3', x: 'Screen 1 — Home Screen' },
-    {
-      t: 'p',
-      x: 'The home screen answers one question immediately: "What is my status today?" Today\'s Route Card occupies the top 40% of the screen. Quick Stats bar is always visible below without scrolling. Import & Create CTA is a large 56pt pill button using the full route gradient (#6FA0FF → #3D7DFF → #6C5CE7), pinned to the bottom safe area.',
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/home_states.png',
-      alt: 'Home screen screenshots showing empty state with onboarding CTA, active route card, and completed state',
-      ratio: '9-16',
-    },
-
-    { t: 'h3', x: 'Screen 2 — Route Import & Scanning' },
-    {
-      t: 'p',
-      x: 'The Bottom Sheet pattern maintains spatial context (map visible behind). Scan Mode uses a full-screen camera with a custom scanning overlay. A bright #3D7DFF laser line sweeps the frame. Address validation happens inline: valid addresses show a green ✓, unresolvable ones show a red ⚠ with a fix prompt. Shimmer loading states prevent the UI from feeling stuck.',
-    },
-    {
-      t: 'gallery',
-      items: [
-        { src: '', alt: 'Empty import bottom sheet' },
-        { src: '', alt: 'Scanning camera with laser animation' },
-        { src: '', alt: 'Populated address list with mixed valid/invalid states' },
-        { src: '', alt: 'All addresses resolved and ready to optimise state' },
-      ],
-    },
-    {
-      t: 'image',
-      src: '',
-      alt: 'Scanner animation showing camera feed, blue laser sweeping line, and address text lifting into the list',
-      ratio: '9-16',
-    },
-
-    { t: 'h3', x: 'Screen 3 — Route Preview Map' },
-    {
-      t: 'p',
-      x: 'Custom map styling: dark mode uses deep navy land (#14181F), soft blue water (#0C1826), and subtle road overlays (White at 6–11% opacity). Stop pins use numbered squircle badges (16pt corner radius) rather than teardrop pins. A horizontal drag slider shows the "Before vs. After" comparison. Floating Stats Card uses a glassmorphic .ultraThinMaterial panel.',
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/route_preview.png',
-      alt: 'Route preview map in dark mode with custom styling, polyline overlay, and before/after comparison',
-      ratio: '9-16',
-    },
-
-    { t: 'h3', x: 'Screen 4 — Active Navigation View' },
-    {
-      t: 'p',
-      x: 'The most critical screen. Drivers look at this 90% of their working day. Minimalist top card shows only turn instruction, distance, and street name. A thin animated blue progress bar tracks delivery progress. Glassmorphic bottom card (.ultraThinMaterial) shows customer name, address, and Complete / Failed action buttons. "Open in Maps" pill lets drivers launch their preferred navigation engine.',
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/navigation_annotated.png',
-      alt: 'Side-by-side dark and light mode navigation screens with annotations indicating progress bar, turn card, map canvas, and glassmorphic delivery card',
-      ratio: '16-9',
-    },
-
-    { t: 'h3', x: 'Screen 5 — Delivery Completion Sheet' },
-    {
-      t: 'p',
-      x: 'Swipe-to-Complete: a draggable slider (not a button) prevents accidental completion while handling packages. Gradient fill (#30D158 → #1FA347) builds as the user drags. Inline Camera expands the sheet to a compact viewfinder so the driver never leaves the screen. Failed reason codes are a grid of colored chips, red-tinted with clear labels.',
-    },
-    {
-      t: 'gallery',
-      items: [
-        { src: '', alt: 'Swipe-to-complete at rest' },
-        { src: '', alt: 'Mid-swipe with fill animation' },
-        { src: '', alt: 'Success state with a green checkmark and micro-animation' },
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/reason_grid.png',
-      alt: 'Failed delivery screen showing the reason-code chip grid with options like Not Home, Wrong Address, Refused, Damaged, and Other',
-      ratio: '9-16',
-    },
-
-    { t: 'h3', x: 'Screen 6 — Daily Summary / End-of-Shift Celebration' },
-    {
-      t: 'p',
-      x: 'Full-screen celebration gradient (#4D8BFF → #6C5CE7 → #B06CE7). All numbers count up using a Bouncy spring curve. Circular completion ring draws itself via CAShapeLayer path animation. The single most impactful metric, "You saved X hours today", is displayed at twice the font size of other stats. Share button generates a shareable image card for WhatsApp.',
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/daily_summary.png',
-      alt: 'Full-bleed daily summary screen showing the celebration gradient, completion ring, and statistics cards',
-      ratio: '9-16',
-    },
-
-    // ── 9. The Design System ─────────────────────────────────────────────────
-    { t: 'h2', x: '9. The Design System' },
-    { t: 'h3', x: 'Color Palette' },
-    {
-      t: 'table',
-      head: ['Token', 'Dark Mode', 'Light Mode', 'Purpose'],
-      rows: [
-        ['accent',        '#3D7DFF', '#3D7DFF', 'Primary actions, route lines'],
-        ['accentSoft',    '#6FA0FF', '#6FA0FF', 'Gradient start, soft highlights'],
-        ['accentDeep',    '#2C5CE0', '#2C5CE0', 'Pressed states'],
-        ['indigo',        '#6C5CE7', '#6C5CE7', 'Selection, secondary brand'],
-        ['success',       '#30D158', '#1FA347', 'Completed deliveries'],
-        ['warning',       '#FFB020', '#FFB020', 'Alerts, flagged stops'],
-        ['danger',        '#FF453A', '#D6362C', 'Failed deliveries'],
-        ['background',    '#0A0B0E', '#F5F7FA', 'App-wide background'],
-        ['surface',       '#171A21', '#FFFFFF', 'Cards, panels'],
-        ['surfaceRaised', '#1E222B', '#F9FAFC', 'Elevated cards'],
-        ['textPrimary',   '#FFFFFF', '#0C0D12', 'Primary text'],
-        ['textSecondary', 'White @ 62%', 'Black @ 62%', 'Supporting text'],
-        ['textTertiary',  'White @ 38%', 'Black @ 38%', 'Hints, labels'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/color_swatches.png',
-      alt: 'Color token swatch grid showing all color swatches, names, hex values, and usage examples',
-      ratio: '12-5',
-    },
-    { t: 'h3', x: 'Typography' },
-    {
-      t: 'p',
-      x: 'All text uses SF Pro Rounded — the rounded variant of the native iOS system font. The rounded terminals soften the aesthetic and align with the friendly, approachable tone of the product.',
-    },
-    {
-      t: 'table',
-      head: ['Style', 'Size', 'Weight', 'Usage'],
-      rows: [
-        ['Display',  '34pt', 'Bold',     'Daily summary hero stats'],
-        ['Title 1',  '28pt', 'Bold',     'Screen headers'],
-        ['Title 2',  '22pt', 'Semibold', 'Section titles'],
-        ['Title 3',  '20pt', 'Semibold', 'Card titles'],
-        ['Body',     '17pt', 'Regular',  'Delivery addresses, descriptions'],
-        ['Callout',  '16pt', 'Medium',   'Secondary info'],
-        ['Footnote', '13pt', 'Regular',  'Metadata, timestamps'],
-        ['Caption',  '11pt', 'Regular',  'Hint text'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/typography_specimen.png',
-      alt: 'Typography scale specimen sheet showing all 8 font styles in dark and light modes',
-      ratio: '16-9',
-    },
-    { t: 'h3', x: 'Animation Curves' },
-    {
-      t: 'table',
-      head: ['Curve', 'Spring Config', 'Use Case'],
-      rows: [
-        ['Standard',    'response: 0.42, damping: 0.82', 'Screen transitions, card mounts'],
-        ['Snappy',      'response: 0.30, damping: 0.78', 'Chips, toggles, small state changes'],
-        ['Bouncy',      'response: 0.50, damping: 0.62', 'Celebration counters, success animations'],
-        ['Sheet',       'response: 0.50, damping: 0.86', 'Bottom sheet slides'],
-        ['Interactive', 'response: 0.28, damping: 0.86', 'Drag gestures, swipe interactions'],
-        ['Ambient',     'easeInOut, duration: 2.4s',     'Map pulse, loading breathe'],
-        ['Fade',        'easeInOut, duration: 0.25s',    'Crossfades, show/hide'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/animation_curves.png',
-      alt: 'Animation spring curve diagrams showing displacement vs time graphs for Standard, Bouncy, and Sheet curves',
-      ratio: '9-4',
-    },
-    { t: 'h3', x: 'Haptic Map' },
-    {
-      t: 'table',
-      head: ['User Action', 'Haptic Response', 'Why'],
-      rows: [
-        ['Tap any button',               '.light impact',              'Subtle acknowledgement'],
-        ['Drag swipe-to-complete',        '.rigid as it snaps',         'Tactile snap confirmation'],
-        ['Complete a delivery',           '.heavy + .success',          'Significant moment representing an earned reward'],
-        ['Failed delivery logged',        '.warning notification',       'Alert without being alarming'],
-        ['Route optimisation done',       '.success notification',       'Route is ready — reassurance'],
-        ['Arrive at stop (auto)',          '.medium impact',             '"You\'re here" physical nudge'],
+        ['Any button', 'Light impact', 'Acknowledgement, nothing more'],
+        ['Dragging a stop into place', 'Soft impact', 'The list confirms the drop without a visual cue'],
+        ['Skipping a stop', 'Medium impact', 'A real change to the route, not a tap'],
+        ['Delivered or failed', 'Success notification', 'The end of a stop — the only pattern that fires here'],
       ],
     },
 
-    // ── 10. Accessibility & Edge Cases ────────────────────────────────────────
-    { t: 'h2', x: '10. Accessibility & Edge Cases' },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'type',        title: 'Dynamic Type',        desc: 'All text labels respect iOS Dynamic Type scaling with size caps to prevent layout breakage.' },
-        { icon: 'eye',         title: 'VoiceOver',           desc: 'All interactive elements have descriptive accessibility labels. Swipe-to-complete uses accessibilityActivate() as an alternative.' },
-        { icon: 'sliders',     title: 'Colour Blind Support', desc: 'Status states use both colour AND icon (green circle + checkmark; red circle + ×). Colour is never the sole signal.' },
-        { icon: 'maximize',    title: 'Minimum Hit Targets',  desc: 'All interactive elements are minimum 44×44pt, even if the visual element is smaller — using invisible tap extensions.' },
-      ],
-    },
-    {
-      t: 'table',
-      head: ['Edge Case', 'Design Solution'],
-      rows: [
-        ['No network (offline)',            'Routes are cached locally. Navigation continues offline. "Offline Mode" badge shown discreetly.'],
-        ['Invalid/unresolvable address',    'Flagged with ⚠ icon. Driver can edit inline, drop pin manually on map, or skip.'],
-        ['Mid-route phone call',            'Navigation state is preserved. App returns to the correct stop on resume.'],
-        ['App killed mid-route',            'Route progress saved to local storage every 30 seconds. On relaunch, "Continue where you left off" prompt appears.'],
-        ['Driver marks wrong stop done',    '30-second "Undo" toast appears. After timeout, reversal requires tapping the stop card.'],
-        ['Battery below 20%',              'App auto-enters Low Power Mode — reduces map animations, disables ambient effects, darkens map canvas to OLED-black.'],
-        ['Very long address (100+ chars)',  'Address text truncates after 2 lines with a "Show more" expansion. Map pin always shows correct location.'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/accessibility_annotated.png',
-      alt: 'Annotated screenshot of Navigation and Delivery screens showing accessibility touch targets, VoiceOver labels, and color redundancy',
-      ratio: '16-9',
-    },
-
-    // ── 11. Outcome & Impact ─────────────────────────────────────────────────
-    { t: 'h2', x: '11. Outcome & Impact' },
+    // ── 7. How it's built ────────────────────────────────────────────────────
+    { t: 'h2', x: '7. How It\'s Built' },
     {
       t: 'p',
-      x: 'Observed during a pilot with 12 drivers over 3 weeks:',
-    },
-    {
-      t: 'table',
-      head: ['Metric', 'Before', 'After', 'Improvement'],
-      rows: [
-        ['Route creation time',           '8–12 minutes',    '40–60 seconds',  '~92% faster'],
-        ['Average daily driving distance', '68 km',           '54 km',          '-21% distance'],
-        ['Failed deliveries per shift',   '7.3 average',     '4.9 average',    '-33% failure rate'],
-        ['Time on non-driving tasks',     '61 min/day',      '18 min/day',     '-70% friction time'],
-        ['End-of-day reporting time',     '15+ min (manual)',  '2 min (auto)',  '-87% time'],
-      ],
-    },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: '"Earlier, I spent more than an hour daily just planning the route. Now it takes two minutes."',
-      x: '— Akash, Delivery Partner, Bengaluru',
-    },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: '"The photo proof feature alone saved me 3 customer disputes in one week."',
-      x: '— Suresh, Fleet Driver, Mumbai',
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/impact_infographic.png',
-      alt: 'Infographic showing the 5 key Before vs. After metrics as large-format stat comparison cards with green accents',
-      ratio: '2-1',
-    },
-
-    // ── 0. Built in Swift — Not Just a Figma File ────────────────────────────
-    { t: 'h2', x: '0. Built in Swift, Not Just a Figma File' },
-    {
-      t: 'p',
-      x: 'Most portfolio case studies stop at the prototype. This one doesn\'t. After completing the full design in Figma, every screen was coded from scratch in Swift and SwiftUI, complete with real animations, physics-based interactions, haptic patterns, map integration, and a rich mock-data layer that makes the app behave exactly as it would in production.',
-    },
-    {
-      t: 'callout',
-      kind: 'tip',
-      title: 'Design → Code. No handoff. No loss in translation.',
-      x: 'Because the same person who designed every pixel also wrote every line of Swift, there is zero gap between intention and implementation. The spring curves in the spec file are the exact values in the codebase. The haptic map became literal UIFeedbackGenerator calls. The design system tokens became SwiftUI Color extensions.',
+      x: 'The reason to build the prototype rather than prototype it in Figma is that the interactions here are the design. A slide-to-confirm, a route line that draws itself, a list that re-sequences under your finger, a map you can throw around — none of those can be evaluated from a static frame. Building it also forces the honest questions: what happens on the 14th row, what happens when validation fails, what happens after the last stop.',
     },
     {
       t: 'stats',
       items: [
-        { v: '6',       l: 'SwiftUI screens built' },
-        { v: '150+',    l: 'Mock delivery stops' },
-        { v: '100%',    l: 'Spec-to-code fidelity' },
-        { v: '0',       l: 'Third-party UI libraries' },
+        { v: '44', l: 'Swift files' },
+        { v: '6.8k', l: 'Lines of Swift' },
+        { v: '0', l: 'Third-party libraries' },
+        { v: '120', l: 'Seeded mock stops' },
       ],
     },
-
-    { t: 'h3', x: 'Tech Stack' },
     {
       t: 'cards',
       items: [
-        { icon: 'code',      title: 'Swift & SwiftUI',    desc: 'Declarative UI across all 6 screens. No UIKit fallbacks except where strictly needed for camera and haptics.' },
-        { icon: 'map',       title: 'MapKit',             desc: 'Custom-styled map canvas, polyline route overlays, numbered squircle annotations, and camera tracking during navigation.' },
-        { icon: 'database',  title: 'Core Data',          desc: 'Persistent storage for routes, stops, and delivery logs — survives app restarts mid-route.' },
-        { icon: 'zap',       title: 'Combine',            desc: 'Reactive data flow between the route optimisation engine, map state, and delivery sheet UI.' },
-        { icon: 'camera',    title: 'AVFoundation',       desc: 'Custom camera viewfinder embedded inline in the delivery sheet for proof-of-delivery photo capture.' },
-        { icon: 'layers',    title: 'Mock Data Engine',   desc: 'A seeded JSON dataset of 150 realistic Indian delivery addresses, customer names, and order references — hot-swappable for production APIs.' },
+        { icon: 'map', title: 'The map is drawn, not embedded', desc: 'No MapKit. A procedural city renders into a SwiftUI <code>Canvas</code>, the route is an animatable <code>Shape</code>, and pins are ordinary SwiftUI views — so it draws itself on reveal, matches the art direction exactly, and looks identical on every run.' },
+        { icon: 'braces', title: 'One observable store', desc: 'A single <code>@Observable @MainActor AppStore</code> owns the screen, the stops, the drive phase and the day\'s stats. Every view reads from it; there is no second source of truth to fall out of sync.' },
+        { icon: 'layers', title: 'Seeded, not random', desc: 'A SplitMix64 generator builds a stable world of 120 stops — names, addresses, delivery windows, package sizes, priorities. The same seed gives the same day every launch, which is what makes screenshots and demos repeatable.' },
+        { icon: 'gauge', title: 'A launch-argument harness', desc: '<code>-startScreen</code>, <code>-drivePhase</code> and <code>-simulateProgress</code> jump straight to any screen or state. Every figure on this page was captured through it.' },
       ],
     },
-
-    { t: 'h3', x: 'How the Mock Data Layer Works' },
+    { t: 'h3', x: 'Ending a stop, in code' },
     {
-      t: 'steps',
-      items: [
-        { title: 'Seed file loaded at launch',       desc: 'A bundled <code>mock_routes.json</code> contains 3 pre-built routes with 50 stops each — covering apartment complexes, commercial areas, and residential lanes across Bengaluru and Mumbai.' },
-        { title: 'Decoded into Core Data',            desc: 'Stops are decoded into <code>DeliveryStop</code> managed objects on first launch, giving the app full offline persistence with no backend dependency.' },
-        { title: 'RouteOptimiser runs nearest-neighbour', desc: 'A pure-Swift greedy nearest-neighbour algorithm reorders stops to minimise total travel distance. This is the same logic that would call a real routing API in production.' },
-        { title: 'State machine drives the UI',       desc: 'A <code>RouteSessionStore</code> ObservableObject tracks the active stop, delivery status per stop, and session stats. Every view observes it via <code>@EnvironmentObject</code>.' },
-        { title: 'All flows are fully exercisable',   desc: 'You can import a route, optimise it, navigate stop-by-stop, complete or fail each delivery, capture a photo, and reach the end-of-day summary, all on device, fully offline.' },
-      ],
+      t: 'p',
+      x: 'The delivery lifecycle is deliberately small — a status, a proof payload, a haptic, and an advance. Success and failure run the same path on purpose, so a failed stop can never end up less finished than a delivered one.',
     },
-
-    { t: 'h3', x: 'A Taste of the Code' },
     {
       t: 'code',
-      file: 'RouteSessionStore.swift',
+      file: 'Data/AppStore.swift',
       lang: 'swift',
-      x: `// Marks a stop as delivered, triggers haptics, and auto-advances.
-func completeStop(_ stop: DeliveryStop, photo: UIImage?) {
-    withAnimation(.spring(response: 0.50, dampingFraction: 0.86)) {
-        stop.status = .delivered
-        stop.completedAt = Date()
-        if let img = photo {
-            stop.photoProof = img.jpegData(compressionQuality: 0.8)
-        }
-        try? context.save()
-    }
+      x: `/// Mark the active stop delivered with captured proof.
+func markDelivered(proof: DeliveryProof) {
+    guard let idx = activeIndex else { return }
+    stops[idx].status = .delivered
+    var p = proof
+    p.completedAt = p.completedAt ?? currentClock()
+    stops[idx].proof = p
+    advanceAfterCompletion()
+}
 
-    // Paired haptics: heavy "thud" followed by success pattern
-    let impact = UIImpactFeedbackGenerator(style: .heavy)
-    let notify  = UINotificationFeedbackGenerator()
-    impact.impactOccurred()
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
-        notify.notificationOccurred(.success)
-    }
+/// Mark the active stop failed with a reason.
+func markFailed(reason: FailureReason, proof: DeliveryProof) {
+    guard let idx = activeIndex else { return }
+    stops[idx].status = .failed
+    var p = proof
+    p.failureReason = reason
+    p.completedAt = p.completedAt ?? currentClock()
+    stops[idx].proof = p
+    advanceAfterCompletion()
+}
 
-    advanceToNextStop()
+private func advanceAfterCompletion() {
+    recountTerminal()
+    Haptics.success()
+    // Activate the next pending stop.
+    if let nextIdx = stops.firstIndex(where: { $0.status == .pending }) {
+        stops[nextIdx].status = .active
+        withAnimation(Motion.sheet) { drivePhase = .driving }
+    } else {
+        // All done — celebrate.
+        withAnimation(Motion.standard) { screen = .summary }
+    }
 }`,
     },
-
-    { t: 'h3', x: 'Screens Built in Swift' },
+    { t: 'h3', x: 'The flows that exist' },
     {
       t: 'table',
-      head: ['Screen', 'Key SwiftUI Techniques'],
+      head: ['Flow', 'What runs'],
       rows: [
-        ['Home Screen',              'LazyVStack, matched geometry transitions, shimmer modifier via PhaseAnimator'],
-        ['Import & Scan Sheet',      'AVCaptureSession in a UIViewRepresentable, custom laser overlay via Canvas, inline validation state machine'],
-        ['Route Preview Map',        'MapKit MKPolylineRenderer, custom MKAnnotationView, UISlider for before/after comparison'],
-        ['Active Navigation',        'MapCameraPosition tracking, glassmorphic .ultraThinMaterial bottom sheet, live progress bar'],
-        ['Delivery Completion Sheet', 'Custom DragGesture swipe-to-complete, gradient fill via GeometryReader, AVCapturePhoto inline'],
-        ['Daily Summary',            'CAShapeLayer completion ring via UIViewRepresentable, TimelineView counter animation, shareable snapshot via ImageRenderer'],
+        ['Home', 'Live map preview, animated progress ring, day stats, one primary CTA'],
+        ['Import', 'Five capture methods, each with its own staging animation'],
+        ['Review', 'Address validation with seeded warnings and blocking errors'],
+        ['Overview', 'Pannable map, filterable stop list, optimise, manual reorder'],
+        ['Navigation', 'Follow camera, live ETA and distance countdown, arrival'],
+        ['Delivery', 'Photo, signature pad, note, safe-place toggle, slide to confirm'],
+        ['Failure', 'Reason codes, captured on the same path as a delivery'],
+        ['Summary & History', 'Animated counters, confetti, seven-day chart, per-day detail'],
       ],
-    },
-    {
-      t: 'image',
-      src: '/route-planner-assets/hero_banner.png',
-      alt: 'Overview banner showing the Route Planner app running on device screens',
-      ratio: '9-16',
     },
 
-    // ── 12. Lessons Learned ──────────────────────────────────────────────────
-    { t: 'h2', x: '12. Lessons Learned' },
-    { t: 'h3', x: 'What Worked Exceptionally Well' },
+    // ── 8. Honest limits ─────────────────────────────────────────────────────
+    { t: 'h2', x: '8. What This Isn\'t Yet' },
+    {
+      t: 'p',
+      x: 'A prototype that claims no limits is just a rendering with extra steps. These are the real ones.',
+    },
     {
       t: 'cards',
       items: [
-        { icon: 'map',         title: 'Designing in the Field',         desc: 'The most critical insights (thumb-zone layout, haptics as primary feedback, dark-first) came from 2-hour ride-alongs, not desk research.' },
-        { icon: 'activity',    title: 'Physicality as a Design Language', desc: 'Spring physics and haptics that match real-world task completion made the app intuitive without explanation. Drivers didn\'t read onboarding. They just used it.' },
-        { icon: 'minimize2',   title: 'Respecting Cognitive Load',       desc: 'The delivery completion flow was initially 5 steps. After testing, reduced to 2 (swipe + photo). Every step removed increased speed and confidence.' },
-      ],
-    },
-    { t: 'h3', x: 'What We\'d Do Differently' },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'monitor',  title: 'Web Companion Dashboard Sooner',      desc: 'Fleet managers need a desktop dispatch and review view. The initial MVP underserved this persona and it became a gap.' },
-        { icon: 'globe',    title: 'Address Language Barrier Earlier',    desc: 'OCR scanner initially supported English only. A large portion of Mumbai drivers received addresses in Marathi and Hindi. Multilingual OCR should have been Day 1.' },
-        { icon: 'wifiOff',  title: 'Offline-First Architecture from Day 1', desc: 'Network reliability in delivery zones was inconsistent. Retrofitting offline support partway through was costly.' },
+        { icon: 'globe', title: 'No real geography', desc: 'The map is a stylised procedural city, not a road network. It exists to make the route legible, so it cannot answer whether a turn is possible — a production build would swap the canvas for real map data and routing.' },
+        { icon: 'warn', title: 'The optimiser is greedy', desc: 'Nearest-neighbour is enough to produce a believably tidy path and a plausible saving. It is not a solver, it ignores time windows and vehicle capacity, and it would not survive contact with a real dispatcher.' },
+        { icon: 'phone', title: 'Nobody has driven with it', desc: 'It has been used at a desk, not on a bike in traffic. The claims about glare, one-handed reach and haptics are design reasoning from constraints, and they are exactly the kind of thing a day of ride-alongs would revise.' },
+        { icon: 'timer', title: 'No persistence or backend', desc: 'The day resets on launch. Offline behaviour, sync, dispatcher hand-off and proof storage are all real product surface that this exercise deliberately left out.' },
       ],
     },
     {
-      t: 'image',
-      src: '/route-planner-assets/process_collage.png',
-      alt: 'Process collage showing a 2×3 grid of whiteboard sketches, paper wireframes, early wireframes, field visits, and user testing sessions',
-      ratio: '3-2',
+      t: 'callout',
+      kind: 'info',
+      title: 'The takeaway',
+      x: 'The design decision worth defending here is that the day, not the turn, is the unit of the product — and the only way to find out whether that holds is to build the whole loop and run it end to end. Doing that surfaced the screens a static flow would have skipped: the review that rejects rows, the reorder that overrules the algorithm, and the failed delivery that has to feel as finished as a successful one.',
     },
 
   ],

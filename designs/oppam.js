@@ -162,13 +162,7 @@ const DESIGN_OPPAM = {
     { t: 'h3', x: 'Reading the Home screen' },
     {
       t: 'p',
-      x: 'The clearest way to see the philosophy is to mark up a single screen. Everything on Home is an <em>invitation</em>, never an instruction - and there is only ever one loud action at a time.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/home-anatomy.webp',
-      alt: 'Annotated anatomy of the Oppam home screen with three numbered zoom callouts',
-      caption: 'Home, annotated. Warmth is doing a job here - every element answers something the research asked for.',
+      x: 'Home is the clearest place to see the philosophy. Everything on it is an <em>invitation</em>, never an instruction - the companion greets you by name, your live session is the single loud action, and a two-minute breath waits below it, offered but never nagged. There is only ever one loud action at a time.',
     },
     {
       t: 'image',
@@ -218,13 +212,7 @@ const DESIGN_OPPAM = {
     { t: 'h3', x: 'It breathes - and this is where the motion lives' },
     {
       t: 'p',
-      x: 'Stillness reads as "dead"; breath reads as "present." The companion runs a slow ~8-second breathing cycle at 2.5% scale and blinks every 3–6 seconds, and every motion in the app collapses to a gentle cross-fade under Reduce Motion. <strong>Static screenshots can\'t carry that - so this frame is left open for the motion clip.</strong>',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/companion-motion.webp',
-      alt: 'The static companion beside an empty framed space reserved for a motion clip',
-      caption: 'The static face, and the space where it comes alive. ▶ Motion clip to be dropped in here.',
+      x: 'Stillness reads as "dead"; breath reads as "present." The companion runs a slow ~8-second breathing cycle at 2.5% scale and blinks every 3–6 seconds, and every motion in the app collapses to a gentle cross-fade under Reduce Motion. <strong>Static screenshots can\'t carry that - you have to see it running.</strong>',
     },
     { t: 'h3', x: 'The rules it never breaks' },
     {
@@ -271,13 +259,7 @@ const DESIGN_OPPAM = {
     { t: 'h3', x: 'The profile that dissolves the fear' },
     {
       t: 'p',
-      x: 'Care leads with a real detail the category buries: each therapist has a <strong>voice introduction</strong> and answers "how I work" in their own words. Fear dissolves at "hello." Credentials come after warmth, not before it.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/care-anatomy.webp',
-      alt: 'A therapist profile annotated: voice intro, plain-language fit tags, and the how-I-work note',
-      caption: 'Their voice and plain-language fit come first; logistics last. The "how I work" note is set in serif, like a letter.',
+      x: 'Care leads with a real detail the category buries: each therapist has a <strong>voice introduction</strong> and answers "how I work" in their own words, set in serif like a letter. Plain-language fit ("gentle listener," "no homework," "comfort with silence") sits above the credentials, and logistics come last. Fear dissolves at "hello."',
     },
     { t: 'h3', x: 'Booking - three taps, zero forms' },
     {
@@ -417,11 +399,8 @@ const DESIGN_OPPAM = {
       x: 'The palette started from one instruction to myself: <strong>"sunlight, not yellow."</strong> Not the flat brand-yellow of a highlighter, but Kerala morning light through a wooden window - haldi on warm cotton, a lamp at night. The background is never pure white; it\'s warm paper. Ink is never pure black; it\'s the brown-black of handwriting.',
     },
     {
-      t: 'image',
-      src: '/oppam-assets/palette.webp',
-      alt: 'The Oppam colour palette: paper, sun, honey, sun wash, warm ink, leaf, sky, clay, rose, and the lamplight dark tokens',
-      caption: 'The core palette. Each colour carries a meaning - leaf is growth and calm confirmation, sky is rest and night, rose is tenderness and is never used for alarm.',
-      bleed: true,
+      t: 'p',
+      x: 'Every colour carries a meaning rather than a decoration. Paper (#FFFAEB) is the ground; sun (#FFC13B) is the companion and the one loud action; honey (#E5A413) presses and links; warm ink (#33302A) is the brown-black of handwriting. Leaf is growth and calm confirmation, sky is rest and night, clay is earth and the offline ribbon, and rose is tenderness - never alarm. Dark mode is lamplight: warm browns and amber, like a lamp left on for you.',
     },
     { t: 'h3', x: 'Type: two voices' },
     {
