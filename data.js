@@ -158,7 +158,8 @@ const EXPLORING = [
 // ============================================================================
 
 const DESIGNS = [
-  DESIGN_ONBOARDING,
+  DESIGN_TROVE,
+  DESIGN_KILI,
   DESIGN_TRACKWISE,
   DESIGN_OPPAM,
   DESIGN_NETTI,
