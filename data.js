@@ -151,13 +151,14 @@ const EXPLORING = [
 
 // ============================================================================
 //  DESIGNS - case studies shown in the sidebar's "Designs" section, grouped
-//  by `category` ('Mobile App' or 'Web'). Each entry is defined in its own
+//  by `category` ('Onboarding', 'Mobile App' or 'Web'). Each entry is defined in its own
 //  file under /designs (same pattern as /projects) and pushed in here.
 //  Shape is identical to a PROJECTS entry - see the block DSL reference
 //  above - plus `category` in place of `group`.
 // ============================================================================
 
 const DESIGNS = [
+  DESIGN_ONBOARDING,
   DESIGN_TRACKWISE,
   DESIGN_OPPAM,
   DESIGN_NETTI,
