@@ -50,9 +50,11 @@ Credits also live beside the files in the app repo at `Sprig/Photos/CREDITS.json
 | `card-planter.jpg` | Ibnul Karim Rupen | CC BY-SA 3.0 |
 | `card-tulip.jpg` | 4028mdk09 | CC BY-SA 3.0 |
 
-**Map** — OpenStreetMap tiles over Kadavanthra, Kochi, stitched into a single
-bundled image. © OpenStreetMap contributors, ODbL. The credit is shown on the
-map screen itself, as the licence asks.
+**Map** — a light, low-ink basemap over Kadavanthra, Kochi: CARTO Voyager
+raster tiles built on OpenStreetMap data, stitched at 2× into a single bundled
+image. © OpenStreetMap contributors (ODbL), © CARTO. The credit is shown on the
+map screen itself, as the licences ask. The standard OSM raster was tried first
+and carried far too many labels and colours to sit under a sheet.
 
 Source app: `sprig-ios` (SwiftUI). To re-capture a screen:
 
