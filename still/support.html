@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — Still</title>
+  <meta name="description" content="Help and contact for Still, a RAW (DNG) camera and photo editor for iPhone.">
+  <link rel="canonical" href="https://nijin.site/still/support">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nijin">
+  <meta property="og:title" content="Support — Still">
+  <meta property="og:description" content="Help and contact for Still, a RAW (DNG) camera for iPhone.">
+  <meta property="og:url" content="https://nijin.site/still/support">
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/jpeg" href="/avatar.jpg">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
+  <script>
+    (() => {
+      try {
+        const query = window.matchMedia('(prefers-color-scheme: dark)');
+        const update = () => {
+          document.documentElement.dataset.theme = query.matches ? 'dark' : 'light';
+        };
+        update();
+        query.addEventListener('change', update);
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font, 'Inter', system-ui, sans-serif);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .legal {
+      max-width: 46rem;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    .legal-back {
+      display: inline-block;
+      margin-bottom: 2.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted, var(--tint-11));
+      text-decoration: none;
+    }
+
+    .legal-back:hover { color: var(--primary-9); }
+
+    .legal h1 {
+      font-family: var(--font-display, 'General Sans', 'Inter', sans-serif);
+      font-size: clamp(1.875rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5rem;
+    }
+
+    .legal .updated {
+      font-size: 0.875rem;
+      color: var(--text-muted, var(--tint-11));
+      margin: 0 0 3rem;
+    }
+
+    .legal h2 {
+      font-family: var(--font-display, 'General Sans', 'Inter', sans-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 2.75rem 0 0.75rem;
+    }
+
+    .legal h3 {
+      font-family: var(--font-display, 'General Sans', 'Inter', sans-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 1.75rem 0 0.4rem;
+    }
+
+    .legal p, .legal li {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .legal p { margin: 0 0 1rem; }
+    .legal ul { margin: 0 0 1rem; padding-left: 1.25rem; }
+    .legal li { margin-bottom: 0.4rem; }
+    .legal a { color: var(--primary-9); }
+
+    .contact {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 0 0 2.5rem;
+      background: var(--bg-subtle);
+    }
+
+    .contact p { margin: 0; }
+
+    .contact .email {
+      font-family: var(--font-display, 'General Sans', 'Inter', sans-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .legal footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.875rem;
+      color: var(--text-muted, var(--tint-11));
+    }
+  </style>
+</head>
+
+<body>
+  <main class="legal">
+    <a class="legal-back" href="/">&larr; nijin.site</a>
+
+    <h1>Still &mdash; Support</h1>
+    <p class="updated">A RAW (DNG) camera and photo editor for iPhone</p>
+
+    <div class="contact">
+      <p class="email"><a href="mailto:uxnijin@gmail.com">uxnijin@gmail.com</a></p>
+      <p style="margin-top:0.5rem; font-size:0.9375rem; color:var(--text-muted, var(--tint-11));">
+        Questions, bug reports and feature requests all go here. Please include
+        your iPhone model and iOS version &mdash; it narrows most things down
+        immediately.
+      </p>
+    </div>
+
+    <h2>Common questions</h2>
+
+    <h3>Does Still really shoot RAW on a non-Pro iPhone?</h3>
+    <p>
+      Yes. Apple ProRAW is a Pro-model feature, but the underlying Bayer RAW
+      capture is available on nearly every iPhone. Still finds it and writes a
+      standard DNG negative. Open Settings &rsaquo; Capabilities in the app to
+      see exactly what each lens on your phone supports.
+    </p>
+
+    <h3>Why does the zoom change when I turn RAW on?</h3>
+    <p>
+      A DNG is always the whole sensor readout, so digital zoom cannot be baked
+      into one. With RAW armed, the zoom row drops to the native lens stops your
+      phone actually has, and pinch is ignored &mdash; otherwise the negative
+      would not match the frame you composed.
+    </p>
+
+    <h3>Where are my DNG files?</h3>
+    <p>
+      In your photo library, alongside the processed image. Still also keeps its
+      own copy in the Files app, under <em>On My iPhone &rsaquo; Still &rsaquo;
+      RAW</em>.
+    </p>
+
+    <h3>Do my edits change the original negative?</h3>
+    <p>
+      Never. Still writes edits to a small separate file beside the DNG and
+      re-renders from the original every time. Exports are always new files, and
+      clearing an edit restores the original exactly. The negative is never
+      opened for writing.
+    </p>
+
+    <h3>Some modes are missing on my iPhone.</h3>
+    <p>
+      Portrait only appears on phones with real depth hardware. Rather than
+      shipping a cut-out that looks like a cut-out, Still hides the mode where
+      the hardware cannot do it properly.
+    </p>
+
+    <h3>Can I shoot from the Lock Screen?</h3>
+    <p>
+      Yes, on iOS 18 and later. Add the Still control to Control Centre, the
+      Action Button, or either Lock Screen button slot. Pressing it on a locked
+      phone opens Still's capture screen without unlocking.
+    </p>
+
+    <h2>Privacy</h2>
+    <p>
+      Still collects nothing and has no networking code. The full
+      <a href="/still/privacy">privacy policy</a> is one short page.
+    </p>
+
+    <footer>
+      Still is designed and built by Nijin Muhammed.
+    </footer>
+  </main>
+</body>
+
+</html>

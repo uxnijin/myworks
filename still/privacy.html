@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Still</title>
+  <meta name="description" content="Still collects no data. No servers, no accounts, no analytics, no networking code. Your photos never leave your iPhone.">
+  <link rel="canonical" href="https://nijin.site/still/privacy">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nijin">
+  <meta property="og:title" content="Privacy Policy — Still">
+  <meta property="og:description" content="Still collects no data. Your photos never leave your iPhone.">
+  <meta property="og:url" content="https://nijin.site/still/privacy">
+
+  <!-- Root-absolute: shares the site's tokens, fonts and dark ramp. -->
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" type="image/jpeg" href="/avatar.jpg">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1d1d1d" media="(prefers-color-scheme: dark)">
+  <script>
+    // Same pre-paint theme set as the main site, so this page doesn't flash
+    // white on a dark system before styles.css resolves its dark ramp.
+    (() => {
+      try {
+        const query = window.matchMedia('(prefers-color-scheme: dark)');
+        const update = () => {
+          document.documentElement.dataset.theme = query.matches ? 'dark' : 'light';
+        };
+        update();
+        query.addEventListener('change', update);
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+
+  <style>
+    /* Scoped to this page: the site's own layout classes belong to the router,
+       which this static page deliberately sits outside of. */
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font, 'Inter', system-ui, sans-serif);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .legal {
+      max-width: 46rem;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    .legal-back {
+      display: inline-block;
+      margin-bottom: 2.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted, var(--tint-11));
+      text-decoration: none;
+    }
+
+    .legal-back:hover { color: var(--primary-9); }
+
+    .legal h1 {
+      font-family: var(--font-display, 'General Sans', 'Inter', sans-serif);
+      font-size: clamp(1.875rem, 4vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5rem;
+    }
+
+    .legal .updated {
+      font-size: 0.875rem;
+      color: var(--text-muted, var(--tint-11));
+      margin: 0 0 3rem;
+    }
+
+    .legal h2 {
+      font-family: var(--font-display, 'General Sans', 'Inter', sans-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 2.75rem 0 0.75rem;
+    }
+
+    .legal p, .legal li {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .legal p { margin: 0 0 1rem; }
+    .legal ul { margin: 0 0 1rem; padding-left: 1.25rem; }
+    .legal li { margin-bottom: 0.4rem; }
+    .legal a { color: var(--primary-9); }
+
+    .lede {
+      border-left: 3px solid var(--primary-9);
+      padding: 0.25rem 0 0.25rem 1.25rem;
+      margin: 0 0 2rem;
+    }
+
+    .lede p { margin: 0; font-size: 1.0625rem; }
+
+    .legal footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.875rem;
+      color: var(--text-muted, var(--tint-11));
+    }
+  </style>
+</head>
+
+<body>
+  <main class="legal">
+    <a class="legal-back" href="/">&larr; nijin.site</a>
+
+    <h1>Privacy Policy</h1>
+    <p class="updated">Still &middot; Last updated 13 August 2026</p>
+
+    <div class="lede">
+      <p>
+        Still does not collect, transmit, or store any of your data. It has no
+        servers, no accounts, and no analytics. The app contains no networking
+        code at all, so your photos cannot leave your iPhone unless you share
+        them yourself.
+      </p>
+    </div>
+
+    <h2>What Still accesses, and why</h2>
+
+    <p>
+      <strong>Camera.</strong> Still needs camera access to show a viewfinder and
+      take photographs. Frames are processed entirely on your device.
+    </p>
+
+    <p>
+      <strong>Photo library.</strong> With your permission, Still saves the
+      photographs and DNG negatives you take to your photo library, and reads it
+      to show your recent shots in the corner thumbnail and the in-app grid.
+      Still only ever reads your library in order to display it back to you.
+    </p>
+
+    <p>
+      <strong>On-device storage.</strong> Still keeps a copy of each DNG negative,
+      together with a small text file recording any edits you have made, inside
+      its own folder on your iPhone. Deleting the app deletes all of it.
+    </p>
+
+    <h2>What Still does not do</h2>
+
+    <ul>
+      <li>No accounts, sign-in, or user identifiers</li>
+      <li>No analytics, telemetry, crash reporting, or usage tracking</li>
+      <li>No advertising, and no advertising identifiers</li>
+      <li>No third-party SDKs</li>
+      <li>No network requests &mdash; the app ships no networking code</li>
+      <li>No data sold, shared, or disclosed to anyone, because none is collected</li>
+    </ul>
+
+    <h2>Children</h2>
+
+    <p>
+      Still collects no data from anyone, including children.
+    </p>
+
+    <h2>Changes to this policy</h2>
+
+    <p>
+      If this policy ever changes, the updated version will be posted at this
+      address and the date above revised.
+    </p>
+
+    <h2>Contact</h2>
+
+    <p>
+      Questions about this policy, or about Still generally:
+      <a href="mailto:uxnijin@gmail.com">uxnijin@gmail.com</a>.
+      There is also a <a href="/still/support">support page</a>.
+    </p>
+
+    <footer>
+      Still is designed and built by Nijin Muhammed.
+    </footer>
+  </main>
+</body>
+
+</html>
