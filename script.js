@@ -230,7 +230,7 @@
   function renderNav(syncRoute = true) {
     const path = currentPath();
     const productGroups = groupBy(PROJECTS, (p) => p.group || 'Projects');
-    const designGroups = groupBy(DESIGNS, (d) => d.category || 'Design', ['Onboarding', 'Mobile App', 'Web']);
+    const designGroups = groupBy(DESIGNS, (d) => d.category || 'Design', ['Onboarding', 'Paywalls', 'Mobile App', 'Web']);
 
     const link = (h, ico, label, active, ext, showIcon = true) => `
       <li>
@@ -250,6 +250,7 @@
           .join('');
         const groupIcons = {
           'Onboarding': 'play',
+          'Paywalls': 'cart',
           'Mobile App': 'smartphone',
           'Resources': 'file',
         };

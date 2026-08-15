@@ -158,6 +158,7 @@ const EXPLORING = [
 // ============================================================================
 
 const DESIGNS = [
+  DESIGN_PAYWALLS,
   DESIGN_TUCK,
   DESIGN_SPRIG,
   DESIGN_TROVE,
