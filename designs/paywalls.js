@@ -9,15 +9,7 @@
 //  case study each. Add a new one as an h2 + a paragraph + its figure.
 // ============================================================================
 
-const DESIGN_PAYWALLS = {
-  slug: 'paywalls',
-  name: 'Paywalls',
-  category: 'Paywalls',
-  icon: 'cart',
-  tag: 'Paywalls',
-  status: 'Prototype',
-  summary: 'Six subscription offer screens, built as running iOS apps — the price, the dates and the states that go wrong.',
-  lede: '<strong>Paywalls</strong> collects the screen an app asks you for money on. Six of them, each a running iOS app rather than a mockup, so the arithmetic, the dates and the failures are real.',
+BODY('paywalls', {
   blocks: [
     {
       t: 'p',
@@ -114,4 +106,4 @@ const DESIGN_PAYWALLS = {
       caption: 'Buy it once, or subscribe instead — offered properly, not hidden.',
     },
   ],
-};
+});

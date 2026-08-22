@@ -18,6 +18,21 @@ http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
 /tints-and-shades                      /docs/tints-and-shades                 301
 /tints-and-shades/                     /docs/tints-and-shades                 301
 
+# /projects was renamed to /products. Exact paths only — no splat — because
+# /projects/<name>.js are real source files that must keep resolving.
+/projects                              /products                              301
+/projects/                             /products                              301
+
+# /writings was renamed to /findings. Splat too — an article keeps its slug,
+# so /writings/<slug> maps straight onto /findings/<slug>.
+/writings                              /findings                              301
+/writings/                             /findings                              301
+/writings/*                            /findings/:splat                       301
+
+# /exploring is gone — the toolkit it listed is now the Tools row on /about.
+/exploring                             /about                                 301
+/exploring/                            /about                                 301
+
 # SPA fallback for the docs router (/docs/<slug>).
 # Netlify serves matching static files first, so the real product directories
 # (/tasks/, /design-system-extractor/, /tints-and-shades/) keep resolving normally.

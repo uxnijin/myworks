@@ -1,2 +1,5 @@
 node_modules
 .agents/
+
+# macOS
+.DS_Store

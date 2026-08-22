@@ -8,59 +8,23 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
   const SITE_URL = 'https://nijin.site';
+
+  // analytics.js needs the content to name a route; a top-level const in a
+  // classic script isn't a window property, so publish the references here.
+  // The arrays are mutated in place as bodies load, so these stay current.
+  window.DESIGNS = DESIGNS;
+  window.PROJECTS = PROJECTS;
   const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const ROTATING_WORDS = [
-    'that ships.',
-    'without fluff.',
-    'done right.',
-    'for products.',
-    'made practical.',
-    'built better.',
-    'made simple.',
-    'with purpose.',
-    'that works.',
-    'that delivers.',
-    'that scales.',
-    'that lasts.',
-    'with impact.',
-    'by design.',
-    'for real.',
-    'made to last.',
-    'production-ready.',
-    'user-first.',
-    'business-driven.',
-    'engineered well.',
-    'beyond mockups.',
-    'beyond pixels.',
-    'built to scale.',
-    'built to ship.',
-    'built for growth.',
-    'built for users.',
-    'built with care.',
-    'shipped fast.',
-    'shipped often.',
-    'validated.',
-    'refined.',
-    'polished.',
-    'intentional.',
-    'practical.',
-    'measurable.',
-    'reliable.',
-    'accessible.',
-    'scalable.',
-    'human-centered.',
-    'worth using.',
-    'worth building.',
-    'made for teams.',
-    'with clarity.',
-    'with confidence.',
-    'with precision.',
-    'with empathy.',
-    'with intention.',
-    'with evidence.',
-    'with quality.',
-    'for people.',
+  // the hero types these in a loop — every one is a thing that actually
+  // exists on this site, so the sentence stays true wherever it pauses
+  const TYPE_WORDS = [
+    'onboarding flows',
+    'paywalls',
+    'Figma plugins',
+    'browser extensions',
+    'network tools',
+    'mobile apps',
   ];
 
   // wraps a route render in the View Transitions API where supported, so the
@@ -68,7 +32,12 @@
   // call everywhere else (older Safari/Firefox, or reduced-motion users).
   const withTransition = (fn) => {
     if (document.startViewTransition && !reduceMotion()) {
-      document.startViewTransition(fn);
+      // starting a transition while one is still running rejects; the render
+      // itself has already happened, so there is nothing to recover from
+      const t = document.startViewTransition(fn);
+      t.finished.catch(() => {});
+      t.ready.catch(() => {});
+      t.updateCallbackDone.catch(() => {});
     } else {
       fn();
     }
@@ -200,7 +169,7 @@
   // names of product groups currently expanded inline in the sidebar
   const expandedGroups = new Set();
 
-  // bumped on every route render; async views (Medium fetches) capture it
+  // bumped on every route render; async views (remote fetches) capture it
   // and bail if it has moved on by the time their promise resolves, so a
   // slow fetch can't paint over whatever page the user has since opened
   let asyncToken = 0;
@@ -227,74 +196,191 @@
     return groups;
   }
 
-  function renderNav(syncRoute = true) {
+  // "Parcel: Premium Courier Booking" → bold "Parcel" + muted "Premium Courier
+  // Booking"; entries without a colon fall back to category/group for the sub,
+  // unless that would just repeat the name.
+  const shortName = (p) => p.name.split(':')[0].trim();
+  const subName = (p) => {
+    const i = p.name.indexOf(':');
+    // no colon → designs borrow their category as the muted half; projects
+    // don't (the group already reads as part of most project names)
+    const sub = i > -1 ? p.name.slice(i + 1).trim() : (p.category || '');
+    return sub.toLowerCase() === shortName(p).toLowerCase() ? '' : sub;
+  };
+
+  // deterministic avatar colour per entry, drawn from the site's accent set
+  const AVA_COLORS = ['#6352fa', '#3369ff', '#008b37', '#ff5400', '#b98900', '#c02d76', '#0f766e', '#7c3aed'];
+  const slugHash = (slug) => {
+    let h = 0;
+    for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+    return h;
+  };
+  const avaColor = (slug) => AVA_COLORS[slugHash(slug) % AVA_COLORS.length];
+
+  // deterministic drifting-gradient class (styles.css .grad-1 … .grad-6)
+  const gradClass = (slug) => `gcard grad-${(slugHash(slug) % 6) + 1}`;
+
+  // the same palette without .gcard, for places that want the colours in CSS
+  // but not a mounted mesh canvas (the sidebar rows hover-fill with these)
+  const gradPalette = (slug) => `grad-${(slugHash(slug) % 6) + 1}`;
+
+  // data copy that surfaces in UI chrome loses its em dashes
+  const noDash = (s = '') => s.replace(/\s+\u2014\s+/g, ', ');
+
+  // ---- site copy, all of it from data.js. `cms(value, fallback)` keeps the
+  // fallback written at each call site authoritative, so a key left blank (or
+  // deleted) in data.js still renders something sensible.
+  const CMS = () => (typeof SITE !== 'undefined' && SITE) || {};
+  const HOMECOPY = () => (typeof HOME !== 'undefined' && HOME) || {};
+  const PAGECOPY = (k) => (typeof PAGE_COPY !== 'undefined' && PAGE_COPY[k]) || {};
+  const CONTACTCOPY = () => (typeof CONTACT !== 'undefined' && CONTACT) || {};
+  const cms = (v, fallback) => (v === undefined || v === null || v === '' ? fallback : v);
+  const EMAIL = () => cms(CMS().email, 'uxnijin@gmail.com');
+  const WA = () => cms(CMS().whatsapp, '916238417389');
+
+  // ------------------------------------------------- lazy content loading
+  //
+  // Only data.js (the index) ships with the page. An entry's `blocks` body and
+  // a heavy page's data live in their own file and are fetched the first time
+  // they are actually needed — opening a case study, or landing on /about.
+  //
+  // A body file calls BODY(slug, {...}) and a page file calls PAGE(key, data);
+  // both are globals because the file is injected as a plain <script>, which
+  // keeps every body file readable as the data it is, with no module wrapper.
+
+  const bySlugAll = (slug) =>
+    DESIGNS.find((x) => x.slug === slug) ||
+    PROJECTS.find((x) => x.slug === slug) ||
+    FINDINGS.find((x) => x.slug === slug);
+
+  window.BODY = (slug, data) => {
+    const entry = bySlugAll(slug);
+    if (entry) Object.assign(entry, data);
+  };
+
+  const PAGE_DATA = {};
+  window.PAGE = (key, data) => {
+    PAGE_DATA[key] = data;
+  };
+
+  // one in-flight promise per URL, kept forever: a body is only ever fetched
+  // once, and a second request while the first is still in the air joins it
+  // rather than injecting a duplicate script.
+  const scriptCache = new Map();
+  function loadScript(src) {
+    if (scriptCache.has(src)) return scriptCache.get(src);
+    const p = new Promise((resolve, reject) => {
+      const el = document.createElement('script');
+      el.src = src;
+      el.async = true;
+      el.onload = () => resolve(true);
+      el.onerror = () => {
+        // drop the rejected promise so a later attempt can retry rather than
+        // being handed the same failure forever
+        scriptCache.delete(src);
+        reject(new Error(`could not load ${src}`));
+      };
+      document.head.appendChild(el);
+    });
+    scriptCache.set(src, p);
+    return p;
+  }
+
+  // resolves once `entry.blocks` is on the object. Entries whose body is
+  // already present (or which have no body file) resolve immediately.
+  const loadBody = (entry) =>
+    !entry || !entry.body || entry.blocks
+      ? Promise.resolve(entry)
+      : loadScript(entry.body).then(() => entry);
+
+  const loadPage = (key, src) =>
+    PAGE_DATA[key] ? Promise.resolve(PAGE_DATA[key]) : loadScript(src).then(() => PAGE_DATA[key]);
+
+  const PAGE_SRC = {
+    about: '/pages/about.js',
+    graphics: '/pages/graphics.js',
+  };
+
+  // Hovering a card is a strong signal the next click is that card, so the
+  // body is fetched during the hover rather than after the click. By the time
+  // the pointer travels to the mouse-down the file is usually already parsed.
+  // Failures are ignored: this is a prefetch, and the real load will report.
+  const prefetch = (path) => {
+    const [head, slug] = path.split('/');
+    const entry =
+      head === 'designs' ? DESIGNS.find((d) => d.slug === slug)
+      : head === 'docs' ? PROJECTS.find((p) => p.slug === slug)
+      : head === 'findings' ? FINDINGS.find((f) => f.slug === slug)
+      : null;
+    if (entry) return void loadBody(entry).catch(() => {});
+    if (PAGE_SRC[path] && !PAGE_DATA[path]) loadScript(PAGE_SRC[path]).catch(() => {});
+  };
+
+  // a project has a real logo only when `logoUrl` is set on its record.
+  // Figma plugins used to render their store icon from the repo, but six
+  // rounded-square app icons in a row read as a store listing rather than a
+  // set of covers, so they take the plain icon on the gradient like everything
+  // else does.
+  const hasLogo = (p) => !!p.logoUrl;
+  const logoSrc = (p) => p.logoUrl;
+  const coverSrc = (p) => p.coverUrl || `/images/${p.slug}-cover.png`;
+  const clientSrc = (c) => c.url || `/images/clients/${c.file}`;
+
+  const entryAva = (p, cls = 'dir-ava') =>
+    hasLogo(p)
+      ? `<span class="${cls} img"><img src="${esc(logoSrc(p))}" alt="" loading="lazy"></span>`
+      : `<span class="${cls}" style="background:${avaColor(p.slug)}">${icon(p.icon)}</span>`;
+
+  function renderNav() {
     const path = currentPath();
-    const productGroups = groupBy(PROJECTS, (p) => p.group || 'Projects');
-    const designGroups = groupBy(DESIGNS, (d) => d.category || 'Design', ['Onboarding', 'Paywalls', 'Mobile App', 'Web']);
 
-    const link = (h, ico, label, active, ext, showIcon = true) => `
-      <li>
-        <a class="nav-item${active ? ' active' : ''}" href="${h}"${ext ? ' target="_blank" rel="noopener"' : ' data-link'}${active ? ' aria-current="page"' : ''
-      }>
-          ${showIcon ? `<span class="nav-icon">${icon(ico)}</span>` : ''}
-          <span class="nav-label">${esc(label)}</span>
-          ${ext ? `<span class="nav-ext">${icon('external')}</span>` : ''}
-        </a>
-      </li>`;
-
-    const groupList = (groups, basePath) => groups
-      .map((g) => {
-        const isOpen = expandedGroups.has(g.name);
-        const itemsHtml = g.items
-          .map((it) => link(href(`${basePath}/${it.slug}`), it.icon, it.name, path === `${basePath}/${it.slug}`, false, false))
-          .join('');
-        const groupIcons = {
-          'Onboarding': 'play',
-          'Paywalls': 'cart',
-          'Mobile App': 'smartphone',
-          'Resources': 'file',
-        };
-        const grpIcon = groupIcons[g.name] || g.items[0]?.icon || 'layers';
-        return `
-          <li>
-            <button type="button" class="nav-item${isOpen ? ' open' : ''}" data-toggle-group="${esc(g.name)}" aria-expanded="${isOpen}">
-              <span class="nav-icon">${icon(grpIcon)}</span>
-              <span class="nav-label">${esc(g.name)}</span>
-              <span class="nav-chevron">${icon('chevronRight')}</span>
-            </button>
-            ${isOpen ? `<ul class="nav-submenu">${itemsHtml}</ul>` : ''}
-          </li>`;
-      })
+    const pageLinks = [
+      ['', 'Index'],
+      ['designs', 'Designs'],
+      ['products', 'Products'],
+      ['findings', 'UX Findings'],
+      // ['graphics', 'Graphic Design'],  — hidden for now
+      ['about', 'About'],
+      ['contact', 'Contact'],
+    ]
+      .map(
+        ([p, label]) =>
+          `<li><a class="side-item${path === p ? ' active' : ''}" href="${href(p)}" data-link>${esc(label)}</a></li>`
+      )
       .join('');
 
-    if (syncRoute) {
-      // auto-expand the group containing the current page
-      const activeProductGroup = productGroups.find((g) =>
-        g.items.some((p) => path === `docs/${p.slug}` || path.startsWith(`docs/${p.slug}/`))
-      );
-      if (activeProductGroup) expandedGroups.add(activeProductGroup.name);
-      const activeDesignGroup = designGroups.find((g) =>
-        g.items.some((d) => path === `designs/${d.slug}` || path.startsWith(`designs/${d.slug}/`))
-      );
-      if (activeDesignGroup) expandedGroups.add(activeDesignGroup.name);
-    }
+    const list = (items, basePath, title) => `
+      <p class="side-title">${esc(title)}</p>
+      <ul class="side-list">
+        ${items
+          .map(
+            (it) => `
+          <li>
+            <a class="side-item side-entry ${gradPalette(it.slug)}${path === `${basePath}/${it.slug}` || path.startsWith(`${basePath}/${it.slug}/`) ? ' active' : ''}"
+               href="${href(`${basePath}/${it.slug}`)}" data-link>
+              <span>${esc(shortName(it))}</span>
+            </a>
+          </li>`
+          )
+          .join('')}
+      </ul>`;
+
+    const onDesign = path.startsWith('designs/');
+    const onDoc = path.startsWith('docs/');
+
+    // the sidebar is the mobile drawer now, and it lists the collection the open
+    // page belongs to — both collections anywhere else.
+    let collections = '';
+    if (onDesign) collections = list(DESIGNS, 'designs', 'Designs');
+    else if (onDoc) collections = list(PROJECTS, 'docs', 'Products');
+    else collections = list(DESIGNS, 'designs', 'Designs') + list(PROJECTS, 'docs', 'Products');
 
     $('#nav').innerHTML = `
-      <p class="nav-title">Overview</p>
-      <ul class="nav-menu">
-        ${link(href(''), 'home', 'Index', path === '')}
-        ${link(href('writings'), 'book', 'Writings', path === 'writings')}
-        ${link(href('exploring'), 'map', "Things I'm Exploring", path === 'exploring')}
-      </ul>
-      ${designGroups.length ? `
-      <p class="nav-title">Designs</p>
-      <ul class="nav-menu">
-        ${groupList(designGroups, 'designs')}
-      </ul>` : ''}
-      <p class="nav-title">My Products</p>
-      <ul class="nav-menu">
-        ${groupList(productGroups, 'docs')}
-      </ul>`;
+      <div class="side-pages">
+        <p class="side-title">Pages</p>
+        <ul class="side-list">${pageLinks}</ul>
+      </div>
+      ${collections}`;
   }
 
   function renderSidebarSocials() {
@@ -310,425 +396,259 @@
 
   // ------------------------------------------------------------- shared row builders
 
-  // a PROJECTS/DESIGNS entry, linking internally via the router
-  const buildDocRows = (items, basePath) =>
-    items
-      .map(
-        (p) => `
-      <a class="row" href="${href(`${basePath}/${p.slug}`)}" data-link>
-        <span class="row-ico">${icon(p.icon)}</span>
-        <span class="row-body">
-          <span class="row-name">${esc(p.name)}</span>
-          <span class="row-desc">${esc(p.summary)}</span>
+  // mono meta line under a directory row's name; skips the category/group
+  // when the visible subtitle already says it
+  const entryMeta = (p) => {
+    const sub = subName(p).toLowerCase();
+    const bits = [];
+    if (p.category && p.category.toLowerCase() !== sub) bits.push(p.category);
+    if (p.group && p.group.toLowerCase() !== sub) bits.push(p.group);
+    if (p.users) bits.push(`${p.users.toLocaleString('en-US')} users`);
+    if (p.status) bits.push(p.status);
+    return bits.join(' · ');
+  };
+
+  // mono link labels on the right of a row (spans, not anchors — the row
+  // itself is the link)
+  const entryChannels = (p) => {
+    const out = [];
+    if (p.group === 'Figma Plugins') out.push('Figma');
+    else if (p.group === 'Browser Extensions') out.push('Chrome');
+    else if (p.url || p.productUrl) out.push('Web');
+    if (p.category) out.push('Case study');
+    return out;
+  };
+
+  // a PROJECTS/DESIGNS entry as a surf-directory row
+  const dirRow = (p, basePath) => `
+      <a class="dir-row" href="${href(`${basePath}/${p.slug}`)}" data-link>
+        ${entryAva(p)}
+        <span class="dir-main">
+          <span class="dir-name">${esc(shortName(p))}${subName(p) ? ` <span class="sub">${esc(subName(p))}</span>` : ''}</span>
+          <span class="dir-meta">${esc(entryMeta(p))}</span>
         </span>
-        <span class="row-tag">${esc(p.tag)}</span>
-        <span class="row-go"><span>Read</span>${icon('arrowRight')}</span>
-      </a>`
-      )
-      .join('');
+        <span class="dir-side">
+          <span class="dir-links">${entryChannels(p).map(esc).join('&ensp;')}</span>
+          <span class="dir-go">${icon('arrowRight')}</span>
+        </span>
+      </a>`;
 
-  // a { icon, title, desc, tag, url? } item, e.g. BUILDING/WRITINGS/Medium posts
-  const buildRows = (items) =>
-    items
-      .map((it) => {
-        const inner = `
-          <span class="row-ico">${icon(it.icon)}</span>
-          <span class="row-body">
-            <span class="row-name">${esc(it.title)}</span>
-            <span class="row-desc">${esc(it.desc)}</span>
+  const buildDirRows = (items, basePath) => items.map((p) => dirRow(p, basePath)).join('');
+
+  // article-style card thumbnail, shared by design case studies and findings:
+  // `thumbUrl` on the index record wins, then the first figure in the body,
+  // and failing both the gradient carries a mark or the entry's own name.
+  //
+  // The index record is the important half now: a card is drawn before its
+  // body file has loaded, so an entry that wants a figure on its card has to
+  // name it in data.js. `firstImage` still runs for an entry whose body
+  // happens to be in memory already (you came back from reading it).
+  //
+  // `borrowFigure` is off for onboarding entries, whose figures are phones on a
+  // white canvas — at thumbnail size that reads as an empty card, so they fall
+  // through to the gradient carrying the product name.
+  const cardThumb = (e, label, borrowFigure) => {
+    const img = e.thumbUrl || (borrowFigure ? firstImage(e) : '');
+    if (img) return `<img src="${esc(img)}" alt="" loading="lazy">`;
+    if (e.cardIconUrl)
+      return `<span class="thumb-glyph ${gradClass(e.slug)}"><img class="thumb-mark" src="${esc(e.cardIconUrl)}" alt="" loading="lazy"></span>`;
+    return `<span class="thumb-cover ${gradClass(e.slug)}"><b>${esc(label)}</b></span>`;
+  };
+
+  const designThumb = (d) => cardThumb(d, shortName(d), d.category !== 'Onboarding');
+  const findingThumb = (f) => cardThumb(f, f.title || '', true);
+
+  const designCard = (d) => `
+      <a class="acard" href="${href(`designs/${d.slug}`)}" data-link>
+        <span class="acard-thumb">${designThumb(d)}</span>
+        <p class="acard-title">${esc(d.name)}</p>
+        <span class="acard-meta">${esc([d.category, d.status].filter(Boolean).join(' · '))}</span>
+      </a>`;
+
+  // findings use the same card as the designs grid, so an article sits at the
+  // same size as a case study or a product
+  const findingCard = (f) => `
+      <a class="acard" href="${href(`findings/${f.slug}`)}" data-link>
+        <span class="acard-thumb">${findingThumb(f)}</span>
+        <p class="acard-title">${esc(f.title || '')}</p>
+        <span class="acard-meta">${esc([f.kind || f.category, f.date].filter(Boolean).join(' · '))}</span>
+      </a>`;
+
+  // product-style card: a drifting gradient with the mark sitting plainly in
+  // the middle, corner labels and white chips on the gradient, name and user
+  // count below the card
+  const projectCard = (p) => {
+    const chips = entryChannels(p).concat(p.status ? [p.status] : []).slice(0, 3);
+    return `
+      <a class="pcard-wrap" href="${href(`docs/${p.slug}`)}" data-link>
+        <span class="pcard ${gradClass(p.slug)}">
+          <span class="pcard-corners">
+            <span class="mono-label">${esc(p.group || '')}</span>
+            <span class="chips">${chips.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</span>
           </span>
-          ${it.tag ? `<span class="row-tag">${esc(it.tag)}</span>` : ''}`;
-        if (it.slug) {
-          return `<a class="row" href="${href(`writings/${it.slug}`)}" data-link>${inner}<span class="row-go"><span>Read</span>${icon('arrowRight')}</span></a>`;
-        }
-        return it.url
-          ? `<a class="row" href="${esc(it.url)}" target="_blank" rel="noopener">${inner}<span class="row-go"><span>Open</span>${icon('arrowRight')}</span></a>`
-          : `<div class="row">${inner}</div>`;
-      })
-      .join('');
+          <span class="pcard-center">${
+            hasLogo(p)
+              ? `<img class="pcard-logo" src="${esc(logoSrc(p))}" alt="" loading="lazy">`
+              : `<span class="pcard-icon">${icon(p.icon)}</span>`
+          }</span>
+        </span>
+        <span class="pcard-caption">
+          <span class="pcard-name">${esc(shortName(p))}</span>
+          <span class="pcard-sub">${p.users ? `${p.users.toLocaleString('en-US')} users` : esc(p.status || '')}</span>
+        </span>
+      </a>`;
+  };
 
-  // ------------------------------------------------------------- Medium
-
-  // fetches nijinmuhammed's Medium posts through rss2json (Medium's own
-  // feed has no CORS headers, so it can't be read directly from the
-  // browser). Cached for the session; a failed fetch clears the cache so
-  // the next visit to a Writings view retries instead of staying broken.
-  let mediumPostsPromise = null;
-  function fetchMediumPosts() {
-    if (mediumPostsPromise) return mediumPostsPromise;
-    const rssUrl = `https://medium.com/feed/@${MEDIUM_USERNAME}`;
-    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-    mediumPostsPromise = fetch(api)
-      .then((res) => {
-        if (!res.ok) throw new Error('medium: bad response');
-        return res.json();
-      })
-      .then((data) => {
-        if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('medium: bad payload');
-        return data.items.map((item) => {
-          const text = (item.description || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-          return {
-            icon: 'book',
-            title: item.title,
-            slug: slugify(item.title),
-            desc: text.length > 150 ? `${text.slice(0, 150).trim()}…` : text,
-            url: item.link,
-            content: item.content || item.description || '',
-            tag: item.pubDate
-              ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              : '',
-          };
-        });
-      })
-      .catch((err) => {
-        mediumPostsPromise = null;
-        throw err;
-      });
-    return mediumPostsPromise;
-  }
-
-  // ------------------------------------------------------------- Threads
-
-  let threadsPostsPromise = null;
-  function fetchThreadsPosts() {
-    if (threadsPostsPromise) return threadsPostsPromise;
-    const targetUrl = (typeof THREADS_RSS_URL === 'string' && THREADS_RSS_URL.trim())
-      ? THREADS_RSS_URL.trim()
-      : `https://www.threads.net/@${THREADS_USERNAME}/rss`;
-    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(targetUrl)}`;
-
-    threadsPostsPromise = fetch(api)
-      .then((res) => {
-        if (!res.ok) throw new Error(`threads: HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('threads: bad payload');
-        return data.items.map((item) => {
-          let imageUrl = item.enclosure && item.enclosure.link ? item.enclosure.link : '';
-          const htmlContent = item.description || item.content || '';
-          if (!imageUrl && htmlContent) {
-            const match = htmlContent.match(/src=["']([^"']+)["']/i);
-            if (match) imageUrl = match[1];
-          }
-          if (imageUrl) {
-            imageUrl = imageUrl.replace(/&amp;/g, '&');
-          }
-
-          const cleanHtml = htmlContent.replace(/<img[^>]*>/gi, '');
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = cleanHtml;
-          const rawText = (tempDiv.textContent || tempDiv.innerText || item.title || '').trim();
-
-          return {
-            author: item.author || `@${THREADS_USERNAME}`,
-            text: rawText,
-            image: imageUrl,
-            url: item.link || `https://www.threads.net/@${THREADS_USERNAME}`,
-            date: item.pubDate
-              ? new Date(item.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-              : '',
-          };
-        });
-      })
-      .catch(() => {
-        return fetch('./threads.json')
-          .then((res) => (res.ok ? res.json() : []))
-          .catch(() => []);
-      });
-
-    return threadsPostsPromise;
-  }
-
-  const buildThreadsCards = (posts) =>
-    `<div class="threads-feed">
-      ${posts
-        .map((p) => {
-          const bodyHtml = esc(p.text || '').replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>');
-          return `
-            <article class="thread-card">
-              <header class="thread-card-head">
-                <div class="thread-card-author">
-                  <div class="thread-card-avatar">
-                    ${PROFILE.avatar ? `<img src="${esc(PROFILE.avatar)}" alt="${esc(PROFILE.name)}" />` : icon('at-sign')}
-                  </div>
-                  <div class="thread-card-meta">
-                    <span class="thread-card-handle">${esc(THREADS_USERNAME)}</span>
-                    ${p.date ? `<span class="thread-card-dot">•</span><span class="thread-card-date">${esc(p.date)}</span>` : ''}
-                  </div>
-                </div>
-                <a class="thread-card-link" href="${esc(p.url)}" target="_blank" rel="noopener" title="Open on Threads">
-                  ${icon('external')}
-                </a>
-              </header>
-
-              <div class="thread-card-text"><p>${bodyHtml}</p></div>
-
-              ${
-                p.image
-                  ? `<div class="thread-card-media">
-                      <img src="${esc(p.image)}" alt="Threads post attachment" loading="lazy" onerror="this.parentElement.style.display='none'" />
-                    </div>`
-                  : ''
-              }
-
-              <footer class="thread-card-foot">
-                <a href="${esc(p.url)}" target="_blank" rel="noopener" class="thread-action" title="Like on Threads">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                </a>
-                <a href="${esc(p.url)}" target="_blank" rel="noopener" class="thread-action" title="Reply on Threads">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-                </a>
-                <a href="${esc(p.url)}" target="_blank" rel="noopener" class="thread-action" title="Repost on Threads">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
-                </a>
-                <a href="${esc(p.url)}" target="_blank" rel="noopener" class="thread-action" title="Share">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.5.5 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
-                </a>
-              </footer>
-            </article>`;
-        })
-        .join('')}
-    </div>`;
-
-
-
-
+  // showcase card: media plate on top, name + summary + arrow link below.
+  // Used for the featured products on the home page.
+  const showCard = (p) => {
+    const media = hasLogo(p)
+      ? `<span class="show-media"><img src="${esc(coverSrc(p))}" alt="" loading="lazy"></span>`
+      : `<span class="show-media ${gradClass(p.slug)}"><span class="pcard-icon">${icon(p.icon)}</span></span>`;
+    return `
+      <a class="show-card" href="${href(`docs/${p.slug}`)}" data-link>
+        ${media}
+        <p class="show-title">${esc(p.name)}</p>
+        <p class="show-desc">${esc(noDash(p.summary || ''))}</p>
+        <span class="arrow-link">View the doc ${icon('arrowRight')}</span>
+      </a>`;
+  };
 
   // ------------------------------------------------------------- home view
 
+  // first real figure inside a case study, used as its thumbnail
+  const firstImage = (p) => {
+    const b = (p.blocks || []).find((x) => x.t === 'image' && x.src);
+    return b ? b.src : '';
+  };
+
   function viewHome() {
     document.title = `${PROFILE.name} ${PROFILE.role}`;
-    setDescription(`${PROFILE.tagline} Projects, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
+    setDescription(`${PROFILE.tagline} Products, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
 
-    const designRows = buildDocRows(DESIGNS, 'designs');
-    const productRows = buildDocRows(PROJECTS, 'docs');
+    const pick = (list, slugs, fallback) => {
+      const chosen = (slugs || []).map((sl) => list.find((x) => x.slug === sl)).filter(Boolean);
+      return chosen.length ? chosen : fallback;
+    };
+    const latest = pick(DESIGNS, HOMECOPY().latestSlugs, DESIGNS).slice(0, 4);
+    const H = HOMECOPY();
+    const featured = pick(
+      PROJECTS,
+      HOMECOPY().featuredProjects,
+      [...PROJECTS].sort((a, b) => (b.users || 0) - (a.users || 0))
+    ).slice(0, 4);
 
     $('#view').innerHTML = `
       <div class="view">
         <section class="hero">
-
-          <div class="hero-id">
-            <span class="hero-avatar" style="background-image:url(${esc(PROFILE.avatar)})"></span>
-            <span class="hero-id-text">
-              <span class="hero-id-name">${esc(PROFILE.name)} ${icon('verified')}</span>
-              <span class="hero-id-role">${esc(PROFILE.role)}</span>
-            </span>
+          <div class="hero-top">
+            <h1 class="hero-h1">${esc(cms(H.headline, 'Design, build, and ship'))}<br><span id="type-word"></span><span class="type-caret">_</span></h1>
+            <img class="hero-photo" src="${esc(H.heroPhotoUrl || H.heroPhotoPath || PROFILE.avatar)}" alt="${esc(PROFILE.name)}">
           </div>
 
-          <h1>${esc(PROFILE.tagline).replace('documented.', '<span class="rotating-word-wrapper"><em class="rotating-word active" style="position: relative;">' + ROTATING_WORDS[0] + '</em></span>')}</h1>
-          <p class="hero-lede">${PROFILE.bio}</p>
-          ${PROFILE.intro ? `<p class="hero-lede" style="margin-top:14px">${PROFILE.intro}</p>` : ''}
+          <div class="hero-row">
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="${href('designs')}" data-link>${esc(cms(H.primaryCta, 'Explore the designs'))}</a>
+              <a class="btn btn-secondary" href="${href('products')}" data-link>${esc(cms(H.secondaryCta, 'Browse products'))}</a>
+            </div>
+            <p class="hero-aside">${PROFILE.bio}</p>
+          </div>
 
-          <div class="hero-actions">
-            <a class="cta" href="${href(`docs/${PROJECTS[0].slug}`)}" data-link>See Projects ${icon('arrowRight')}</a>
-            <button class="cta ghost" id="hero-search">${icon('search')} Search projects</button>
+        </section>
+
+        <section class="home-sec">
+          <div class="banner gcard gcard-live grad-1">
+            <div class="banner-copy">
+              <span class="mono-label">${esc(cms(H.bannerLabel, 'The work'))}</span>
+              <h3>${esc(cms(H.bannerHeading, `${DESIGNS.length} case studies · ${PROJECTS.length} shipped products`))}</h3>
+              <p>${esc(cms(H.bannerText, 'Every figure is a screenshot of the real, running app, designed and built end to end.'))}</p>
+            </div>
           </div>
         </section>
 
-        ${DESIGNS.length ? `
-        <section class="sec">
-          <div class="sec-head">
-            <h2>Designs</h2>
-            <span class="sec-count">${DESIGNS.length} Case ${DESIGNS.length === 1 ? 'Study' : 'Studies'}</span>
+        <section class="home-sec">
+          <div class="sec-topline">
+            <h2 class="sec-h">${esc(cms(H.latestHeading, 'Latest from the studio'))}</h2>
+            <a class="arrow-link" href="${href('designs')}" data-link>All designs ${icon('arrowRight')}</a>
           </div>
-          <p class="sec-sub">Mobile app and web design case studies — the brief, the process, the outcome.</p>
-          <div class="index">${designRows}</div>
-        </section>` : ''}
-
-        <section class="sec">
-          <div class="sec-head">
-            <h2>My Products</h2>
-            <span class="sec-count">${PROJECTS.length} Products</span>
-          </div>
-          <p class="sec-sub">Every one has a doc page: the problem, the decisions, and what I'd change.</p>
-          <div class="index">${productRows}</div>
-        </section>
-
-        <section class="sec">
-          <div class="sec-head">
-            <h2>Writing</h2>
-            <a class="sec-count" href="${href('writings')}" data-link>All writings ${icon('arrowRight')}</a>
-          </div>
-          <p class="sec-sub">Notes on design and building products, live from Medium.</p>
-          <div class="index" id="home-writing-list"><p class="sec-sub">Loading posts from Medium…</p></div>
-        </section>
-
-        <section class="sec">
-          <div class="sec-head">
-            <h2>Videos</h2>
-          </div>
-          <p class="sec-sub">Watch sessions and talks from HACA Design School.</p>
-          <div class="embed" style="max-width: 480px; margin: 16px 0;">
-            <iframe src="https://www.youtube.com/embed/taRS6YUVZhM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <div class="news-grid">
+            ${latest
+              .map((d) => `
+              <a class="news-item" href="${href(`designs/${d.slug}`)}" data-link>
+                <span class="news-thumb">${designThumb(d)}</span>
+                <p class="news-title">${esc(d.name)}</p>
+                <span class="news-meta">${esc([d.category, d.status].filter(Boolean).join(' · '))}</span>
+              </a>`)
+              .join('')}
           </div>
         </section>
 
-        <section class="sec">
-          <div class="sec-head"><h2>Activity</h2></div>
-          <p class="sec-sub">Most of this is the tools above, being built in public.</p>
-          <div class="gh" id="gh"><div class="gh-skel">Loading contributions…</div></div>
+        <section class="home-sec">
+          <div class="sec-topline">
+            <h2 class="sec-h">${esc(cms(H.productsHeading, 'Tools people actually use'))}</h2>
+            <a class="arrow-link" href="${href('products')}" data-link>View all products ${icon('arrowRight')}</a>
+          </div>
+          <div class="show-grid">
+            ${featured.map(showCard).join('')}
+          </div>
         </section>
 
-        <footer class="foot">
-          <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}</span>
-          <span class="socials">
-            ${PROFILE.links
-        .map(
-          (l) =>
-            `<a href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)}">${icon(
-              (l.label || '').toLowerCase()
-            )}</a>`
-        )
-        .join('')}
-          </span>
-        </footer>
+        ${
+          H.showGithub === false
+            ? ''
+            : `<section class="home-sec">
+                 <div class="gh" id="gh"><div class="gh-skel">Loading contributions…</div></div>
+               </section>`
+        }
+
+        <section class="home-sec">
+          <div class="banner gcard gcard-live grad-3">
+            <div class="banner-copy">
+              <span class="mono-label">${esc(cms(H.ctaLabel, 'Get in touch'))}</span>
+              <h3>${esc(cms(H.ctaHeading, 'Have something to build?'))}</h3>
+              <p>${esc(cms(H.ctaText, 'From the first flow to the shipped product, I design and build the whole thing.'))}</p>
+              <a class="btn btn-light" href="${href('contact')}" data-link style="margin-top:22px">${esc(cms(H.ctaButton, 'Contact me'))}</a>
+            </div>
+          </div>
+        </section>
       </div>`;
 
-    const totalUsers = PROJECTS.reduce((sum, p) => sum + (p.users || 0), 0);
-    const sortedProjects = [...PROJECTS].sort((a, b) => (b.users || 0) - (a.users || 0));
-
-    $('#toc').innerHTML = `
-      <div class="toc-users">
-        <h3 class="toc-title">Community Reach</h3>
-        <div class="users-total-card">
-          <span class="users-total-num">0</span>
-          <span class="users-total-label">Active Users Combined</span>
-        </div>
-        <details class="users-accordion">
-          <summary class="toc-title">
-            <span>By Product</span>
-            <span class="users-chevron">${icon('chevronRight')}</span>
-          </summary>
-          <div class="users-list">
-            ${sortedProjects
-        .map((p, i) => {
-          const maxUsers = sortedProjects[0].users || 1;
-          const pct = Math.max(4, Math.round(((p.users || 0) / maxUsers) * 100));
-          return `
-                  <a href="${href(`docs/${p.slug}`)}" class="users-item" data-link style="animation-delay: ${i * 20}ms;">
-                    <div class="users-item-header">
-                      <span class="users-item-icon">${icon(p.icon)}</span>
-                      <span class="users-item-name">${esc(p.name)}</span>
-                      <span class="users-item-count" data-val="${p.users || 0}">0</span>
-                    </div>
-                    <div class="users-item-bar-bg">
-                      <div class="users-item-bar" style="width: ${pct}%;"></div>
-                    </div>
-                  </a>
-                `;
-        })
-        .join('')}
-          </div>
-        </details>
-      </div>
-    `;
-
-    const totalNumEl = $('.users-total-num');
-    if (totalNumEl) {
-      animateCount(totalNumEl, totalUsers, 1500);
-    }
-
-    const accordion = $('.users-accordion');
-    const summary = $('summary', accordion);
-    if (accordion && summary) {
-      summary.addEventListener('click', (e) => {
-        e.preventDefault();
-        const items = $$('.users-item', accordion);
-        if (accordion.hasAttribute('open')) {
-          items.forEach((item, idx) => {
-            item.style.animationDelay = `${(items.length - 1 - idx) * 20}ms`;
-          });
-          accordion.classList.add('closing');
-          setTimeout(() => {
-            accordion.removeAttribute('open');
-            accordion.classList.remove('closing');
-          }, 500);
-        } else {
-          items.forEach((item, idx) => {
-            item.style.animationDelay = `${idx * 20}ms`;
-          });
-          accordion.setAttribute('open', '');
-          $$('.users-item-count', accordion).forEach((el) => {
-            const val = parseInt(el.dataset.val, 10);
-            if (!isNaN(val)) {
-              animateCount(el, val, 1000);
-            }
-          });
-        }
-      });
-    }
-
-    $('#hero-search')?.addEventListener('click', openPalette);
     renderGitHub();
-
-    const homeWritingToken = asyncToken;
-    fetchMediumPosts()
-      .then((posts) => (posts.length ? posts.slice(0, 4) : WRITINGS))
-      .catch(() => WRITINGS)
-      .then((posts) => {
-        if (homeWritingToken !== asyncToken) return;
-        const list = $('#home-writing-list');
-        if (!list) return;
-        list.innerHTML = posts.length
-          ? buildRows(posts)
-          : `<p class="sec-sub">Haven't published anything yet — check back soon.</p>`;
-      });
-
-    initRotatingHeadline();
+    initTypewriter();
   }
 
-  function initRotatingHeadline() {
-    const wrapper = $('.rotating-word-wrapper');
-    if (!wrapper) return;
+  // types the hero's rotating words letter by letter, holds, deletes, moves on
+  function initTypewriter() {
+    const el = $('#type-word');
+    if (!el) return;
+    if (reduceMotion()) {
+      el.textContent = ((HOMECOPY().typeWords || [])[0]) || TYPE_WORDS[0];
+      return;
+    }
 
-    let currentIndex = 0;
+    const words = (HOMECOPY().typeWords || []).length ? HOMECOPY().typeWords : TYPE_WORDS;
+    let word = 0;
+    let len = 0;
+    let deleting = false;
 
-    const intervalId = setInterval(() => {
-      if (!document.body.contains(wrapper)) {
-        clearInterval(intervalId);
-        return;
+    const tick = () => {
+      if (!document.body.contains(el)) return;
+      const target = words[word];
+      len += deleting ? -1 : 1;
+      el.textContent = target.slice(0, len);
+
+      let wait = deleting ? 38 : 64 + Math.random() * 55;
+      if (!deleting && len === target.length) {
+        deleting = true;
+        wait = 1900;
+      } else if (deleting && len === 0) {
+        deleting = false;
+        word = (word + 1) % words.length;
+        wait = 380;
       }
-
-      const currentSpan = wrapper.querySelector('.rotating-word.active');
-      if (!currentSpan) return;
-
-      currentIndex = (currentIndex + 1) % ROTATING_WORDS.length;
-      const nextWord = ROTATING_WORDS[currentIndex];
-
-      const currentWidth = currentSpan.offsetWidth;
-
-      const newSpan = document.createElement('em');
-      newSpan.className = 'rotating-word enter';
-      newSpan.style.position = 'absolute';
-      newSpan.style.left = '0';
-      newSpan.style.top = '0';
-      newSpan.textContent = nextWord;
-      wrapper.appendChild(newSpan);
-
-      const newWidth = newSpan.offsetWidth;
-
-      wrapper.style.width = `${currentWidth}px`;
-
-      wrapper.offsetHeight; // force reflow
-
-      currentSpan.classList.remove('active');
-      currentSpan.classList.add('exit');
-
-      newSpan.classList.remove('enter');
-      newSpan.classList.add('active');
-
-      wrapper.style.width = `${newWidth}px`;
-
-      setTimeout(() => {
-        if (!document.body.contains(wrapper)) return;
-        currentSpan.remove();
-        newSpan.style.position = 'relative';
-        newSpan.style.left = '';
-        newSpan.style.top = '';
-        wrapper.style.width = '';
-      }, 600);
-    }, 3000);
+      setTimeout(tick, wait);
+    };
+    tick();
   }
 
   // ------------------------------------------------------------- doc view
@@ -749,133 +669,150 @@
       })
       : p.blocks;
 
-    $('#view').innerHTML = `
-      <div class="view">
-        <article>
+    const sub = subName(p);
+    const kicker = entryMeta(p);
+    const extUrl = p.productUrl || p.url;
+    const isProject = basePath === 'docs';
+
+    // every document opens the same way: the name, the meta line, and one lede
+    // at reading size. A product's rail still carries the identity beside it,
+    // but the column no longer starts in a smaller typeface than it continues
+    // in.
+    const headerHtml = `
           <header class="doc-head">
-            <nav class="crumbs" aria-label="Breadcrumb">
-              <a href="${href('')}" data-link>Index</a>
-              ${icon('chevronRight')}
-              <span>${esc(p.group || p.category || 'Projects')}</span>
-              ${icon('chevronRight')}
-              <span style="color:var(--text)">${esc(p.name)}</span>
-            </nav>
-            <h1 class="doc-h1" style="display:flex; align-items:center; gap:12px;">
-              ${p.group === 'Figma Plugins' ? `<img src="/images/${p.slug}-logo.png" alt="" style="width:36px; height:36px; border-radius:8px; border:1px solid var(--border); flex-shrink:0;" />` : ''}
-              <span>${esc(p.name)}</span>
+            <h1 class="doc-h1">
+              <span>${esc(shortName(p))}</span>
+              ${sub ? `<span class="from">${esc(sub)}</span>` : ''}
             </h1>
+            ${kicker ? `<div class="doc-kicker mono-label">${esc(kicker)}</div>` : ''}
             <p class="doc-lede">${p.lede}</p>
-            <div class="doc-meta">
-              <div class="doc-meta-actions" style="display:flex; gap:8px;">
-                ${p.productUrl || p.url
-        ? `<a class="cta" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${p.group === 'Figma Plugins' ? 'Open in Figma' : 'Open Product'} ${icon('external')}</a>`
-        : ''
-      }
-              </div>
-              ${p.status ? `<span class="pill${p.status === 'Live' ? ' live' : ''}" style="margin-left:auto;"><span class="dot"></span>${esc(p.status)}</span>` : ''}
-            </div>
-          </header>
+          </header>`;
 
-          ${p.group === 'Figma Plugins'
-        ? `<div class="doc-hero-thumbnail" data-tilt-3d style="margin-bottom:40px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border); aspect-ratio:16/9; background:var(--bg-subtle); transition:transform .3s var(--ease);">
-                   <img src="/images/${p.slug}-cover.png" alt="${esc(p.name)} Thumbnail" style="width:100%; height:100%; object-fit:cover; display:block;" />
+    const articleHtml = `
+        <article class="doc-article read-doc">
+          ${headerHtml}
+
+          ${
+            hasLogo(p)
+              ? `<div class="doc-hero-thumbnail">
+                   <img src="${esc(coverSrc(p))}" alt="${esc(p.name)} thumbnail" />
                  </div>`
-        : ''
-      }
+              : ''
+          }
 
-          <div class="prose">${renderBlocks(filteredBlocks)}</div>
+          <div class="prose read-prose">${renderBlocks(filteredBlocks)}</div>
 
-          ${p.privacyBlocks || p.termsBlocks
-        ? `<div class="doc-footer-links">
+          ${
+            p.privacyBlocks || p.termsBlocks
+              ? `<div class="doc-footer-links">
                    ${p.privacyBlocks ? `<a class="doc-footer-link" href="${href(`${basePath}/${p.slug}/privacy`)}" data-link>Privacy Policy</a>` : ''}
                    ${p.termsBlocks ? `<a class="doc-footer-link" href="${href(`${basePath}/${p.slug}/terms`)}" data-link>Terms of Service</a>` : ''}
                  </div>`
-        : ''
-      }
+              : ''
+          }
 
           <nav class="page-nav" aria-label="Pagination">
-            ${prev
-        ? `<a class="page-nav-link prev" href="${href(`${basePath}/${prev.slug}`)}" data-link>
+            ${
+              prev
+                ? `<a class="page-nav-link prev" href="${href(`${basePath}/${prev.slug}`)}" data-link>
                      <span class="page-nav-dir">${icon('chevronLeft')} Previous</span>
-                     <span class="page-nav-name">${esc(prev.name)}</span>
+                     <span class="page-nav-name">${esc(shortName(prev))}</span>
                    </a>`
-        : '<span></span>'
-      }
-            ${next
-        ? `<a class="page-nav-link next" href="${href(`${basePath}/${next.slug}`)}" data-link>
+                : '<span></span>'
+            }
+            ${
+              next
+                ? `<a class="page-nav-link next" href="${href(`${basePath}/${next.slug}`)}" data-link>
                      <span class="page-nav-dir">Next ${icon('chevronRight')}</span>
-                     <span class="page-nav-name">${esc(next.name)}</span>
+                     <span class="page-nav-name">${esc(shortName(next))}</span>
                    </a>`
-        : ''
-      }
+                : ''
+            }
           </nav>
-        </article>
-      </div>`;
+        </article>`;
 
-    renderTOC(p, basePath);
-    initCopy();
-    initZoom();
-    initTilt();
-    initScaleDemo();
-  }
-
-  // ------------------------------------------------------------- TOC
-
-  let tocObserver = null;
-
-  function renderTOC(p, basePath = 'docs') {
-    const heads = $$('.prose h2, .prose h3');
-    if (!heads.length) {
-      $('#toc').innerHTML = '';
-      return;
+    if (isProject) {
+      // product-page anatomy: content + a sticky rail with the CTA and facts
+      const railRow = (label, value) =>
+        value ? `<div class="rail-row"><span class="mono-label">${esc(label)}</span><b>${esc(value)}</b></div>` : '';
+      $('#view').innerHTML = `
+        <div class="view">
+          <div class="doc-grid">
+            ${articleHtml}
+            <aside class="rail" aria-label="Product facts">
+              <div class="rail-head">
+                ${
+                  // a real screenshot of the thing beats a coloured square with
+                  // a glyph on it; the glyph is only the fallback for a product
+                  // with nothing to shoot yet
+                  p.thumbUrl
+                    ? `<span class="rail-thumb"><img src="${esc(p.thumbUrl)}" alt="" loading="lazy"></span>`
+                    : `<span class="rail-ico" style="background:${avaColor(p.slug)}">${icon(p.icon)}</span>`
+                }
+                <span class="rail-name">${esc(shortName(p))}</span>
+              </div>
+              <p class="rail-sub">${esc(noDash(p.summary || ''))}</p>
+              ${
+                extUrl
+                  ? `<a class="btn btn-primary" href="${esc(extUrl)}" target="_blank" rel="noopener">${
+                      p.group === 'Figma Plugins' ? 'Open in Figma' : 'Open the product'
+                    }</a>`
+                  : ''
+              }
+              <div class="rail-rows">
+                ${railRow('Type', p.group)}
+                ${railRow('Status', p.status)}
+                ${railRow('Users', p.users ? p.users.toLocaleString('en-US') : '')}
+                ${railRow('Focus', p.tag)}
+              </div>
+            </aside>
+          </div>
+        </div>`;
+    } else {
+      $('#view').innerHTML = `
+        <div class="view">
+          ${
+            extUrl
+              ? articleHtml.replace(
+                  '</header>',
+                  `<div class="doc-links"><a href="${esc(extUrl)}" target="_blank" rel="noopener">Open product ${icon('external')}</a></div></header>`
+                )
+              : articleHtml
+          }
+        </div>`;
     }
 
-    heads.forEach((h, idx) => {
+    renderTOC();
+    initCopy();
+    initZoom();
+    initScaleDemo();
+    initCurrencyDemo();
+    initDeleteDemo();
+    initStruggleDemo();
+    initBatchDemo();
+    initResumeDemo();
+    initSearchDemo();
+    initZoomDemo();
+    initNextDemo();
+    initRetryDemo();
+    initPayDemo();
+    initWaitDemo();
+    initPrefetchDemo();
+    initHumanDemo();
+    initAnchorDemo();
+    initUndoDemo();
+  }
+
+  // ------------------------------------------------------------- headings
+
+  // there is no table of contents in this layout, but headings still get
+  // stable ids so the # anchor links in the prose keep working
+  function renderTOC() {
+    $$('.prose h2, .prose h3').forEach((h, idx) => {
       if (!h.id) {
         h.id = slugify(h.textContent) || `heading-${idx}`;
       }
     });
-
-    const path = currentPath();
-    $('#toc').innerHTML = `
-      <p class="toc-title">On this page</p>
-      <ul class="toc-list">
-        ${heads
-        .map(
-          (h) =>
-            `<li><a class="toc-link lvl-${h.tagName === 'H3' ? 3 : 2}" href="#${h.id}" data-toc="${h.id}">${h.textContent.replace(/^#/, '').trim()
-            }</a></li>`
-        )
-        .join('')}
-        ${p.privacyBlocks ? `<li><a class="toc-link lvl-2${path === `${basePath}/${p.slug}/privacy` ? ' active' : ''}" href="${href(`${basePath}/${p.slug}/privacy`)}" data-link>Privacy Policy</a></li>` : ''}
-        ${p.termsBlocks ? `<li><a class="toc-link lvl-2${path === `${basePath}/${p.slug}/terms` ? ' active' : ''}" href="${href(`${basePath}/${p.slug}/terms`)}" data-link>Terms of Service</a></li>` : ''}
-      </ul>
-      <div class="toc-foot">
-        ${p.productUrl || p.url ? `<a class="toc-action" href="${esc(p.productUrl || p.url)}" target="_blank" rel="noopener">${icon('external')} Open the product</a>` : ''}
-        <a class="toc-action" href="#" data-top>${icon('chevronLeft')} Back to top</a>
-      </div>`;
-
-    $('[data-top]')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // scrollspy: highlight the heading nearest the top of the viewport
-    tocObserver?.disconnect();
-    const seen = new Map();
-    tocObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => seen.set(e.target.id, e));
-        const visible = [...seen.values()]
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        const id = visible[0]?.target.id;
-        if (!id) return;
-        $$('.toc-link').forEach((l) => l.classList.toggle('active', l.dataset.toc === id));
-      },
-      { rootMargin: '-72px 0px -70% 0px', threshold: 0 }
-    );
-    heads.forEach((h) => tocObserver.observe(h));
   }
 
   // ------------------------------------------------------------- interactions
@@ -1097,11 +1034,1217 @@
     paint(color.value);
   }
 
+  // ------------------------------------------------------------ ambient demos
+
+  // The four figures in the findings all play rather than wait to be clicked.
+  // They share one loop: it pauses off-screen, stops with the view it belongs
+  // to, and holds a single still frame for anyone who has asked for less
+  // motion. `run` gets a beat() to wait on and does one pass of the story.
+  function ambient(demo, { still, run }) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      still();
+      return;
+    }
+
+    let stop = false;
+    let visible = true;
+
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const beat = async (ms) => {
+      await wait(ms);
+      while (!visible && !stop) await wait(200);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => (visible = e.isIntersecting)),
+      { threshold: 0.15 }
+    );
+    io.observe(demo);
+
+    const watchdog = setInterval(() => {
+      if (document.contains(demo)) return;
+      stop = true;
+      io.disconnect();
+      clearInterval(watchdog);
+    }, 2000);
+
+    (async () => {
+      let pass = 0;
+      while (!stop) {
+        if (!document.contains(demo)) return;
+        await run(beat, pass++);
+      }
+    })();
+  }
+
+  // The pointer is the whole point: a figure that changes on its own reads as a
+  // bug, and the same change with a cursor arriving first reads as someone
+  // doing it. One pointer per demo, parked out of the way between moves.
+  function pointerFor(demo) {
+    const el = document.createElement('span');
+    el.className = 'demo-cursor';
+    // one arrow, drawn from its own tip
+    el.innerHTML =
+      '<span class="demo-cursor-ring"></span>' +
+      '<svg class="demo-cursor-g" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M5.6 2.4 19.2 12.3l-6.3.5 3.4 6.9-2.9 1.4-3.4-6.9-4.4 4.2z"/></svg>';
+    demo.appendChild(el);
+
+    // the tip lands a little past the middle of a control, the way a hand does
+    const at = (target, fx = 0.56, fy = 0.62) => {
+      const d = demo.getBoundingClientRect();
+      const r = target.getBoundingClientRect();
+      el.style.transform = `translate(${r.left - d.left + r.width * fx}px, ${r.top - d.top + r.height * fy}px)`;
+    };
+
+    return {
+      // move into place, press, and let the press be what changes the state
+      tap: async (target, beat, act) => {
+        at(target);
+        el.classList.add('on');
+        await beat(620);
+        el.classList.add('down');
+        await beat(170);
+        if (act) act();
+        await beat(150);
+        el.classList.remove('down');
+        await beat(240);
+      },
+      // arrive and stay, without pressing — a hover is its own event
+      hover: async (target, beat, act) => {
+        at(target);
+        el.classList.add('on');
+        await beat(620);
+        if (act) act();
+        await beat(160);
+      },
+      // drift to the corner, so nothing is obscured while the result is read
+      park: async (beat) => {
+        const d = demo.getBoundingClientRect();
+        el.style.transform = `translate(${d.width - 34}px, ${d.height - 26}px)`;
+        await beat(300);
+        el.classList.remove('on');
+      },
+    };
+  }
+
+  // ---------------------------------------------------------- currency demo
+
+  // Select the amount, open the menu, convert. Each pass uses the next
+  // preferred currency, and every number comes off the rate table.
+  function initCurrencyDemo() {
+    const demo = $('[data-demo="currency"]');
+    if (!demo) return;
+
+    const AMOUNT = 249.99;
+    const cur = $('.cdemo-cur', demo);
+    const amount = $('.cdemo-amount', demo);
+    const convert = $('.cdemo-convert', demo);
+    const out = $('.cdemo-out', demo);
+    const rateV = $('.cdemo-rate-v', demo);
+    const step = $('.cdemo-step', demo);
+    const hand = pointerFor(demo);
+
+    // one formatting rule for both lines, so the rate and the total agree
+    const money = (v, r, dp) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: r.code,
+        currencyDisplay: 'narrowSymbol',
+        minimumFractionDigits: dp,
+        maximumFractionDigits: dp,
+      }).format(v);
+
+    const paint = (r) => {
+      cur.textContent = r.code;
+      convert.textContent = `Convert to ${r.code}`;
+      out.textContent = `${money(AMOUNT * r.rate, r, r.code === 'JPY' ? 0 : 2)} ${r.code}`;
+      rateV.textContent = `1 USD = ${money(r.rate, r, 2)}`;
+    };
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    ambient(demo, {
+      still: () => {
+        paint(DEMO_RATES[0]);
+        demo.dataset.state = 'converted';
+        say('Converted in place');
+      },
+      run: async (beat, pass) => {
+        const r = DEMO_RATES[pass % DEMO_RATES.length];
+        paint(r);
+
+        demo.dataset.state = 'idle';
+        say('An amount in another currency');
+        await beat(1100);
+
+        // the selection and the menu come from the press, not from a timer
+        await hand.tap(amount, beat, () => {
+          demo.dataset.state = 'selected';
+          say('Selected');
+        });
+        demo.dataset.state = 'menu';
+        say('The usual menu');
+        await beat(900);
+
+        await hand.tap(convert, beat, () => {
+          demo.dataset.state = 'converted';
+          say('Converted in place');
+        });
+        await hand.park(beat);
+        await beat(2600);
+      },
+    });
+  }
+
+  // ------------------------------------------------------------ delete demo
+
+  // Two deletes confirmed, and then the dialog gives way to an undo. Nothing
+  // to click: the list plays it out and rebuilds itself.
+  function initDeleteDemo() {
+    const demo = $('[data-demo="delete"]');
+    if (!demo) return;
+
+    const LEARN_AFTER = 2;
+    const list = $('.ddemo-list', demo);
+    const mode = $('.ddemo-mode', demo);
+    const step = $('.ddemo-step', demo);
+    const toast = $('.ddemo-toast', demo);
+    const toastT = $('.ddemo-toast-t', demo);
+    const hand = pointerFor(demo);
+    const ROWS = list.innerHTML;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    const setMode = (learned) => {
+      demo.dataset.mode = learned ? 'undo' : 'confirm';
+      mode.textContent = learned ? 'Deleting straight away, with undo' : 'Confirming every delete';
+    };
+
+    const name = (row) => $('.ddemo-name', row).textContent.trim();
+
+    ambient(demo, {
+      still: () => {
+        setMode(true);
+        list.firstElementChild.remove();
+        list.firstElementChild.remove();
+        toastT.textContent = '\u201cDraft \u2014 pricing page\u201d deleted';
+        toast.classList.add('on');
+        say('No dialog, undo instead');
+      },
+      run: async (beat) => {
+        list.innerHTML = ROWS;
+        toast.classList.remove('on');
+        setMode(false);
+        say('Watching');
+        await beat(900);
+
+        // the row leaves rather than blinks out, so the delete is legible
+        const drop = async (row) => {
+          row.classList.add('going');
+          await beat(240);
+          row.remove();
+        };
+
+        // rows are picked from down the list rather than always off the top,
+        // so the pointer travels and the deletes read as separate decisions
+        const pick = (n) => list.children[Math.min(n, list.children.length - 1)];
+
+        // the first two are deleted the long way round
+        for (let i = 0; i < LEARN_AFTER; i += 1) {
+          const row = pick(i === 0 ? 1 : 3);
+          await hand.tap($('.ddemo-del', row), beat, () => {
+            row.classList.add('asking');
+            say('Asking to be sure');
+          });
+          await beat(500);
+          await hand.tap($('.ddemo-yes', row), beat, () => say(`Deleted \u00b7 ${i + 1}`));
+          await drop(row);
+          await beat(500);
+        }
+
+        setMode(true);
+        say('Twice is intent');
+        await beat(1200);
+
+        // and the rest go straight through, with the undo underneath
+        for (let i = 0; i < 2; i += 1) {
+          const row = pick(i === 0 ? 0 : 2);
+          const label = name(row);
+          await hand.tap($('.ddemo-del', row), beat, () => {
+            toastT.textContent = `Deleted \u201c${label}\u201d`;
+            toast.classList.add('on');
+            say('No dialog, undo instead');
+          });
+          await drop(row);
+          await beat(1900);
+          if (i === 0) toast.classList.remove('on');
+          await beat(400);
+        }
+
+        await hand.park(beat);
+        await beat(2000);
+      },
+    });
+  }
+
+  // ----------------------------------------------------------- struggle demo
+
+  // A field typed into and cleared twice, and the hint that follows.
+  function initStruggleDemo() {
+    const demo = $('[data-demo="struggle"]');
+    if (!demo) return;
+
+    const text = $('.sdemo-text', demo);
+    const field = $('.sdemo-field', demo);
+    const step = $('.sdemo-step', demo);
+    const hand = pointerFor(demo);
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    ambient(demo, {
+      still: () => {
+        text.textContent = 'ORD 2481';
+        demo.classList.add('hinting');
+        say('Hint offered');
+      },
+      run: async (beat) => {
+        const type = async (str, speed = 75) => {
+          for (const ch of str) {
+            text.textContent += ch;
+            await beat(speed);
+          }
+        };
+
+        const clear = async (speed = 45) => {
+          while (text.textContent) {
+            text.textContent = text.textContent.slice(0, -1);
+            await beat(speed);
+          }
+        };
+
+        demo.classList.remove('hinting');
+        text.textContent = '';
+        say('Watching');
+        await beat(700);
+
+        // someone clicks into the field before any of this happens
+        await hand.tap(field, beat, () => say('Typing'));
+        await hand.park(beat);
+        await type('2481');
+        await beat(800);
+
+        say('Cleared');
+        await clear();
+        await beat(500);
+
+        say('Typing again');
+        await type('ord 2481');
+        await beat(900);
+
+        say('Cleared again');
+        await clear();
+        await beat(400);
+
+        // the hint lands while the third attempt is still sitting in the field
+        say('Trying again');
+        await type('ORD 2481');
+        await beat(700);
+
+        say('Hint offered');
+        demo.classList.add('hinting');
+        await beat(3400);
+      },
+    });
+  }
+
+  // -------------------------------------------------------------- batch demo
+
+  // Three images rotated by hand, then the offer to finish the other seven.
+  function initBatchDemo() {
+    const demo = $('[data-demo="batch"]');
+    if (!demo) return;
+
+    const tiles = $$('.bdemo-tile', demo);
+    const btn = $('.bdemo-btn', demo);
+    const step = $('.bdemo-step', demo);
+    const hand = pointerFor(demo);
+    const BY_HAND = 3;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    ambient(demo, {
+      still: () => {
+        tiles.slice(0, BY_HAND).forEach((t) => t.classList.add('turned'));
+        demo.classList.add('asking');
+        say('Offer made');
+      },
+      run: async (beat) => {
+        tiles.forEach((t) => t.classList.remove('turned'));
+        demo.classList.remove('asking', 'taken');
+        say('Watching');
+        await beat(900);
+
+        for (let i = 0; i < BY_HAND; i += 1) {
+          await hand.tap(tiles[i], beat, () => {
+            tiles[i].classList.add('turned');
+            say(`Rotated by hand \u00b7 ${i + 1}`);
+          });
+        }
+
+        say('Same edit, three times');
+        await beat(500);
+
+        demo.classList.add('asking');
+        say('Offer made');
+        await beat(1400);
+
+        await hand.tap(btn, beat, () => demo.classList.add('taken'));
+
+        // the other seven follow, staggered, so the batch reads as one action
+        for (let i = BY_HAND; i < tiles.length; i += 1) {
+          tiles[i].classList.add('turned');
+          await beat(90);
+        }
+        say('Applied to the other 7');
+        await hand.park(beat);
+        await beat(2600);
+      },
+    });
+  }
+
+  // ------------------------------------------------------------- resume demo
+
+  // Three fields filled, the page left at the fourth, and the return landing
+  // on that field rather than at the top of the form.
+  function initResumeDemo() {
+    const demo = $('[data-demo="resume"]');
+    if (!demo) return;
+
+    const row = (key) => $(`.rdemo-row[data-f="${key}"]`, demo);
+    const value = (key) => $('.rdemo-v', row(key));
+    const step = $('.rdemo-step', demo);
+    const hand = pointerFor(demo);
+
+    const FILLED = [
+      ['name', 'Nijin Muhammed'],
+      ['phone', '98470 12345'],
+      ['address', 'Kozhikode, Kerala'],
+    ];
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    const focus = (key) => {
+      $$('.rdemo-row', demo).forEach((r) => r.classList.remove('on'));
+      if (key) row(key).classList.add('on');
+    };
+
+    ambient(demo, {
+      still: () => {
+        FILLED.forEach(([k, v]) => (value(k).textContent = v));
+        demo.dataset.state = 'back';
+        row('pin').classList.add('here');
+        say('Back where you were');
+      },
+      run: async (beat) => {
+        demo.dataset.state = 'filling';
+        $$('.rdemo-row', demo).forEach((r) => r.classList.remove('here', 'on'));
+        FILLED.forEach(([k]) => (value(k).textContent = ''));
+        say('Filling the form');
+        await beat(800);
+
+        for (const [key, text] of FILLED) {
+          await hand.tap(row(key), beat, () => focus(key));
+          const box = value(key);
+          for (const ch of text) {
+            box.textContent += ch;
+            await beat(52);
+          }
+          await beat(420);
+        }
+
+        // the last field is the one the answer has to be fetched for
+        await hand.tap(row('pin'), beat, () => {
+          focus('pin');
+          say('Needs the PIN');
+        });
+        await hand.park(beat);
+        await beat(500);
+
+        demo.dataset.state = 'away';
+        say('Left the page');
+        await beat(2400);
+
+        demo.dataset.state = 'back';
+        focus('pin');
+        row('pin').classList.add('here');
+        say('Back on the field, not the top of the form');
+        await beat(3600);
+      },
+    });
+  }
+
+  // ------------------------------------------------------------- search demo
+
+  // The query is typed, the dead end is shown, and then the same failure is
+  // answered with the one change worth offering.
+  function initSearchDemo() {
+    const demo = $('[data-demo="search"]');
+    if (!demo) return;
+
+    const query = demo.dataset.query;
+    const box = $('.qdemo-q', demo);
+    const go = $('.qdemo-go', demo);
+    const field = $('.qdemo-field', demo);
+    const cta = $('.qdemo-cta', demo);
+    const step = $('.qdemo-step', demo);
+    const hand = pointerFor(demo);
+    const hits = $$('.qdemo-hit', demo).length;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    ambient(demo, {
+      still: () => {
+        box.textContent = query;
+        demo.dataset.state = 'help';
+        say('The same failure, answered');
+      },
+      run: async (beat) => {
+        demo.dataset.state = 'idle';
+        box.textContent = '';
+        say('Watching');
+        await beat(800);
+
+        await hand.tap(field, beat, () => {
+          demo.dataset.state = 'typing';
+          say('Typing the query');
+        });
+        await hand.park(beat);
+        for (const ch of query) {
+          box.textContent += ch;
+          await beat(48);
+        }
+        await beat(500);
+
+        await hand.tap(go, beat, () => {
+          demo.dataset.state = 'help';
+          say('Nothing matched, and here is why');
+        });
+        await hand.park(beat);
+        await beat(2400);
+
+        await hand.tap(cta, beat, () => {
+          demo.dataset.state = 'results';
+          say(`${hits} results, no retyping`);
+        });
+        await hand.park(beat);
+        await beat(3400);
+      },
+    });
+  }
+
+  // --------------------------------------------------------------- zoom demo
+
+  // The same card opened two ways. The hero panel is placed exactly over the
+  // card, then grown to fill the screen — so the thing that was clicked is the
+  // thing that arrives, rather than a new screen replacing it.
+  function initZoomDemo() {
+    const demo = $('[data-demo="zoom"]');
+    if (!demo) return;
+
+    const stage = $('.zdemo-stage', demo);
+    const card = $('.zdemo-card.is-hero', demo);
+    const hero = $('.zdemo-hero', demo);
+    const step = $('.zdemo-step', demo);
+    const hand = pointerFor(demo);
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    // sit the hero exactly on the card it came from
+    const overCard = () => {
+      const s0 = stage.getBoundingClientRect();
+      const c = card.getBoundingClientRect();
+      hero.style.left = `${c.left - s0.left}px`;
+      hero.style.top = `${c.top - s0.top}px`;
+      hero.style.width = `${c.width}px`;
+      hero.style.height = `${c.height}px`;
+    };
+
+    // opening stops short of the edges, so the panel still reads as sitting on
+    // the page it grew out of
+    const fillStage = () => {
+      const inset = 10;
+      hero.style.left = `${inset}px`;
+      hero.style.top = `${inset}px`;
+      hero.style.width = `${stage.clientWidth - inset * 2}px`;
+      hero.style.height = `${stage.clientHeight - inset * 2}px`;
+    };
+
+    ambient(demo, {
+      still: () => {
+        overCard();
+        fillStage();
+        demo.dataset.state = 'open';
+        say('The same card, opened');
+      },
+      run: async (beat) => {
+        demo.dataset.state = 'grid';
+        overCard();
+        say('Watching');
+        await beat(1000);
+
+        // the card itself does the travelling
+        await hand.tap(card, beat, () => {
+          demo.dataset.state = 'opening';
+          // the hero starts on the card, so the growth reads as one object
+          overCard();
+          requestAnimationFrame(() => {
+            fillStage();
+            demo.dataset.state = 'open';
+          });
+          say('The same card, opened');
+        });
+        await hand.park(beat);
+        await beat(3000);
+
+        demo.dataset.state = 'opening';
+        overCard();
+        say('And back where it came from');
+        await beat(900);
+        demo.dataset.state = 'grid';
+        await beat(1400);
+      },
+    });
+  }
+
+  // --------------------------------------------------------------- next demo
+
+  // The same button twice: once saying nothing, once naming the step it leads
+  // to — and then going exactly there.
+  function initNextDemo() {
+    const demo = $('[data-demo="next"]');
+    if (!demo) return;
+
+    const go = $('.ndemo-go', demo);
+    const heading = $('.ndemo-h', demo);
+    const step = $('.ndemo-step', demo);
+    const hand = pointerFor(demo);
+
+    // the label is built from the step list, so it cannot promise a step that
+    // is not the one the button moves to
+    const STEPS = $$('.ndemo-stp', demo).map((el) => el.textContent.trim());
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    const at = (i) => {
+      demo.dataset.at = String(i);
+      heading.textContent = `${STEPS[i]} details`;
+      const next = STEPS[i + 1];
+      go.textContent = next ? `Continue to ${next.toLowerCase()}` : 'Place the order';
+    };
+
+    ambient(demo, {
+      still: () => {
+        at(1);
+        say('The button names the step it leads to');
+      },
+      run: async (beat) => {
+        at(1);
+        say('The button names the step it leads to');
+        await beat(1900);
+
+        await hand.tap(go, beat, () => {
+          at(2);
+          say('Exactly what it promised');
+        });
+        await hand.park(beat);
+        await beat(2600);
+      },
+    });
+  }
+
+  // -------------------------------------------------------------- retry demo
+
+  // Two tiles loaded, one did not. The retry reloads that tile and leaves the
+  // other two alone — which is the whole point, so nothing else may flicker.
+  function initRetryDemo() {
+    const demo = $('[data-demo="retry"]');
+    if (!demo) return;
+
+    const failed = $('.tdemo-tile[data-t="orders"]', demo);
+    const retry = $('.tdemo-retry', failed);
+    const step = $('.tdemo-step', demo);
+    const hand = pointerFor(demo);
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    ambient(demo, {
+      still: () => {
+        demo.dataset.state = 'failed';
+        say('One tile failed, the others are fine');
+      },
+      run: async (beat) => {
+        demo.dataset.state = 'failed';
+        say('Two loaded, one did not');
+        await beat(1600);
+
+        await hand.tap(retry, beat, () => {
+          demo.dataset.state = 'retrying';
+          say('Only that tile is asked again');
+        });
+        await hand.park(beat);
+        await beat(1700);
+
+        demo.dataset.state = 'done';
+        say('Back without reloading the page');
+        await beat(3200);
+      },
+    });
+  }
+
+  // ---------------------------------------------------------------- pay demo
+
+  // The press is answered immediately, and the button stops being a button
+  // until the request comes back.
+  function initPayDemo() {
+    const demo = $('[data-demo="pay"]');
+    if (!demo) return;
+
+    const btn = $('.pdemo-btn', demo);
+    const label = $('.pdemo-label', demo);
+    const step = $('.pdemo-step', demo);
+    const hand = pointerFor(demo);
+    const AMOUNT = $('.pdemo-total-v', demo).textContent.trim();
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    ambient(demo, {
+      still: () => {
+        demo.dataset.state = 'done';
+        label.textContent = 'Payment complete';
+        say('The press was answered');
+      },
+      run: async (beat) => {
+        demo.dataset.state = 'ready';
+        label.textContent = `Pay ${AMOUNT}`;
+        say('Watching');
+        await beat(900);
+
+        await hand.tap(btn, beat, () => {
+          demo.dataset.state = 'busy';
+          label.textContent = 'Processing\u2026';
+          say('Answered on the press, and locked');
+        });
+
+        // a second press while it is working, which the button refuses
+        await hand.tap(btn, beat, () => {
+          demo.classList.add('refused');
+          say('A second press does nothing');
+        });
+        await beat(500);
+        demo.classList.remove('refused');
+        await beat(1400);
+
+        demo.dataset.state = 'done';
+        label.textContent = 'Payment complete';
+        say('Charged once');
+        await hand.park(beat);
+        await beat(2800);
+      },
+    });
+  }
+
+  // --------------------------------------------------------------- wait demo
+
+  // The same wait, told three ways as it gets longer. The clock is real: it
+  // counts the beats the loop has actually spent waiting.
+  function initWaitDemo() {
+    const demo = $('[data-demo="wait"]');
+    if (!demo) return;
+
+    const msg = $('.wdemo-msg', demo);
+    const sub = $('.wdemo-sub', demo);
+    const clock = $('.wdemo-clock', demo);
+    const step = $('.wdemo-step', demo);
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    const STAGES = [
+      { at: 0, state: 'short', msg: 'Loading\u2026', sub: 'Fetching your report', trace: 'Under two seconds: say nothing else' },
+      { at: 2.4, state: 'mid', msg: 'Still working\u2026', sub: 'The report is large', trace: 'A few seconds in: still working' },
+      { at: 6, state: 'long', msg: 'This is taking longer than usual', sub: 'You can keep waiting, or try again', trace: 'Longer than usual: say so, and offer a way out' },
+    ];
+
+    const paint = (st) => {
+      demo.dataset.state = st.state;
+      msg.textContent = st.msg;
+      sub.textContent = st.sub;
+      say(st.trace);
+    };
+
+    ambient(demo, {
+      still: () => {
+        paint(STAGES[2]);
+        clock.textContent = '9.0s';
+      },
+      run: async (beat) => {
+        let t = 0;
+        paint(STAGES[0]);
+        clock.textContent = '0.0s';
+
+        // one tick every 200ms, so the copy changes on the clock, not on a cue
+        while (t < 9) {
+          await beat(200);
+          t += 0.2;
+          clock.textContent = `${t.toFixed(1)}s`;
+          const stage = STAGES.filter((x) => t >= x.at).pop();
+          if (stage && demo.dataset.state !== stage.state) paint(stage);
+        }
+        await beat(1600);
+      },
+    });
+  }
+
+  // ----------------------------------------------------------- prefetch demo
+
+  // The mechanism, drawn on one axis: the request starts on the hover and
+  // finishes before the click, so the click has nothing left to wait for.
+  // Every mark is positioned from DEMO_TRACE, so the picture cannot disagree
+  // with the numbers printed on it.
+  function initPrefetchDemo() {
+    const demo = $('[data-demo="prefetch"]');
+    if (!demo) return;
+
+    const t = DEMO_TRACE;
+    const card = $('.hdemo-card.is-target', demo);
+    const bar = $('.hdemo-bar', demo);
+    const step = $('.hdemo-step', demo);
+    const hand = pointerFor(demo);
+    const pct = (ms) => `${(ms / t.span) * 100}%`;
+
+    const mark = (name) => $(`.hdemo-mark[data-m="${name}"]`, demo);
+
+    // lay the trace out once; the loop only reveals it
+    mark('hover').style.left = pct(t.hover);
+    mark('click').style.left = pct(t.click);
+    mark('ready').style.left = pct(t.hover + t.request);
+    mark('paint').style.left = pct(t.click);
+    bar.style.left = pct(t.hover);
+    $('em', bar).textContent = `GET /desk-clock \u00b7 ${t.request}\u2009ms`;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    const show = (name) => mark(name).classList.add('on');
+    const clear = () => {
+      $$('.hdemo-mark', demo).forEach((m) => m.classList.remove('on'));
+      bar.style.width = '0%';
+      bar.classList.remove('grow');
+    };
+
+    ambient(demo, {
+      still: () => {
+        demo.dataset.state = 'open';
+        card.classList.add('hover', 'open');
+        bar.style.width = pct(t.request);
+        ['hover', 'ready', 'click', 'paint'].forEach(show);
+        say('The request fits in the gap before the click');
+      },
+      run: async (beat) => {
+        demo.dataset.state = 'idle';
+        card.classList.remove('hover', 'open');
+        clear();
+        say('Watching');
+        await beat(900);
+
+        // the hover is the event that starts the fetch
+        await hand.hover(card, beat, () => {
+          card.classList.add('hover');
+          demo.dataset.state = 'fetching';
+          show('hover');
+          say('Hover: the request starts here');
+        });
+        bar.classList.add('grow');
+        bar.style.width = pct(t.request);
+        await beat(1500);
+
+        show('ready');
+        say(`Answered in ${t.request}\u2009ms, while the pointer is still on the card`);
+        await beat(1400);
+
+        await hand.tap(card, beat, () => {
+          show('click');
+          show('paint');
+          card.classList.add('open');
+          demo.dataset.state = 'open';
+          say('Click: painted from cache, nothing to wait for');
+        });
+        await hand.park(beat);
+        await beat(3000);
+      },
+    });
+  }
+
+  // -------------------------------------------------------------- human demo
+
+  // The check that replaces the CAPTCHA, drawn as it runs: signals land while
+  // the form is being filled, the score is the sum of their weights, and the
+  // challenge is skipped only once that sum clears the threshold.
+  function initHumanDemo() {
+    const demo = $('[data-demo="human"]');
+    if (!demo) return;
+
+    const value = $('.gdemo-v', demo);
+    const go = $('.gdemo-go', demo);
+    const fill = $('.gdemo-fill', demo);
+    const score = $('.gdemo-score', demo);
+    const step = $('.gdemo-step', demo);
+    const hand = pointerFor(demo);
+    const field = $('.gdemo-input', demo);
+
+    const EMAIL = 'nijin@studio.in';
+    const TOTAL = DEMO_SIGNALS.reduce((n, g) => n + g.weight, 0);
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    // one number, used for the bar, the label and the decision
+    let sum = 0;
+    const paint = () => {
+      fill.style.width = `${sum}%`;
+      score.textContent = String(sum);
+      demo.dataset.pass = sum >= DEMO_THRESHOLD ? 'yes' : 'no';
+    };
+
+    const land = (key) => {
+      const g = DEMO_SIGNALS.find((x) => x.key === key);
+      $(`.gdemo-sig[data-s="${key}"]`, demo).classList.add('on');
+      sum += g.weight;
+      paint();
+    };
+
+    const reset = () => {
+      $$('.gdemo-sig', demo).forEach((el) => el.classList.remove('on'));
+      sum = 0;
+      paint();
+      value.textContent = '';
+      demo.dataset.state = 'idle';
+    };
+
+    ambient(demo, {
+      still: () => {
+        $$('.gdemo-sig', demo).forEach((el) => el.classList.add('on'));
+        sum = TOTAL;
+        paint();
+        value.textContent = EMAIL;
+        demo.dataset.state = 'in';
+        say(`Score ${TOTAL} of 100 \u2014 no challenge shown`);
+      },
+      run: async (beat) => {
+        reset();
+        say('Nothing asked of the user yet');
+        await beat(900);
+
+        // moving the pointer is itself one of the signals
+        await hand.tap(field, beat, () => {
+          demo.dataset.state = 'typing';
+          land('pointer');
+          say('The way the pointer moved is the first signal');
+        });
+        await hand.park(beat);
+        await beat(400);
+
+        for (const ch of EMAIL) {
+          value.textContent += ch;
+          await beat(58);
+        }
+        land('typing');
+        say('Typing rhythm looks human, not scripted');
+        await beat(900);
+
+        land('nav');
+        await beat(600);
+        land('device');
+        // the wording is read off the same comparison the code makes
+        say(`Score ${sum} \u2014 ${sum >= DEMO_THRESHOLD ? 'over' : 'still under'} the threshold`);
+        await beat(1100);
+
+        await hand.tap(go, beat, () => {
+          land('timing');
+          say(`Score ${sum} of 100 \u2014 ${sum >= DEMO_THRESHOLD ? 'over' : 'under'} the threshold`);
+        });
+        await beat(700);
+
+        demo.dataset.state = 'in';
+        say('Signed in, with no CAPTCHA to solve');
+        await hand.park(beat);
+        await beat(3000);
+      },
+    });
+  }
+
+  // ------------------------------------------------------------- anchor demo
+
+  // Something loads above the line being read. The slot grows by DEMO_SHIFT and
+  // the document is pushed up by the same DEMO_SHIFT in the same breath, so the
+  // line stays exactly where the reader left it — the guide proves it.
+  function initAnchorDemo() {
+    const demo = $('[data-demo="anchor"]');
+    if (!demo) return;
+
+    const doc = $('.ldemo-doc', demo);
+    const slot = $('.ldemo-slot', demo);
+    const read = $('.ldemo-p.is-read', demo);
+    const guide = $('.ldemo-guide', demo);
+    const step = $('.ldemo-step', demo);
+
+    const GUIDE_Y = 208;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    // park the read line on the guide, whatever the type happens to measure
+    const rest = () => {
+      // collapse without animating, or offsetTop is read mid-transition and the
+      // line lands wherever the half-finished height happens to put it
+      slot.style.transition = 'none';
+      slot.style.height = '0px';
+      doc.style.transition = 'none';
+      doc.style.transform = 'translateY(0)';
+      guide.style.top = `${GUIDE_Y}px`;
+      const top = read.offsetTop;
+      doc.style.transform = `translateY(${GUIDE_Y - top}px)`;
+      void doc.offsetHeight;
+      slot.style.transition = '';
+      return GUIDE_Y - top;
+    };
+
+    ambient(demo, {
+      still: () => {
+        const y = rest();
+        slot.style.height = `${DEMO_SHIFT}px`;
+        doc.style.transform = `translateY(${y - DEMO_SHIFT}px)`;
+        demo.dataset.state = 'after';
+        say('The line stayed where it was');
+      },
+      run: async (beat) => {
+        const y = rest();
+        demo.dataset.state = 'before';
+        say('Reading, part way down the page');
+        await beat(1600);
+
+        // the two halves of the correction run together, on the same curve
+        demo.dataset.state = 'loading';
+        doc.style.transition = 'transform 0.5s var(--ease-out)';
+        slot.style.height = `${DEMO_SHIFT}px`;
+        doc.style.transform = `translateY(${y - DEMO_SHIFT}px)`;
+        say(`An image loads above it \u2014 ${DEMO_SHIFT}\u2009px of new page`);
+        await beat(900);
+
+        demo.dataset.state = 'after';
+        say(`Scroll corrected by the same ${DEMO_SHIFT}\u2009px`);
+        await beat(1500);
+
+        say('The line you were reading never moved');
+        await beat(3000);
+      },
+    });
+  }
+
+  // --------------------------------------------------------------- undo demo
+
+  // A real stack: every action pushes an entry that knows how to reverse
+  // itself, and the key pops the top one and runs it. The list on the right is
+  // that array, rendered.
+  function initUndoDemo() {
+    const demo = $('[data-demo="undo"]');
+    if (!demo) return;
+
+    const list = $('.udemo-list', demo);
+    const stackEl = $('.udemo-stack', demo);
+    const key = $('.udemo-key', demo);
+    const step = $('.udemo-step', demo);
+    const hand = pointerFor(demo);
+    const START = list.innerHTML;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    let stack = [];
+
+    const paintStack = () => {
+      stackEl.innerHTML = stack
+        .map(
+          (e, i) => `<li class="udemo-entry${i === 0 ? ' is-next' : ''}">
+            ${i === 0 ? icon('undo', 'udemo-entry-i') : ''}${e.label}
+          </li>`
+        )
+        .join('');
+      demo.dataset.stack = String(stack.length);
+    };
+
+    const push = (label, undo) => {
+      stack.unshift({ label, undo });
+      paintStack();
+    };
+
+    const row = (id) => $(`.udemo-row[data-id="${id}"]`, demo);
+
+    // the three actions, each paired with the step that reverses it
+    const remove = (id) => {
+      const el = row(id);
+      const before = el.nextElementSibling;
+      const name = $('.udemo-nt', el).textContent;
+      el.classList.add('going');
+      setTimeout(() => el.remove(), 220);
+      push(`Deleted &ldquo;${name}&rdquo;`, () => {
+        el.classList.remove('going');
+        list.insertBefore(el, before);
+      });
+    };
+
+    const moveUp = (id) => {
+      const el = row(id);
+      const prev = el.previousElementSibling;
+      const name = $('.udemo-nt', el).textContent;
+      list.insertBefore(el, prev);
+      el.classList.add('moved');
+      setTimeout(() => el.classList.remove('moved'), 500);
+      push(`Moved &ldquo;${name}&rdquo; up`, () => list.insertBefore(el, prev.nextElementSibling));
+    };
+
+    const markDone = (id) => {
+      const el = row(id);
+      const name = $('.udemo-nt', el).textContent;
+      el.classList.add('is-done');
+      push(`Marked &ldquo;${name}&rdquo; done`, () => el.classList.remove('is-done'));
+    };
+
+    const undoOne = async (beat) => {
+      if (!stack.length) return;
+      key.classList.add('down');
+      await beat(180);
+      const entry = stack.shift();
+      entry.undo();
+      paintStack();
+      await beat(160);
+      key.classList.remove('down');
+      await beat(420);
+    };
+
+    ambient(demo, {
+      still: () => {
+        list.innerHTML = START;
+        stack = [];
+        paintStack();
+        markDone(3);
+        say('Every action leaves something to undo');
+      },
+      run: async (beat) => {
+        list.innerHTML = START;
+        stack = [];
+        paintStack();
+        say('Watching');
+        await beat(900);
+
+        await hand.tap(row(1), beat, () => {
+          remove(1);
+          say('Deleted \u2014 one entry on the stack');
+        });
+        await beat(700);
+
+        await hand.tap(row(3), beat, () => {
+          moveUp(3);
+          say('Moved \u2014 two');
+        });
+        await beat(700);
+
+        await hand.tap(row(0), beat, () => {
+          markDone(0);
+          say('Changed \u2014 three');
+        });
+        await hand.park(beat);
+        await beat(1200);
+
+        say('\u2318Z takes the top entry off and reverses it');
+        await undoOne(beat);
+        await beat(600);
+        await undoOne(beat);
+        await beat(600);
+        await undoOne(beat);
+
+        say('Back to where it started, with nothing confirmed on the way');
+        await beat(2800);
+      },
+    });
+  }
+
   // ------------------------------------------------------------- github graph
 
   const GH_CACHE = 'gh-contrib-cache';
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const LEVELS = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
+  const LEVEL_NAMES = ['NONE', 'FIRST_QUARTILE', 'SECOND_QUARTILE', 'THIRD_QUARTILE', 'FOURTH_QUARTILE'];
+
+  // The API hands back one flat list of days; the painter wants columns of
+  // weeks starting on Sunday, with GitHub's own field names.
+  function normaliseGitHub(raw) {
+    const days = (raw && raw.contributions) || [];
+    if (!days.length) throw new Error('unexpected shape');
+
+    const weeks = [];
+    let week = [];
+    days.forEach((d) => {
+      const dow = new Date(d.date + 'T00:00:00').getDay();
+      if (dow === 0 && week.length) {
+        weeks.push(week);
+        week = [];
+      }
+      week.push({
+        date: d.date,
+        contributionCount: d.count || 0,
+        contributionLevel: LEVEL_NAMES[d.level] || 'NONE',
+      });
+    });
+    if (week.length) weeks.push(week);
+
+    // the year rarely starts on a Sunday, so the first column is short. Pad it
+    // at the top with blanks, otherwise every cell in it sits one or more rows
+    // too high and the whole first week reads against the wrong weekday.
+    if (weeks.length) {
+      const firstDow = new Date(weeks[0][0].date + 'T00:00:00').getDay();
+      for (let i = 0; i < firstDow; i++) weeks[0].unshift(null);
+    }
+
+    const total = (raw.total && (raw.total.lastYear ?? Object.values(raw.total)[0])) || 0;
+    return { contributions: weeks, totalContributions: total };
+  }
 
   function paintGitHub(data, cached) {
     const el = $('#gh');
@@ -1113,52 +2256,54 @@
 
     const total = data.totalContributions || 0;
 
+    // one label per month, placed on the column where that month first appears
     let months = '';
     let last = -1;
     weeks.forEach((w, col) => {
-      const d = new Date(w[0].date);
+      const first = w.find(Boolean);
+      if (!first) return;
+      const d = new Date(first.date + 'T00:00:00');
       if (d.getMonth() !== last) {
         months += `<span style="grid-column-start:${col + 1}">${MONTHS[d.getMonth()]}</span>`;
         last = d.getMonth();
       }
     });
 
-    const cells = weeks
-      .map((w) =>
-        w
-          .map((d) => {
-            const lvl = LEVELS[d.contributionLevel] ?? 0;
-            const n = d.contributionCount || 0;
-            const date = new Date(d.date).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            });
-            const tip = n === 0 ? `No contributions on ${date}` : `${n} contribution${n > 1 ? 's' : ''} on ${date}`;
-            return `<div class="gh-cell" data-l="${lvl}" data-tip="${esc(tip)}"></div>`;
-          })
-          .join('')
-      )
-      .join('');
+    // emitted row-major (a weekday at a time) rather than column-major, so the
+    // grid can flow by row and let each row take its height from the cells'
+    // aspect-ratio — that is what lets the columns be 1fr and fill the card.
+    const cell = (d) => {
+      if (!d) return `<div class="gh-cell gh-pad"></div>`;
+      const lvl = LEVELS[d.contributionLevel] ?? 0;
+      const n = d.contributionCount || 0;
+      const date = new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+      const tip = n === 0 ? `No contributions on ${date}` : `${n} contribution${n > 1 ? 's' : ''} on ${date}`;
+      return `<div class="gh-cell" data-l="${lvl}" data-tip="${esc(tip)}"></div>`;
+    };
+
+    let cells = '';
+    for (let row = 0; row < 7; row++) {
+      for (let col = 0; col < weeks.length; col++) cells += cell(weeks[col][row]);
+    }
+
+    const cols = `grid-template-columns:repeat(${weeks.length},1fr)`;
 
     el.innerHTML = `
-      <div class="gh-head">
-        <h3 class="gh-title">
-          ${icon('github')}
-          <a href="https://github.com/${esc(PROFILE.github)}" target="_blank" rel="noopener">@${esc(PROFILE.github)}</a>
-        </h3>
-        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last year</span>
-      </div>
       <div class="gh-scroll">
         <div class="gh-wrap">
-          <div class="gh-months" style="grid-template-columns:repeat(${weeks.length},1fr)">${months}</div>
+          <div class="gh-months" style="${cols}">${months}</div>
           <div class="gh-body">
             <div class="gh-days"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-            <div class="gh-grid" style="grid-template-columns:repeat(${weeks.length},1fr)">${cells}</div>
+            <div class="gh-grid" style="${cols}">${cells}</div>
           </div>
         </div>
       </div>
       <div class="gh-foot">
+        <span class="gh-stat"><strong>${total.toLocaleString()}</strong> contributions in the last year</span>
         <span class="gh-cached">${cached ? 'Showing cached data, as GitHub is unreachable right now.' : ''}</span>
         <span class="gh-legend">
           Less
@@ -1201,9 +2346,10 @@
     }
 
     // 2. always revalidate in the background
-    fetch(`https://github-contributions-api.deno.dev/${PROFILE.github}.json`)
+    fetch(`https://github-contributions-api.jogruber.de/v4/${PROFILE.github}?y=last`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
-      .then((data) => {
+      .then((raw) => {
+        const data = normaliseGitHub(raw);
         paintGitHub(data, false);
         try {
           localStorage.setItem(GH_CACHE, JSON.stringify({ ts: Date.now(), data }));
@@ -1230,12 +2376,20 @@
   let palItems = [];
 
   const searchable = () => [
-    { name: 'Index', desc: 'All projects', path: '', icon: 'home' },
-    { name: 'Writings', desc: 'Notes and write-ups', path: 'writings', icon: 'book' },
-    { name: "Things I'm Exploring", desc: 'Ideas and topics on my radar', path: 'exploring', icon: 'map' },
+    { name: 'Index', desc: 'All products', path: '', icon: 'home' },
+    { name: 'UX Findings', desc: 'Findings, teardowns and notes', path: 'findings', icon: 'book' },
+    // { name: 'Graphic Design', desc: 'Posters and print work', path: 'graphics', icon: 'image' },  — hidden for now
+    { name: 'About', desc: 'Experience, education, clients', path: 'about', icon: 'home' },
     { name: 'Contact', desc: 'Get in touch', path: 'contact', icon: 'mail' },
     ...PROJECTS.map((p) => ({ name: p.name, desc: p.summary, path: `docs/${p.slug}`, icon: p.icon, tag: p.tag })),
     ...DESIGNS.map((d) => ({ name: d.name, desc: d.summary, path: `designs/${d.slug}`, icon: d.icon, tag: d.tag })),
+    ...FINDINGS.map((f) => ({
+      name: f.title,
+      desc: f.summary || '',
+      path: `findings/${f.slug}`,
+      icon: f.icon || 'book',
+      tag: f.kind || f.category || '',
+    })),
   ];
 
   function paintPalette(q = '') {
@@ -1250,18 +2404,16 @@
     palIndex = 0;
     const res = $('#pal-res');
     if (!palItems.length) {
-      res.innerHTML = `<div class="pal-empty">No projects match “${esc(q)}”</div>`;
+      res.innerHTML = `<div class="pal-empty">No products match “${esc(q)}”</div>`;
       return;
     }
     res.innerHTML = palItems
       .map(
         (it, i) => `<div class="pal-item" role="option" aria-selected="${i === 0}" data-i="${i}">
           <span class="pal-ico">${icon(it.icon)}</span>
-          <span class="pal-text">
-            <span class="pal-name">${esc(it.name)}</span>
-            <span class="pal-desc">${esc(it.desc)}</span>
-          </span>
-          ${it.tag ? `<span class="pal-hint">${esc(it.tag)}</span>` : ''}
+          <span class="pal-item-name">${esc(it.name)}</span>
+          <span class="pal-item-desc">${esc(it.desc)}</span>
+          ${it.tag ? `<span class="pal-item-tag">${esc(it.tag)}</span>` : ''}
         </div>`
       )
       .join('');
@@ -1327,7 +2479,7 @@
 
     $('#view').innerHTML = `
       <div class="view">
-        <article>
+        <article class="doc-article read-doc">
           <header class="doc-head">
             <nav class="crumbs" aria-label="Breadcrumb">
               <a href="${href('')}" data-link>Index</a>
@@ -1340,7 +2492,7 @@
             <p class="doc-lede">Legal documentation for ${esc(p.name)}.</p>
           </header>
 
-          <div class="prose">${renderBlocks(blocks)}</div>
+          <div class="prose read-prose">${renderBlocks(blocks)}</div>
         </article>
       </div>`;
 
@@ -1352,261 +2504,657 @@
   // ------------------------------------------------------------- render
 
   function render() {
-    const path = currentPath();
+    let path = currentPath();
+
+    // /projects was renamed to /products. Netlify 301s the real request, but
+    // an in-app link or a back/forward entry can still land here, so swap it
+    // and rewrite history rather than rendering a 404.
+    if (path === 'projects' || path.startsWith('projects/')) {
+      path = 'products' + path.slice('projects'.length);
+      history.replaceState(null, '', href(path));
+    }
+
+    // /writings was renamed to /findings, article slugs unchanged. Same reason
+    // as above: Netlify 301s a real request, this catches in-app history.
+    if (path === 'writings' || path.startsWith('writings/')) {
+      path = 'findings' + path.slice('writings'.length);
+      history.replaceState(null, '', href(path));
+    }
+
+    // /exploring is gone — its toolkit is the Tools row on /about. Netlify
+    // 301s a real request; this catches in-app history the same way.
+    if (path === 'exploring') {
+      path = 'about';
+      history.replaceState(null, '', href(path));
+    }
+
     closeNav();
     asyncToken++;
+
+    // no page carries the library sidebar any more: a case study is a document,
+    // and the list of every other case study beside it was competing with it.
+    // The same list is still the mobile drawer, which is where it earns itself.
+    document.body.classList.remove('with-sidebar');
+
+    // topnav active state
+    const navKey = path.startsWith('designs') ? 'designs'
+      : path.startsWith('docs/') || path === 'products' ? 'products'
+      : path.startsWith('findings') ? 'findings'
+      : path === 'graphics' ? 'graphics'
+      : path === 'about' ? 'about'
+      : '';
+    $$('.topnav a').forEach((a) => a.classList.toggle('active', a.dataset.nav === navKey));
 
     if (path === '' || path === 'index.html') {
       viewHome();
     } else if (path === 'contact') {
       viewContact();
+    } else if (path === 'about') {
+      whenLoaded(() => pageReady('about'), viewAbout, 'About');
+    } else if (path === 'graphics') {
+      whenLoaded(() => pageReady('graphics'), viewGraphics, 'Graphic Design');
+    } else if (path === 'designs') {
+      viewDirectory(DESIGNS, 'designs');
+    } else if (path === 'products') {
+      viewDirectory(PROJECTS, 'docs');
     } else if (path === 'building') {
       viewNotFound();
-    } else if (path === 'writings') {
-      viewWritings();
-    } else if (path.startsWith('writings/')) {
-      const slug = path.slice('writings/'.length);
-      const token = asyncToken;
-      $('#view').innerHTML = `
-        <div class="view">
-          <article>
-            <header class="doc-head">
-              <nav class="crumbs" aria-label="Breadcrumb">
-                <a href="${href('')}" data-link>Index</a>
-                ${icon('chevronRight')}
-                <a href="${href('writings')}" data-link>Writings</a>
-              </nav>
-              <h1 class="doc-h1">Loading article…</h1>
-            </header>
-            <div class="prose"><p>Fetching article content from Medium…</p></div>
-          </article>
-        </div>`;
-      $('#toc').innerHTML = '';
-
-      fetchMediumPosts()
-        .then((posts) => {
-          if (token !== asyncToken) return;
-          const post = posts.find((p) => p.slug === slug);
-          if (post) {
-            viewWriting(post);
-          } else {
-            viewNotFound();
-          }
-        })
-        .catch(() => {
-          if (token !== asyncToken) return;
-          viewNotFound();
-        });
-    } else if (path === 'exploring') {
-      viewExploring();
+    } else if (path === 'findings') {
+      viewFindings();
+    } else if (path.startsWith('findings/')) {
+      const slug = path.slice('findings/'.length);
+      const f = FINDINGS.find((x) => x.slug === slug);
+      f ? whenLoaded(() => bodyReady(f), () => viewFinding(f), f.title) : viewNotFound();
     } else if (path.startsWith('docs/')) {
       const parts = path.slice(5).split('/');
       const slug = parts[0];
       const sub = parts[1];
       const p = bySlug(slug);
-      if (p) {
-        if (!sub) {
-          viewDoc(p);
-        } else if (sub === 'privacy' && p.privacyBlocks) {
-          viewDocSubPage(p, 'Privacy Policy', p.privacyBlocks);
-        } else if (sub === 'terms' && p.termsBlocks) {
-          viewDocSubPage(p, 'Terms of Service', p.termsBlocks);
-        } else {
-          viewNotFound();
-        }
+      if (!p) {
+        viewNotFound();
+      } else if (!sub) {
+        whenLoaded(() => bodyReady(p), () => viewDoc(p), shortName(p));
+      } else if (sub === 'privacy' || sub === 'terms') {
+        // the legal pages live in the same body file as the case study, so the
+        // body has to be here before we can tell whether they exist at all
+        whenLoaded(
+          () => bodyReady(p),
+          () => {
+            const blocks = sub === 'privacy' ? p.privacyBlocks : p.termsBlocks;
+            if (!blocks) return viewNotFound();
+            viewDocSubPage(p, sub === 'privacy' ? 'Privacy Policy' : 'Terms of Service', blocks);
+          },
+          sub === 'privacy' ? 'Privacy Policy' : 'Terms of Service'
+        );
       } else {
         viewNotFound();
       }
     } else if (path.startsWith('designs/')) {
       const slug = path.slice('designs/'.length);
       const d = designBySlug(slug);
-      d ? viewDoc(d, DESIGNS, 'designs') : viewNotFound();
+      d ? whenLoaded(() => bodyReady(d), () => viewDoc(d, DESIGNS, 'designs'), shortName(d)) : viewNotFound();
     } else {
       viewNotFound();
     }
 
     renderNav();
     window.scrollTo(0, 0);
-    updateProgress();
     updateCanonical(path);
+    if (window.trackPage) window.trackPage(path);
+    afterRender();
+  }
+
+  // everything that has to run against freshly painted markup. Called once per
+  // navigation, and again when a lazily loaded view swaps in over its
+  // skeleton. All of it is idempotent.
+  function afterRender() {
+    updateProgress();
     initImageFade($('#view'));
     animateHeading($('#view h1'));
-    initTilt3D($('#view'));
-    initMagnetic();
+    initReveal();
+    if (window.MeshGradient) window.MeshGradient.scan();
   }
 
-  // ------------------------------------------------------------- simple list pages
-
-  function viewListPage(title, lede, items, emptyText) {
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
-    $('#toc').innerHTML = '';
-
-    $('#view').innerHTML = `
-      <div class="view">
-        <article>
-          <header class="doc-head">
-            <h1 class="doc-h1">${esc(title)}</h1>
-            <p class="doc-lede">${esc(lede)}</p>
-          </header>
-          ${items.length ? `<div class="index">${buildRows(items)}</div>` : `<p class="sec-sub">${esc(emptyText)}</p>`}
-        </article>
-      </div>`;
-  }
-
-  function viewBuilding() {
-    const title = 'Building';
-    const lede = "Things I'm currently building or shipping, live from Threads.";
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
-    $('#toc').innerHTML = '';
-    $('#view').innerHTML = `
-      <div class="view">
-        <article>
-          <header class="doc-head">
-            <h1 class="doc-h1">${esc(title)}</h1>
-            <p class="doc-lede">${esc(lede)}</p>
-          </header>
-          <div id="building-body"><p class="sec-sub">Loading updates from Threads…</p></div>
-        </article>
-      </div>`;
-
+  // ---- lazy route helpers
+  //
+  // A detail page cannot paint until its body file has arrived, so it shows a
+  // skeleton of the right shape immediately and swaps in the real view when
+  // the body lands. `asyncToken` guards against a slow load painting over a
+  // page the visitor has since navigated to.
+  function whenLoaded(load, paint, describe) {
+    const ready = load();
+    if (ready.settled) return paint();
     const token = asyncToken;
-    fetchThreadsPosts()
-      .then((posts) => ({ posts, empty: 'Nothing posted on Threads yet — check back soon.' }))
-      .catch(() => ({ posts: BUILDING, empty: "Couldn't load updates from Threads right now — check back soon." }))
-      .then(({ posts, empty }) => {
+    paintSkeleton(describe);
+    afterRender();
+    ready
+      .then(() => {
         if (token !== asyncToken) return;
-        const body = $('#building-body');
-        if (!body) return;
-        body.innerHTML = posts.length ? buildThreadsCards(posts) : `<p class="sec-sub">${esc(empty)}</p>`;
+        paint();
+        afterRender();
+      })
+      .catch(() => {
+        if (token !== asyncToken) return;
+        paintLoadError(describe);
+        afterRender();
       });
   }
 
-  function viewWritings() {
-    const title = 'Writings';
-    const lede = 'Notes and write-ups on design and building products, live from Medium.';
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
+  // resolved-already promises let a cached entry paint synchronously, with no
+  // skeleton frame in between
+  const settled = (v) => {
+    const p = Promise.resolve(v);
+    p.settled = true;
+    return p;
+  };
+
+  const bodyReady = (entry) => (entry.blocks ? settled(entry) : loadBody(entry));
+  const pageReady = (key) => (PAGE_DATA[key] ? settled(PAGE_DATA[key]) : loadPage(key, PAGE_SRC[key]));
+
+  // a grey stand-in the size of the page that is coming, so the layout does
+  // not jump when the real thing arrives
+  function paintSkeleton(title) {
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
-        <article>
+        <article class="doc-article" aria-busy="true">
           <header class="doc-head">
-            <h1 class="doc-h1">${esc(title)}</h1>
-            <p class="doc-lede">${esc(lede)}</p>
+            <h1 class="doc-h1"><span>${esc(title || 'Loading')}</span></h1>
           </header>
-          <div id="writings-body"><p class="sec-sub">Loading posts from Medium…</p></div>
+          <div class="skeleton">
+            <span class="sk-line" style="width:92%"></span>
+            <span class="sk-line" style="width:86%"></span>
+            <span class="sk-line" style="width:64%"></span>
+            <span class="sk-figure"></span>
+            <span class="sk-line" style="width:90%"></span>
+            <span class="sk-line" style="width:72%"></span>
+          </div>
         </article>
       </div>`;
-
-    const token = asyncToken;
-    fetchMediumPosts()
-      .then((posts) => ({ posts, empty: 'Nothing published on Medium yet — check back soon.' }))
-      .catch(() => ({ posts: WRITINGS, empty: "Couldn't load posts from Medium right now — check back soon." }))
-      .then(({ posts, empty }) => {
-        if (token !== asyncToken) return;
-        const body = $('#writings-body');
-        if (!body) return;
-        body.innerHTML = posts.length ? `<div class="index">${buildRows(posts)}</div>` : `<p class="sec-sub">${esc(empty)}</p>`;
-      });
   }
 
-  function viewWriting(post) {
-    document.title = `${post.title} | ${PROFILE.name}`;
-    setDescription(post.desc);
+  function paintLoadError(title) {
+    $('#view').innerHTML = `
+      <div class="view">
+        <article class="doc-article">
+          <header class="doc-head">
+            <h1 class="doc-h1"><span>${esc(title || 'This page')}</span></h1>
+            <p class="doc-lede">This page could not be loaded. It may be a connection problem — reloading usually fixes it.</p>
+          </header>
+          <p><a class="btn btn-secondary" href="${href('')}" data-link>Back to the index</a></p>
+        </article>
+      </div>`;
+  }
+
+  // ------------------------------------------------------------- reveal
+
+  // fades grid items and big blocks up as they scroll into view, with a
+  // small stagger inside each row
+  let revealObserver = null;
+
+  function initReveal() {
+    if (reduceMotion() || !('IntersectionObserver' in window)) return;
+    revealObserver?.disconnect();
+    revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          en.target.classList.add('revealed');
+          revealObserver.unobserve(en.target);
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+    );
+
+    const els = $$(
+      '.acard, .pcard-wrap, .show-card, .news-item, .banner, .launch, .tool-pill, .tl-item',
+      $('#view')
+    );
+    const vh = window.innerHeight || 800;
+    els.forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.setProperty('--reveal-delay', `${(i % 4) * 60}ms`);
+      // anything already on screen reveals straight away — the observer only
+      // handles what's still below the fold (and can't be trusted to fire in
+      // prerendered/hidden tabs)
+      if (el.getBoundingClientRect().top < vh) {
+        // setTimeout, not rAF: rAF never fires in hidden/prerendered tabs
+        setTimeout(() => el.classList.add('revealed'), 30);
+      } else {
+        revealObserver.observe(el);
+      }
+    });
+  }
+
+  // ------------------------------------------------------------- directories
+
+  // /designs is laid out like an articles page (image cards); /products like
+  // a products page (tall cards, name below). Both open with the category
+  // pills, then the groups under mono labels.
+  function viewDirectory(items, basePath) {
+    const isDesigns = basePath === 'designs';
+    // the copy key stays 'projects': the route and labels were renamed to
+    // Products, the PAGE_COPY key in data.js was left alone
+    const copy = PAGECOPY(isDesigns ? 'designs' : 'projects');
+    const title = cms(copy.title, isDesigns ? 'Designs' : 'Products');
+    const lede = cms(
+      copy.lede,
+      isDesigns
+        ? 'Onboarding flows, paywalls, and full products. Every case study is backed by a real, running app.'
+        : 'Figma plugins, browser extensions, and network tools, designed, built, and shipped for real users.'
+    );
+
+    document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
+
+    const groups = isDesigns
+      ? groupBy(items, (d) => d.category || 'Design', ['Onboarding', 'Paywalls', 'Mobile App', 'Web'])
+      : groupBy(items, (p) => p.group || 'Products');
+
+    const grid = (g) =>
+      isDesigns
+        ? `<div class="acard-grid">${g.items.map(designCard).join('')}</div>`
+        : `<div class="pcard-grid">${g.items.map(projectCard).join('')}</div>`;
+
+    const pills = groups
+      .map(
+        (g) => `
+        <a class="cat-pill" href="#g-${slugify(g.name)}" data-scrollto="g-${slugify(g.name)}">
+          ${esc(g.name)} <span class="count">${g.items.length}</span>
+        </a>`
+      )
+      .join('');
 
     $('#view').innerHTML = `
       <div class="view">
-        <article>
+        <header class="page-head">
+          <h1 class="page-h1">${esc(title)}</h1>
+          <p class="page-lede">${esc(lede)}</p>
+        </header>
+
+        <div class="cat-row">${pills}</div>
+
+        <div class="dir-list">
+          ${groups
+            .map(
+              (g) => `
+            <div class="group-head" id="g-${slugify(g.name)}">
+              <h2 class="group-title">${esc(g.name)}</h2>
+              <span class="group-count">${g.items.length} ${
+                isDesigns ? (g.items.length === 1 ? 'case study' : 'case studies') : g.items.length === 1 ? 'product' : 'products'
+              }</span>
+            </div>
+            ${grid(g)}`
+            )
+            .join('')}
+        </div>
+      </div>`;
+
+    // category pills scroll to their group
+    $$('#view [data-scrollto]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById(a.dataset.scrollto)?.scrollIntoView({
+          behavior: reduceMotion() ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      });
+    });
+  }
+
+  // ------------------------------------------------------------- graphics
+
+  // Posters and other flat graphic work. Purely a showcase: a grid of images
+  // that open in the lightbox, grouped by category when one is set.
+  function viewGraphics() {
+    const copy = PAGECOPY('graphics');
+    const title = cms(copy.title, 'Graphic Design');
+    const lede = cms(copy.lede, 'Posters and print work, made for clients and for the fun of it.');
+
+    document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
+
+    // a poster without artwork has nothing to show, so it stays in the list in
+    // pages/graphics.js as a placeholder for its file and is skipped here
+    const posters = (PAGE_DATA.graphics || []).filter((p) => p.src);
+    const groups = groupBy(posters, (p) => p.category || '');
+
+    const card = (p) => `
+      <button class="poster" type="button" data-zoom aria-label="${esc(p.title || 'Open poster')}">
+        <span class="poster-frame"><img src="${esc(p.src)}" alt="${esc(p.title || '')}" loading="lazy"></span>
+        ${p.title ? `<p class="poster-title">${esc(p.title)}</p>` : ''}
+        <span class="poster-meta">${esc([p.client, p.year].filter(Boolean).join(' · '))}</span>
+      </button>`;
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <header class="page-head">
+          <h1 class="page-h1">${esc(title)}</h1>
+          <p class="page-lede">${esc(lede)}</p>
+        </header>
+
+        ${
+          posters.length
+            ? groups
+                .map(
+                  (g) => `
+            ${
+              g.name
+                ? `<div class="group-head">
+                     <h2 class="group-title">${esc(g.name)}</h2>
+                     <span class="group-count">${g.items.length} ${g.items.length === 1 ? 'piece' : 'pieces'}</span>
+                   </div>`
+                : ''
+            }
+            <div class="poster-grid" style="margin-top:28px">${g.items.map(card).join('')}</div>`
+                )
+                .join('')
+            : `<div class="strip"><span class="mono-label">Nothing here yet</span></div>
+               <p class="page-lede" style="padding:24px 0">
+                 Posters listed in pages/graphics.js appear here once they have artwork.
+               </p>`
+        }
+      </div>`;
+
+    initZoom();
+  }
+
+  // ------------------------------------------------------------- findings
+
+  // Articles — findings, teardowns, notes. A record in data.js, a body in
+  // findings/<slug>.js, rendered through the same block DSL as a case study.
+  // The grid is the designs grid: same card, same size as a product.
+  function viewFindings() {
+    const copy = PAGECOPY('findings');
+    const title = cms(copy.title, 'UX Findings');
+    const lede = cms(copy.lede, 'Findings, teardowns and notes from designing and building things.');
+
+    document.title = `${title} | ${PROFILE.name}`;
+    setDescription(lede);
+    $('#toc').innerHTML = '';
+
+    const items = FINDINGS.filter((f) => f && f.slug);
+    // findings group by theme rather than by surface, in a fixed reading order
+    const groups = groupBy(items, (w) => w.category || '', [
+      'Anticipation',
+      'Feedback',
+      'Recovery',
+      'Continuity',
+      'Friction',
+    ]);
+    const grouped = groups.length > 1 || (groups[0] && groups[0].name);
+
+    const pills = grouped
+      ? groups
+          .map(
+            (g) => `
+        <a class="cat-pill" href="#g-${slugify(g.name || 'finding')}" data-scrollto="g-${slugify(g.name || 'finding')}">
+          ${esc(g.name || 'Finding')} <span class="count">${g.items.length}</span>
+        </a>`
+          )
+          .join('')
+      : '';
+
+    const body = items.length
+      ? `
+        ${pills ? `<div class="cat-row">${pills}</div>` : ''}
+        <div class="dir-list">
+          ${groups
+            .map(
+              (g) => `
+            ${
+              grouped
+                ? `<div class="group-head" id="g-${slugify(g.name || 'finding')}">
+                     <h2 class="group-title">${esc(g.name || 'Finding')}</h2>
+                     <span class="group-count">${g.items.length} ${g.items.length === 1 ? 'article' : 'articles'}</span>
+                   </div>`
+                : ''
+            }
+            <div class="acard-grid">${g.items.map(findingCard).join('')}</div>`
+            )
+            .join('')}
+        </div>`
+      : `<div class="strip"><span class="mono-label">Nothing here yet</span></div>
+         <p class="page-lede" style="padding:24px 0">Findings added to data.js will appear here.</p>`;
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <header class="page-head">
+          <h1 class="page-h1">${esc(title)}</h1>
+          <p class="page-lede">${esc(lede)}</p>
+        </header>
+        ${body}
+      </div>`;
+
+    // category pills scroll to their group
+    $$('#view [data-scrollto]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById(a.dataset.scrollto)?.scrollIntoView({
+          behavior: reduceMotion() ? 'auto' : 'smooth',
+          block: 'start',
+        });
+      });
+    });
+  }
+
+  function viewFinding(f) {
+    document.title = `${f.title} | ${PROFILE.name}`;
+    setDescription(f.summary || '');
+
+    const i = FINDINGS.indexOf(f);
+    const prev = FINDINGS[i - 1];
+    const next = FINDINGS[i + 1];
+    const kicker = [f.kind, f.category, f.date].filter(Boolean).join(' · ');
+
+    // The lede is meant to be one standfirst line. If a whole article ends up
+    // in it, blank-line-separated, it would otherwise render as one run-on
+    // paragraph — so the first paragraph stays the lede and the rest falls
+    // through into the body above the blocks. A one-paragraph lede is
+    // unaffected, and a proper `blocks` body still leads.
+    const ledeParts = (f.lede || '').split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
+    const lede = ledeParts[0] || '';
+    const spill = ledeParts.slice(1);
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article class="doc-article read-doc">
           <header class="doc-head">
             <nav class="crumbs" aria-label="Breadcrumb">
               <a href="${href('')}" data-link>Index</a>
               ${icon('chevronRight')}
-              <a href="${href('writings')}" data-link>Writings</a>
-              ${icon('chevronRight')}
-              <span style="color:var(--text)">${esc(post.title)}</span>
+              <a href="${href('findings')}" data-link>UX Findings</a>
             </nav>
-            <h1 class="doc-h1">${esc(post.title)}</h1>
-            <div class="doc-meta">
-              ${post.tag ? `<span class="doc-meta-date" style="color:var(--text-faint); font-size:14px;">${esc(post.tag)}</span>` : ''}
-              <div class="doc-meta-actions" style="display:flex; gap:8px; margin-left:auto;">
-                ${post.url
-        ? `<a class="cta" href="${esc(post.url)}" target="_blank" rel="noopener">Read on Medium ${icon('external')}</a>`
-        : ''
-      }
-              </div>
-            </div>
+            <h1 class="doc-h1"><span>${esc(f.title || '')}</span></h1>
+            ${kicker ? `<div class="doc-kicker mono-label">${esc(kicker)}</div>` : ''}
+            ${lede ? `<p class="doc-lede">${lede}</p>` : ''}
           </header>
 
-          <div class="prose Medium-prose">${post.content}</div>
+          <div class="prose read-prose">${spill.map((x) => `<p>${x}</p>`).join('')}${renderBlocks(f.blocks || [])}</div>
+
+          ${
+            f.sourceUrl
+              ? `<div class="doc-footer-links">
+                   <a class="doc-footer-link" href="${esc(f.sourceUrl)}" target="_blank" rel="noopener">${esc(
+                  f.sourceLabel || 'Source'
+                )}</a>
+                 </div>`
+              : ''
+          }
+
+          <nav class="page-nav" aria-label="Pagination">
+            ${
+              prev
+                ? `<a class="page-nav-link prev" href="${href(`findings/${prev.slug}`)}" data-link>
+                     <span class="page-nav-dir">${icon('chevronLeft')} Previous</span>
+                     <span class="page-nav-name">${esc(prev.title || '')}</span>
+                   </a>`
+                : '<span></span>'
+            }
+            ${
+              next
+                ? `<a class="page-nav-link next" href="${href(`findings/${next.slug}`)}" data-link>
+                     <span class="page-nav-dir">Next ${icon('chevronRight')}</span>
+                     <span class="page-nav-name">${esc(next.title || '')}</span>
+                   </a>`
+                : ''
+            }
+          </nav>
         </article>
       </div>`;
 
-    // Ensure all h2 and h3 elements inside the Medium content have IDs for TOC
-    $$('.prose h2, .prose h3').forEach((h, idx) => {
-      if (!h.id) {
-        h.id = slugify(h.textContent) || `heading-${idx}`;
-      }
-    });
-
-    renderTOC({
-      name: post.title,
-      productUrl: post.url
-    }, 'writings');
-
+    $('#toc').innerHTML = '';
+    renderTOC();
     initCopy();
     initZoom();
-    initTilt();
+    initCurrencyDemo();
+    initDeleteDemo();
+    initStruggleDemo();
+    initBatchDemo();
+    initResumeDemo();
+    initSearchDemo();
+    initZoomDemo();
+    initNextDemo();
+    initRetryDemo();
+    initPayDemo();
+    initWaitDemo();
+    initPrefetchDemo();
+    initHumanDemo();
+    initAnchorDemo();
+    initUndoDemo();
   }
 
-  function viewExploring() {
-    const title = "Things I'm Exploring";
-    const lede = 'The tools, languages and services in my day-to-day rotation — from designing the thing to shipping it.';
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
+  // A tool is either a plain name or { name, icon }, where `icon` is a file in
+  // /images/tools/ — the product's own mark, so the row reads as real software
+  // rather than a list of words.
+  const toolPill = (t) => {
+    const name = typeof t === 'string' ? t : t.name;
+    const ico = typeof t === 'string' ? '' : t.icon;
+    return `<span class="skill-pill tool-pill">${
+      ico
+        ? `<img class="tool-pill-ico" src="/images/tools/${esc(ico)}.png" alt="" width="20" height="20" loading="lazy" decoding="async">`
+        : ''
+    }${esc(name)}</span>`;
+  };
+
+  function viewAbout() {
+    // shadows nothing: the About data lives in pages/about.js and only exists
+    // once that file has been fetched
+    const ABOUT = PAGE_DATA.about || {};
+    document.title = `About | ${PROFILE.name}`;
+    setDescription(`Who ${PROFILE.name} is: experience, education, skills, and the clients behind the work.`);
     $('#toc').innerHTML = '';
 
-    const chip = (t) => {
-      const glyph = t.brand
-        ? brandGlyph(t.brand)
-        : `<span class="tool-chip-mono">${esc(t.letter || t.name.charAt(0))}</span>`;
-      const inner = `
-        <span class="tool-chip-ico" style="background:${esc(t.color || 'var(--accent)')}">${glyph}</span>
-        <span class="tool-chip-body">
-          <span class="tool-chip-name">${esc(t.name)}</span>
-          ${t.use ? `<span class="tool-chip-use">${esc(t.use)}</span>` : ''}
-        </span>`;
-      return t.url
-        ? `<a class="tool-chip" href="${esc(t.url)}" target="_blank" rel="noopener">${inner}</a>`
-        : `<div class="tool-chip">${inner}</div>`;
-    };
+    // doubled below so the marquee can loop seamlessly
+    const clientLogos = CLIENTS.map(
+      (c) =>
+        `<img src="${esc(clientSrc(c))}" alt="${esc(c.name)}" title="${esc(c.name)}"${
+          c.scale ? ` style="--s:${Number(c.scale)}"` : ''
+        } loading="lazy">`
+    ).join('');
 
-    // Back-compat: support both the grouped shape and a flat array.
-    const groups = Array.isArray(EXPLORING) && EXPLORING[0] && EXPLORING[0].items
-      ? EXPLORING
-      : [{ items: EXPLORING }];
+    // Experience and education read as a dated timeline: the years sit in their
+    // own rail on the left, and a node on the hairline marks each entry. The
+    // role still in progress gets the filled node — `meta` ending in "Present"
+    // is the only signal, so nothing has to be flagged in the data.
+    const isNow = (it) => /present\s*$/i.test(it.meta || '');
 
-    const total = groups.reduce((n, g) => n + (g.items ? g.items.length : 0), 0);
+    const row = (it) => `
+      <li class="tl-item${isNow(it) ? ' is-now' : ''}">
+        <span class="tl-when">${esc(it.meta || '')}</span>
+        <span class="tl-rail" aria-hidden="true"></span>
+        <div class="tl-body">
+          <h3 class="tl-title">${esc(it.title)}</h3>
+          <span class="tl-org">${esc(it.org)}</span>
+          ${it.note ? `<p class="tl-note">${esc(it.note)}</p>` : ''}
+        </div>
+      </li>`;
 
-    const sections = groups.map((g) => `
-      <section class="tool-section">
-        ${g.group ? `<div class="tool-section-head">
-          <h2 class="tool-section-title">${esc(g.group)}</h2>
-          ${g.blurb ? `<p class="tool-section-blurb">${esc(g.blurb)}</p>` : ''}
-        </div>` : ''}
-        <div class="tool-grid">${g.items.map(chip).join('')}</div>
-      </section>`).join('');
+    const timeline = (items) => `<ol class="tl">${items.map(row).join('')}</ol>`;
 
     $('#view').innerHTML = `
       <div class="view">
-        <article>
-          <header class="doc-head">
-            <h1 class="doc-h1">${esc(title)}</h1>
-            <p class="doc-lede">${esc(lede)}</p>
-          </header>
-          ${total ? sections : `<p class="sec-sub">Nothing new to share yet — check back soon.</p>`}
-        </article>
+        <section class="about-hero">
+          <div class="about-hero-copy">
+            <span class="mono-label">About${ABOUT.location ? ` · ${esc(ABOUT.location)}` : ''}</span>
+            <h1>${esc(ABOUT.name)}</h1>
+            <p class="about-role">${esc(PROFILE.role)}</p>
+            <p class="about-bio">${ABOUT.bio}</p>
+          </div>
+        </section>
+
+        <div class="stat-card gcard gcard-live grad-5">
+          <div class="stat"><span class="stat-v">${esc(cms(ABOUT.stat1Value, '30+'))}</span><span class="stat-l">${esc(cms(ABOUT.stat1Label, 'Clients worked with'))}</span></div>
+          <div class="stat"><span class="stat-v">${esc(cms(ABOUT.stat2Value, '500+'))}</span><span class="stat-l">${esc(cms(ABOUT.stat2Label, 'Design students mentored'))}</span></div>
+          <div class="stat"><span class="stat-v">${PROJECTS.length}</span><span class="stat-l">Products designed, built and shipped</span></div>
+        </div>
+
+        <section class="home-sec">
+          <div class="strip">
+            <span class="mono-label">Clients</span>
+            <span class="mono-label">A few of the 30+</span>
+          </div>
+          <div class="logo-marquee" aria-label="Client logos">
+            <div class="logo-track">${clientLogos}${clientLogos}</div>
+          </div>
+        </section>
+
+        ${
+          ABOUT.photo
+            ? `<section class="home-sec">
+                 <figure class="figure" style="margin:0">
+                   <div class="frame" style="cursor:default">
+                     <img src="${esc(ABOUT.photo.src)}" alt="${esc(ABOUT.photo.caption || '')}" loading="lazy">
+                   </div>
+                   ${ABOUT.photo.caption ? `<figcaption>${esc(ABOUT.photo.caption)}</figcaption>` : ''}
+                 </figure>
+               </section>`
+            : ''
+        }
+
+        <section class="home-sec">
+          <div class="sec-topline">
+            <h2 class="sec-h">Experience</h2>
+          </div>
+          ${timeline(ABOUT.experience)}
+        </section>
+
+        <section class="home-sec">
+          <div class="sec-topline">
+            <h2 class="sec-h">Education</h2>
+          </div>
+          ${timeline(ABOUT.education)}
+        </section>
+
+        <section class="home-sec">
+          <div class="sec-topline">
+            <h2 class="sec-h">Skills</h2>
+          </div>
+          <div class="skill-row">
+            ${ABOUT.skills.map((s) => `<span class="skill-pill">${esc(s)}</span>`).join('')}
+          </div>
+
+          ${
+            ABOUT.tools && ABOUT.tools.length
+              ? `<div class="strip" style="margin-top:44px">
+                   <span class="mono-label">Tools</span>
+                   <span class="mono-label">Day to day</span>
+                 </div>
+                 <div class="skill-row">${ABOUT.tools.map(toolPill).join('')}</div>`
+              : ''
+          }
+        </section>
+
+        <section class="home-sec">
+          <div class="banner gcard gcard-live grad-2">
+            <div class="banner-copy">
+              <span class="mono-label">Next project</span>
+              <h3>${esc(cms(ABOUT.ctaHeading, 'Want to work together?'))}</h3>
+              <p>${esc(cms(ABOUT.ctaText, 'Tell me what you are building and where it is stuck. I will bring the design and the code.'))}</p>
+              <a class="btn btn-light" href="${href('contact')}" data-link style="margin-top:22px">${esc(cms(ABOUT.ctaButton, 'Start a conversation'))}</a>
+            </div>
+          </div>
+        </section>
       </div>`;
   }
 
@@ -1616,35 +3164,42 @@
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
-        <article style="max-width: 600px; margin: 0 auto;">
-          <header class="doc-head">
-            <h1 class="doc-h1">Contact</h1>
-            <p class="doc-lede">Feel free to reach out for collaborations, project inquiries, or just to say hi.</p>
-          </header>
-          
-          <div class="contact-channels">
-            <div class="channel-card">
-              <a href="mailto:uxnijin@gmail.com" class="channel-card-main">
+        <div class="contact-grid">
+          <div class="contact-intro">
+            <span class="mono-label">${esc(cms(CONTACTCOPY().label, 'Contact'))}</span>
+            <h1>${esc(cms(CONTACTCOPY().heading, 'Have something in mind? Say hello'))}</h1>
+            <p>${esc(cms(CONTACTCOPY().text, 'Reach out for collaborations, project inquiries, or just to talk shop about onboarding, paywalls, and shipping things.'))}</p>
+
+            <div class="contact-rows">
+              <a href="mailto:${esc(EMAIL())}" class="contact-row">
                 <span class="channel-ico">${icon('mail')}</span>
-                <div class="channel-info">
+                <span class="channel-info">
                   <span class="channel-label">Email</span>
-                  <span class="channel-value">uxnijin@gmail.com</span>
-                </div>
+                  <span class="channel-value">${esc(EMAIL())}</span>
+                </span>
+                <span class="dir-go">${icon('arrowRight')}</span>
               </a>
-              <button class="copy-btn" type="button" aria-label="Copy email address" data-copy="uxnijin@gmail.com">
-                ${icon('copy', 'copy')}${icon('check', 'check')}
-              </button>
+              <a href="https://wa.me/${esc(WA())}" target="_blank" rel="noopener" class="contact-row">
+                <span class="channel-ico">${icon('whatsapp')}</span>
+                <span class="channel-info">
+                  <span class="channel-label">WhatsApp</span>
+                  <span class="channel-value">${esc(cms(CMS().whatsappLabel, '62384 17389'))}</span>
+                </span>
+                <span class="dir-go">${icon('arrowRight')}</span>
+              </a>
             </div>
-            <a href="https://wa.me/916238417389" target="_blank" rel="noopener" class="channel-card">
-              <span class="channel-ico">${icon('whatsapp')}</span>
-              <div class="channel-info">
-                <span class="channel-label">WhatsApp</span>
-                <span class="channel-value">62384 17389</span>
-              </div>
-            </a>
+
+            <div class="contact-socials">
+              ${PROFILE.links
+                .map(
+                  (l) =>
+                    `<a class="icon-btn-c" href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)}">${icon((l.label || '').toLowerCase())}</a>`
+                )
+                .join('')}
+            </div>
           </div>
-          
-          <form class="contact-form" id="contact-form">
+
+          <form class="contact-form form-card" id="contact-form">
             <div class="form-group">
               <label for="contact-name">Name</label>
               <input type="text" id="contact-name" name="name" required placeholder="Your name">
@@ -1663,10 +3218,8 @@
             <button class="cta" type="submit" style="width: 100%; justify-content: center; margin-top: 8px;">Send Message</button>
             <div class="form-status" id="form-status"></div>
           </form>
-        </article>
+        </div>
       </div>`;
-
-    initCopy();
 
     const form = $('#contact-form');
     form?.addEventListener('submit', async (e) => {
@@ -1688,6 +3241,7 @@
         if (res.ok) {
           status.innerHTML = `${icon('check')}<span>Thank you! Your message has been sent.</span>`;
           status.className = 'form-status success';
+          if (window.track) window.track('contact_submit');
           form.reset();
         } else {
           throw new Error();
@@ -1705,26 +3259,125 @@
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
-        <h1 class="doc-h1">Page not found</h1>
-        <p class="doc-lede">That page doesn't exist; it may have been renamed.</p>
-        <div class="hero-actions">
-          <a class="cta" href="${href('')}" data-link>Back to the index ${icon('arrowRight')}</a>
+        <header class="page-head">
+          <h1 class="page-h1">Page not found</h1>
+          <p class="page-lede">That page doesn't exist; it may have been renamed.</p>
+        </header>
+        <div class="hero-actions" style="padding-bottom:64px">
+          <a class="btn btn-primary" href="${href('')}" data-link>Back to the index</a>
         </div>
       </div>`;
   }
 
   // ------------------------------------------------------------- boot
 
+  // top promo banner: whatever SITE says, or the newest case study
+  function renderPromo() {
+    const bar = $('#promo-bar');
+    const s = CMS();
+    if (s.promoEnabled === false) {
+      bar.style.display = 'none';
+      return;
+    }
+    bar.style.display = '';
+    const latest = DESIGNS[0];
+    const text = cms(s.promoText, latest ? `${shortName(latest)}: ${noDash(latest.summary || '')}` : '');
+    const url = cms(s.promoUrl, latest ? `designs/${latest.slug}` : '');
+    if (!text) {
+      bar.style.display = 'none';
+      return;
+    }
+    bar.innerHTML = `
+      <span class="promo-chip">${esc(cms(s.promoChip, 'New'))}</span>
+      <span class="promo-text">${esc(text)}</span>
+      ${url ? `<a class="promo-cta" href="${href(url)}" data-link>${esc(cms(s.promoCta, 'View'))}</a>` : ''}`;
+  }
+
+  function renderFooter() {
+    const popular = [
+      ...DESIGNS.slice(0, 2).map((d) => ({ label: shortName(d), path: `designs/${d.slug}` })),
+      ...[...PROJECTS].sort((a, b) => (b.users || 0) - (a.users || 0)).slice(0, 3)
+        .map((p) => ({ label: shortName(p), path: `docs/${p.slug}` })),
+    ];
+
+    $('#site-foot').innerHTML = `
+      <div class="site-foot-in">
+        <div class="foot-top">
+          <div class="foot-id">
+            <span class="brand-mark" style="background-image:url(${esc(PROFILE.avatar)})"></span>
+            <p class="foot-tagline">${esc(cms(CMS().footerTagline, 'Onboarding flows, paywalls, and the tools behind them, designed and shipped by one person'))}</p>
+            <div class="foot-quick">
+              <a href="${href('designs')}" data-link>Explore the designs</a>
+              <a href="${href('products')}" data-link>Browse products</a>
+            </div>
+          </div>
+
+          <div class="foot-col">
+            <h4>Explore</h4>
+            <ul>
+              <li><a href="${href('designs')}" data-link>Designs</a></li>
+              <li><a href="${href('products')}" data-link>Products</a></li>
+              <li><a href="${href('findings')}" data-link>UX Findings</a></li>
+              <li><a href="${href('about')}" data-link>About</a></li>
+            </ul>
+          </div>
+
+          <div class="foot-col">
+            <h4>Popular</h4>
+            <ul>
+              ${popular.map((it) => `<li><a href="${href(it.path)}" data-link>${esc(it.label)}</a></li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="foot-col">
+            <h4>Connect</h4>
+            <ul>
+              <li><a href="${href('contact')}" data-link>Contact</a></li>
+              <li><a href="mailto:${esc(EMAIL())}">Email</a></li>
+              <li><a href="https://wa.me/${esc(WA())}" target="_blank" rel="noopener">WhatsApp</a></li>
+              <li><a href="https://github.com/${esc(PROFILE.github)}" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="foot-mid">
+          <div class="icon-group">
+            <span class="icon-row">
+              ${PROFILE.links
+                .map(
+                  (l) =>
+                    `<a class="icon-btn-c" href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="${esc(l.label)}">${icon((l.label || '').toLowerCase())}</a>`
+                )
+                .join('')}
+            </span>
+          </div>
+          <div class="icon-group">
+            <span class="icon-row">
+              <a class="icon-btn-c" href="mailto:${esc(EMAIL())}" aria-label="Email">${icon('mail')}</a>
+              <a class="icon-btn-c" href="https://wa.me/${esc(WA())}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('whatsapp')}</a>
+            </span>
+          </div>
+        </div>
+
+        <div class="foot-bottom">
+          <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. All rights reserved</span>
+          <span class="foot-note">${esc(cms(CMS().footerNote, 'Designed and built by hand, no templates'))}</span>
+        </div>
+      </div>`;
+  }
+
   function boot() {
     // topbar icons
     $('#menu-btn').innerHTML = icon('menu');
-    $('.search-ico').innerHTML = icon('search');
-    $('#contact-ico').innerHTML = icon('mail');
     $('#pal-icon').innerHTML = icon('search');
     $('#lb-close').innerHTML = icon('x');
     $('#brand-mark').style.backgroundImage = `url(${PROFILE.avatar})`;
     $('#brand-name').textContent = PROFILE.name;
-    if (!navigator.platform.toLowerCase().includes('mac')) $('#search-kbd').textContent = 'Ctrl K';
+
+    renderFooter();
+    if (window.MeshGradient) window.MeshGradient.scan();
+
+    renderPromo();
 
     // rounded favicon
     if (PROFILE.avatar) {
@@ -1773,7 +3426,7 @@
 
     // intercept internal links
     document.addEventListener('click', (e) => {
-      const tocLink = e.target.closest('a.toc-link[data-toc], a.heading-anchor');
+      const tocLink = e.target.closest('a.toc-link[data-toc]');
       if (tocLink) {
         e.preventDefault();
         const id = tocLink.dataset.toc || tocLink.getAttribute('href')?.replace(/^#/, '');
@@ -1800,8 +3453,18 @@
       else closeNav();
     });
 
-    // palette
-    $('#search-btn').addEventListener('click', openPalette);
+    // Pointer over a link is the earliest reliable signal that its body will
+    // be wanted. `pointerenter` covers mouse and pen; `touchstart` fires on
+    // tap before the click, which still buys the length of the tap.
+    const prefetchFrom = (e) => {
+      const a = e.target.closest?.('a[data-link]');
+      if (!a) return;
+      prefetch(new URL(a.href, location.origin).pathname.replace(/^\//, ''));
+    };
+    document.addEventListener('pointerover', prefetchFrom, { passive: true });
+    document.addEventListener('touchstart', prefetchFrom, { passive: true });
+
+    // palette (the visible search bar is gone; ⌘K still opens it)
     $('#pal-input').addEventListener('input', (e) => paintPalette(e.target.value));
     $('#pal-bg').addEventListener('click', (e) => e.target === $('#pal-bg') && closePalette());
     $('#pal-res').addEventListener('click', (e) => {

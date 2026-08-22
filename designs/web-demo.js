@@ -5,15 +5,7 @@
 //  DESIGNS in data.js. Delete this file once you have real work to show.
 // ============================================================================
 
-const DESIGN_WEB_DEMO = {
-  slug: 'web-demo',
-  name: 'Web Case Study (Demo)',
-  category: 'Web',
-  icon: 'window',
-  tag: 'Case Study',
-  status: 'Demo',
-  summary: 'A placeholder web design case study — swap this out for a real project.',
-  lede: 'This is a demo entry so the Designs → Web section isn\'t empty. Replace the text and images below with an actual case study.',
+BODY('web-demo', {
   blocks: [
     { t: 'h2', x: 'Overview' },
     {
@@ -65,4 +57,4 @@ const DESIGN_WEB_DEMO = {
       x: 'Swap every block above for real content — text, screenshots, a live link — once you have a project to publish.',
     },
   ],
-};
+});

@@ -8,15 +8,7 @@
 //  OpenStreetMap. Credits in the screens README and in the app's CREDITS.json.
 // ============================================================================
 
-const DESIGN_SPRIG = {
-  slug: 'sprig',
-  name: 'Sprig',
-  category: 'Onboarding',
-  icon: 'droplet',
-  tag: 'Onboarding',
-  status: 'Prototype',
-  summary: 'Plants and flowers delivered the same day — number, one-time code, address on a real map.',
-  lede: '<strong>Sprig</strong> delivers plants and cut flowers the same day. Twenty onboarding screens, built as a running iOS app — a number, a one-time code, a name, and an address dropped on a real map.',
+BODY('sprig', {
   blocks: [
     {
       t: 'p',
@@ -26,4 +18,4 @@ const DESIGN_SPRIG = {
     { t: 'image', src: '/onboarding-assets/sprig-screens/images/sprig-02-address.webp', alt: 'Sprig address search, results, map pin, coach mark and the shop', caption: 'Search, results, the pin, one coach-mark, the shop.' },
     { t: 'image', src: '/onboarding-assets/sprig-screens/images/sprig-03-states.webp', alt: 'Sprig states — sending, too few digits, wrong code, offline and location refused', caption: 'Sending, short number, wrong code, offline, location refused.' },
   ],
-};
+});

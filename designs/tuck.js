@@ -8,15 +8,7 @@
 //  photograph (Wikimedia Commons, CC BY 2.0) credited in the app's CREDITS.json.
 // ============================================================================
 
-const DESIGN_TUCK = {
-  slug: 'tuck',
-  name: 'Tuck',
-  category: 'Onboarding',
-  icon: 'zap',
-  tag: 'Onboarding',
-  status: 'Prototype',
-  summary: 'A savings app that puts a little away each week — a six-question setup with a character to carry it.',
-  lede: '<strong>Tuck</strong> moves a small amount into a pot every week, on the day money actually arrives. Twenty-two onboarding screens, built as a running iOS app.',
+BODY('tuck', {
   blocks: [
     {
       t: 'p',
@@ -27,4 +19,4 @@ const DESIGN_TUCK = {
     { t: 'image', src: '/onboarding-assets/tuck-screens/images/tuck-03-value.webp', alt: 'Tuck encouragement, chart, weekly plan, account connection and round-ups', caption: 'A breath, the argument, the number, the two permissions.' },
     { t: 'image', src: '/onboarding-assets/tuck-screens/images/tuck-04-finish.webp', alt: 'Tuck timeline, sign-in and three error states', caption: 'When things happen, signing in, and what goes wrong.' },
   ],
-};
+});

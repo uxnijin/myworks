@@ -6,15 +6,7 @@
 //  Figures: onboarding-assets/trove-screens/images, built with tools/compose_bezels.py
 // ============================================================================
 
-const DESIGN_TROVE = {
-  slug: 'trove',
-  name: 'Trove',
-  category: 'Onboarding',
-  icon: 'layers',
-  tag: 'Onboarding',
-  status: 'Prototype',
-  summary: 'Buy allocated gold by the gram — sign-in, email verification and a vault that starts at zero.',
-  lede: '<strong>Trove</strong> sells allocated gold, silver and platinum from a gram upwards, held in an audited vault. Fourteen onboarding screens, built as a running iOS app.',
+BODY('trove', {
   blocks: [
     {
       t: 'p',
@@ -24,4 +16,4 @@ const DESIGN_TROVE = {
     { t: 'image', src: '/onboarding-assets/trove-screens/images/trove-02-verify.webp', alt: 'Trove code entry, verifying, success and the empty vault', caption: 'Entering, verifying, in, and a vault at zero.' },
     { t: 'image', src: '/onboarding-assets/trove-screens/images/trove-03-states.webp', alt: 'Trove states — sending, unfinished domain, wrong code, resend available and offline', caption: 'Sending, bad domain, wrong code, resend live, offline.' },
   ],
-};
+});

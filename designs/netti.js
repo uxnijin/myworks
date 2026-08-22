@@ -9,17 +9,7 @@
 //  Every screenshot in this case study is the real app running in a simulator.
 // ============================================================================
 
-const DESIGN_NETTI = {
-  slug: 'netti',
-  hidden: true,
-  name: 'Netti: One Instrument, Four Screens',
-  category: 'Mobile App',
-  icon: 'gauge',
-  tag: 'Case Study',
-  status: 'Prototype',
-  summary: 'A network speed test designed as an instrument rather than a dashboard — one SwiftUI codebase that becomes a tab bar, a split view, a Mac window and a stack of paged rings.',
-  lede: 'Netti measures your connection against Cloudflare\'s public speed-test edge and reports what it finds — including packet loss and retransmits read straight from kernel TCP counters. It runs on iPhone, iPad, Mac and Apple Watch from a single set of screens, and it is built on one typographic rule: every measured value is monospaced, every label is not. This is a design case study about precision — about the small decisions that separate a dial that looks like a speedometer from one that behaves like an instrument.',
-  tech: ['Swift', 'SwiftUI', 'Observation', 'URLSession', 'Swift Charts', 'Cloudflare speed-test edge', 'iOS 18 · iPadOS 18 · macOS 15 · watchOS 11'],
+BODY('netti', {
   blocks: [
 
     // ── This is real ─────────────────────────────────────────────────────────
@@ -376,4 +366,4 @@ const DESIGN_NETTI = {
     },
 
   ],
-};
+});

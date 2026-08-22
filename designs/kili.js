@@ -6,15 +6,7 @@
 //  Figures: onboarding-assets/kili-screens/images
 // ============================================================================
 
-const DESIGN_KILI = {
-  slug: 'kili',
-  name: 'Kili',
-  category: 'Onboarding',
-  icon: 'globe',
-  tag: 'Onboarding',
-  status: 'Prototype',
-  summary: 'A language app you learn by speaking — twelve onboarding screens and every state that isn\'t the happy path.',
-  lede: '<strong>Kili</strong> teaches a language by making you speak it — ten minutes, one conversation a day. Twelve onboarding screens, built as a running iOS app so every state can be seen rather than described.',
+BODY('kili', {
   blocks: [
     {
       t: 'p',
@@ -27,4 +19,4 @@ const DESIGN_KILI = {
     { t: 'image', src: '/onboarding-assets/kili-screens/images/kili-05.webp', alt: 'Kili error states' },
     { t: 'image', src: '/onboarding-assets/kili-screens/images/kili-06.webp', alt: 'Kili onboarding screens' },
   ],
-};
+});
