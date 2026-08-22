@@ -1,412 +1,406 @@
 // ============================================================================
-//  Parcel: Premium Courier Booking (iOS)
-//  Mobile App Design Case Study
+//  Parcel — Premium Courier Booking (iOS)
+//  Mobile case study
 //
-//  Designed AND built in code. A real, runnable SwiftUI prototype — not a
-//  Figma file. Every screen, animation, map and haptic is working Swift,
-//  driven by a rich mock-data layer. No backend, no network.
+//  Same structure as the Oppam, KSRTC and Route Planner entries: problem,
+//  research, findings, the bet, scope, the flow, the screens, the trade-offs,
+//  and how success would be measured. Short text — the figures carry it.
+//
+//  Every figure is a screenshot of the running SwiftUI app, composed by
+//  tools/parcel_figures.sh. Individual captures live in parcel-assets/screens/.
+//  Light is the primary set; dark appears only in the theme figure.
+//
+//  NOTE: the funnel is FOUR steps (pickup, receiver, parcel, review) and the
+//  app assigns a pickup branch rather than comparing partners. An older draft
+//  of this case study described five steps and a partner-comparison screen —
+//  that is stale. Write from what the captures show.
 // ============================================================================
 
-const DESIGN_PARCEL = {
-  slug: 'parcel',
-  name: 'Parcel: Premium Courier Booking',
-  category: 'Mobile App',
-  icon: 'smartphone',
-  tag: 'Case Study',
-  status: 'Prototype',
-  summary: 'Booking a courier that feels as effortless as ordering a ride — designed and built end-to-end in native SwiftUI.',
-  lede: 'End-to-end product design AND iOS engineering for a consumer courier-booking app. I designed every screen, state and motion, then built the whole thing in Swift and SwiftUI — a custom vector map, an 8-stage live tracking timeline, spring-physics motion and haptics, all running on a seeded mock-data layer. It runs on a real iPhone. Nothing here is a static mockup.',
-  tech: ['Swift', 'SwiftUI', 'Canvas', 'Observation', 'Custom motion', 'Haptics', 'Mock data · no network'],
+BODY('parcel', {
   blocks: [
 
-    // ── This is real ──────────────────────────────────────────────────────────
-    {
-      t: 'callout',
-      kind: 'success',
-      title: 'This is a working iOS app, not a Figma prototype.',
-      x: 'Every screen, transition, map and haptic in this case study is real Swift code. The courier moves along the route on a hand-drawn <code>Canvas</code> map. The confirmation confetti is a real particle system. The tracking timeline animates stage by stage. It builds in Xcode and runs on an iPhone — I designed the interaction <em>by writing it</em>, not by faking it in a prototyping tool.',
-    },
-
-    // ── Hero ──────────────────────────────────────────────────────────────────
+    // ── Hero ────────────────────────────────────────────────────────────────
     {
       t: 'image',
-      src: '/parcel-assets/hero-banner.png',
-      alt: 'Three Parcel screens — Home, live Tracking, and booking Confirmation',
-      caption: 'Home, live tracking, and the confirmation pass — three of the app\'s thirteen fully-built screens.',
+      src: '/parcel-assets/hero.webp',
+      alt: 'Five Parcel screens: home, the parcel step, review and pay, live tracking, and the booking confirmation',
+      caption: 'Home, two steps of the funnel, the live map, and the pass you get at the end.',
     },
 
-    // ── At a glance ─────────────────────────────────────────────────────────────
+    { t: 'h3', x: 'A self-directed concept, and every screen is real.' },
+    {
+      t: 'p',
+      x: 'Nobody commissioned this and no courier company was involved. <strong>Every image is a screenshot of the running app.</strong> The courier moves along the route on a hand-drawn <code>Canvas</code> map - there is no map SDK anywhere in the project. The tracking timeline animates stage by stage, the confirmation confetti is a real particle system, and the whole thing builds in Xcode and runs on an iPhone.',
+    },
+
     {
       t: 'table',
       head: ['', ''],
       rows: [
-        ['Role', 'Product Designer &amp; iOS Engineer (end-to-end)'],
-        ['Platform', 'Native iOS (iPhone, iOS 26)'],
-        ['Domain', 'Logistics · consumer courier booking'],
-        ['Built with', 'Swift &amp; SwiftUI, hand-written — no UI frameworks, no map SDK'],
-        ['Data', 'A seeded, offline mock layer. No backend, no network.'],
-        ['Deliverable', 'A runnable, fully interactive iOS prototype'],
+        ['Role', 'Sole designer and engineer - end to end'],
+        ['Type', 'Self-directed product exercise'],
+        ['Platform', 'Native iOS - iPhone, light-first'],
+        ['Built with', 'Swift and SwiftUI, hand-written - no UI frameworks, no map SDK'],
+        ['Data', 'A seeded offline mock layer. No backend, no network.'],
+        ['Status', 'Runnable prototype - no real booking, no payment rail'],
       ],
+    },
+
+    // ══ 1 · Problem ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '1 · The problem' },
+    {
+      t: 'p',
+      x: 'Booking a cab in India is a twenty-second, one-thumb ritual that everybody trusts. Sending a parcel is still a chore: a counter visit, or an app that looks like a spreadsheet, opaque pricing, and then no honest idea where the thing is until it either turns up or doesn\'t.',
+    },
+    {
+      t: 'p',
+      x: 'The interesting part is that the second job is not harder than the first. It is <em>the same shape</em> - a pickup, a drop, a price, a person coming to your door - presented as paperwork instead of as a ride.',
+    },
+
+    // ══ 2 · Research ════════════════════════════════════════════════════════
+    { t: 'h2', x: '2 · What I did instead of guessing' },
+    {
+      t: 'p',
+      x: 'This is self-directed, so I will say the limits plainly: <strong>no senders were interviewed, and no courier operator was consulted.</strong> What there is:',
+    },
+    {
+      t: 'list',
+      items: [
+        '<strong>I booked a courier through the existing apps</strong> and wrote down every point where I had to guess - what it would cost, when somebody would actually arrive, and where the parcel was once it left.',
+        '<strong>A side-by-side with the ride-hailing pattern</strong> this design borrows from, to work out which parts genuinely transfer and which parts are a category mistake.',
+        '<strong>Building it, and then using it</strong> - which is where the design actually changed. The pickup-time question below is the clearest example: the first version promised a slot, and building it made it obvious that was a lie.',
+      ],
+    },
+
+    // ══ 3 · Findings ════════════════════════════════════════════════════════
+    { t: 'h2', x: '3 · What that pointed at' },
+    {
+      t: 'cards',
+      items: [
+        {
+          icon: 'gauge',
+          title: 'The typing is the tax',
+          desc: 'Addresses, names, phone numbers — retyped every single time. <strong>So:</strong> saved places, frequent receivers as avatars, and a sender prefilled from the profile. Most bookings start half-done.',
+        },
+        {
+          icon: 'activity',
+          title: 'Anxiety is the real problem',
+          desc: 'The gap between “booked” and “delivered” is where trust is lost. <strong>So:</strong> a live map, a named courier you can call, and a timeline that fills in as it happens.',
+        },
+        {
+          icon: 'checkCircle',
+          title: 'A promised slot you can’t keep is worse than a range',
+          desc: 'Pickup times depend on a branch, not on the app. <strong>So:</strong> the app says “today, within 2 hours” and tells you the branch confirms the exact slot when they call.',
+        },
+        {
+          icon: 'smartphone',
+          title: 'One thumb, on the move',
+          desc: 'This gets used standing in a doorway holding a box. <strong>So:</strong> primary actions live in the bottom third, and nothing important needs a second hand.',
+        },
+      ],
+    },
+
+    // ══ 4 · The bet ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '4 · The bet' },
+    {
+      t: 'quote',
+      x: 'Sending a parcel is the same shape as booking a ride - a pickup, a drop, a price and a person coming to your door. Design it as a ride, not as paperwork, and the anxiety goes with the paperwork.',
+      by: 'The one sentence every decision was tested against',
+    },
+
+    { t: 'h3', x: 'Four rules that settled the arguments' },
+    {
+      t: 'cards',
+      items: [
+        { icon: 'sun', title: 'Light-first, dark authored', desc: 'Designed in a soft warm-white so it reads bright and trustworthy. The dark theme is built from the same tokens by hand, not auto-inverted.' },
+        { icon: 'zap', title: 'Motion with mass', desc: 'Every transition uses a named spring. Sheets are heavy, chips are snappy, the confirmation is allowed to celebrate. Motion communicates state; it never decorates.' },
+        { icon: 'layers', title: 'Wallet-grade surfaces', desc: 'Continuous-corner cards, a single elevation level, a top-lit sheen. Depth is used sparingly enough that it means something when it appears.' },
+        { icon: 'droplet', title: 'Say what you actually know', desc: 'A range you can keep beats a time you can’t. Where the app is guessing, it says it is guessing.' },
+      ],
+    },
+
+    // ══ 5 · Feature inventory ═══════════════════════════════════════════════
+    { t: 'h2', x: '5 · Everything it could have been' },
+    {
+      t: 'p',
+      x: 'Thirteen surfaces, grouped by the part of the job they belong to.',
+    },
+    {
+      t: 'table',
+      head: ['Part of the job', 'What lives there'],
+      rows: [
+        ['<strong>Arriving</strong>', 'Welcome · phone sign-in · a home that leads with the shipment already moving, then Domestic and International, then the quick actions'],
+        ['<strong>Booking</strong>', 'Pickup with saved places and “use current location” · receiver from frequent contacts · parcel type, a fragile toggle, a weight stepper and a note for the rider · a review carrying the route map, the itinerary, the assigned branch and the fee'],
+        ['<strong>Waiting</strong>', 'A confirmation pass with a booking number and the branch’s phone number · a live map with the courier drawn on it · a progress ring · a named, rateable courier · a timeline that fills in stage by stage'],
+        ['<strong>Afterwards</strong>', 'A rating prompt · activity · shipment history · profile and saved addresses'],
+      ],
+    },
+
+    // ══ 6 · Prioritisation ══════════════════════════════════════════════════
+    { t: 'h2', x: '6 · What made the cut, and why' },
+    {
+      t: 'p',
+      x: 'One rule decided scope: <strong>does this reduce the sender\'s uncertainty?</strong> Not “does it add a feature” — which is what killed the four in the bottom-right corner, every one of them normal in a logistics app.',
+    },
+    {
+      t: 'diagram',
+      caption: 'The sort that set scope. Position is judgement, not measurement — the axes are mine, and the point is the reasoning.',
+      svg: `<svg viewBox="0 0 720 486" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Feature prioritisation: how much a feature reduces the sender's uncertainty, against build cost">
+  <line x1="30" y1="238" x2="700" y2="238" class="d-l"/>
+  <line x1="366" y1="20" x2="366" y2="424" class="d-l"/>
+  <polygon points="700,238 690,233 690,243" class="d-arrow"/>
+  <polygon points="366,20 361,30 371,30" class="d-arrow"/>
+
+  <text x="34" y="52" class="d-m">SHIP FIRST</text>
+  <circle cx="40" cy="76" r="4" class="d-dot-a"/><text x="54" y="80" class="d-s">Saved places and receivers</text>
+  <circle cx="40" cy="102" r="4" class="d-dot-a"/><text x="54" y="106" class="d-s">An honest pickup range</text>
+  <circle cx="40" cy="128" r="4" class="d-dot-a"/><text x="54" y="132" class="d-s">The branch’s phone number</text>
+  <circle cx="40" cy="154" r="4" class="d-dot-a"/><text x="54" y="158" class="d-s">A booking number you can read</text>
+  <circle cx="40" cy="180" r="4" class="d-dot-a"/><text x="54" y="184" class="d-s">The fee, before you confirm</text>
+
+  <text x="384" y="52" class="d-m">WORTH THE WORK</text>
+  <circle cx="390" cy="76" r="4" class="d-dot-a"/><text x="404" y="80" class="d-s">A live map, drawn from scratch</text>
+  <circle cx="390" cy="102" r="4" class="d-dot-a"/><text x="404" y="106" class="d-s">A named, callable courier</text>
+  <circle cx="390" cy="128" r="4" class="d-dot-a"/><text x="404" y="132" class="d-s">A timeline that fills in live</text>
+  <circle cx="390" cy="154" r="4" class="d-dot-a"/><text x="404" y="158" class="d-s">Four steps on one surface</text>
+  <circle cx="390" cy="180" r="4" class="d-dot-a"/><text x="404" y="184" class="d-s">Two authored themes</text>
+
+  <text x="34" y="282" class="d-m">LATER, NOT NEVER</text>
+  <circle cx="40" cy="306" r="4" class="d-dot"/><text x="54" y="310" class="d-s">Scheduled pickups</text>
+  <circle cx="40" cy="332" r="4" class="d-dot"/><text x="54" y="336" class="d-s">Multi-parcel bookings</text>
+  <circle cx="40" cy="358" r="4" class="d-dot"/><text x="54" y="362" class="d-s">Live Activity on the lock screen</text>
+
+  <text x="384" y="282" class="d-m">CUT</text>
+  <circle cx="390" cy="306" r="4" class="d-dot"/><text x="404" y="310" class="d-s">A partner price-comparison grid</text>
+  <circle cx="390" cy="332" r="4" class="d-dot"/><text x="404" y="336" class="d-s">Loyalty points and tiers</text>
+  <circle cx="390" cy="358" r="4" class="d-dot"/><text x="404" y="362" class="d-s">In-app chat with support</text>
+  <circle cx="390" cy="384" r="4" class="d-dot"/><text x="404" y="388" class="d-s">A promotions carousel on home</text>
+
+  <text x="30" y="452" class="d-m">LOW BUILD COST</text>
+  <text x="700" y="452" class="d-m" text-anchor="end">HIGH BUILD COST</text>
+  <text x="0" y="14" class="d-m">↑ REDUCES THE SENDER’S UNCERTAINTY</text>
+</svg>`,
+    },
+    {
+      t: 'p',
+      x: 'The one worth explaining is the partner grid. An earlier version of this design compared five courier partners on price, speed and rating - and it looked great in a portfolio. It was also the wrong job: a first-time sender does not have an opinion about carriers, and asking them to form one is <em>work</em> disguised as choice. The app assigns the nearest branch, names it, and gives you its phone number instead.',
+    },
+
+    // ══ 7 · Flow ════════════════════════════════════════════════════════════
+    { t: 'h2', x: '7 · The core flow, end to end' },
+    {
+      t: 'p',
+      x: 'From opening the app to rating a delivery. Each phase carries one principle, and the orange notes are the places a sender normally starts worrying.',
+    },
+    {
+      t: 'diagram',
+      caption: 'Twelve steps. The funnel is four of them, and they all happen on one surface under a progress header that never leaves.',
+      svg: `<svg viewBox="0 0 720 578" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The core flow: arrive, book, hand it over, and follow it">
+
+  <text x="0" y="12" class="d-m">1 · ARRIVE</text>
+  <text x="720" y="12" class="d-m" text-anchor="end">START HALF-DONE</text>
+  <rect x="0" y="24" width="220" height="60" rx="11" class="d-box-a"/>
+  <text x="16" y="50" class="d-t">Open</text><text x="16" y="70" class="d-s">A phone number, nothing more</text>
+  <rect x="250" y="24" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="50" class="d-t">Home</text><text x="266" y="70" class="d-s">Leads with what’s moving</text>
+  <rect x="500" y="24" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="50" class="d-t">Send</text><text x="516" y="70" class="d-s">Domestic or international</text>
+  <line x1="220" y1="54" x2="244" y2="54" class="d-l"/><polygon points="250,54 242,50 242,58" class="d-arrow"/>
+  <line x1="470" y1="54" x2="494" y2="54" class="d-l"/><polygon points="500,54 492,50 492,58" class="d-arrow"/>
+  <text x="0" y="106" class="d-s" fill="var(--accent)">↳ a shipment already in flight owns the top of home — tracking is not a tab you go and find</text>
+  <path d="M610 84 V118 q0 8 -8 8 H204 q-8 0 -8 8 V160" class="d-l"/>
+  <polygon points="196,166 192,158 200,158" class="d-arrow"/>
+
+  <text x="0" y="154" class="d-m">2 · BOOK IT</text>
+  <text x="720" y="154" class="d-m" text-anchor="end">FOUR STEPS, ONE SURFACE</text>
+  <rect x="0" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="192" class="d-t">Pickup</text><text x="16" y="212" class="d-s">Home, Office, Parents</text>
+  <rect x="250" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="192" class="d-t">Receiver</text><text x="266" y="212" class="d-s">Frequent people, as faces</text>
+  <rect x="500" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="192" class="d-t">The parcel</text><text x="516" y="212" class="d-s">Type, weight, fragile, a note</text>
+  <line x1="220" y1="196" x2="244" y2="196" class="d-l"/><polygon points="250,196 242,192 242,200" class="d-arrow"/>
+  <line x1="470" y1="196" x2="494" y2="196" class="d-l"/><polygon points="500,196 492,192 492,200" class="d-arrow"/>
+  <text x="0" y="248" class="d-s" fill="var(--accent)">↳ the sender is prefilled from the profile — most bookings open already half-answered</text>
+  <path d="M610 226 V260 q0 8 -8 8 H204 q-8 0 -8 8 V302" class="d-l"/>
+  <polygon points="196,308 192,300 200,300" class="d-arrow"/>
+
+  <text x="0" y="296" class="d-m">3 · HAND IT OVER</text>
+  <text x="720" y="296" class="d-m" text-anchor="end">SAY WHAT YOU ACTUALLY KNOW</text>
+  <rect x="0" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="334" class="d-t">Review</text><text x="16" y="354" class="d-s">Route, itinerary, the fee</text>
+  <rect x="250" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="334" class="d-t">Confirm</text><text x="266" y="354" class="d-s">One button, with the amount</text>
+  <rect x="500" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="334" class="d-t">Booked</text><text x="516" y="354" class="d-s">A number, and a branch to call</text>
+  <line x1="220" y1="338" x2="244" y2="338" class="d-l"/><polygon points="250,338 242,334 242,342" class="d-arrow"/>
+  <line x1="470" y1="338" x2="494" y2="338" class="d-l"/><polygon points="500,338 492,334 492,342" class="d-arrow"/>
+  <text x="0" y="390" class="d-s" fill="var(--accent)">↳ “today, within 2 hours” — a range the branch can keep, not a slot the app invented</text>
+  <path d="M610 368 V402 q0 8 -8 8 H204 q-8 0 -8 8 V444" class="d-l"/>
+  <polygon points="196,450 192,442 200,442" class="d-arrow"/>
+
+  <text x="0" y="438" class="d-m">4 · FOLLOW IT</text>
+  <text x="720" y="438" class="d-m" text-anchor="end">CLOSE THE ANXIETY GAP</text>
+  <rect x="0" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="476" class="d-t">Track</text><text x="16" y="496" class="d-s">A map you can believe</text>
+  <rect x="250" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="476" class="d-t">The courier</text><text x="266" y="496" class="d-s">Named, rated, callable</text>
+  <rect x="500" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="476" class="d-t">Delivered</text><text x="516" y="496" class="d-s">Then a quiet rating prompt</text>
+  <line x1="220" y1="480" x2="244" y2="480" class="d-l"/><polygon points="250,480 242,476 242,484" class="d-arrow"/>
+  <line x1="470" y1="480" x2="494" y2="480" class="d-l"/><polygon points="500,480 492,476 492,484" class="d-arrow"/>
+  <text x="0" y="532" class="d-s" fill="var(--accent)">↳ the timeline fills in stage by stage — requested, accepted, assigned, collected</text>
+  <text x="0" y="558" class="d-s" fill="var(--accent)">↻ rebook from history — the same route, prefilled, in two taps</text>
+</svg>`,
+    },
+
+    // ══ 8 · Shell ═══════════════════════════════════════════════════════════
+    { t: 'h2', x: '8 · The frame around the flow' },
+    {
+      t: 'p',
+      x: 'Sign-in is a phone number and nothing else. Home leads with the shipment that is already moving - if something is in flight, that is the only thing you came to find out - and only then offers Domestic and International. The quick actions underneath are the three verbs that actually recur: track, rebook, shipments.',
+    },
+    {
+      t: 'image',
+      src: '/parcel-assets/shell.webp',
+      alt: 'The welcome screen, phone sign-in, and home',
+      caption: 'Welcome, sign-in, home. One system, and a home screen that answers “where is my thing” before it asks for anything.',
+    },
+
+    // ══ 9 · Booking ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '9 · Four steps, one surface' },
+    {
+      t: 'p',
+      x: 'The funnel lives on a single surface: steps swap with matched, directional motion under a progress header that never unmounts, so it never feels like four separate screens. Almost every field has a default worth accepting - saved places, frequent receivers as avatars, the sender already filled in.',
+    },
+    {
+      t: 'image',
+      src: '/parcel-assets/booking.webp',
+      alt: 'The four booking steps: pickup, receiver, the parcel, and review and pay',
+      caption: 'Pickup → receiver → parcel → review. The progress bar and the phone button stay put; only the middle changes.',
+    },
+    {
+      t: 'p',
+      x: 'The parcel step is the one that had to stay simple. Four things decide a courier quote - what it is, how heavy, how fragile, and anything the rider should know - so it asks exactly those four, as a type list, a stepper, a toggle and one optional line. No dimensions, no declared value, no insurance upsell.',
+    },
+
+    // ══ 10 · Honesty ════════════════════════════════════════════════════════
+    { t: 'h2', x: '10 · The pickup time is a range, on purpose' },
+    {
+      t: 'p',
+      x: 'This is the decision I would defend hardest. An earlier version promised a pickup slot, and building it made the problem obvious: <strong>the app does not control when a rider leaves a branch.</strong> A slot the system cannot keep is a broken promise on the very first booking.',
+    },
+    {
+      t: 'p',
+      x: 'So the review, the confirmation and the tracking screen all say the same thing - <em>today, within 2 hours</em> - and the confirmation adds the sentence that makes it usable rather than vague: <em>“the branch confirms the exact slot when they call.”</em> The branch\'s own phone number sits underneath it. The app stops pretending to be the operator, and hands you the operator.',
+    },
+    {
+      t: 'image',
+      src: '/parcel-assets/tracking.webp',
+      alt: 'The booking confirmation, live tracking with the courier on a map, and the rating prompt',
+      caption: 'Booked, in flight, delivered. The courier is a named person with a rating and a call button; the timeline fills in as it happens; the rating asks once and quietly.',
+    },
+    {
+      t: 'p',
+      x: 'The map is drawn rather than embedded - no map SDK anywhere in the project. That was a deliberate cost: it buys exact art direction and a route that can animate itself, and it gives up real geography entirely.',
+    },
+
+    // ══ 11 · After ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '11 · Afterwards' },
+    {
+      t: 'image',
+      src: '/parcel-assets/after.webp',
+      alt: 'Activity, shipment history, and the profile screen',
+      caption: 'Activity, history and profile. History is the rebooking surface — most people send to the same few places.',
+    },
+
+    // ══ 12 · Theme ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '12 · Light-first, dark authored' },
+    {
+      t: 'p',
+      x: 'The app is designed in a soft warm-white rather than pure white, with one indigo-violet signature carrying every primary action, and status colours reserved for status. Dark is built from the same tokens by hand - the map, the route line and the accent survive the switch, and only the surfaces move.',
+    },
+    {
+      t: 'image',
+      src: '/parcel-assets/theme.webp',
+      alt: 'Home and tracking shown in light and dark side by side',
+      caption: 'The same two screens in both appearances.',
+    },
+
+    // ══ 13 · Trade-offs ═════════════════════════════════════════════════════
+    { t: 'h2', x: '13 · The trade-offs' },
+    {
+      t: 'table',
+      head: ['What I chose', 'What it cost', 'Why I took it anyway'],
+      rows: [
+        [
+          '<strong>Drawing the map instead of embedding one.</strong>',
+          'No real geography, no real routing, and it could not ship like this.',
+          'It buys exact art direction and a route line that animates itself, on a screen whose whole job is to feel believable. A stock map would have made this look like every other tracking page.',
+        ],
+        [
+          '<strong>A pickup range, not a slot.</strong>',
+          'Vaguer than a competitor promising 4–6pm, and almost certainly worse in a conversion test.',
+          'The app does not control when a rider leaves a branch. A slot it cannot keep breaks trust on the first booking, which is the only one that matters.',
+        ],
+        [
+          '<strong>Assigning a branch instead of comparing partners.</strong>',
+          'Loses the price-comparison grid, which is the most portfolio-friendly screen in the category.',
+          'A first-time sender has no opinion about carriers. Asking them to form one is work disguised as choice.',
+        ],
+        [
+          '<strong>Four steps instead of one long form.</strong>',
+          'Four taps of Continue where a single scrolling form would need none.',
+          'One question at a time is what makes it feel like booking a ride. The progress header is what stops four steps reading as four screens.',
+        ],
+        [
+          '<strong>Phone-number sign-in, nothing else.</strong>',
+          'No email, so no receipts, no recovery, no marketing list.',
+          'The parcel needs a phone number anyway. Everything else could be asked for later, and mostly never needs to be.',
+        ],
+      ],
+    },
+
+    // ══ 14 · Measurement ════════════════════════════════════════════════════
+    { t: 'h2', x: '14 · How I\'d know it worked' },
+    {
+      t: 'p',
+      x: 'Nothing has shipped, so there are no results to report. This is the plan I would hold it to.',
+    },
+    {
+      t: 'table',
+      head: ['', ''],
+      rows: [
+        ['<strong>North star</strong>', 'Time from opening the app to a confirmed booking, for a repeat sender. The prefills exist to make that number small.'],
+        ['<strong>The anxiety test</strong>', 'Tracking opens per shipment. Counterintuitively I want this to <em>fall</em> over time — obsessive checking means the map is not convincing.'],
+        ['<strong>The honesty test</strong>', 'Support contacts asking “when is pickup”. The range plus the branch number exists to make that call unnecessary; if it does not, the range is too vague to be useful.'],
+        ['<strong>Repeat rate</strong>', 'Second bookings within 30 days, and how many come through rebook rather than a fresh funnel.'],
+        ['<strong>Guardrail</strong>', 'Bookings abandoned at the parcel step. That is the only screen asking for something the sender has to think about.'],
+        ['<strong>The first experiment</strong>', 'The honest range against a promised slot. It is the riskiest decision in the design and the one most likely to lose on a naive conversion metric while winning on retention.'],
+      ],
+    },
+
+    // ══ 15 · Scope ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '15 · What isn\'t built' },
+    {
+      t: 'p',
+      x: 'No real geocoding or routing, because the map is drawn. No payment rail - the fee is real in the interface and imaginary underneath. No scheduled pickups, no multi-parcel bookings, and no Live Activity, though the tracking timeline is exactly the data one wants. And no sender has used it, which is why the section above is a plan rather than a result.',
     },
     {
       t: 'stats',
       items: [
-        { v: '13', l: 'Screens & surfaces built' },
-        { v: '8', l: 'Named spring curves' },
-        { v: '0', l: 'Third-party UI libraries' },
-        { v: '100%', l: 'Mock data, no network' },
+        { v: '13', l: 'screens and surfaces' },
+        { v: '4', l: 'booking steps, one surface' },
+        { v: '8', l: 'named spring curves' },
+        { v: '0', l: 'third-party UI libraries, and no map SDK' },
       ],
     },
 
-    // ── 1. The idea ───────────────────────────────────────────────────────────
-    { t: 'h2', x: '1. The Idea' },
+    { t: 'hr' },
     {
-      t: 'p',
-      x: 'Sending a parcel in India still feels like a chore. You visit a courier counter, or juggle half-formed apps that look like spreadsheets, compare opaque pricing, and then have no honest idea where your package is until it either arrives or doesn\'t. Meanwhile, booking a cab is a 20-second, one-thumb ritual we all trust.',
+      t: 'quote',
+      x: 'The best decision in this project was subtracting a screen. The partner-comparison grid looked like the most designed thing in the app, and removing it is what made the booking feel like ordering a ride.',
+      by: 'Design intent, Parcel',
     },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: 'The premise',
-      x: 'What if booking a courier felt like ordering a ride? Doorstep pickup in ~20 minutes, transparent partner choice, and a live map you actually believe. That emotional bar — calm, fast, trustworthy — drove every decision.',
-    },
-    {
-      t: 'p',
-      x: 'Parcel is a self-serve app for the person <strong>sending</strong> a package: pick pickup and drop, describe the parcel, choose a courier partner on price and speed, pay, and follow it live. The design language borrows the confidence of Apple Wallet, the calm of Linear and Arc, and the friendliness of Airbnb — light-first, with a single indigo-violet signature.',
-    },
-
-    // ── 2. Who it's for ───────────────────────────────────────────────────────
-    { t: 'h2', x: '2. Who It\'s For' },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: '"I just want to send this thing and know it\'s handled — without thinking about it again."',
-      x: 'Aarav, 29, Bengaluru. Sends 2–4 parcels a month — documents to family, a resold gadget, a gift to another city. Comfortable with UPI and ride apps. Has zero patience for courier counters and dense tracking pages.',
-    },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'gauge', title: 'Values speed', desc: 'Wants the whole booking done before the auto-rickshaw arrives. Low typing, smart defaults, sensible prefills.' },
-        { icon: 'checkCircle', title: 'Wants certainty', desc: 'A booking number, an ETA, and a live map beat a promise. Anxiety is the real problem to solve.' },
-        { icon: 'phone', title: 'One-thumb, on the move', desc: 'Primary actions sit in the bottom third of the screen. Everything reachable while walking.' },
-      ],
-    },
-
-    // ── 3. Design language ──────────────────────────────────────────────────────
-    { t: 'h2', x: '3. Design Language' },
-    {
-      t: 'p',
-      x: 'Four principles kept a feature-rich app feeling calm and premium rather than busy.',
-    },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'sun', title: 'Light-first, dark-ready', desc: 'Designed in a soft warm-white (#F4F4F8) so it feels bright and trustworthy. A hand-tuned dark theme is built from the same tokens, not auto-inverted.' },
-        { icon: 'zap', title: 'Motion with mass', desc: 'Every transition uses a named spring curve. Sheets are heavy, chips are snappy, celebrations bounce. Motion communicates state, it never decorates.' },
-        { icon: 'layers', title: 'Wallet-grade surfaces', desc: 'Continuous-corner "squircle" cards, a single elevation level, and a top-lit sheen. Depth is used sparingly so it means something.' },
-        { icon: 'droplet', title: 'Color carries meaning', desc: 'Neutrals dominate. Indigo is the one brand action; amber, green and violet map to shipment status. Nothing is colorful just to be colorful.' },
-      ],
-    },
-    {
-      t: 'image',
-      src: '/parcel-assets/shell-screens.png',
-      alt: 'Welcome, account creation, and profile screens showing the calm light-first design language',
-      caption: 'The frame around the flow — Welcome, sign-in and profile. Calm, bright, and unmistakably one system.',
-    },
-
-    // ── 4. The booking flow ─────────────────────────────────────────────────────
-    { t: 'h2', x: '4. The Core Flow: Booking' },
-    {
-      t: 'p',
-      x: 'The heart of the app is a five-step booking flow that lives on a single surface — steps swap with matched, directional motion under a persistent progress header, so it never feels like five separate screens. The sender is prefilled from the signed-in profile, so most bookings start already half-done.',
-    },
-    {
-      t: 'steps',
-      items: [
-        { title: 'Pickup', desc: 'Where should we collect from? Saved places (Home, Office, Parents) are one tap; the sender is prefilled.' },
-        { title: 'Delivery', desc: 'Frequent recipients as avatars, with recipient details and a destination address list.' },
-        { title: 'Parcel', desc: 'Document · Parcel · Fragile · Heavy, a weight stepper, a note for the rider, and free parcel protection.' },
-        { title: 'Choose partner', desc: 'Five courier partners compared on rating, pickup ETA, speed and reliability — with a clear recommendation.' },
-        { title: 'Review & pay', desc: 'A route map, the full itinerary, a transparent fare breakdown, and one confident confirm button.' },
-      ],
-    },
-    {
-      t: 'image',
-      src: '/parcel-assets/booking-flow.png',
-      alt: 'All five booking steps in a row: Pickup, Delivery, Parcel, Choose partner, Review & pay',
-      caption: 'The full five-step booking flow, left to right. One surface, directional transitions, a progress header that never leaves.',
-    },
-    { t: 'h3', x: 'Choosing a partner is the decision that matters' },
-    {
-      t: 'p',
-      x: 'This is where trust is won or lost, so it gets the most design care. Each partner card leads with a monogram badge in its own brand color, then a rating, and a three-up strip of the numbers that actually drive the choice: pickup ETA, speed tier, and a reliability score. The recommended partner is highlighted, and a glass bar pins the current selection and price above the button so the trade-off is never out of sight. Review then lays out the route, the itinerary and a transparent fare breakdown before you commit.',
-    },
-    {
-      t: 'image',
-      src: '/parcel-assets/partner-review.png',
-      alt: 'Choose partner screen beside the Review & pay screen',
-      caption: 'Choose partner (with a recommended highlight) and Review & pay (route, itinerary, fare breakdown).',
-    },
-    { t: 'h3', x: 'The payoff: a moment worth celebrating' },
-    {
-      t: 'p',
-      x: 'Confirming triggers a full-screen celebration — a spring-scaled success check, a real confetti particle system, and a Wallet-style card with the booking number, AWB and ETA counting into place (it\'s the third screen in the hero above). Sending something matters emotionally; the interface treats it that way. From there, one tap drops you straight into live tracking.',
-    },
-
-    // ── 5. Live tracking ──────────────────────────────────────────────────────
-    { t: 'h2', x: '5. Live Tracking' },
-    {
-      t: 'p',
-      x: 'Tracking is the screen a customer opens the most, so it had to feel alive. A courier marker travels along a curved route on a custom map, a progress ring shows how far along the delivery is, and a draggable sheet reveals the rider, a call/message shortcut, and an animated 8-stage timeline — from "Pickup requested" all the way to "Delivered". The current stage pulses so your eye lands on it instantly. The Activity tab collects every live shipment as its own moving mini-map card.',
-    },
-    {
-      t: 'image',
-      src: '/parcel-assets/tracking-live.png',
-      alt: 'Live tracking screen with map, courier and timeline, beside the Activity tab of live mini-map cards',
-      caption: 'The map, moving courier, progress ring and timeline are all hand-drawn and animated in SwiftUI — no map SDK, no assets.',
-    },
-    { t: 'h3', x: 'The eight stages' },
-    {
-      t: 'table',
-      head: ['Stage', 'What the customer sees'],
-      rows: [
-        ['Pickup requested', 'We\'re finding a courier partner'],
-        ['Pickup accepted', 'A partner accepted your request'],
-        ['Courier assigned', 'Your rider is on the way to pickup'],
-        ['Package picked up', 'Your package is with the rider'],
-        ['In transit', 'Moving toward the destination city'],
-        ['At sorting hub', 'Sorted and dispatched for delivery'],
-        ['Out for delivery', 'Arriving at the doorstep soon'],
-        ['Delivered', 'Handed over to the recipient'],
-      ],
-    },
-
-    // ── 6. Signature moments ─────────────────────────────────────────────────
-    { t: 'h2', x: '6. Signature Interaction Moments' },
-    {
-      t: 'p',
-      x: 'The details that make it feel like a real, premium product — each one built from scratch in code.',
-    },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'map', title: 'Hand-drawn vector map', desc: 'A stylised "premium map" rendered entirely with SwiftUI Canvas — water, park, city blocks, road grid, a bowed pickup→delivery route, and a courier that eases along it. Zero map SDK, zero image assets.' },
-        { icon: 'activity', title: '8-stage live timeline', desc: 'A vertical timeline where completed stages fill and the active stage pulses with an ambient loop. Each stage carries its own SF Symbol, timestamp and location.' },
-        { icon: 'checkCircle', title: 'Confetti confirmation', desc: 'A real particle system plus a spring-scaled check and animated counters — a deliberate emotional peak at the moment of booking.' },
-        { icon: 'home', title: 'Floating tab bar', desc: 'A custom glass tab bar with a raised central "Book" action, symbol-bounce on selection, and no reliance on the stock TabView.' },
-        { icon: 'phone', title: 'Haptics on every beat', desc: 'Nine mapped feedback patterns — a light tap on buttons, medium on step advance, a success notification on booking. The app talks back through touch.' },
-        { icon: 'droplet', title: 'One dynamic color system', desc: 'Every color is a single token that resolves per light/dark trait at runtime, so the whole app re-themes coherently from one source of truth.' },
-      ],
-    },
-
-    // ── 7. The design system, in code ────────────────────────────────────────
-    { t: 'h2', x: '7. The Design System, Built in Code' },
-    {
-      t: 'p',
-      x: 'There was no separate Figma library to drift out of sync. The design system <em>is</em> the code: colors, type, spacing, radius, motion and haptics are all Swift tokens, used directly by every view.',
-    },
-    { t: 'h3', x: 'Color' },
-    {
-      t: 'table',
-      head: ['Token', 'Light', 'Dark', 'Purpose'],
-      rows: [
-        ['accent', '#4B44F5', '#4B44F5', 'The one brand action — electric indigo'],
-        ['violet', '#8B5CF6', '#8B5CF6', 'Gradient companion, "out for delivery"'],
-        ['amber', '#FF9F0A', '#FF9F0A', 'In-motion / in-transit states'],
-        ['success', '#2ECC71', '#2ECC71', 'Delivered, confirmation'],
-        ['danger', '#FF453A', '#FF453A', 'Errors, cancellations'],
-        ['background', '#F4F4F8', '#0A0A0F', 'App background — warm-white / near-black ink'],
-        ['surface', '#FFFFFF', '#17171F', 'Cards and panels'],
-        ['textPrimary', '#0B0B12', '#FFFFFF', 'Primary text (secondary/tertiary are opacity steps)'],
-      ],
-    },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: 'Why light-first',
-      x: 'A courier app carries a little anxiety — is my package okay? A bright, warm, low-chroma surface reads as calm and trustworthy. Dark mode is fully supported and hand-balanced, but light is the app\'s natural home.',
-    },
-    { t: 'h3', x: 'Type, space & shape' },
-    {
-      t: 'table',
-      head: ['Token', 'Value', 'Purpose'],
-      rows: [
-        ['Typeface', 'SF Pro Rounded', 'Friendly, native, modern — rounded terminals soften the tone'],
-        ['Type scale', '11 → 56pt', 'Micro, caption, body, titles, hero numbers'],
-        ['Spacing', '4pt base', 'A single rhythm every gap snaps to (4 → 48)'],
-        ['Radius', '10 / 16 / 22 / 28 / 36', 'Continuous "squircle" corners everywhere'],
-        ['Controls', '56pt buttons · 58pt fields', 'Generous, thumb-friendly hit targets (min 44pt)'],
-      ],
-    },
-    { t: 'h3', x: 'Motion' },
-    {
-      t: 'table',
-      head: ['Curve', 'Spring config', 'Use case'],
-      rows: [
-        ['Standard', 'response 0.42 · damping 0.82', 'Screen and step transitions'],
-        ['Snappy', 'response 0.30 · damping 0.78', 'Chips, toggles, small state'],
-        ['Bouncy', 'response 0.55 · damping 0.60', 'Celebrations, counters, success'],
-        ['Sheet', 'response 0.50 · damping 0.86', 'Bottom sheets, large surfaces'],
-        ['Interactive', 'response 0.28 · damping 0.86', 'Drag-follow gestures'],
-        ['Ambient', 'easeInOut 2.4s loop', 'Map pulse, gradient drift'],
-      ],
-    },
-    { t: 'h3', x: 'Haptics' },
-    {
-      t: 'table',
-      head: ['User action', 'Haptic', 'Why'],
-      rows: [
-        ['Tap a button', '.light impact', 'Subtle acknowledgement'],
-        ['Advance a booking step', '.medium impact', 'A sense of forward progress'],
-        ['Switch tabs', '.selection', 'A crisp detent'],
-        ['Booking confirmed', '.success notification', 'The emotional peak — you did it'],
-        ['Something went wrong', '.warning / .error', 'Alert without alarm'],
-      ],
-    },
-
-    // ── 8. Built in Swift, not Figma ─────────────────────────────────────────
-    { t: 'h2', x: '8. Built in Swift, Not Figma' },
-    {
-      t: 'p',
-      x: 'Most portfolio case studies stop at the mockup. This one is the running app. I didn\'t hand a design to an engineer — I <em>was</em> the engineer, so there is zero gap between intention and implementation. The spring values in the design notes are the literal spring values in the code. The haptic map is literal <code>UIFeedbackGenerator</code> calls. The color tokens are SwiftUI <code>Color</code> extensions.',
-    },
-    {
-      t: 'callout',
-      kind: 'success',
-      title: 'Design → code. No handoff, no loss in translation.',
-      x: 'Designing by building means every interaction is testable the instant it\'s designed. If a transition felt wrong, I changed a damping value and felt it again in seconds. That tight loop is only possible when the designer writes the Swift.',
-    },
-    {
-      t: 'stats',
-      items: [
-        { v: '13', l: 'SwiftUI screens & surfaces' },
-        { v: '~18', l: 'Custom components' },
-        { v: '8-stage', l: 'Live tracking timeline' },
-        { v: '1', l: 'Observable store · no NavigationStack' },
-      ],
-    },
-    { t: 'h3', x: 'How it\'s put together' },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'code', title: 'Pure SwiftUI', desc: 'Declarative views throughout, dropping to UIKit only for haptics. No storyboards, no third-party UI kits.' },
-        { icon: 'braces', title: 'One @Observable store', desc: 'A single @MainActor AppStore is the source of truth and the router. No NavigationStack — every transition is custom, so motion is fully mine.' },
-        { icon: 'map', title: 'Everything hand-drawn', desc: 'The map, progress ring, timeline, confetti and tab bar are drawn with Canvas / Shape / SF Symbols. No map SDK, no image assets.' },
-        { icon: 'layers', title: 'Seeded mock-data layer', desc: 'A deterministic generator produces believable Indian names, cities, PINs, AWBs and pricing — so demos look identical every run and could be swapped for a real API.' },
-      ],
-    },
-    { t: 'h3', x: 'A taste of the code' },
-    {
-      t: 'p',
-      x: 'The whole design system starts as tokens. Because color is a single dynamic value, one definition drives both themes — light and dark stay in lockstep with no duplicated screens.',
-    },
-    {
-      t: 'code',
-      file: 'DesignSystem/Theme.swift',
-      lang: 'swift',
-      x: `enum Theme {
-    /// The one brand action — a confident electric indigo.
-    static let accent = Color(hex: 0x4B44F5)
-
-    /// App background — soft warm-white in light, near-black ink in dark.
-    static let background = Color.dynamic(lightHex: 0xF4F4F8, darkHex: 0x0A0A0F)
-    static let surface    = Color.dynamic(lightHex: 0xFFFFFF, darkHex: 0x17171F)
-
-    /// Signature gradient used on primary buttons and hero accents.
-    static let brandGradient = LinearGradient(
-        colors: [accentSoft, accent, violet],
-        startPoint: .topLeading, endPoint: .bottomTrailing)
-}
-
-extension Color {
-    /// Resolves per light/dark trait at runtime — one token, two themes.
-    static func dynamic(lightHex: UInt, darkHex: UInt) -> Color {
-        Color(UIColor { traits in
-            let hex = traits.userInterfaceStyle == .dark ? darkHex : lightHex
-            return UIColor(hex)
-        })
-    }
-}`,
-    },
-    {
-      t: 'p',
-      x: 'And the tracking map is not a screenshot — it\'s a live drawing. The route is a quadratic curve, and the courier is placed on it every frame by evaluating the Bézier at the current progress.',
-    },
-    {
-      t: 'code',
-      file: 'Components/MiniMap.swift',
-      lang: 'swift',
-      x: `// Bow the straight line into a gentle arc, then draw casing + fill.
-var route = Path()
-route.move(to: pickup)
-route.addQuadCurve(to: delivery, control: control)
-ctx.stroke(route, with: .color(Theme.accent.opacity(0.25)),
-           style: StrokeStyle(lineWidth: 9, lineCap: .round))
-ctx.stroke(route, with: .color(Theme.accent),
-           style: StrokeStyle(lineWidth: 4, lineCap: .round))
-
-// Highlight the portion already travelled.
-let travelled = route.trimmedPath(from: 0, to: CGFloat(progress))
-ctx.stroke(travelled, with: .color(.white),
-           style: StrokeStyle(lineWidth: 4, lineCap: .round))
-
-// Place the courier on the curve by evaluating the quad Bézier at t.
-let pos = quadPoint(pickup, control, delivery, CGFloat(progress))
-let pulse = 1 + 0.15 * sin(time * 3)   // gentle breathing halo
-ctx.fill(circle(at: pos, r: 18 * pulse), with: .color(Theme.accent.opacity(0.16)))
-ctx.fill(circle(at: pos, r: 13),          with: .color(Theme.accent))`,
-    },
-    { t: 'h3', x: 'Screens built in Swift' },
-    {
-      t: 'table',
-      head: ['Screen', 'Notable SwiftUI technique'],
-      rows: [
-        ['Welcome & Auth', 'Gradient app-icon, segmented Register/Login, social auth buttons'],
-        ['Home', 'Live hero card, quick actions, horizontally-scrolling saved places, rebook rows'],
-        ['Booking flow', 'One surface, five steps, directional matched transitions + persistent progress header'],
-        ['Choose partner', 'Comparison cards with a glass "selected partner" bar pinned above the CTA'],
-        ['Confirmation', 'Confetti particle system, spring check, animated counters'],
-        ['Tracking', 'Canvas map + moving courier, progress ring, draggable sheet, pulsing 8-stage timeline'],
-        ['Activity', 'Live mini-map cards with animated LIVE badges'],
-        ['Shipments & Profile', 'Search + status filters, status pills, saved places & recipients'],
-      ],
-    },
-
-    // ── 9. Light & dark ──────────────────────────────────────────────────────
-    { t: 'h2', x: '9. Light-First, Dark Done Right' },
-    {
-      t: 'p',
-      x: 'Light mode is the app\'s home, but dark mode isn\'t an afterthought or an auto-invert. Because every color is one dynamic token, dark is hand-balanced from the same source — surfaces get their own inks, the accent glows a touch, and the map re-tints its water and land.',
-    },
-    {
-      t: 'image',
-      src: '/parcel-assets/theme-home.png',
-      alt: 'The Home screen shown in light mode beside dark mode',
-      caption: 'The same Home screen in both themes, from a single set of tokens — not an auto-invert.',
-    },
-    {
-      t: 'image',
-      src: '/parcel-assets/theme-tracking.png',
-      alt: 'Live tracking shown in light mode beside dark mode',
-      caption: 'Live tracking re-themes end to end — including the hand-drawn map canvas.',
-    },
-
-    // ── 10. What I'd build next ───────────────────────────────────────────────
-    { t: 'h2', x: '10. What I\'d Build Next' },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'braces', title: 'Real carrier APIs', desc: 'The mock layer already mirrors an API shape — every read could be swapped for live carrier tracking with minimal view changes.' },
-        { icon: 'activity', title: 'Push-driven updates', desc: 'Live Activities on the lock screen and push notifications for each stage change, reusing the existing 8-stage model.' },
-        { icon: 'globe', title: 'Localisation', desc: 'Indian-language support for names and addresses, and Dynamic Type auditing across the denser screens.' },
-      ],
-    },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: 'The takeaway',
-      x: 'This is what "design engineer" means to me: I can take a product from an emotional premise all the way to a running, felt-in-the-hand iOS app — owning the interaction, the motion, the system and the Swift that makes it real.',
-    },
-
   ],
-};
+});

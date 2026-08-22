@@ -1,536 +1,601 @@
 // ============================================================================
-//  Oppam - the Companion Experience
-//  Mobile App Design Case Study (concept redesign of oppam.me)
+//  Oppam - A Companion, Not an App
+//  Mobile case study (concept redesign of oppam.me)
 //
-//  A ground-up reimagining of Oppam's therapy platform as a native iOS app
-//  built around a single idea: not a therapy app, but the feeling of someone
-//  quietly coming to sit beside you. Designed and built end-to-end as a
-//  running SwiftUI prototype - 29 files, ~6,800 lines, no UI libraries.
+//  Structure follows the shape a design panel reads for: problem, research,
+//  findings, the bet, the principles, the work, the trade-offs, the other
+//  side of the marketplace, and how success would be measured. Short text,
+//  figures carry the weight.
 //
-//  Redesign concept of a real, existing product. The disclaimer callout
-//  below must stay. Every screenshot is captured live from the running app.
+//  Every figure is a screenshot of the running SwiftUI app, composed by
+//  tools/oppam_figures.sh. Individual captures live in oppam-assets/screens/.
+//  Research is secondary and cited - there are no interviews behind this and
+//  the copy says so. Do not add invented metrics, quotes or pilots.
 // ============================================================================
 
-const DESIGN_OPPAM = {
-  slug: 'oppam',
-  name: 'Oppam: A Companion, Not an App',
-  category: 'Mobile App',
-  icon: 'sun',
-  tag: 'Case Study',
-  status: 'Prototype',
-  summary: 'Reimagining a Kerala therapy platform as a warm iOS companion - a living mascot, a sunlit design system, live sessions, and privacy built for shared homes. Designed and shipped as a running SwiftUI app.',
-  lede: 'In Kerala, asking for therapy is heavy - slowed by stigma, shared phones, and fear of the unknown. Oppam (ഒപ്പം - "beside you") is a concept redesign built to soften that moment: not a therapy app, but the feeling of someone quietly sitting beside you - brought to life in a runnable iOS app with an animated companion, a sunlit design system, real-feeling video sessions, and privacy built for shared homes.',
-  tech: ['SwiftUI', 'iOS 18', 'SwiftData (on-device only)', 'Observation', 'WidgetKit', 'Custom character system', 'Face ID', 'Mock data · no cloud'],
+BODY('oppam', {
   blocks: [
 
-    // ── Hero ─────────────────────────────────────────────────────────────────
+    // ── Hero ────────────────────────────────────────────────────────────────
     {
       t: 'image',
       src: '/oppam-assets/hero.webp',
-      alt: 'Three screens from Oppam - the welcome sunrise, the home veranda, and a therapist introduction',
-      caption: 'The sunrise that opens the app, the "veranda" home, and Care - where you meet a person, not a directory.',
+      alt: 'Five Oppam screens: the welcome, home, a therapist introduction, the journal, and the therapist console',
+      caption: 'The first screen, home, a therapist, your pages - and the fifth phone is the therapist\'s own app. Both sides are built.',
     },
 
-    // ── Disclaimer & Real App text ──────────────────────────────────────────
-    { t: 'h3', x: 'A concept redesign of an existing product.' },
+    { t: 'h3', x: 'A concept redesign, and every screen is real.' },
     {
       t: 'p',
-      x: 'Oppam is a real therapy platform (<strong>oppam.me</strong>). This is an <strong>independent design exploration</strong> - a reimagining of what their product could feel like as a native app. Therapist names, photos, prices, concern areas and platform stats are drawn from the live oppam.me site so the work is grounded in a real service; bios, reviews and session copy are prototype writing in Oppam\'s voice. Nothing here is shipped, no real booking is made, and no payment is taken. It is offered constructively, as a founder-minded proposal.',
-    },
-    { t: 'h3', x: 'Every screen here is a real app, not a mockup.' },
-    {
-      t: 'p',
-      x: 'This isn\'t a Figma file exported to images - <strong>every screenshot below is captured live from the running app.</strong> The companion actually breathes and blinks, the breathing exercise really counts you through 4–2–6, the journal really locks behind Face ID, the video session really connects and rates, and the therapist matching really reorders people around the feelings you pick. <strong>29 Swift files, ~6,800 lines, zero third-party UI libraries.</strong>',
+      x: 'Oppam is a therapy service in Kerala (<strong>oppam.me</strong>). This is an independent redesign of it as a native iOS app - not commissioned, not shipped. Therapist names, photos, prices and concern areas come from the live site; everything else I designed and built. <strong>Every image below is a screenshot of the running app</strong>, captured from an iPhone simulator - not a mockup, not a render.',
     },
 
-    // ── At a glance ──────────────────────────────────────────────────────────
     {
       t: 'table',
       head: ['', ''],
       rows: [
-        ['Role', 'Product Designer &amp; iOS Engineer - research, IA, brand, character, UI, motion, build'],
-        ['Type', 'Concept redesign of an existing product · independent prototype'],
-        ['Platform', 'Native iOS (iPhone, iOS 18) · home-screen widget'],
-        ['Domain', 'Mental health · therapy access in Kerala, India'],
-        ['The bet', 'People delay therapy because of <em>feeling</em>, not features. So design the feeling first.'],
-        ['Signature', 'A living companion character - the brand mark, alive, present in every room'],
-        ['Data', 'Real roster &amp; prices from oppam.me; everything stored on-device with SwiftData. No account, no cloud.'],
-        ['Deliverable', 'A runnable, fully interactive iOS app'],
+        ['Role', 'Sole designer and engineer - research, IA, UI, motion, build'],
+        ['Type', 'Self-initiated concept redesign of a live product'],
+        ['Platform', 'iOS 18 - iPhone, plus a home-screen widget'],
+        ['Built with', 'SwiftUI, SwiftData, WidgetKit - 38 files, ~10,600 lines, no UI libraries'],
+        ['People in it', 'Two: someone seeking care, and the therapist on the other side'],
+        ['Status', 'Runnable prototype. On-device only - no cloud, no account, no real payment.'],
       ],
+    },
+
+    // ══ 1 · Problem ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '1 · The problem' },
+    {
+      t: 'p',
+      x: 'Kerala has more psychiatrists per person than any other state in India. It still leaves most people untreated. <strong>So the wall is not a shortage of therapists.</strong>',
+    },
+    {
+      t: 'p',
+      x: 'The wall is the walk to the door. Most people who would benefit never ask at all - and they stop somewhere upstream of the app, long before price or availability matters.',
     },
     {
       t: 'stats',
       items: [
-        { v: '0', l: 'Accounts required' },
-        { v: '4', l: 'Rooms, one companion' },
-        { v: '5', l: 'Companion moods' },
-        { v: '1', l: 'Shadow in the whole app' },
+        { v: '83%', l: 'of Indians with a mental-health condition get no treatment (NMHS)' },
+        { v: '1.2', l: 'psychiatrists per 100,000 in Kerala - the highest in India' },
+        { v: '0', l: 'accounts Oppam asks you to create' },
       ],
     },
 
-    // ══ 1. Why people don't come ═════════════════════════════════════════════
-    { t: 'h2', x: '1. The Real Problem Isn\'t Software' },
+    // ══ 2 · Research ════════════════════════════════════════════════════════
+    { t: 'h2', x: '2 · What I did instead of guessing' },
     {
       t: 'p',
-      x: 'The current Oppam platform already works - it connects people to good therapists across 45+ countries. So a redesign that just repaints buttons would miss the point. The interesting problem is upstream of the app: <strong>most people who would benefit never book at all.</strong> Before designing a single screen, I mapped <em>why</em> - the quiet, human reasons someone in Kerala puts it off. Each barrier became a specific design decision.',
+      x: 'This is self-initiated, so there was no research budget and no recruited panel. I would rather say that plainly than dress it up: <strong>there are no user interviews behind this.</strong> What there is:',
     },
     {
-      t: 'table',
-      head: ['The barrier (why people wait)', 'Oppam\'s design answer'],
-      rows: [
-        ['<strong>"Am I mad, then?"</strong> - stigma. Therapy is whispered about; being seen at a clinic carries a cost.', 'No clinical language anywhere. You "sit with" someone - you don\'t "get treated." The app never once says the word it\'s afraid of.'],
-        ['<strong>Family visibility.</strong> Shared homes, shared phones, a sibling who borrows your device.', 'A Privacy Room: Face ID on the journal, a sunrise cover in the app switcher, and neutral notifications that never say "therapy."'],
-        ['<strong>"Is my problem big enough?"</strong> People wait for a crisis to feel they\'ve earned help.', 'Nothing asks you to rank your pain. "Just wanting to talk" is a first-class, valid reason to be here.'],
-        ['<strong>Form dread.</strong> Sign-up walls make it feel like registering an illness.', 'No account. A first name only - any name. "Just let me look around" skips everything.'],
-        ['<strong>Cost opacity.</strong> Fear of packages, upsells, hidden fees.', 'A ₹ price on every card, per session. Longer plans are cheaper but never pushed; the first-session discount applies itself.'],
-        ['<strong>Language distance.</strong> Feelings don\'t translate; English therapy feels like an exam.', 'Malayalam / English / Manglish, chosen up front - and the emotionally load-bearing lines actually switch, not just the labels.'],
-        ['<strong>The unknown first session.</strong> The tallest wall is not knowing what happens in there.', 'Every therapist answers "how I work" in their own voice - camera-off allowed, silence allowed, nothing to prepare.'],
+      t: 'list',
+      items: [
+        '<strong>The National Mental Health Survey</strong> (NIMHANS, 2015-16) and the Kerala paper drawn from it - the size and the shape of the gap, and stigma named in its own qualitative findings.',
+        '<strong>Published work on shared phones</strong> in Indian households - who else can see your screen, and what that does to help-seeking.',
+        '<strong>A teardown of the live oppam.me service</strong> - its therapist roster, prices, concern areas, languages and hours.',
+        '<strong>A walk through the category</strong> - every competing app from first open to booking, marking each place I hesitated and why.',
       ],
     },
-    { t: 'h3', x: 'Five people I designed for' },
     {
       t: 'p',
-      x: 'Abstract barriers become design decisions faster when they have a face. Five personas carried the work - each one bends a different part of the product.',
+      x: 'Five situations kept the decisions concrete: the student who types what she can\'t say aloud, the new mother whose only free hour is 10 PM, the husband working Gulf hours, the professional running on four hours of sleep, and the person who simply doesn\'t want to be alone tonight. <strong>Those are archetypes drawn from that reading, not people I interviewed</strong> - and I would replace them with real ones the day there was a budget for it.',
     },
+
+    // ══ 3 · Findings ════════════════════════════════════════════════════════
+    { t: 'h2', x: '3 · Four findings, and what each one changed' },
     {
       t: 'cards',
       items: [
-        { icon: 'book', title: 'The student', desc: 'Types what she can\'t say aloud. <strong>Chat-first</strong> therapists, and a promise her parents will never hear a word.' },
-        { icon: 'moon', title: 'The new mother', desc: 'Her only free hour is 10 PM. <strong>Voice-only, evening slots</strong>, and a night companion that\'s awake when she is.' },
-        { icon: 'globe', title: 'The NRI spouse', desc: 'Gulf time zones, a marriage under strain. <strong>Late-IST couple slots</strong> with an even-handed therapist.' },
-        { icon: 'activity', title: 'The burnt-out professional', desc: 'Four hours of sleep. A psychiatrist who <strong>asks how you\'re sleeping</strong> before asking what\'s wrong.' },
-        { icon: 'sun', title: 'The one who\'s just not okay tonight', desc: 'Doesn\'t need a booking - needs to not be alone. A <strong>night companion + real helplines</strong>, one tap away.' },
-      ],
-    },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: 'The one-line thesis',
-      x: 'Everything in this case study follows from a single sentence: <strong>Oppam is not a therapy app - it is a companion experience.</strong> A therapy app helps you manage a condition. A companion sits with you until asking for help stops feeling like a confession. Design the second thing, and the first takes care of itself.',
-    },
-    { t: 'h3', x: 'The psychology under each decision' },
-    {
-      t: 'p',
-      x: 'The warmth isn\'t decoration - each move is a known behavioural principle, aimed at the exact moment someone hesitates.',
-    },
-    {
-      t: 'table',
-      head: ['Principle from research', 'How Oppam uses it'],
-      rows: [
-        ['<strong>Anonymity lowers self-disclosure cost.</strong> People open up faster when identity is optional.', 'No account, first-name-only, "just look around." You can reach a real therapist before you\'ve given up a single identifying detail.'],
-        ['<strong>Choice overload &amp; evaluation anxiety.</strong> A wall of strangers is cognitively expensive and faintly clinical.', 'Care <em>introduces</em> three people with plain reasons instead of asking you to filter and self-select. The full list still exists - one tap deeper.'],
-        ['<strong>Loss aversion &amp; the streak trap.</strong> Broken streaks punish you exactly when life is hardest.', 'A garden that can only grow, and check-ins you can skip without penalty. Care that survives the bad week.'],
-        ['<strong>Mere presence.</strong> A felt "someone is here" reduces distress even without words.', 'The companion breathes in every room and stays up past 9 PM with a lantern. It never leaves the screen.'],
-        ['<strong>Ecological validity.</strong> Calm imported from elsewhere feels generic.', 'The veranda, Malayalam, haldi-light - calm rooted in a specific Kerala place, not a Western meditation brand.'],
+        {
+          icon: 'activity',
+          title: 'Supply is not the bottleneck',
+          desc: 'The best-served state in India still leaves most people untreated. <strong>So:</strong> design the ten minutes <em>before</em> the booking, not the booking engine.',
+        },
+        {
+          icon: 'verified',
+          title: 'The phone is not private',
+          desc: 'Homes and handsets get shared; a sibling borrows the device. <strong>So:</strong> privacy has to be something you can watch working - a room, not a policy page.',
+        },
+        {
+          icon: 'book',
+          title: 'Nobody knows what happens in there',
+          desc: 'The unknown first session is the tallest wall. <strong>So:</strong> every therapist answers it in their own recorded voice, before you pay anything.',
+        },
+        {
+          icon: 'globe',
+          title: 'A directory asks the hardest question first',
+          desc: 'Evaluate strangers and choose correctly, while anxious. <strong>So:</strong> bring three people forward and say plainly why each of them.',
+        },
       ],
     },
 
-    // ══ 2. The emotional journey ═════════════════════════════════════════════
-    { t: 'h2', x: '2. Designing the Feeling, Step by Step' },
+    // ══ 4 · The bet ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '4 · The bet' },
     {
-      t: 'p',
-      x: 'Instead of a feature list, the product was planned as an <strong>emotional arc</strong> - the path from "I don\'t know if I need this" to "I feel a little stronger today." Every screen is a station on that line. If a feature didn\'t move someone gently along it, it didn\'t ship.',
-    },
-    {
-      t: 'steps',
-      items: [
-        { title: '"I don\'t know if I need this"', desc: 'The app opens without asking anything. The companion just sits with you. No wall, no form, no login.' },
-        { title: '"Maybe I\'ll just look"', desc: 'Browse everything, book nothing. No nagging, no countdown, no red badges. Looking is allowed to be the whole visit.' },
-        { title: '"I could try writing"', desc: 'Pages: private, prompt optional, spelling doesn\'t matter, Malayalam or Manglish both fine.' },
-        { title: '"Maybe a person"', desc: 'Care: name a feeling, meet three people, and - crucially - hear <em>why</em> each of them.' },
-        { title: '"I\'m scared of the first session"', desc: 'An honest note from the therapist in their own voice, camera-off and chat modes, and "come exactly as you are."' },
-        { title: '"I went"', desc: 'A real-feeling video room that connects, holds the call, and lets you rate it kindly afterward.' },
-        { title: '"I feel a little stronger"', desc: 'Small wins plant a garden that only ever grows. Nothing here can wilt - the opposite of a broken streak.' },
-      ],
+      t: 'quote',
+      x: 'Oppam is not a therapy app. It is the feeling of someone quietly coming to sit beside you - and its real job is the moment before someone asks for help, not the transaction afterwards.',
+      by: 'The one sentence every decision was tested against',
     },
 
-    // ══ 3. Information architecture ══════════════════════════════════════════
-    { t: 'h2', x: '3. Four Rooms, One Companion' },
-    {
-      t: 'p',
-      x: 'The whole app is four tabs - and choosing only four was the hardest, most important structural decision. Therapy marketplaces tend to sprawl (directories, filters, blogs, assessments, plans). Oppam does the opposite: <strong>depth over breadth</strong>, so that a scared first-time user is never lost. Each room has one job.',
-    },
+    { t: 'h3', x: 'Four rules that settled the arguments' },
     {
       t: 'cards',
       items: [
-        { icon: 'home', title: 'Home - the veranda', desc: 'A time-aware sky, a greeting by name, your next (or live) session, and a quiet moment to breathe. Warm, never a dashboard.' },
-        { icon: 'sun', title: 'Care', desc: 'Finding a therapist reimagined as <strong>being introduced by a trusted friend</strong>. You name a feeling; Oppam brings three people and says why them. The full searchable list is one tap deeper.' },
-        { icon: 'book', title: 'Pages', desc: 'A private notebook that lives on the phone - journal, "letters to future me" sealed until their day, and the memory garden. Face ID at the door.' },
-        { icon: 'verified', title: 'You', desc: 'Deliberately tiny. The Privacy Room is the hero; real Kerala helplines sit right there; the language-of-the-heart switcher lives here. Almost nothing to "manage" - on purpose.' },
+        { icon: 'sun', title: 'Trust before identity', desc: 'Nothing is asked before trust is earned. No account, no email - a first name, and even that is optional.' },
+        { icon: 'layers', title: 'One loud action', desc: 'Exactly one thing on a screen may raise its voice. Everything else is an invitation you can ignore.' },
+        { icon: 'droplet', title: 'Visible, not promised', desc: 'If you can\'t see a protection working, it isn\'t a feature. Every toggle shows what it actually does.' },
+        { icon: 'moon', title: 'Presence, not performance', desc: 'The companion never gamifies, never guilt-trips, never speaks first, and never pretends to be a therapist.' },
       ],
     },
-    { t: 'h3', x: 'Reading the Home screen' },
+
+
+    // ══ 5 · Feature inventory ═══════════════════════════════════════════════
+    { t: 'h2', x: '5 · Everything it could have been' },
     {
       t: 'p',
-      x: 'Home is the clearest place to see the philosophy. Everything on it is an <em>invitation</em>, never an instruction - the companion greets you by name, your live session is the single loud action, and a two-minute breath waits below it, offered but never nagged. There is only ever one loud action at a time.',
+      x: 'Before cutting anything, I wrote down every feature the product could carry, grouped by the room it would live in. Twenty-two of them are in the running prototype; the rest are named further down rather than quietly dropped.',
     },
     {
-      t: 'image',
-      src: '/oppam-assets/home-times.webp',
-      alt: 'The home screen at morning, afternoon, evening and night - the sky and companion change with the hour',
-      caption: 'The same screen across the day. The sky shifts, and after 9 PM the companion grows sleepy-lidded and holds a lantern - it stays up with you.',
+      t: 'table',
+      head: ['Room', 'What lives there'],
+      rows: [
+        ['<strong>Home</strong> — the veranda', 'A sky and a companion that follow the hour · the inner-weather check-in · your next or live session · a two-minute 4-2-6 breath · small wins'],
+        ['<strong>Care</strong>', 'Feeling-led matching · three introductions with reasons · a recorded voice introduction · “how I work,” in their own words · the full directory with search and four categories · booking in four steps · video, voice or chat · the live room · a kind, skippable rating · history with one-tap rebooking'],
+        ['<strong>Pages</strong>', 'A Face-ID door · the journal · letters sealed until their day · the garden of small wins'],
+        ['<strong>You</strong>', 'The Privacy Room · neutral notifications with a live preview · the app-switcher cover · language of the heart · real Kerala helplines · session history'],
+        ['<strong>Everywhere</strong>', 'The offline ribbon · eleven designed empty and error states · a home-screen widget'],
+        ['<strong>The console</strong>', 'Today · People with care signals · a file and notes per person · the calendar and the hours you open · earnings with the 70/30 split · your public listing · supervision and escalation'],
+      ],
     },
 
-    // ══ 4. The companion - the signature idea ════════════════════════════════
-    { t: 'h2', x: '4. The Companion - the Whole Point' },
+    // ══ 6 · Prioritisation ══════════════════════════════════════════════════
+    { t: 'h2', x: '6 · What made the cut, and why' },
     {
       t: 'p',
-      x: 'This is the idea the entire product is built around, so it gets the most room. Oppam\'s logo is a simple smiling face. The insight was: <strong>don\'t just put the logo in a corner - make it alive, and let it live in every room.</strong> The companion is the brand mark, breathing. It is what turns "an app" into "someone."',
+      x: 'One rule decided scope: <strong>does this move somebody closer to asking for help?</strong> Anything that only made the app stickier lost. That rule is what killed the four features in the bottom-right corner - all of them normal in this category, all of them working on the wrong problem.',
     },
     {
       t: 'diagram',
-      caption: 'The companion is drawn as animatable geometry (a SwiftUI Shape), never an imported image - which is the entire reason it can breathe, blink, and change mood in real time.',
-      svg: `<svg viewBox="0 0 560 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Construction of the companion face - two upward eye arcs and one lifted smile">
-  <text x="40" y="50" class="d-t" style="font-size:22px">How it's built</text>
-  <rect x="70" y="100" width="300" height="200" rx="6" class="d-l" stroke-dasharray="5 6" fill="none"/>
-  <line x1="70" y1="160" x2="370" y2="160" class="d-l" stroke-dasharray="4 6"/>
-  <line x1="70" y1="204" x2="370" y2="204" class="d-l" stroke-dasharray="4 6"/>
-  <text x="378" y="165" class="d-s">eyes · 30% height</text>
-  <text x="378" y="209" class="d-s">smile · 52% height</text>
-  <line x1="160" y1="100" x2="160" y2="300" class="d-l" stroke-dasharray="4 6"/>
-  <line x1="280" y1="100" x2="280" y2="300" class="d-l" stroke-dasharray="4 6"/>
-  <path d="M144 162 Q160 142 176 162" fill="none" stroke="var(--text)" stroke-width="8" stroke-linecap="round" class="d-smile"/>
-  <path d="M264 162 Q280 142 296 162" fill="none" stroke="var(--text)" stroke-width="8" stroke-linecap="round" class="d-smile"/>
-  <path d="M100 188 C156 266 284 266 340 188" fill="none" stroke="var(--text)" stroke-width="8" stroke-linecap="round" class="d-smile"/>
-  <circle cx="100" cy="188" r="4.5" fill="#FFC13B"/><circle cx="340" cy="188" r="4.5" fill="#FFC13B"/>
-  <circle cx="160" cy="142" r="4.5" fill="#FFC13B"/><circle cx="280" cy="142" r="4.5" fill="#FFC13B"/>
-  <text x="40" y="360" class="d-s" style="font-size:14px">Two upward arcs (eyes) + one long smile whose</text>
-  <text x="40" y="384" class="d-s" style="font-size:14px">tips lift past the eyes - lifted straight from the logo.</text>
+      caption: 'The sort that set scope. Position here is judgement, not measurement - the axes are mine, and the point is the reasoning, not the coordinates.',
+      svg: `<svg viewBox="0 0 720 486" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Feature prioritisation: effect on the moment of asking, against build cost">
+  <line x1="30" y1="238" x2="700" y2="238" class="d-l"/>
+  <line x1="366" y1="20" x2="366" y2="424" class="d-l"/>
+  <polygon points="700,238 690,233 690,243" class="d-arrow"/>
+  <polygon points="366,20 361,30 371,30" class="d-arrow"/>
+
+  <text x="34" y="52" class="d-m">SHIP FIRST</text>
+  <circle cx="40" cy="76" r="4" class="d-dot-a"/><text x="54" y="80" class="d-s">No account, ever</text>
+  <circle cx="40" cy="102" r="4" class="d-dot-a"/><text x="54" y="106" class="d-s">A price on every card</text>
+  <circle cx="40" cy="128" r="4" class="d-dot-a"/><text x="54" y="132" class="d-s">Neutral notifications</text>
+  <circle cx="40" cy="154" r="4" class="d-dot-a"/><text x="54" y="158" class="d-s">“Just let me look around”</text>
+  <circle cx="40" cy="180" r="4" class="d-dot-a"/><text x="54" y="184" class="d-s">Video, voice or chat</text>
+
+  <text x="384" y="52" class="d-m">WORTH THE WORK</text>
+  <circle cx="390" cy="76" r="4" class="d-dot-a"/><text x="404" y="80" class="d-s">The companion</text>
+  <circle cx="390" cy="102" r="4" class="d-dot-a"/><text x="404" y="106" class="d-s">Three introductions, with reasons</text>
+  <circle cx="390" cy="128" r="4" class="d-dot-a"/><text x="404" y="132" class="d-s">Recorded voice introductions</text>
+  <circle cx="390" cy="154" r="4" class="d-dot-a"/><text x="404" y="158" class="d-s">The Privacy Room</text>
+  <circle cx="390" cy="180" r="4" class="d-dot-a"/><text x="404" y="184" class="d-s">The therapist console</text>
+
+  <text x="34" y="282" class="d-m">LATER, NOT NEVER</text>
+  <circle cx="40" cy="306" r="4" class="d-dot"/><text x="54" y="310" class="d-s">The home-screen widget</text>
+  <circle cx="40" cy="332" r="4" class="d-dot"/><text x="54" y="336" class="d-s">Letters to your future self</text>
+  <circle cx="40" cy="358" r="4" class="d-dot"/><text x="54" y="362" class="d-s">Live Activity countdown</text>
+
+  <text x="384" y="282" class="d-m">CUT</text>
+  <circle cx="390" cy="306" r="4" class="d-dot"/><text x="404" y="310" class="d-s">An AI chat “therapist”</text>
+  <circle cx="390" cy="332" r="4" class="d-dot"/><text x="404" y="336" class="d-s">Streaks, XP and badges</text>
+  <circle cx="390" cy="358" r="4" class="d-dot"/><text x="404" y="362" class="d-s">A community forum</text>
+  <circle cx="390" cy="384" r="4" class="d-dot"/><text x="404" y="388" class="d-s">A mood analytics dashboard</text>
+
+  <text x="30" y="452" class="d-m">LOW BUILD COST</text>
+  <text x="700" y="452" class="d-m" text-anchor="end">HIGH BUILD COST</text>
+  <text x="0" y="14" class="d-m">↑ MOVES SOMEONE CLOSER TO ASKING</text>
 </svg>`,
     },
-    { t: 'h3', x: 'One face, five registers' },
+
+    // ══ 7 · User flow ═══════════════════════════════════════════════════════
+    { t: 'h2', x: '7 · The core flow, end to end' },
     {
       t: 'p',
-      x: 'The companion has five moods - but the rule that makes it feel safe rather than gimmicky is this: <strong>its mood always sits one step softer than yours.</strong> It never mirrors distress, and it never celebrates louder than you do. When you\'re heavy, it goes tender, not sad. When you win, it\'s quietly happy, not confetti.',
+      x: 'Twelve steps, from opening the app to sitting with somebody. The thing worth noticing is what <em>isn\'t</em> on it - no sign-up, no verification, no intake questionnaire. Each of the four phases carries one principle, and the orange notes are the exits and the recoveries: the places a real person hesitates, or something breaks.',
     },
     {
-      t: 'image',
-      src: '/oppam-assets/moods.webp',
-      alt: 'The five companion moods: peaceful, listening, happy, comforting, sleeping',
-      caption: 'Peaceful, listening, happy, comforting, sleeping - the same geometry, re-curved. This board is generated live by the app, not drawn by hand.',
-    },
-    { t: 'h3', x: 'It breathes - and this is where the motion lives' },
-    {
-      t: 'p',
-      x: 'Stillness reads as "dead"; breath reads as "present." The companion runs a slow ~8-second breathing cycle at 2.5% scale and blinks every 3–6 seconds, and every motion in the app collapses to a gentle cross-fade under Reduce Motion. <strong>Static screenshots can\'t carry that - you have to see it running.</strong>',
-    },
-    { t: 'h3', x: 'The rules it never breaks' },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'activity', title: 'It always breathes', desc: 'A ~8-second breathing cycle and a blink every 3–6 seconds. Present, never static.' },
-        { icon: 'moon', title: 'It sleeps, it doesn\'t leave', desc: 'After 9 PM it grows sleepy-lidded and holds a lantern. It never disappears - someone is always still there.' },
-        { icon: 'book', title: 'It speaks like a letter', desc: 'The companion\'s words are always set in serif, never in a chat bubble - a note from someone who cares, not a chatbot.' },
-        { icon: 'sun', title: 'It never performs', desc: 'It never bounces, never talks first in a loud way, never gamifies, never guilt-trips. Presence, not performance.' },
-      ],
-    },
-    {
-      t: 'callout',
-      kind: 'success',
-      title: 'Why this matters commercially, not just emotionally',
-      x: 'A living character is the one thing a competitor can\'t clone with a template. It is the brand you <em>feel</em> before you read a word - on the app icon, the home-screen widget, the empty states, the app-switcher cover, the booking confirmation. It gives Oppam an ownable identity in a category where most apps look like a hospital form, and it makes the product retainable for the softest reason of all: people come back to something that feels glad they did.',
+      t: 'diagram',
+      caption: 'Four phases, twelve steps. The loop at the end is the point of the whole thing - a second session is one tap, from a screen you were already on.',
+      svg: `<svg viewBox="0 0 720 578" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The core user flow: arrive, find someone, book, and sit with them">
+
+  <text x="0" y="12" class="d-m">1 · ARRIVE</text>
+  <text x="720" y="12" class="d-m" text-anchor="end">NOTHING IS ASKED</text>
+  <rect x="0" y="24" width="220" height="60" rx="11" class="d-box-a"/>
+  <text x="16" y="50" class="d-t">Open</text><text x="16" y="70" class="d-s">No account, no email</text>
+  <rect x="250" y="24" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="50" class="d-t">A name</text><text x="266" y="70" class="d-s">Any name, or skip it</text>
+  <rect x="500" y="24" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="50" class="d-t">Home</text><text x="516" y="70" class="d-s">The veranda, by the hour</text>
+  <line x1="220" y1="54" x2="244" y2="54" class="d-l"/><polygon points="250,54 242,50 242,58" class="d-arrow"/>
+  <line x1="470" y1="54" x2="494" y2="54" class="d-l"/><polygon points="500,54 492,50 492,58" class="d-arrow"/>
+  <text x="0" y="106" class="d-s" fill="var(--accent)">↳ the category puts a sign-up wall here — it is where people quietly leave</text>
+  <path d="M610 84 V118 q0 8 -8 8 H204 q-8 0 -8 8 V160" class="d-l"/>
+  <polygon points="196,166 192,158 200,158" class="d-arrow"/>
+
+  <text x="0" y="154" class="d-m">2 · FIND SOMEONE</text>
+  <text x="720" y="154" class="d-m" text-anchor="end">INTRODUCED, NOT LISTED</text>
+  <rect x="0" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="192" class="d-t">Care</text><text x="16" y="212" class="d-s">Name a feeling</text>
+  <rect x="250" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="192" class="d-t">Three introductions</text><text x="266" y="212" class="d-s">Each with its reason</text>
+  <rect x="500" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="192" class="d-t">A therapist</text><text x="516" y="212" class="d-s">Voice note, in their words</text>
+  <line x1="220" y1="196" x2="244" y2="196" class="d-l"/><polygon points="250,196 242,192 242,200" class="d-arrow"/>
+  <line x1="470" y1="196" x2="494" y2="196" class="d-l"/><polygon points="500,196 492,192 492,200" class="d-arrow"/>
+  <text x="250" y="248" class="d-s" fill="var(--accent)">↳ or see everyone, in the full directory</text>
+  <path d="M610 226 V260 q0 8 -8 8 H204 q-8 0 -8 8 V302" class="d-l"/>
+  <polygon points="196,308 192,300 200,300" class="d-arrow"/>
+
+  <text x="0" y="296" class="d-m">3 · BOOK</text>
+  <text x="720" y="296" class="d-m" text-anchor="end">PRICE UP FRONT</text>
+  <rect x="0" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="334" class="d-t">Book</text><text x="16" y="354" class="d-s">Plan, time, how you’ll meet</text>
+  <rect x="250" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="334" class="d-t">Review</text><text x="266" y="354" class="d-s">The bill, in plain words</text>
+  <rect x="500" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="334" class="d-t">Confirmed</text><text x="516" y="354" class="d-s">One neutral reminder</text>
+  <line x1="220" y1="338" x2="244" y2="338" class="d-l"/><polygon points="250,338 242,334 242,342" class="d-arrow"/>
+  <line x1="470" y1="338" x2="494" y2="338" class="d-l"/><polygon points="500,338 492,334 492,342" class="d-arrow"/>
+  <text x="250" y="390" class="d-s" fill="var(--accent)">↳ declined card → nothing charged, slot held</text>
+  <path d="M610 368 V402 q0 8 -8 8 H204 q-8 0 -8 8 V444" class="d-l"/>
+  <polygon points="196,450 192,442 200,442" class="d-arrow"/>
+
+  <text x="0" y="438" class="d-m">4 · SIT WITH THEM</text>
+  <text x="720" y="438" class="d-m" text-anchor="end">HELD ALL THE WAY THROUGH</text>
+  <rect x="0" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="476" class="d-t">Join</text><text x="16" y="496" class="d-s">From Home, one tap</text>
+  <rect x="250" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="476" class="d-t">The session</text><text x="266" y="496" class="d-s">Nothing is recorded</text>
+  <rect x="500" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="476" class="d-t">Rating</text><text x="516" y="496" class="d-s">Skippable, then history</text>
+  <line x1="220" y1="480" x2="244" y2="480" class="d-l"/><polygon points="250,480 242,476 242,484" class="d-arrow"/>
+  <line x1="470" y1="480" x2="494" y2="480" class="d-l"/><polygon points="500,480 492,476 492,484" class="d-arrow"/>
+  <text x="0" y="532" class="d-s" fill="var(--accent)">↳ a low rating offers a different fit — no awkwardness, no explaining</text>
+  <text x="0" y="558" class="d-s" fill="var(--accent)">↻ book again — one tap from history, straight back to phase 3</text>
+</svg>`,
     },
 
-    // ══ 5. Onboarding ════════════════════════════════════════════════════════
-    { t: 'h2', x: '5. Onboarding - Five Gentle Moments, Not a Form' },
+    // ══ 8 · Onboarding ══════════════════════════════════════════════════════
+    { t: 'h2', x: '8 · The first sixty seconds' },
     {
       t: 'p',
-      x: 'The riskiest 60 seconds in the whole product. Most therapy apps open with a wall - email, password, "create account," an intake questionnaire. Oppam opens with a <strong>sunrise</strong>. The only thing it ever asks is a first name, and even that can be made up or skipped. Trust is earned before anything is requested - the opposite of registering an illness.',
+      x: 'The riskiest screen in the product is the first one. Most therapy apps open with a sign-up wall, which is where a frightened person quietly leaves. Oppam opens with a sunrise and asks for one thing - a name, any name. <strong>"Just let me look around" skips even that.</strong>',
     },
     {
       t: 'image',
       src: '/oppam-assets/onboarding.webp',
-      alt: 'The five onboarding steps: welcome sunrise, a name, language of the heart, what brings you, and the privacy promise',
-      caption: 'Arrival → a name (any name) → language of the heart → what\'s sitting with you (optional) → one privacy promise. No email. No password. "Just let me look around" skips it all.',
+      alt: 'Five onboarding screens: welcome, a name, language, what brings you, and the privacy promise',
+      caption: 'Arrival, a name, the language you feel in, what\'s sitting with you (optional), one privacy promise. No email. No password.',
     },
 
-    // ══ 6. Care ══════════════════════════════════════════════════════════════
-    { t: 'h2', x: '6. Care - Meeting a Person, Not Browsing a Market' },
+    // ══ 9 · Home ════════════════════════════════════════════════════════════
+    { t: 'h2', x: '9 · Home is a veranda, not a dashboard' },
     {
       t: 'p',
-      x: 'A directory asks an anxious person to evaluate strangers and pick correctly. Oppam inverts it: you name what\'s sitting with you, and it introduces a few people, each with a plain-language reason ("sits with anxiety often," "evening &amp; night times," "speaks Malayalam"). It feels like a friend saying <em>"I know someone you\'d like."</em>',
+      x: 'The sky follows the hour. After 9 PM the companion grows sleepy-lidded and lights a lantern - it stays up with you rather than logging off.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/home-times.webp',
+      alt: 'The home screen at morning, afternoon, evening and night',
+      caption: 'One screen, four times of day. No badges, no counters, no streak to protect.',
+    },
+
+    // ══ 10 · Care ════════════════════════════════════════════════════════════
+    { t: 'h2', x: '10 · Introduced, not listed' },
+    {
+      t: 'p',
+      x: 'You name a feeling - and <em>"Just want to talk"</em> is one of them. Oppam brings three people forward and says why each one: <em>"sits with anxiety often," "evening &amp; night times."</em> Each has a voice note, so you hear a person before you pay. The full searchable directory is still one tap deeper.',
     },
     {
       t: 'image',
       src: '/oppam-assets/care.webp',
-      alt: 'Care: the gentle start with feeling chips, and the matched introductions',
-      caption: 'Left: you name a feeling (with the platform\'s real trust strip). Right: three introductions, each with a plain reason why them - and a live session waiting at the top if you have one.',
-    },
-    { t: 'h3', x: 'The profile that dissolves the fear' },
-    {
-      t: 'p',
-      x: 'Care leads with a real detail the category buries: each therapist has a <strong>voice introduction</strong> and answers "how I work" in their own words, set in serif like a letter. Plain-language fit ("gentle listener," "no homework," "comfort with silence") sits above the credentials, and logistics come last. Fear dissolves at "hello."',
-    },
-    { t: 'h3', x: 'Booking - three taps, zero forms' },
-    {
-      t: 'p',
-      x: 'Booking is a day, a time, and how you\'d like to meet (video, voice, or chat, because camera-shy is normal here). Longer plans are cheaper but never pushed, couple sessions are first-class for the NRI persona, and the first-session discount applies itself. The confirmation promises a reminder that won\'t mention therapy.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/therapist-booking.webp',
-      alt: 'A therapist profile, the plan-choosing booking sheet, and the warm confirmation',
-      caption: 'Profile → choose a rhythm (single or a gentle plan) → "You\'re booked." Come exactly as you are - that\'s the whole point.',
-    },
-    {
-      t: 'p',
-      x: 'The whole flow, step by step: <strong>who\'s coming</strong> (just you, or a couple), <strong>when</strong>, <strong>how you\'d like to meet</strong>, and a plain-language <strong>review</strong> where the bill is itemised and the first-session discount has already applied itself. No hidden fees, cancel anytime.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/booking-steps.webp',
-      alt: 'The four booking steps: session type, choosing a slot, choosing a mode, and the review with an itemised bill',
-      caption: 'Session type → slot → how you\'ll meet → review. Four calm steps, each doing one thing, with a progress dot that never rushes you.',
-    },
-    { t: 'h3', x: 'For those who\'d rather look themselves' },
-    {
-      t: 'p',
-      x: 'The exhaustive directory still exists - it\'s just not the front door. Search by name or concern, filter by the four real categories (Consultant · Clinical · Psychiatrist · Sexual Health). And the rough edges are designed too: every empty result and error state was drawn on purpose, gathered in one place.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/directory-edges.webp',
-      alt: 'The full searchable therapist directory, and the edge-case gallery of empty and error states',
-      caption: 'Left: the full list, one tap deeper. Right: the edge-case room - offline, card declined, a dropped call, empty searches - each held gently, none left to a default alert.',
+      alt: 'Care: naming a feeling, three matched introductions, and a therapist profile',
+      caption: 'Name a feeling, meet three people with reasons attached, then read one in their own words. "Introductions, not listings."',
     },
 
-    // ══ 7. Sessions ══════════════════════════════════════════════════════════
-    { t: 'h2', x: '7. The Session - Held All the Way Through' },
+    // ══ 11 · Booking ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '11 · The price is on the card' },
     {
       t: 'p',
-      x: 'Most therapy apps hand you off to a generic call and disappear. Oppam stays. A live session surfaces on Home and Care with a single "Join," the video room connects and holds the call, and afterward you\'re asked - gently, skippably - how it went. <strong>The companion frames the whole thing so a first video call feels less like a clinical appointment and more like meeting someone.</strong>',
+      x: 'Cost opacity is one of the reasons people never start, so every price is stated per session, up front. Longer plans cost less and are never pushed, and the bill is itemised in plain words before anything is confirmed.',
     },
     {
       t: 'image',
-      src: '/oppam-assets/session-flow.webp',
-      alt: 'The live session flow: the join card, the connected video room, and the kind rating screen',
-      caption: 'Join → a calm, connected room → "How was your time?" Rating is an invitation, never a demand - "Maybe later" is always there, and a low rating offers a different fit with no awkwardness.',
-    },
-    { t: 'h3', x: 'A history that invites you back' },
-    {
-      t: 'p',
-      x: 'Past sessions become a quiet record you can revisit - each with the warmth of the moment, a star if you gave one, and a one-tap "book again" with the same person. It\'s continuity of care, made to feel like remembering a good conversation, not opening a medical file.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/history.webp',
-      alt: 'Session history with per-session ratings and rebooking, and the session detail sheet',
-      caption: 'Left: your sessions so far, each rebookable in a tap. Right: a session\'s details - nothing to prepare, one quiet reminder an hour before.',
+      src: '/oppam-assets/booking.webp',
+      alt: 'The four booking steps - plan, time, how to meet, and the bill - then the confirmation',
+      caption: 'A rhythm, a time, how you\'d like to meet, then the bill. "No hidden fees. Cancel anytime before a session and it stays as a credit." It ends on "nothing to prepare, come exactly as you are."',
     },
 
-    // ══ 8. Pages ═════════════════════════════════════════════════════════════
-    { t: 'h2', x: '8. Pages - a Garden That Can Only Grow' },
+    // ══ 12 · Session ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '12 · The session is held all the way through' },
     {
       t: 'p',
-      x: 'The journal is private by construction (on-device, Face-ID-gated) and warm by tone: prompts are invitations you can dismiss, spelling doesn\'t matter, and you can seal a letter to your future self until its day. Small wins plant a <strong>garden that never wilts</strong> - a deliberate rejection of the streak mechanic that punishes you the day life gets hard.',
+      x: 'Most platforms hand you to a generic call and disappear. Here the session surfaces on Home with one Join, the room stays in the app\'s own warmth, and afterwards you\'re asked how it went - gently, and "maybe later" is always there.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/session.webp',
+      alt: 'The connected session room, and session history',
+      caption: 'The room says "this stays between you two. Oppam never records." Afterwards, a history you can rebook from in one tap.',
+    },
+
+    // ══ 13 · Pages ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '13 · A garden that can only grow' },
+    {
+      t: 'p',
+      x: 'The journal lives behind Face ID, on the phone, and nowhere else. Prompts can be switched off, spelling doesn\'t matter, and Malayalam, English or Manglish are all fine. Small wins plant a garden that never wilts.',
     },
     {
       t: 'image',
       src: '/oppam-assets/pages.webp',
-      alt: 'The Pages journal with the memory garden, the writing composer, and the future-letter composer',
-      caption: 'The garden and your entries; a composer where the only prompt is one you can turn off; and a letter you can seal for one, three or six months.',
+      alt: 'The Pages journal, the writing composer, and the letter-to-future-self composer',
+      caption: 'The garden and your entries; a composer whose only prompt can be turned off; and a letter you can seal for months.',
     },
 
-    // ══ 9. Privacy ═══════════════════════════════════════════════════════════
-    { t: 'h2', x: '9. Privacy Is the Feature, Not the Footnote' },
+    // ══ 14 · Privacy ════════════════════════════════════════════════════════
+    { t: 'h2', x: '14 · Privacy you can watch working' },
     {
       t: 'p',
-      x: 'In a shared Kerala household, privacy isn\'t a compliance checkbox - it\'s the thing standing between someone and getting help at all. So it\'s given its own room, and every protection <strong>explains itself in plain words and shows exactly what others would see.</strong> There is no account and no cloud; everything lives on the phone.',
+      x: 'In a shared home, privacy is not a compliance checkbox - it is the thing standing between someone and getting help at all. So it gets its own room, and every protection <strong>shows you exactly what someone else would see.</strong>',
     },
     {
       t: 'image',
-      src: '/oppam-assets/you-privacy.webp',
-      alt: 'The You tab and the Privacy Room with self-explaining toggles and a live notification preview',
-      caption: 'The You tab is deliberately tiny; the Privacy Room is the hero. Note the live notification preview: it shows the actual harmless text a family member would see on the lock screen - never the word "therapy."',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/privacy-signature.webp',
-      alt: 'Three privacy signatures: the app-switcher sunrise cover, the Face-ID locked door, and the Privacy Room',
-      caption: 'Three signatures of one principle: switch away and the app switcher shows only a sunrise; your pages sit behind a Face-ID door ("these pages are only yours"); and inside the Privacy Room, every protection is a toggle you can see and understand.',
+      src: '/oppam-assets/privacy.webp',
+      alt: 'The Face-ID door, the Privacy Room, the app-switcher cover, and the You tab',
+      caption: 'A locked door on your pages; a room where every protection explains itself; the sunrise the app switcher shows; and a You tab kept deliberately tiny. The notification preview is the real text a family member would see.',
     },
 
-    // ══ 10. Edge & error states ══════════════════════════════════════════════
-    { t: 'h2', x: '10. Designed for the Bad Days, Too' },
+    // ══ 15 · Companion ══════════════════════════════════════════════════════
+    { t: 'h2', x: '15 · The companion' },
     {
       t: 'p',
-      x: 'A gentle product earns its calm precisely when things go wrong. So every rough edge - a dropped signal, a declined card, a call that won\'t connect, a screen with nothing in it yet - was drawn on purpose, in the same warm voice, never left to a default system alert. <strong>Each one says the same three things: it wasn\'t your fault, nothing was lost, and here\'s the one small thing to try.</strong>',
+      x: 'The logo, alive. It is drawn as animatable geometry rather than an imported image, which is the whole reason it can breathe, blink and change register in real time. <strong>Its mood always sits one step softer than yours</strong> - tender when you are heavy, quietly pleased when you win, never louder than you.',
     },
     {
       t: 'image',
-      src: '/oppam-assets/edge-connection.webp',
-      alt: 'Five failure states: offline page, card declined, network dropped mid-payment, offline booking, and the call-can\'t-connect screen',
-      caption: 'When the signal drops, a card is declined, or a call won\'t connect. Every failure reassures first ("nothing was charged," "your slot is safe") and offers one calm retry.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/edge-empty.webp',
-      alt: 'The offline ribbon and five empty states: nothing booked, no history, no search results, blank pages, and the generic fallback',
-      caption: 'Empty is never a dead end. The companion waits in every blank space with a warm line and a gentle way forward - the app-wide offline ribbon, no sessions yet, no results, blank pages, and the catch-all "something went sideways."',
+      src: '/oppam-assets/companion.webp',
+      alt: 'The five companion moods, the breathing exercise, and the night companion holding a lantern',
+      caption: 'Five registers from one face - this board is rendered live by the app, not drawn by hand. Beside it: the 4-2-6 breath, and the companion after 9 PM.',
     },
     {
       t: 'p',
-      x: 'And because the whole system is dynamic, every one of these holds together in lamplight too.',
+      x: 'Stillness reads as dead; breath reads as present. It runs a slow eight-second breathing cycle at 2.5% scale and blinks every three to six seconds. Under Reduce Motion, every one of those collapses to a cross-fade.',
     },
     {
       t: 'image',
-      src: '/oppam-assets/edge-dark.webp',
-      alt: 'The same error and empty states rendered in lamplight dark mode',
-      caption: 'The same rough edges, re-lit for night - warm, never cold grey, even when something breaks.',
+      src: '/oppam-assets/motion-breathe.gif',
+      alt: 'The companion breathing - one full cycle, captured from the running app',
+      caption: 'One breathing cycle, captured frame by frame from the simulator. Static screenshots can\'t carry this part.',
+    },
+    {
+      t: 'p',
+      x: 'The same face sits on the home screen too - a WidgetKit widget carrying the greeting for the hour and nothing private. It asks for nothing, and a tap opens straight into a two-minute breath.',
     },
 
-    // ══ 11. Widget ═══════════════════════════════════════════════════════════
-    { t: 'h2', x: '11. A Presence on the Home Screen' },
+    // ══ 16 · Trade-offs ═════════════════════════════════════════════════════
+    { t: 'h2', x: '16 · The trade-offs' },
     {
       t: 'p',
-      x: 'The companion doesn\'t only live inside the app. A WidgetKit widget puts it on the home screen - the same face, the same time-aware greeting, one gentle line, and nothing private. It follows the day (sleepy after dark), asks for nothing, and a tap opens straight into a two-minute breath. It\'s the brand, sitting quietly on your home screen all day.',
+      x: 'Every one of these had a real cost. Naming the cost is the point - these are the decisions I would expect to defend in a design review.',
     },
-    {
-      t: 'image',
-      src: '/oppam-assets/widget.webp',
-      alt: 'The Oppam home-screen widget in light and dark, small and medium sizes',
-      caption: 'Small and medium widgets, in daylight and lamplight. No account, no data - just the companion and a greeting that follows the hour.',
-    },
-
-    // ══ 11. Design system ════════════════════════════════════════════════════
-    { t: 'h2', x: '12. A Design System Made of Sunlight' },
-    {
-      t: 'p',
-      x: 'The palette started from one instruction to myself: <strong>"sunlight, not yellow."</strong> Not the flat brand-yellow of a highlighter, but Kerala morning light through a wooden window - haldi on warm cotton, a lamp at night. The background is never pure white; it\'s warm paper. Ink is never pure black; it\'s the brown-black of handwriting.',
-    },
-    {
-      t: 'p',
-      x: 'Every colour carries a meaning rather than a decoration. Paper (#FFFAEB) is the ground; sun (#FFC13B) is the companion and the one loud action; honey (#E5A413) presses and links; warm ink (#33302A) is the brown-black of handwriting. Leaf is growth and calm confirmation, sky is rest and night, clay is earth and the offline ribbon, and rose is tenderness - never alarm. Dark mode is lamplight: warm browns and amber, like a lamp left on for you.',
-    },
-    { t: 'h3', x: 'Type: two voices' },
     {
       t: 'table',
-      head: ['When Oppam is being human', 'When Oppam is being useful'],
+      head: ['What I chose', 'What it cost', 'Why I took it anyway'],
       rows: [
-        ['<strong>Serif.</strong> "Good morning, Anu." The companion\'s words. Your journal. The therapist\'s "how I work." Warmth, intimacy, a person talking.', '<strong>Sans-serif.</strong> Tab bar, buttons, prices, filters, meta. Clarity, structure, getting out of the way.'],
+        [
+          '<strong>No account, ever.</strong>',
+          'No sync, no recovery if the phone is lost, no history that follows you to a new device.',
+          'The sign-up wall is the last screen many people ever see. Continuity is carried on the therapist\'s side instead, so care survives without the person having an identity.',
+        ],
+        [
+          '<strong>Three introductions before the directory.</strong>',
+          'Less felt control, and it hides how much choice actually exists.',
+          'Choosing between strangers is the hardest task to hand an anxious person. Each match states its reason in plain words, and "see everyone" is one tap away - so the logic stays visible.',
+        ],
+        [
+          '<strong>A character, not a neutral clinical UI.</strong>',
+          'Characters can read as childish, they date badly, and they risk trivialising the subject.',
+          'It is the one thing a competitor cannot copy from a template, and it makes the empty and error screens bearable. Four hard rules keep it from becoming a toy.',
+        ],
+        [
+          '<strong>A garden instead of streaks.</strong>',
+          'A measurably weaker daily-return hook. Streaks work.',
+          'A streak breaks on the day someone needs the app most. That is the wrong day to punish somebody.',
+        ],
+        [
+          '<strong>Everything on the device.</strong>',
+          'No backup, no cross-device access, and no analytics on the part of the product people use most.',
+          'The threat model here is a family member holding your unlocked phone, not a remote attacker. On-device is the only answer that addresses it.',
+        ],
+        [
+          '<strong>The price on every card.</strong>',
+          'Price becomes a filter early, and probably costs the more expensive therapists some bookings.',
+          'Fear of packages and hidden fees is a documented reason people never begin. Hiding it would win the click and lose the trust.',
+        ],
       ],
+    },
+
+    // ══ 17 · The therapist's app ════════════════════════════════════════════
+    { t: 'h2', x: '17 · The other half: the therapist\'s app' },
+    {
+      t: 'p',
+      x: 'A marketplace with a beautiful client app and a neglected provider portal is half a product. So the same app has a second side. Same paper, same sun, same serif voice - <strong>in working clothes.</strong> It answers three questions in order: who\'s next, who needs something, and what\'s left of the day.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/practice-day.webp',
+      alt: 'The therapist console: today, incoming requests, the session room and the note composer',
+      caption: 'Today leads with the live session and the one-line note you left yourself last time. Requests say "nobody is timing you." The room records nothing. A note is written "the way you\'d say it to a colleague you trust."',
+    },
+    {
+      t: 'p',
+      x: 'There is no risk score anywhere. A person gets one of three words - <strong>Steady, Keep an eye, Reach out</strong> - and each one says what to <em>do</em>, not what the person <em>is</em>. The journal never crosses over: the console can\'t see a single page.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/practice-people.webp',
+      alt: 'The People list with care signals, a client file, and unfinished notes',
+      caption: 'People, not cases. The file shows a first name and only what that person chose to share - including the words they typed on day one. "Unfinished notes aren\'t a backlog."',
+    },
+    {
+      t: 'p',
+      x: 'The business side is stated in words, not buried: <strong>the therapist keeps 70% of every session</strong>, the split is spelled out, and the payout date sits on the card. Nothing is auto-booked. And if a week passes twenty-five sessions, the console quietly stops offering new people until the therapist says otherwise.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/practice-work.webp',
+      alt: 'Calendar, practice profile, earnings, the public listing, and supervision & support',
+      caption: 'Hours you open yourself, earnings with the split written out, your listing "exactly as someone sees it at 2 AM deciding whether to trust you," and an on-call clinical lead answered in under three minutes.',
+    },
+
+    // ══ 18 · Rough weather ══════════════════════════════════════════════════
+    { t: 'h2', x: '18 · The bad days are designed too' },
+    {
+      t: 'p',
+      x: 'A gentle product earns its calm exactly when things break. Every failure state says the same three things: <strong>it wasn\'t your fault, nothing was lost, here is one small thing to try.</strong> None of them is left to a default system alert.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/edges.webp',
+      alt: 'Five failure states: offline, card declined, payment dropped, call failed, and the catch-all',
+      caption: '"Your bank declined it, so nothing was charged." "Your therapist is still holding the time." Reassurance first, one calm retry second.',
+    },
+    {
+      t: 'image',
+      src: '/oppam-assets/empties.webp',
+      alt: 'The offline ribbon and four empty states',
+      caption: 'Empty is never a dead end - the companion waits in every blank space with a line and a way forward.',
+    },
+
+    // ══ 19 · The system ═════════════════════════════════════════════════════
+    { t: 'h2', x: '19 · The system underneath' },
+    {
+      t: 'p',
+      x: 'The palette started from one instruction to myself: <strong>sunlight, not yellow.</strong> Not the flat yellow of a highlighter, but Kerala morning light through a wooden window. The background is never pure white - it is warm paper. The ink is never pure black - it is the brown-black of handwriting.',
     },
     {
       t: 'cards',
       items: [
-        { icon: 'droplet', title: 'One shadow, everywhere', desc: 'The entire app uses a <strong>single</strong> warm, low shadow - like late-afternoon light. Consistency you feel without noticing.' },
-        { icon: 'image', title: 'Organic shapes', desc: 'Continuous-corner cards (26pt), capsule chips, rolling hills. Nothing sharp. The geometry itself is trying to relax you.' },
-        { icon: 'layers', title: 'Tinted meanings', desc: 'Sun-wash for warmth, leaf-wash for growth, sky-wash for rest. Colour as quiet emotional signage, never decoration.' },
-        { icon: 'sun', title: 'Everything rides Dynamic Type', desc: 'Text scales with the reader\'s accessibility settings; the layout holds. Warmth that doesn\'t break when magnified.' },
+        { icon: 'book', title: 'Two voices, one rule', desc: 'Serif when Oppam is being <em>human</em> - greetings, the companion, your journal, a therapist\'s own words. Sans-serif when it is being <em>useful</em> - tabs, buttons, prices, meta.' },
+        { icon: 'droplet', title: 'One shadow in the whole app', desc: 'A single warm, low shadow, like late-afternoon light. Consistency you feel without noticing it.' },
+        { icon: 'layers', title: 'Colour means something', desc: 'Sun is warmth and the one loud action, leaf is growth, sky is rest, clay is the offline ribbon, rose is tenderness - never alarm.' },
+        { icon: 'verified', title: 'Accessible by construction', desc: 'Every size rides Dynamic Type and the layouts hold when magnified; every motion collapses to a cross-fade under Reduce Motion; decorative faces are hidden from VoiceOver.' },
       ],
     },
 
-    // ══ 12. Dark mode ════════════════════════════════════════════════════════
-    { t: 'h2', x: '13. Lamplight - Dark Mode, Reimagined' },
+    // ══ 20 · Lamplight ══════════════════════════════════════════════════════
+    { t: 'h2', x: '20 · Lamplight' },
     {
       t: 'p',
-      x: 'Most dark modes are cold grey - practical, but a little clinical, exactly the feeling Oppam is trying to avoid. So dark mode here is <strong>"lamplight"</strong>: warm browns and amber, like a lamp someone left on for you. Every token is dynamic - the same components, re-lit for night.',
+      x: 'Most dark modes are cold grey - practical, and slightly clinical, which is the one feeling this product cannot afford. Here it is <strong>lamplight</strong>: warm browns and amber, like a lamp somebody left on for you. Every token is dynamic, so both sides of the app re-light together.',
     },
     {
       t: 'image',
-      src: '/oppam-assets/dark-showcase.webp',
-      alt: 'Four screens in lamplight dark mode: home, care, a therapist profile and the journal',
-      caption: 'Home, Care, a therapist, and Pages in lamplight. The sunlit palette was the daytime hero, so lamplight simply proves the system holds together at night.',
+      src: '/oppam-assets/dark.webp',
+      alt: 'Five screens in lamplight: night home, care, a therapist, pages and the privacy room',
+      caption: 'The night veranda, Care, a therapist, your pages, and the Privacy Room - warm, never cold grey.',
     },
     {
       t: 'image',
-      src: '/oppam-assets/dark-showcase-2.webp',
-      alt: 'Four more lamplight screens: You, session history, booking confirmed, and the night home',
-      caption: 'You, your session history, a confirmed booking, and the night veranda - warm, never cold grey.',
-    },
-    {
-      t: 'p',
-      x: 'It isn\'t a handful of hero screens that happen to work in the dark - <strong>every room and every flow is fully dressed for lamplight.</strong> Onboarding, the whole session loop, and Care\'s browse-and-book path, all re-lit:',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/dark-onboarding.webp',
-      alt: 'All five onboarding steps in lamplight dark mode',
-      caption: 'The entire onboarding arc in lamplight - the same warmth, from the first sunrise to the privacy promise.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/dark-sessions.webp',
-      alt: 'The session flow in dark mode: night home, the live call, rating, and history',
-      caption: 'The session loop at night - the "Still up?" veranda, the live call, the rating, and your history.',
-    },
-    {
-      t: 'image',
-      src: '/oppam-assets/dark-flows.webp',
-      alt: 'Care flows in dark mode: the gentle start, the full directory, choosing a plan, and the booking review',
-      caption: 'Care in lamplight - from the gentle start through the full directory, plan and review.',
+      src: '/oppam-assets/dark-practice.webp',
+      alt: 'The therapist console, a client file, the session room, a confirmed booking and an error state in dark mode',
+      caption: 'The console re-lights too - and so does the rough weather. A design system is only real when the error states hold.',
     },
 
-    // ══ 14. How it compares ══════════════════════════════════════════════════
-    { t: 'h2', x: '14. How It Compares' },
+    // ══ 21 · Positioning ════════════════════════════════════════════════════
+    { t: 'h2', x: '21 · Where it sits' },
     {
       t: 'p',
-      x: 'Oppam sits in a crowded category - but almost every player optimises for a different thing, and that gap is the opportunity. Two axes tell the whole story: whether finding help feels like <em>browsing a marketplace</em> or <em>being introduced to a person</em>, and whether the product behaves like a <em>clinical tool</em> or a <em>companion that\'s present.</em>',
+      x: 'Two axes decide this category: whether finding help feels like <em>browsing a market</em> or <em>being introduced</em>, and whether the product behaves like a <em>clinical tool</em> or like <em>company</em>. Almost everyone optimises the same corner.',
     },
     {
       t: 'diagram',
-      caption: 'Where a companion-first, introduction-led approach sits relative to the market. Grounded against the live oppam.me platform and the wider category.',
-      svg: `<svg viewBox="0 0 940 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Positioning map: marketplace versus introduction, clinical tool versus companion presence">
-  <!-- axes -->
-  <line x1="70" y1="310" x2="880" y2="310" class="d-l"/>
-  <line x1="475" y1="60" x2="475" y2="560" class="d-l"/>
-  <polygon points="880,310 862,302 862,318" class="d-arrow"/>
-  <polygon points="475,60 467,78 483,78" class="d-arrow"/>
-  <!-- axis labels -->
-  <text x="88" y="345" class="d-s">Browse a marketplace</text>
-  <text x="760" y="345" class="d-s">Introduced to a person</text>
-  <text x="490" y="76" class="d-s">A companion, present</text>
-  <text x="490" y="548" class="d-s">A clinical tool</text>
-  <!-- competitor dots -->
-  <g>
-    <circle cx="200" cy="430" r="7" class="d-box"/><text x="214" y="435" class="d-s">BetterHelp</text>
-    <circle cx="270" cy="380" r="7" class="d-box"/><text x="284" y="385" class="d-s">YourDOST</text>
-    <circle cx="230" cy="480" r="7" class="d-box"/><text x="244" y="485" class="d-s">Amaha</text>
-    <circle cx="360" cy="360" r="7" class="d-box"/><text x="374" y="365" class="d-s">Wysa · Replika (chatbot)</text>
-    <circle cx="430" cy="470" r="7" class="d-box"/><text x="444" y="475" class="d-s">Headspace · Calm</text>
-    <circle cx="560" cy="185" r="7" class="d-box"/><text x="574" y="190" class="d-s">Finch (gamified)</text>
-  </g>
-  <!-- Oppam -->
-  <circle cx="760" cy="150" r="18" fill="#FFC13B" opacity="0.28"/>
-  <circle cx="760" cy="150" r="10" fill="#FFC13B" stroke="#33302A" stroke-width="2"/>
-  <text x="782" y="146" class="d-t" style="font-size:15px">Oppam</text>
-  <text x="782" y="166" class="d-s">introduced · companion · present</text>
+      caption: 'A competitive map from walking each app end to end. The empty corner is the opportunity - and the reason the companion exists.',
+      svg: `<svg viewBox="0 0 720 424" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Positioning map: browsing a market versus being introduced, a clinical tool versus company">
+  <line x1="20" y1="210" x2="694" y2="210" class="d-l"/>
+  <line x1="360" y1="26" x2="360" y2="396" class="d-l"/>
+  <polygon points="700,210 690,205 690,215" class="d-arrow"/>
+  <polygon points="360,20 355,30 365,30" class="d-arrow"/>
+
+  <text x="20" y="236" class="d-m">BROWSE A MARKET</text>
+  <text x="700" y="236" class="d-m" text-anchor="end">INTRODUCED TO A PERSON</text>
+  <text x="374" y="24" class="d-m">COMPANY, PRESENT</text>
+  <text x="374" y="392" class="d-m">A CLINICAL TOOL</text>
+
+  <circle cx="110" cy="295" r="5" class="d-dot"/><text x="124" y="299" class="d-s">BetterHelp</text>
+  <circle cx="165" cy="262" r="5" class="d-dot"/><text x="179" y="266" class="d-s">YourDOST</text>
+  <circle cx="130" cy="338" r="5" class="d-dot"/><text x="144" y="342" class="d-s">Amaha</text>
+  <circle cx="235" cy="245" r="5" class="d-dot"/><text x="249" y="249" class="d-s">Wysa · Replika</text>
+  <circle cx="225" cy="330" r="5" class="d-dot"/><text x="239" y="334" class="d-s">Headspace · Calm</text>
+  <circle cx="430" cy="125" r="5" class="d-dot"/><text x="444" y="129" class="d-s">Finch</text>
+
+  <circle cx="560" cy="100" r="17" fill="var(--accent)" opacity="0.16"/>
+  <circle cx="560" cy="100" r="7" class="d-dot-a"/>
+  <text x="584" y="96" class="d-t">Oppam</text>
+  <text x="584" y="116" class="d-s">introduced · present</text>
 </svg>`,
+    },
+
+    // ══ 22 · Measurement ════════════════════════════════════════════════════
+    { t: 'h2', x: '22 · How I\'d know it worked' },
+    {
+      t: 'p',
+      x: 'Nothing has shipped, so there are no results to report and I\'m not going to invent any. This is the plan I would hold it to, written before launch rather than after.',
     },
     {
       t: 'table',
-      head: ['What most of the category does', 'What Oppam does instead'],
+      head: ['', ''],
       rows: [
-        ['<strong>Marketplace directories</strong> (BetterHelp, YourDOST, Amaha): filter and scroll a wall of strangers, then self-select.', 'Introductions, not listings. You name a feeling; three people are brought to you, each with a reason. The directory exists - it just isn\'t the front door.'],
-        ['<strong>Chatbot-as-therapist</strong> (Wysa, Replika): an AI that role-plays the counsellor.', 'The companion <em>never</em> pretends to be a therapist. It is presence, and it hands you to real, human, credentialed people. That honesty is the trust.'],
-        ['<strong>Gamified self-care</strong> (streaks, pets, XP - Finch and the like): engagement through mild guilt.', 'A garden that can only grow, and check-ins you can skip without penalty. Care that survives the bad week instead of punishing it.'],
-        ['<strong>Meditation-brand calm</strong> (Headspace, Calm): beautiful, but generic and Western.', 'Calm rooted in a specific place - the Kerala veranda, Malayalam, haldi-light - and in one character you build a relationship with.'],
-        ['<strong>Privacy as a policy page.</strong>', 'Privacy as a room you can see and touch: Face ID, app-switcher cover, neutral notifications - designed for shared phones.'],
-        ['<strong>Hand-off to a generic call.</strong>', 'A session held all the way through - joined from Home, framed by the companion, and closed with a kind, skippable rating.'],
+        ['<strong>North star</strong>', 'First sessions <em>attended</em> - not booked. Attendance is the only number that means somebody actually walked through the door.'],
+        ['<strong>The funnel to watch</strong>', 'Opened → reached a profile → booked → showed up. My bet is that the interesting drop moves from "opened" to "profile → booked," because the account wall is gone.'],
+        ['<strong>The anti-streak test</strong>', 'Does a week away predict churn? If the garden works the way I think it does, a gap should be survivable - that is the whole argument against streaks, and it is falsifiable.'],
+        ['<strong>Privacy guardrails</strong>', 'Zero notifications that name therapy. Face-ID failures and support contacts about "someone saw my phone" both tracked as hard failures, not noise.'],
+        ['<strong>Therapist health</strong>', 'Sessions per therapist per week against the twenty-five cap, and how many "reach out" nudges are actually acted on. A console people ignore is a console that failed.'],
+        ['<strong>The first experiment</strong>', 'Introductions versus the full directory, split at the Care tab. This is the riskiest assumption in the whole design: that removing choice reads as care rather than as being sold to. I would want to be proved wrong early.'],
       ],
     },
 
-    // ══ 15. Scope & honesty ══════════════════════════════════════════════════
-    { t: 'h2', x: '15. Prototype Scope' },
+    // ══ 23 · Scope ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '23 · What isn\'t built' },
     {
       t: 'p',
-      x: 'Built with SwiftUI on iOS 18 - SwiftData for on-device storage, the Observation framework for state, async/await, WidgetKit, and a hand-built character and motion system. All data is mock or drawn from the public oppam.me site. Since the last pass, the <strong>WidgetKit widget shipped</strong> and the whole live-session → rating → history loop was built. A few items remain <strong>deliberately deferred</strong>, and naming them is part of the design: a Live Activity for the session countdown, alternate app icons (needs asset variants), HealthKit sleep-awareness for the night companion, and Apple Sign In - kept out of onboarding on purpose, because trust should come before identity.',
+      x: 'Deliberately deferred, and naming it is part of the design: a Live Activity for the session countdown, alternate app icons, HealthKit sleep-awareness for the night companion, and Apple Sign In - kept out of onboarding on purpose, because trust should come before identity. Payments, calls and the network are simulated; the design of what happens when they fail is not.',
     },
     {
       t: 'stats',
       items: [
-        { v: '29', l: 'Swift files' },
-        { v: '~6,800', l: 'Lines of Swift' },
-        { v: '10', l: 'Therapists (from oppam.me)' },
+        { v: '38', l: 'Swift files' },
+        { v: '~10,600', l: 'Lines of Swift' },
+        { v: '2', l: 'Sides of the marketplace, one codebase' },
         { v: '0', l: 'Third-party UI libraries' },
+      ],
+    },
+
+    { t: 'h3', x: 'Sources' },
+    {
+      t: 'list',
+      items: [
+        'National Mental Health Survey of India 2015-16, NIMHANS - prevalence, treatment gap, and psychiatrist density by state.',
+        '<em>Mental health morbidities in Kerala: insights from the National Mental Health Survey</em>, Indian Journal of Psychiatry - the Kerala-specific findings, including stigma named in its qualitative work.',
+        'Published studies on shared mobile phone access and digital privacy in Indian households.',
+        'oppam.me - the live service: therapist roster, prices, concern areas, languages and hours.',
       ],
     },
 
     { t: 'hr' },
     {
       t: 'quote',
-      x: 'The goal was never to build a better therapy app. It was to build the first ten seconds - the moment someone opens it, exhales, and feels that, for once, nothing is being asked of them. Everything else is just keeping that promise.',
+      x: 'The goal was never a better therapy app. It was the first ten seconds - the moment someone opens it, exhales, and finds that for once nothing is being asked of them. Everything else is keeping that promise.',
       by: 'Design intent, Oppam',
     },
   ],
-};
+});

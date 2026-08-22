@@ -1,715 +1,522 @@
 // ============================================================================
-//  Trackwise — Where Is My Parcel?
-//  Web App Design Case Study
+//  Trackwise — Multi-carrier Parcel Tracking (web)
+//  B2B SaaS case study
 //
-//  A multi-carrier parcel tracking platform designed and built end-to-end on
-//  Razorpay's real production design system (@razorpay/blade v12). 82 files,
-//  ~27,900 lines, 34 routes, 9 personas × 7 backend conditions.
+//  Same structure as the other entries: problem, research, findings, the bet,
+//  scope, the flow, the screens, the trade-offs, and how success would be
+//  measured. Short text — the figures carry it.
 //
-//  Every figure is captured from the running app at 2x. Long pages are shown
-//  as sequences of 16:9 panels rather than one endless image — cuts are
-//  snapped to the gutters between cards so no panel bisects a component.
+//  Every figure is a screenshot of the running app, captured by
+//  tools/trackwise_capture.js against the dev server (preview_start name
+//  "trackwise"). Individual captures live in trackwise-assets/screens/.
+//  No bezel — a desktop product is a desktop product.
+//
+//  Built on Razorpay's real Blade design system. The persona/data-state switch
+//  is a genuine feature of the build, not a demo hack — see the dev panel.
 // ============================================================================
 
-const DESIGN_TRACKWISE = {
-  slug: 'trackwise',
-  name: 'Trackwise: Where Is My Parcel?',
-  category: 'Web',
-  icon: 'cart',
-  tag: 'Case Study',
-  status: 'Prototype',
-  summary: 'A multi-carrier parcel tracking platform built on Razorpay\'s real design system — one timeline across 14 carriers, a delay prediction that shows its reasoning, and every persona, plan edge and failure state designed rather than assumed.',
-  lede: '"Where is my order?" is the single most expensive question in e-commerce — and almost every answer to it is a carrier page that says <em>In transit</em> and nothing else. Trackwise is a working product that answers it properly: paste any tracking number from 14 carriers, get one stitched timeline across every handover, and get told a parcel is going to be late roughly a day before the carrier admits it. It is designed on <strong>Razorpay Blade</strong>, the real production design system, and shipped as a running React app — 34 routes, 9 personas and 7 backend conditions, all reachable in one click.',
-  tech: ['React 18', 'TypeScript', 'Razorpay Blade v12 (109 components)', 'styled-components', 'React Router', 'Framer Motion', 'Recharts', 'Vite', 'Seeded mock data · no backend'],
+BODY('trackwise', {
   blocks: [
 
-    // ══ Hero ═════════════════════════════════════════════════════════════════
+    // ── Hero ────────────────────────────────────────────────────────────────
     {
       t: 'image',
       src: '/trackwise-assets/hero.webp',
-      alt: 'Three Trackwise screens — the workspace home, a parcel detail page, and the public tracking page',
-      caption: 'One product, three altitudes: the workspace that triages a hundred parcels, the single parcel that explains itself, and the public page that answers a stranger with no account.',
+      alt: 'The Trackwise workspace home: parcels needing attention, arriving today, in transit, and the latest activity',
+      caption: 'The workspace home. It opens on what needs a human, not on a list of everything.',
     },
 
-    // ══ Framing ══════════════════════════════════════════════════════════════
+    { t: 'h3', x: 'A working product, on a real design system.' },
     {
-      t: 'callout',
-      kind: 'success',
-      title: 'This is a running app, not a Figma export.',
-      x: 'Every image below is a 2× screenshot of real React running in a browser. The carrier is detected as you type, the timeline is stitched from two carriers\' scan histories, the API key really is shown exactly once, pausing a webhook really does stop test deliveries succeeding, and the delay prediction really does carry its own reasoning. <strong>82 files, ~27,900 lines, 34 routes.</strong>',
+      t: 'p',
+      x: 'Trackwise is built on <strong>Razorpay\'s Blade</strong> - the real published design system, not a lookalike. <strong>Every image below is a screenshot of the running app.</strong> Everything runs on seeded mock data, and a developer panel in the app switches persona (guest, free, pro, business, past-due) and backend condition (ready, loading, empty, server error, offline, rate-limited) so no state is reachable only by accident.',
     },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: 'An independent exercise, built on a real design system.',
-      x: 'Trackwise is my own product concept. It is built on <strong>Razorpay Blade</strong> (<code>@razorpay/blade</code> v12.112) — Razorpay\'s real, open-source design system — because designing inside someone else\'s constraints is the honest version of the job. This is not a Razorpay product, is not affiliated with or endorsed by Razorpay, and no Razorpay data is involved. Every number in the screenshots comes from one seeded generator. Carrier names and logos identify the couriers a real product would integrate.',
-    },
+
     {
       t: 'table',
       head: ['', ''],
       rows: [
-        ['Role', 'Product Designer &amp; front-end engineer — problem framing, IA, interaction design, UI, copy, illustration, build'],
-        ['Type', 'Self-directed product concept · working prototype'],
-        ['Platform', 'Responsive web app'],
-        ['Domain', 'Logistics · post-purchase experience · WISMO deflection'],
-        ['The problem', '"Where is my order?" — the most-asked, least-well-answered question after checkout'],
-        ['The constraint', 'Use a real production design system (Razorpay Blade) rather than inventing one'],
-        ['The bet', 'The product that <em>predicts</em> the bad news beats the product that reports it'],
-        ['Coverage', '34 routes × 9 personas × 7 backend conditions — all reachable from one panel'],
-        ['Deliverable', 'A running React app anyone can click through in a minute'],
+        ['Role', 'Sole designer and front-end engineer'],
+        ['Type', 'Self-directed product exercise'],
+        ['Platform', 'Responsive web app - public pages and a workspace'],
+        ['Built with', 'React, TypeScript, Vite, and <strong>@razorpay/blade</strong>'],
+        ['Domain', 'Multi-carrier parcel tracking for merchants and shoppers'],
+        ['Status', 'Runnable prototype on seeded data - no backend, no API keys'],
       ],
+    },
+
+    // ══ 1 · Problem ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '1 · The most expensive question in e-commerce' },
+    {
+      t: 'p',
+      x: '<em>“Where is my order?”</em> - WISMO. It is the single largest category of inbound support contact for online retail, running at roughly <strong>25–40% of all tickets</strong> and climbing past half during peak season. Each one costs somewhere between <strong>$5 and $22</strong> to answer.',
+    },
+    {
+      t: 'p',
+      x: 'The awkward part: the answer already exists. It is sitting in a carrier\'s API. The ticket happens because nobody put the answer where the customer was looking - so a merchant pays several dollars for a human to read out a status that a page could have shown for free.',
     },
     {
       t: 'stats',
       items: [
-        { v: '14', l: 'Carriers, one timeline' },
-        { v: '9', l: 'Personas modelled' },
-        { v: '7', l: 'Backend conditions' },
-        { v: '109', l: 'Blade components used' },
+        { v: '25–40%', l: 'of e-commerce support tickets are “where is my order”' },
+        { v: '$5–22', l: 'to answer one of them, with a person' },
+        { v: '90%+', l: 'of customers track an order after buying it' },
       ],
     },
 
-    // ══ 1. The problem ═══════════════════════════════════════════════════════
-    { t: 'h2', x: '1. The Most Expensive Question in E-commerce' },
+    // ══ 2 · Research ════════════════════════════════════════════════════════
+    { t: 'h2', x: '2 · What I did instead of guessing' },
     {
       t: 'p',
-      x: 'Every support team in retail knows the shape of it. A customer buys something. Two days pass. They open a chat window and type five words: <strong>"where is my order?"</strong> — WISMO, in the trade. It is the highest-volume ticket in e-commerce and the least valuable one to answer, because the answer already exists in a carrier\'s database. The customer just couldn\'t reach it, or reached it and couldn\'t understand it.',
+      x: 'Self-directed, so the limits first: <strong>no merchants were interviewed and no support queue was observed.</strong> What there is:',
     },
     {
-      t: 'p',
-      x: 'I started by writing down what actually goes wrong between "shipped" and "delivered." Not features — <em>failures</em>. Each one became a design decision, and every one of them is visible in a screenshot further down this page.',
-    },
-    {
-      t: 'table',
-      head: ['What actually goes wrong', 'What Trackwise does about it'],
-      rows: [
-        ['<strong>The number doesn\'t belong to anyone.</strong> You have a tracking number and no idea which of 14 carriers to paste it into.', 'Carrier detection as you type. One field, no dropdown — the format identifies the carrier before you finish pasting.'],
-        ['<strong>The journey is split across carriers.</strong> Royal Mail hands to India Post and the trail simply stops on both sites.', 'One stitched timeline across handovers, with the handover itself marked as an event rather than hidden as a gap.'],
-        ['<strong>"In transit" is not an answer.</strong> The status is technically true and practically useless.', 'The page leads with a date and a place — <em>expected Friday, currently at Mumbai Foreign Post Office</em> — and the status is a secondary badge.'],
-        ['<strong>Bad news arrives last.</strong> The carrier keeps promising Friday until Friday evening.', 'A delay prediction that flags the slip roughly 19 hours before the carrier revises, and shows why it thinks so.'],
-        ['<strong>Sharing the page leaks your address.</strong> Forwarding a carrier link hands over the recipient name and full delivery address.', 'A share link that is status-only by construction — address, recipient and full tracking number are structurally excluded, and the sheet says so at the moment of sharing.'],
-        ['<strong>Tracking is an ad surface.</strong> Free trackers monetise a moment of anxiety with ads and data broking.', 'No account, no card, no ads — and a Privacy page that says what is and is not stored.'],
-        ['<strong>The merchant loses the moment.</strong> The most-visited page after checkout is on someone else\'s domain, in someone else\'s brand.', 'A branded tracking page on the merchant\'s own domain and palette — and analytics that tie it to deflected tickets.'],
+      t: 'list',
+      items: [
+        '<strong>Published WISMO figures</strong> - ticket share, cost per contact, and the fact that most shoppers are already tracking. Those three numbers define both the problem and the business case.',
+        '<strong>A walk through the tracking pages</strong> shoppers actually land on - carrier pages, marketplace pages, and the branded ones - noting where each stops being useful.',
+        '<strong>Reading Blade properly</strong> before drawing anything, so the work is a genuine test of building inside somebody else\'s design system rather than a reskin.',
+        '<strong>Building every persona and every failure state</strong>, and then reviewing them - which is what the developer panel exists for.',
       ],
     },
 
-    { t: 'h3', x: 'Three people, three completely different products' },
-    {
-      t: 'p',
-      x: 'The same tracking data serves three users whose needs barely overlap. Designing one dashboard for all three would have produced something that fits nobody, so the product resolves into three shapes around one core — and the plan tiers follow the people, not the other way round.',
-    },
+    // ══ 3 · Findings ════════════════════════════════════════════════════════
+    { t: 'h2', x: '3 · What that pointed at' },
     {
       t: 'cards',
       items: [
-        { icon: 'search', title: 'The anxious buyer', desc: 'Has one number and no account. Wants an answer in <strong>under five seconds</strong>, then wants to leave. Never sees a dashboard — the public page is the whole product.' },
-        { icon: 'cart', title: 'The heavy shopper', desc: 'Dozens of parcels in flight, half of them international. Needs <strong>triage</strong>: what needs me, what lands today, what can wait. Lives on the workspace home.' },
-        { icon: 'gauge', title: 'The store owner', desc: 'Ships hundreds a month and eats the WISMO tickets. Needs a <strong>branded page</strong>, carrier performance, and proof the subscription pays for itself.' },
+        {
+          icon: 'search',
+          title: 'The shopper knows one thing',
+          desc: 'They have a tracking number and no idea which carrier it belongs to. <strong>So:</strong> one field, live carrier detection, and no dropdown to get wrong.',
+        },
+        {
+          icon: 'activity',
+          title: 'Answer first, ask second',
+          desc: 'Marketing above the answer is why people bounce to Google. <strong>So:</strong> the status, then sharing, then the sign-up — in that order, never reversed.',
+        },
+        {
+          icon: 'layers',
+          title: 'One parcel, several carriers',
+          desc: 'A cross-border parcel changes hands and each carrier tells its own partial story. <strong>So:</strong> one merged timeline, with the raw scans kept underneath.',
+        },
+        {
+          icon: 'checkCircle',
+          title: 'Bad news early beats bad news late',
+          desc: 'A delay a merchant learns about from a customer is already a support ticket. <strong>So:</strong> predicted delays, with the reasoning shown so the prediction can be argued with.',
+        },
       ],
     },
+
+    // ══ 4 · The bet ═════════════════════════════════════════════════════════
+    { t: 'h2', x: '4 · The bet' },
     {
-      t: 'callout',
-      kind: 'info',
-      title: 'The one-line thesis',
-      x: 'Everything that follows comes from one sentence: <strong>answer first, ask later.</strong> Most tracking products treat the answer as the reward for signing up. Trackwise gives the answer to a stranger with no account, and only then makes a case for itself — which turns out to be the only moment the case is persuasive.',
+      t: 'quote',
+      x: 'Every WISMO ticket is an answer that existed and was not shown. Put the answer where the customer is already looking, and tell the merchant about the delay before the customer does.',
+      by: 'The one sentence every decision was tested against',
     },
 
-    // ══ 2. Detection ═════════════════════════════════════════════════════════
-    { t: 'h2', x: '2. One Field, No Dropdown' },
+    { t: 'h3', x: 'Four rules that settled the arguments' },
     {
-      t: 'p',
-      x: 'The single most common friction in tracking is the carrier picker: a dropdown of 14 logos asking a question the number already answers. Tracking numbers have formats — <code>1Z</code> prefixes for UPS, a 12-digit block for FedEx, <code>RP…IN</code> for India Post. So the field reads the format and names the carrier while you type, and the picker disappears entirely.',
-    },
-    {
-      t: 'p',
-      x: 'The interesting half is the <em>other</em> state. When the field can\'t tell yet, it must not guess — a confident wrong logo costs more trust than no logo at all. So it says the one useful thing it actually knows: this isn\'t long enough to be a tracking number yet, keep going.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/detect.webp',
-      alt: 'The tracking field with a UPS number typed and auto-detected, above the same field with two digits typed and a keep-typing hint',
-      caption: 'Top: eighteen characters in, the carrier is named and marked auto-detected. Bottom: two digits in, no carrier is claimed — just the reason nothing has happened yet.',
+      t: 'cards',
+      items: [
+        { icon: 'zap', title: 'The answer, then the ask', desc: 'Nothing is sold above the fold on a tracking page. Persuasion comes after the question is answered, which is the only moment it is persuasive.' },
+        { icon: 'verified', title: 'Public means status only', desc: 'Address, recipient and the full tracking number are structurally excluded from a shared page — and the share sheet says so at the moment of sharing.' },
+        { icon: 'layers', title: 'Three levels, three questions', desc: 'Which part of the product, which screen, which slice of this screen. Each level answers exactly one of those, and never two.' },
+        { icon: 'checkCircle', title: 'No state reachable by accident', desc: 'Every persona, plan limit and backend failure is switchable in the app, because the states that only exist for a week are the ones that never get designed.' },
+      ],
     },
 
-    // ══ 3. The answer ════════════════════════════════════════════════════════
-    { t: 'h2', x: '3. The Answer, Then the Ask' },
-    {
-      t: 'p',
-      x: 'The public tracking page is the product\'s most important screen and the one no signed-in user ever sees. It is ordered as an argument: <strong>the answer</strong> (a date, a place, a status), then <strong>the journey</strong>, then — only once you\'ve been given what you came for — the case for an account. A first-time visitor can get the full answer and leave without ever seeing a form.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/answer-1.webp',
-      alt: 'The top of the public tracking page — status pill, item name, expected arrival date, route bar and carrier facts',
-      caption: 'The top of the page does the whole job: the date at display size on the right, the route underneath, and a line stating that this link shows status only.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/answer-2.webp',
-      alt: 'The lower half of the public tracking page — the journey timeline and the sign-up case beneath it',
-      caption: 'And only then the journey, and only after that the pitch. The marketing that used to sit on the landing page lives here instead — after the page has been useful.',
-    },
-    { t: 'h3', x: 'Sharing without leaking' },
-    {
-      t: 'p',
-      x: 'People forward tracking links constantly — to a partner, to the person the gift is for, into a group chat. Carrier links carry the recipient name, the full delivery address and the raw tracking number, which means forwarding one is a small privacy accident. Trackwise\'s share link is <strong>status-only by construction</strong>: the shared route can\'t render an address because the payload behind it doesn\'t contain one. And the share sheet says so, at the exact moment the decision is being made, rather than in a privacy policy nobody opens.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/share.webp',
-      alt: 'The share sheet on the public page with copy, WhatsApp, mail and OS-sheet options, beside the shareable link card inside the workspace',
-      caption: '"Status only — no address, no tracking number," stated where it matters. The same sentence appears on the public share sheet and on the owner\'s copy of the link.',
-    },
-    {
-      t: 'p',
-      x: 'When someone does decide to sign up, it is one route with two modes rather than two screens that slowly drift apart — and the page argues for itself alongside the form using the product\'s own components, not stock illustration.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/auth.webp',
-      alt: 'The sign-in screen beside the create-account screen, sharing a layout and differing only in copy',
-      caption: 'One route, switched by <code>?mode=</code>. Same fields, same rail of reasons — only the copy and the destination persona change.',
-    },
-
-    // ══ 4. Branded ═══════════════════════════════════════════════════════════
-    { t: 'h2', x: '4. The Merchant\'s Version of the Same Page' },
-    {
-      t: 'p',
-      x: 'For a store, the tracking page is the highest-traffic page after checkout — and handing that traffic to a third-party domain is a small brand donation made several thousand times a month. The branded page runs on the merchant\'s own domain, palette, typography and support contacts, with their FAQ and their shop links.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/branded-1.webp',
-      alt: 'The top of the branded merchant tracking page in a dark green palette on the merchant\'s own domain',
-      caption: 'Same data, entirely different clothes. The palette is deliberately non-Blade — a merchant\'s brand is not the design system\'s job, and this is the one place the system gets an escape hatch.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/branded-2.webp',
-      alt: 'The lower half of the branded page — journey detail, a help block with the merchant\'s own contacts and FAQ chips',
-      caption: 'And the bottom of it: the merchant\'s support channels and their four most-asked questions, so the page deflects the ticket instead of forwarding it.',
-    },
-    {
-      t: 'p',
-      x: 'The builder behind it is a live preview rather than a form with a save button — palette presets, domain, identity and support details update the customer-facing page as you change them, next to the deflection numbers that page is producing.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/branded-builder-1.webp',
-      alt: 'The branded-page builder — setup steps, deflection stats, domain verification and a live preview of the customer page',
-      caption: 'Three setup steps, the numbers the page is earning, DNS verification, and a live preview that is the real component rather than a picture of it.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/branded-builder-2.webp',
-      alt: 'The lower half of the builder — palette presets, what-to-show toggles, and a panel listing what will never be put on the page',
-      caption: 'The panel I care most about: <strong>"What we\'ll never put on this page"</strong> — no advertising, no third-party pixels, no reselling. A constraint is worth more written down than assumed.',
-    },
-
-    // ══ 5. Navigation ════════════════════════════════════════════════════════
-    { t: 'h2', x: '5. Three Levels of Navigation, Three Different Questions' },
-    {
-      t: 'p',
-      x: 'A workspace with 34 routes gets lost quickly if navigation is one flat list. The structure here is three strips, each answering a different question, and the rule is that no strip ever answers another strip\'s question.',
-    },
+    // ══ 5 · Feature inventory ═══════════════════════════════════════════════
+    { t: 'h2', x: '5 · Everything it could have been' },
     {
       t: 'table',
-      head: ['Level', 'The question it answers', 'Where it lives'],
+      head: ['Area', 'What lives there'],
       rows: [
-        ['<strong>Product tabs</strong>', 'Which part of the product am I in?', 'The dark top bar. Overflows into <em>More</em> as the window narrows.'],
-        ['<strong>Side rail</strong>', 'Which screen?', 'A grouped rail — Tracking · Insights · Developers. Collapses to a 56px icon rail, and the choice persists across reloads.'],
-        ['<strong>Context tabs</strong>', 'Which slice of <em>this</em> screen?', 'A light strip under the top bar: parcel scopes with live counts, developer sections, settings sections.'],
+        ['<strong>Public, no account</strong>', 'A landing page with one job · a public tracking page with share-by-copy, WhatsApp, mail or the OS sheet · a branded merchant page on the merchant\'s own palette · pricing with every limit on one page · sign-in and create-account on one route'],
+        ['<strong>The workspace</strong>', 'Triage-first home · parcels with filters, quick filters, sort and scope tabs · a parcel detail with a cross-carrier timeline, route rail, delay prediction and raw scans · add parcels singly, by bulk paste, or automatically · alerts grouped by day showing which channel each went out on'],
+        ['<strong>Business</strong>', 'Analytics: WISMO deflection, carrier performance, prediction accuracy, and the lanes worth fixing · a branded-page builder with a live preview · integrations for inbox, store, channels and developer'],
+        ['<strong>Developers</strong>', 'API keys · webhooks with delivery attempts · an event log — three separate jobs, not one settings page'],
+        ['<strong>Money</strong>', 'Plans, billing, quota meters, the trial-ending state and the past-due state'],
       ],
     },
+
+    // ══ 6 · Prioritisation ══════════════════════════════════════════════════
+    { t: 'h2', x: '6 · What made the cut, and why' },
     {
       t: 'p',
-      x: 'The parcel scopes — Active, Needs attention, Delivered, Archive — began as a second-level side-nav panel. Moved to a tab strip they cost no horizontal width, show their counts without a hover, and read as the filters they always were. The counts are the tell: <strong>Needs attention 29</strong> is a piece of information, not a label.',
+      x: 'One rule decided scope: <strong>does this prevent a support ticket?</strong> Which is a harsher filter than it sounds - it cut most of the things a tracking product usually sells itself on.',
     },
     {
-      t: 'image',
-      src: '/trackwise-assets/home-1.webp',
-      alt: 'The top of the workspace home — a count-led greeting, four stat tiles, and the needs-a-look panel',
-      caption: 'Home is triage, in order: <strong>what needs you</strong>, then what lands today, then everything moving as expected. The headline is a count and a name, not a welcome.',
+      t: 'diagram',
+      caption: 'The sort that set scope. Position is judgement, not measurement — the axes are mine, and the point is the reasoning.',
+      svg: `<svg viewBox="0 0 720 486" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Feature prioritisation: how much a feature prevents a support ticket, against build cost">
+  <line x1="30" y1="238" x2="700" y2="238" class="d-l"/>
+  <line x1="366" y1="20" x2="366" y2="424" class="d-l"/>
+  <polygon points="700,238 690,233 690,243" class="d-arrow"/>
+  <polygon points="366,20 361,30 371,30" class="d-arrow"/>
+
+  <text x="34" y="52" class="d-m">SHIP FIRST</text>
+  <circle cx="40" cy="76" r="4" class="d-dot-a"/><text x="54" y="80" class="d-s">One field, carrier auto-detected</text>
+  <circle cx="40" cy="102" r="4" class="d-dot-a"/><text x="54" y="106" class="d-s">Answer above the ask</text>
+  <circle cx="40" cy="128" r="4" class="d-dot-a"/><text x="54" y="132" class="d-s">Share without leaking an address</text>
+  <circle cx="40" cy="154" r="4" class="d-dot-a"/><text x="54" y="158" class="d-s">Triage-first workspace home</text>
+  <circle cx="40" cy="180" r="4" class="d-dot-a"/><text x="54" y="184" class="d-s">Every limit on one pricing page</text>
+
+  <text x="384" y="52" class="d-m">WORTH THE WORK</text>
+  <circle cx="390" cy="76" r="4" class="d-dot-a"/><text x="404" y="80" class="d-s">One merged cross-carrier timeline</text>
+  <circle cx="390" cy="102" r="4" class="d-dot-a"/><text x="404" y="106" class="d-s">Delay prediction, with reasoning</text>
+  <circle cx="390" cy="128" r="4" class="d-dot-a"/><text x="404" y="132" class="d-s">The branded-page builder</text>
+  <circle cx="390" cy="154" r="4" class="d-dot-a"/><text x="404" y="158" class="d-s">Webhooks and an event log</text>
+  <circle cx="390" cy="180" r="4" class="d-dot-a"/><text x="404" y="184" class="d-s">Every persona and failure state</text>
+
+  <text x="34" y="282" class="d-m">LATER, NOT NEVER</text>
+  <circle cx="40" cy="306" r="4" class="d-dot"/><text x="54" y="310" class="d-s">Returns and exchanges</text>
+  <circle cx="40" cy="332" r="4" class="d-dot"/><text x="54" y="336" class="d-s">A shopper mobile app</text>
+  <circle cx="40" cy="358" r="4" class="d-dot"/><text x="54" y="362" class="d-s">Multi-workspace for agencies</text>
+
+  <text x="384" y="282" class="d-m">CUT</text>
+  <circle cx="390" cy="306" r="4" class="d-dot"/><text x="404" y="310" class="d-s">A map of the parcel’s position</text>
+  <circle cx="390" cy="332" r="4" class="d-dot"/><text x="404" y="336" class="d-s">Upsells on the tracking page</text>
+  <circle cx="390" cy="358" r="4" class="d-dot"/><text x="404" y="362" class="d-s">A reviews-request flow</text>
+  <circle cx="390" cy="384" r="4" class="d-dot"/><text x="404" y="388" class="d-s">Gamified delivery countdowns</text>
+
+  <text x="30" y="452" class="d-m">LOW BUILD COST</text>
+  <text x="700" y="452" class="d-m" text-anchor="end">HIGH BUILD COST</text>
+  <text x="0" y="14" class="d-m">↑ PREVENTS A SUPPORT TICKET</text>
+</svg>`,
     },
-    {
-      t: 'image',
-      src: '/trackwise-assets/home-2.webp',
-      alt: 'The lower half of the workspace home — delivery insights, the finish-setting-up card, and a jump-to row',
-      caption: 'Further down, the week in three numbers with a plain-language note under each, an honest line about where the data comes from, and shortcuts to the rest of the product.',
-    },
-    { t: 'h3', x: 'The same screen, three plans' },
     {
       t: 'p',
-      x: 'Home reads the persona rather than checking plan flags screen by screen, so a free shopper with 22 parcels, a Pro user with 64, and a store with 148 all get a page shaped to their volume — the same components, different density, different first sentence.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/home-personas.webp',
-      alt: 'The workspace home rendered for a free shopper, a Pro user and a Business store',
-      caption: 'Free, Pro, Business — one screen, three densities. The quota meter in the rail changes with them, and so does what the page thinks is worth putting first.',
+      x: 'Upsells on the tracking page are the interesting cut. Every competitor in this category sells them, and the pitch is good: it is the highest-intent page a merchant owns. But the page exists to answer one question, and a carousel above the answer is precisely what sends a shopper back to Google - which costs the merchant a ticket. <strong>The marketing moved below the answer instead.</strong>',
     },
 
-    // ══ 6. The list ══════════════════════════════════════════════════════════
-    { t: 'h2', x: '6. A Hundred Parcels, and the One You Meant' },
+    // ══ 7 · Flow ════════════════════════════════════════════════════════════
+    { t: 'h2', x: '7 · The core flow, end to end' },
     {
       t: 'p',
-      x: 'The list is where a store owner spends their day, so the row had to carry a lot without becoming a spreadsheet: carrier, item, merchant, tracking number, status, a route bar with origin and destination, the expected date, and a delay flag when there is one. Everything else — search, status, carrier, sort, and quick filters for starred, international, delay-predicted and shared — sits above it.',
+      x: 'Two people use this product for opposite reasons. A shopper wants one answer and then to leave; a merchant wants to never be surprised. The flow below follows the parcel, and the phases hand off between them.',
+    },
+    {
+      t: 'diagram',
+      caption: 'Twelve steps across two audiences. The whole business case sits in phase four — every alert that lands before a customer notices is a ticket that never happens.',
+      svg: `<svg viewBox="0 0 720 578" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The core flow: a shopper asks, the merchant loads parcels, the parcel travels, and a delay is caught early">
+
+  <text x="0" y="12" class="d-m">1 · THE SHOPPER ASKS</text>
+  <text x="720" y="12" class="d-m" text-anchor="end">THE ANSWER, THEN THE ASK</text>
+  <rect x="0" y="24" width="220" height="60" rx="11" class="d-box-a"/>
+  <text x="16" y="50" class="d-t">One field</text><text x="16" y="70" class="d-s">Carrier detected live</text>
+  <rect x="250" y="24" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="50" class="d-t">The answer</text><text x="266" y="70" class="d-s">Status, above everything</text>
+  <rect x="500" y="24" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="50" class="d-t">Share it</text><text x="516" y="70" class="d-s">Status only, never address</text>
+  <line x1="220" y1="54" x2="244" y2="54" class="d-l"/><polygon points="250,54 242,50 242,58" class="d-arrow"/>
+  <line x1="470" y1="54" x2="494" y2="54" class="d-l"/><polygon points="500,54 492,50 492,58" class="d-arrow"/>
+  <text x="0" y="106" class="d-s" fill="var(--accent)">↳ no dropdown to get wrong, and no marketing above the fold — that is what sends people to Google</text>
+  <path d="M610 84 V118 q0 8 -8 8 H204 q-8 0 -8 8 V160" class="d-l"/>
+  <polygon points="196,166 192,158 200,158" class="d-arrow"/>
+
+  <text x="0" y="154" class="d-m">2 · THE MERCHANT LOADS</text>
+  <text x="720" y="154" class="d-m" text-anchor="end">THREE WAYS IN, THREE VOLUMES</text>
+  <rect x="0" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="192" class="d-t">One at a time</text><text x="16" y="212" class="d-s">Paste and go</text>
+  <rect x="250" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="192" class="d-t">Bulk paste</text><text x="266" y="212" class="d-s">Detected as you type</text>
+  <rect x="500" y="166" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="192" class="d-t">Automatic</text><text x="516" y="212" class="d-s">Store, inbox, or the API</text>
+  <line x1="220" y1="196" x2="244" y2="196" class="d-l"/><polygon points="250,196 242,192 242,200" class="d-arrow"/>
+  <line x1="470" y1="196" x2="494" y2="196" class="d-l"/><polygon points="500,196 492,192 492,200" class="d-arrow"/>
+  <text x="0" y="248" class="d-s" fill="var(--accent)">↳ the right way in depends on whether you ship five parcels a week or five thousand</text>
+  <path d="M610 226 V260 q0 8 -8 8 H204 q-8 0 -8 8 V302" class="d-l"/>
+  <polygon points="196,308 192,300 200,300" class="d-arrow"/>
+
+  <text x="0" y="296" class="d-m">3 · THE PARCEL TRAVELS</text>
+  <text x="720" y="296" class="d-m" text-anchor="end">ONE PARCEL, ONE STORY</text>
+  <rect x="0" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="334" class="d-t">Scans arrive</text><text x="16" y="354" class="d-s">From several carriers</text>
+  <rect x="250" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="334" class="d-t">Merged</text><text x="266" y="354" class="d-s">One timeline, one vocabulary</text>
+  <rect x="500" y="308" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="334" class="d-t">Predicted</text><text x="516" y="354" class="d-s">And it shows its working</text>
+  <line x1="220" y1="338" x2="244" y2="338" class="d-l"/><polygon points="250,338 242,334 242,342" class="d-arrow"/>
+  <line x1="470" y1="338" x2="494" y2="338" class="d-l"/><polygon points="500,338 492,334 492,342" class="d-arrow"/>
+  <text x="0" y="390" class="d-s" fill="var(--accent)">↳ the raw carrier scans stay underneath — for the times you have to argue with a carrier</text>
+  <path d="M610 368 V402 q0 8 -8 8 H204 q-8 0 -8 8 V444" class="d-l"/>
+  <polygon points="196,450 192,442 200,442" class="d-arrow"/>
+
+  <text x="0" y="438" class="d-m">4 · SOMETHING GOES WRONG</text>
+  <text x="720" y="438" class="d-m" text-anchor="end">BEFORE THE CUSTOMER NOTICES</text>
+  <rect x="0" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="16" y="476" class="d-t">Needs attention</text><text x="16" y="496" class="d-s">The home screen says so</text>
+  <rect x="250" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="266" y="476" class="d-t">Alert out</text><text x="266" y="496" class="d-s">On a named channel</text>
+  <rect x="500" y="450" width="220" height="60" rx="11" class="d-box"/>
+  <text x="516" y="476" class="d-t">Ticket avoided</text><text x="516" y="496" class="d-s">Counted, in analytics</text>
+  <line x1="220" y1="480" x2="244" y2="480" class="d-l"/><polygon points="250,480 242,476 242,484" class="d-arrow"/>
+  <line x1="470" y1="480" x2="494" y2="480" class="d-l"/><polygon points="500,480 492,476 492,484" class="d-arrow"/>
+  <text x="0" y="532" class="d-s" fill="var(--accent)">↳ every alert that lands first is a $5–22 ticket that never happens — which is the whole product</text>
+  <text x="0" y="558" class="d-s" fill="var(--accent)">↻ and the deflection rate is the number the merchant is actually buying</text>
+</svg>`,
+    },
+
+    // ══ 8 · The front door ══════════════════════════════════════════════════
+    { t: 'h2', x: '8 · One field, no dropdown' },
+    {
+      t: 'p',
+      x: 'A shopper has a tracking number and usually no idea which carrier issued it. So the landing page is one hero, one field with live carrier detection, and nothing else above the fold. Asking somebody to pick their carrier from a list of forty is asking them to answer a question they came here to have answered.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/landing.webp',
+      alt: 'The Trackwise landing page: a hero and a single tracking field',
+      caption: 'One job. The marketing that used to live under this hero moved to the tracking page — after the answer, where it is finally persuasive.',
+    },
+
+    // ══ 9 · The answer ══════════════════════════════════════════════════════
+    { t: 'h2', x: '9 · The answer, then the share, then the ask' },
+    {
+      t: 'p',
+      x: 'The public tracking page is the most-visited screen in a product like this and the one most often ruined. Here the order is fixed: the status, then a way to share it, then - and only then - a reason to make an account.',
+    },
+    {
+      t: 'p',
+      x: 'Sharing is where the privacy decision lives. A shared page carries <strong>status only</strong>: address, recipient and the full tracking number are structurally excluded rather than hidden, and the share sheet says so at the moment you share, because that is the moment somebody is deciding whether to send it to a group chat.',
+    },
+    {
+      t: 'image',
+      src: '/trackwise-assets/public.webp',
+      alt: 'The public tracking page showing status, then share options',
+      caption: 'Status first. What you can share is deliberately less than what you can see.',
+    },
+
+    // ══ 10 · Navigation ═════════════════════════════════════════════════════
+    { t: 'h2', x: '10 · Three levels, three different questions' },
+    {
+      t: 'p',
+      x: 'Navigation is three levels and each answers exactly one question: <strong>which part of the product</strong> (the dark top bar, which overflows into “More” as the window narrows), <strong>which screen</strong> (a grouped side rail that collapses to 56px and remembers the choice), and <strong>which slice of this screen</strong> (a light tab strip under the top bar, carrying live counts).',
+    },
+    {
+      t: 'p',
+      x: 'The parcel scopes used to be a second-level side panel. As a tab strip they cost no width, show their counts without a hover, and read as the filters they actually are.',
     },
     {
       t: 'image',
       src: '/trackwise-assets/parcels.webp',
-      alt: 'The parcels list with search, status, carrier and sort controls, quick filters, and rows carrying carrier, status, route and arrival',
-      caption: 'Four scopes as tabs with live counts, four quick filters, and a row that answers "which one is this and is it fine" without opening anything.',
-    },
-    {
-      t: 'p',
-      x: 'The important interaction is what happens when you click a row. Opening a full page for every parcel means losing your place in a list you were scanning, so a row opens a <strong>peek</strong>: the arrival date, the route, the current location and the recent journey, in a drawer, with the full page one click further. Triage rarely needs the full page — it needs the answer and the next row.',
+      alt: 'The parcels list with scope tabs, filters, quick filters and pagination',
+      caption: 'All parcels, with the scopes as tabs. The counts are the point — “needs attention: 29” is a to-do list, not a filter label.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/peek.webp',
-      alt: 'A parcel peek drawer opened over the list, showing arrival, route, current location and recent journey',
-      caption: 'Scan, peek, dismiss, next. The list stays exactly where you left it — the drawer is the answer, not a destination.',
+      src: '/trackwise-assets/attention.webp',
+      alt: 'The needs-attention scope, filtered to parcels with exceptions and predicted delays',
+      caption: 'The same table, scoped to trouble. This is the view a merchant should be able to live in.',
     },
 
-    // ══ 7. The parcel ════════════════════════════════════════════════════════
-    { t: 'h2', x: '7. One Parcel, Two Carriers, One Timeline' },
+    // ══ 11 · One timeline ═══════════════════════════════════════════════════
+    { t: 'h2', x: '11 · One parcel, two carriers, one timeline' },
     {
       t: 'p',
-      x: 'This is the screen the whole product exists to produce. A parcel from London to Kochi is carried by Royal Mail, handed to India Post for the last mile, and tracked in two databases that don\'t know about each other. On the carriers\' own sites the trail stops mid-journey. Here the two scan histories are merged into one timeline, ordered by time, and the handover is <strong>marked as an event rather than hidden as a gap</strong> — because "handed over to India Post" is the single most reassuring line on the page when you are watching a parcel go quiet.',
+      x: 'A cross-border parcel changes hands - here DHL hands off to Delhivery - and each carrier tells its own partial story in its own words. The detail page merges them into a single timeline with one vocabulary, keeps the route rail and the shipment facts alongside, and leaves the raw carrier scans underneath for the times somebody has to argue with a carrier.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/detail-1.webp',
-      alt: 'The top of the parcel detail page — expected date, original promise, route rail, and the start of the delay callout',
-      caption: 'The answer first: expected Friday, originally promised Monday, currently at Mumbai Foreign Post Office, carried by Royal Mail then India Post.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/detail-2.webp',
-      alt: 'The middle of the parcel detail page — the full delay callout, the journey timeline and the shipment facts panel',
-      caption: 'Then the disagreement with the carrier, then the journey, with the shipment facts in a column that never competes with the story.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/detail-3.webp',
-      alt: 'The lower part of the parcel detail page — the end of the journey, per-parcel alert switches, and the shareable link card',
-      caption: 'And at the end: which alerts are on for <em>this</em> parcel, and the status-only link you can hand to someone else.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/timeline.webp',
-      alt: 'The journey timeline, shown as two columns — ten scans across Royal Mail and India Post with the carrier handover marked',
-      caption: 'The full timeline, split into two columns to read here. Ten scans, two carriers, one order — each entry carrying its place and which carrier reported it.',
-    },
-    {
-      t: 'p',
-      x: 'Underneath the readable timeline sits the same data unedited: <strong>raw carrier scans</strong>, monospaced, exactly as each carrier reported them. It exists because a merchant disputing a delivery with a courier needs the courier\'s own words, and because a product that rewrites its sources should be willing to show them.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/rawscans.webp',
-      alt: 'The raw carrier scans panel — a monospaced list of timestamps, carriers, scan descriptions and locations',
-      caption: 'The unedited source, one row per scan. Nothing here is interpreted — which is the point of putting it directly under something that is.',
+      src: '/trackwise-assets/detail.webp',
+      alt: 'A parcel detail page with a merged cross-carrier timeline, route rail and shipment facts',
+      caption: 'Eleven scans across two carriers, told once. The handover is a fact on the page rather than a gap in the story.',
     },
 
-    // ══ 8. The prediction ════════════════════════════════════════════════════
-    { t: 'h2', x: '8. The Hardest Screen: Telling Someone Bad News Early' },
+    // ══ 12 · Bad news ═══════════════════════════════════════════════════════
+    { t: 'h2', x: '12 · The hardest screen: bad news, early' },
     {
       t: 'p',
-      x: 'The feature that makes Trackwise worth paying for is also the one most likely to be distrusted: it tells you a parcel will be late <em>while the carrier is still promising it on time</em>. That is a direct contradiction on screen — the carrier says Friday, we say Tuesday — and the design problem is entirely one of credibility.',
+      x: 'A delay a merchant hears about from a customer has already cost them a ticket. So Trackwise predicts delays - and, more importantly, <strong>shows its reasoning</strong>. A prediction you cannot interrogate is a prediction nobody will act on, and one that turns out wrong without explanation destroys trust in every future one.',
     },
     {
       t: 'p',
-      x: 'Four decisions carry it. <strong>Show both dates</strong>, and attribute each: what the carrier still promises, and what we expect. <strong>Show the reasoning</strong> in one plain sentence — "origin hub is running 1.8 days behind on outbound sorting this week" — because an unexplained prediction is a horoscope. <strong>Show the confidence</strong> as a number and a bar, so a 91% and a 60% don\'t look identical. And <strong>show when it changed</strong>: flagged a day ago, carrier has since confirmed. That last badge is the most valuable pixel on the page, because it is the product being proved right in public.',
+      x: 'This is also why analytics carries a prediction-accuracy scoreboard. A product that guesses on a merchant\'s behalf owes them a public record of how often it is right.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/delay.webp',
-      alt: 'The expected-date header with the original promise beneath it, above the delay callout with its reasoning and a 91% confidence bar',
-      caption: 'Top: the date, and the date it replaced. Bottom: the disagreement stated plainly — carrier still promises Friday, we expect Tuesday, flagged a day ago, 91% confident, and here is why.',
-    },
-    { t: 'h3', x: 'And then publishing your own error rate' },
-    {
-      t: 'p',
-      x: 'A prediction engine that only reports its wins is marketing. So the Business analytics carry a <strong>scoreboard</strong> that publishes the number a vendor would normally bury: <em>false positives — 41 parcels we warned about that arrived on time anyway.</em> Alongside it, the median lead time and the raw hit rate. The copy states the trade-off in one line: we would rather over-warn slightly than let a delay surprise a customer — and here is the count, so you can judge that for yourself.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/scoreboard.webp',
-      alt: 'The deflection stat row above the delay prediction scoreboard, which shows predictions made, hit rate, median lead time and false positives',
-      caption: 'What the plan bought, and how often the prediction was right — including when it wasn\'t. Figures are from the seeded demo dataset.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/lanes.webp',
-      alt: 'The lanes-worth-fixing table ranked by exception rate, with carrier, volume, exception rate and median transit',
-      caption: 'And the one table a store owner can act on: lanes ranked by exception rate rather than volume, because the small painful ones are the ones nobody notices.',
-    },
-    { t: 'h3', x: 'The rest of the analytics page' },
-    {
-      t: 'image',
-      src: '/trackwise-assets/analytics-1.webp',
-      alt: 'The top of the analytics page — deflection stats, a return-on-subscription bar, and page views versus tickets over time',
-      caption: 'It opens with the argument for its own price: support cost avoided against the subscription, then the two lines that should diverge — more self-service, fewer contacts.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/analytics-2.webp',
-      alt: 'Carrier delivery performance bars beside a status mix donut, above the delay prediction scoreboard',
-      caption: 'Carrier performance ranked against the original promise, the current status mix, and the scoreboard underneath.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/analytics-3.webp',
-      alt: 'The bottom of the analytics page — the lanes worth fixing table',
-      caption: 'And it closes on somewhere to go and fix something. Evidence at the top, an action at the bottom.',
-    },
-    {
-      t: 'callout',
-      kind: 'warning',
-      title: 'Why publish the failures at all?',
-      x: 'Because the alternative is worse. A merchant who gets one false alarm and has never been told false alarms exist concludes the feature is broken. A merchant who was told upfront that ~10% of warnings are precautionary concludes it is working as described. <strong>Naming your error rate converts a bug report into an expectation</strong> — and it is the cheapest trust the product ever buys.',
+      src: '/trackwise-assets/analytics.webp',
+      alt: 'The analytics screen: WISMO deflection, carrier performance, prediction accuracy and lanes worth fixing',
+      caption: 'Deflection, carrier performance, prediction accuracy, and the lanes worth fixing. The first number is the one the merchant is buying.',
     },
 
-    // ══ 9. Getting parcels in ════════════════════════════════════════════════
-    { t: 'h2', x: '9. Three Ways In, for Three Different Volumes' },
+    // ══ 13 · Getting parcels in ═════════════════════════════════════════════
+    { t: 'h2', x: '13 · Three ways in, for three different volumes' },
     {
       t: 'p',
-      x: 'A shopper adds one number. A store pastes forty out of a spreadsheet. A serious store never adds anything at all, because the parcels arrive through a Shopify sync or an inbox scan. Those are three different jobs, so they are three tabs rather than one clever field that tries to be all of them.',
+      x: 'Five parcels a week and five thousand a week are different jobs. So there are three ways in: one at a time, a bulk paste that detects carriers live as you type, or automatically from a store, an inbox or the API. Offering three is not indecision - the fastest one genuinely changes with volume.',
     },
     {
       t: 'image',
       src: '/trackwise-assets/add.webp',
-      alt: 'The add-parcel screen in three modes — a single number, a bulk paste with per-line carrier detection, and automatic sources',
-      caption: 'One · many · none. The bulk paste runs the same detection per line and reports what it found before you commit, so a bad row is caught at paste time rather than after the import.',
+      alt: 'The add-parcels screen with single, bulk paste and automatic options',
+      caption: 'Paste a block of tracking numbers and watch the carriers resolve as you go.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/integrations-1.webp',
-      alt: 'The integrations page — connected inbox accounts, one of them showing an expired token with a reconnect action',
-      caption: 'Where parcels come from. Every connection carries a real state — connected, expired, needs reconnect — because integrations are where products quietly break.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/integrations-2.webp',
-      alt: 'The lower half of the integrations page — store platforms, notification channels and developer connections',
-      caption: 'Store platforms, the channels alerts go out on, and the developer surface, grouped by what they do rather than by who built them.',
-    },
-    {
-      t: 'p',
-      x: 'The inbox scanner is the one that needs the most care, because it reads mail. So it is built as a <strong>queue you approve</strong>, not an automation that acts: it finds shipping confirmations, shows what it matched and how confident it is, and nothing joins your parcel list until you accept it.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/inbox-1.webp',
-      alt: 'The inbox scans page — how it works in three steps, a reconnect warning, and counts waiting for review',
-      caption: 'Three sentences explaining exactly what it reads and what it ignores, then the queue: waiting, needs a closer look, added.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/inbox-2.webp',
-      alt: 'The inbox scan queue rows — matched merchants and carriers with accept and dismiss actions, some flagged for review',
-      caption: 'Each row shows the match and its doubt in plain words — "the carrier isn\'t certain, check it before accepting" — with accept and dismiss side by side.',
+      src: '/trackwise-assets/alerts.webp',
+      alt: 'The alerts screen, grouped by day, showing which channel each alert went out on',
+      caption: 'Alerts grouped by day, each showing the channel it went out on — because “did the customer actually hear about this?” is the only question that matters here.',
     },
 
-    // ══ 10. Alerts ═══════════════════════════════════════════════════════════
-    { t: 'h2', x: '10. Alerts: a Matrix, Not a Pile of Switches' },
+    // ══ 14 · Developers ═════════════════════════════════════════════════════
+    { t: 'h2', x: '14 · The developer surface is three jobs, not a settings page' },
     {
       t: 'p',
-      x: 'Notification settings usually decay into a long column of toggles that answers "do you want emails?" — the wrong question. The real question has two axes: <strong>which event</strong>, and <strong>which channel</strong>. Out-for-delivery deserves a push and nothing more; an exception deserves push, email and SMS; a carrier handover deserves nothing at all unless you ask. So the settings are a grid: triggers down the side, channels across the top, one master switch per row.',
+      x: 'Most products bury API keys, webhooks and logs in one “Developers” tab. They are three different jobs done by three different people at three different times: getting started, wiring something up, and debugging at 2am. So they are three screens.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/matrix.webp',
-      alt: 'The alert rules matrix — seven triggers down the side, five channels across the top, with checkboxes and per-row master switches',
-      caption: 'Seven triggers × five channels, with the scope of each rule stated underneath it ("applies to starred parcels"). Channels the plan doesn\'t include are visible but disabled — the ceiling is shown, not hidden.',
+      src: '/trackwise-assets/webhooks.webp',
+      alt: 'The webhooks screen with endpoints and delivery attempts',
+      caption: 'Webhooks with their delivery attempts. The failed attempt, and why it failed, is the whole reason this screen exists.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/alerts-1.webp',
-      alt: 'The top of the alerts page — how alerting works in three steps, and counts for needs action, early warnings and delivered',
-      caption: 'And the feed those rules produce. It opens by explaining itself in three steps, then splits the day into what needs action and what is just news.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/alerts-2.webp',
-      alt: 'The alerts feed grouped by day, each alert showing the channel it went out on',
-      caption: 'Grouped by day, each entry showing the channel it actually went out on. Rules you can\'t audit are rules you stop trusting.',
+      src: '/trackwise-assets/integrations.webp',
+      alt: 'The integrations screen showing inbox, store, channel and developer connections with real states',
+      caption: 'Integrations with real connect and error states — a connected integration and a broken one look genuinely different.',
     },
 
-    // ══ 11. Developers ═══════════════════════════════════════════════════════
-    { t: 'h2', x: '11. The Developer Surface Is Three Jobs, Not One Settings Page' },
+    // ══ 15 · Money ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '15 · The money moments, designed rather than bolted on' },
     {
       t: 'p',
-      x: 'API access started life as a single settings page and was wrong there, because three unrelated jobs were sharing one screen: <em>getting credentials</em>, <em>configuring where events go</em>, and <em>working out why one didn\'t arrive</em>. The third one happens at 2am under pressure and deserves its own room. So Developers became its own product area with three sections — and everything in it mutates real state.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/keys-1.webp',
-      alt: 'The API keys page — a start-here panel with a copyable curl example, and the list of keys with modes and last-used times',
-      caption: 'A working request before anything else, then the keys themselves — each with its mode, its scopes, and when it was last used.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/keys-2.webp',
-      alt: 'The lower half of the API keys page — four permission cards explaining what a key can be allowed to do',
-      caption: 'Permissions explained as sentences with the scope string underneath, and a count of how many of your keys hold each one.',
+      x: 'The states that decide whether a business keeps a customer only exist for about a week each - near a quota, mid-trial, past due - so they are exactly the states that never get designed. Here they are switchable in the app, which is the only reason they got the same attention as the happy path.',
     },
     {
       t: 'p',
-      x: 'Keys carry a mode (live or test) and a fixed scope set, so a read-only test key can never touch live data even if it leaks. And the secret is shown <strong>exactly once</strong> — the only honest way to model a credential the server stores as a hash.',
+      x: 'Pricing puts every limit on one page, including the awkward questions, on the theory that a limit discovered later is worse than a limit read up front.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/key-secret.webp',
-      alt: 'The modal shown after creating a key — copy your key now, this is the only time you will see it, with a secret-manager warning',
-      caption: '"This is the only time you\'ll see it," and the reason underneath: we store a hash, not the key. If a dialog can only be honest or convenient, it should be honest.',
-    },
-    {
-      t: 'p',
-      x: 'Webhooks are modelled the same way: multiple endpoints, each with its own event subscriptions, signing secret and delivery history. Pausing an endpoint genuinely stops test sends succeeding; unsubscribing an event genuinely removes it from what you can fire. A settings screen where the switches are decorative teaches developers to distrust the whole dashboard.',
+      src: '/trackwise-assets/pricing.webp',
+      alt: 'The pricing page with a full comparison table and every limit stated',
+      caption: 'Every limit on one page. The awkward questions are answered here rather than in a support thread later.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/webhooks-1.webp',
-      alt: 'The webhooks page — an explainer with the exact JSON payload, and a warning that one message did not get through',
-      caption: 'It leads with the actual payload you will receive and the retry policy in one sentence — then tells you immediately if something didn\'t land.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/webhooks-2.webp',
-      alt: 'The endpoint list and settings — URL, sending toggle, signing secret, and the grid of events to send',
-      caption: 'One endpoint, fully specified: where, whether it is sending, the secret it is signed with, and exactly which events it is subscribed to.',
-    },
-    {
-      t: 'p',
-      x: 'The event log is the 2am screen. Every attempt for seven days, filterable by outcome, and expanding a row gives the two things you actually need side by side: <strong>what we sent</strong> (the exact JSON) and <strong>what came back</strong> (the exact response, including a 500\'s HTML error page). Failures carry a "send again" that is safe to press, because events carry an id and the copy says so.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/eventlog.webp',
-      alt: 'The event log with a failed delivery expanded, showing the request JSON sent and the 500 response returned',
-      caption: 'The request, the response, the status code, the retry count and the event id — one row, expanded. Everything a developer would otherwise ask support for.',
+      src: '/trackwise-assets/billing.webp',
+      alt: 'The billing settings screen with plan, quota meters and invoices',
+      caption: 'Billing, with the quota meter that makes the plan limit visible before it becomes a problem.',
     },
 
-    // ══ 12. Money ════════════════════════════════════════════════════════════
-    { t: 'h2', x: '12. The Money Moments — Designed, Not Bolted On' },
+    // ══ 16 · Blade ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '16 · Built inside somebody else’s design system' },
     {
       t: 'p',
-      x: 'Plan limits, trials and failed payments are where products get ugly: hard walls, disabled screens, red modals. These states only exist for a week or two in a user\'s life, which is exactly why they go unreviewed and end up being the worst screens in the product. I designed them as a sequence with one rule — <strong>never take away what is already working</strong>.',
+      x: 'This was the real exercise. Blade is a published, opinionated system with its own tokens, components and rules, and building a whole product inside it is a different discipline from inventing a language: <strong>the interesting decisions move from “what should this look like” to “which existing component is this, really”.</strong>',
     },
-    {
-      t: 'steps',
-      items: [
-        { title: 'Day one — nothing to show', desc: 'Empty states that do a job: what this screen will hold, and the one action that fills it. A setup checklist that can be dismissed and doesn\'t nag.' },
-        { title: '92% of the quota', desc: 'The rail meter turns amber and counts down in the unit that matters — "8 parcels left", not "92% used". Nothing is blocked yet, and the upgrade is an offer.' },
-        { title: 'Quota exhausted', desc: 'The critical decision: parcels you are <em>already</em> tracking keep updating. You just can\'t add new ones until the 1st. The wall is on new work, never on work in flight.' },
-        { title: 'Trial ending', desc: 'A countdown that says what happens on the day rather than what you\'ll lose — and the invoice preview is one click away.' },
-        { title: 'Payment failed', desc: 'A six-day grace period stated in days remaining, with tracking and alerts still running. The product degrades on a schedule you can read, not the moment a card bounces.' },
-      ],
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/plan-states.webp',
-      alt: 'Six workspace states — brand new account, 92% of quota, quota exhausted, trial ending, payment failed, and an empty list',
-      caption: 'The states that exist for one week and get reviewed for none of it. Each is reachable in a single click from the review panel — which is the only reason they got designed at all.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/quota.webp',
-      alt: 'The quota meter in the sidebar showing 8 parcels left, above the banner shown once the limit is reached',
-      caption: '"8 parcels left" is a countdown. "92% used" is a statistic. Only one of them tells you what to do next — and the banner that follows it is careful to say what still works.',
-    },
-    { t: 'h3', x: 'Gating without lying' },
     {
       t: 'p',
-      x: 'A gated feature is a design decision about respect. Hiding it entirely means a customer never learns the product does the thing they need; a dead click with a shrug is worse. Trackwise renders the real screen behind a blur, with a panel that lists specifically what would appear and what it costs — the feature is <em>visible, unusable, and honestly priced</em>.',
+      x: 'Where Blade had an answer, I used it. Where it did not - the merged timeline, the route rail, the branded-page preview - the new pieces are composed from Blade primitives so they inherit its tokens, its dark theme and its accessibility work rather than sitting beside them.',
     },
     {
       t: 'image',
-      src: '/trackwise-assets/gates.webp',
-      alt: 'The analytics page gated behind an upgrade panel over a blurred real chart, beside the full upgrade modal with plan comparison',
-      caption: 'The blur is the real Analytics page, rendered with real data. What sits on top of it is a list of exactly what you would get — not a padlock.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/pricing-1.webp',
-      alt: 'The public pricing page — three plan cards with limits and what each includes',
-      caption: 'Three plans, every limit on the card rather than behind a "see details" link. The page is titled after the thing pricing pages usually do wrong.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/pricing-2.webp',
-      alt: 'The full plan comparison table with every limit and feature across the three plans',
-      caption: 'And the full comparison underneath, including the rows a vendor would rather leave out — history retention, polling frequency, seats.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/pricing-3.webp',
-      alt: 'The pricing FAQ answering what happens at the limit, on downgrade, and to your data',
-      caption: 'The awkward questions, answered on the pricing page itself: what happens at the limit, on downgrade, and to your data. Pages that dodge those get read as traps.',
+      src: '/trackwise-assets/branded.webp',
+      alt: 'The branded-page builder with a live preview of the merchant’s tracking page',
+      caption: 'The branded-page builder — a merchant\'s own palette and domain, previewed live. One of the few places the system needed something new.',
     },
 
-    // ══ 13. States ═══════════════════════════════════════════════════════════
-    { t: 'h2', x: '13. Every Way It Can Fail, Drawn on Purpose' },
+    // ══ 17 · Dark ═══════════════════════════════════════════════════════════
+    { t: 'h2', x: '17 · Dark mode, for free and not for free' },
     {
       t: 'p',
-      x: 'The product depends on 14 third-party carrier APIs, which means it is broken somewhere almost all of the time. Designing only the happy path would have left the most-seen screens to a default spinner and an <code>alert()</code>. So the app models <strong>seven backend conditions</strong>, and every screen renders honestly in each of them.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/states.webp',
-      alt: 'Six workspace states — loading skeletons, empty, server error, offline, rate limited, and partial carrier outage',
-      caption: 'Loading · empty · server error · offline · rate limited · partial outage. Six different truths, six different sentences — none of them a spinner.',
-    },
-    {
-      t: 'table',
-      head: ['Condition', 'What the interface says — and why'],
-      rows: [
-        ['<strong>Loading</strong>', 'Skeletons shaped like the content that\'s coming, so the layout doesn\'t jump when it lands.'],
-        ['<strong>Empty</strong>', 'What this screen will hold once it has something, plus the one action that fills it. Never a shrug.'],
-        ['<strong>Server error</strong>', '"We couldn\'t load this" — and, critically, "your parcels are still being tracked in the background." The failure is scoped to the page, not the promise.'],
-        ['<strong>Offline</strong>', 'Cached data, clearly labelled stale with the time of the last sync. Readable, not blank.'],
-        ['<strong>Rate limited</strong>', 'The most honest one: we hit the carrier\'s shared limit, data is up to 22 minutes behind, and paid plans poll on a dedicated quota. A limitation and its remedy in one sentence.'],
-        ['<strong>Partial outage</strong>', 'Names the two degraded carriers and the exact number of affected parcels, and states that every other carrier is unaffected — with a filter to see them.'],
-        ['<strong>Not found</strong>', 'Different copy inside the workspace and outside it, because a lost signed-in user and a lost stranger need different exits.'],
-      ],
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/errors.webp',
-      alt: 'The 404 page inside the workspace, the public 404, and the help and support panel',
-      caption: 'Two different kinds of lost, and the way out of both. Every route is also wrapped in an error boundary — a single bad prop once took the whole app to a blank white page, which is how the API screen got fixed.',
-    },
-
-    // ══ 14. Craft ════════════════════════════════════════════════════════════
-    { t: 'h2', x: '14. Dark Mode, Search, and the Rest of the Surface' },
-    {
-      t: 'p',
-      x: 'Dark mode is Blade\'s <code>onDark</code> scheme rather than an inverted stylesheet — but the hand-built pieces had to be taught it. The custom illustrations resolve their own palette per scheme, because the pastel blues that read as soft on white glow unpleasantly on a dark surface, and the route rails and carrier tiles use non-token colour that needed a second pass.',
+      x: 'Blade ships <code>onLight</code> and <code>onDark</code>, so every stock component switched for free. Everything I composed had to earn it - the timeline\'s status colours, the route rail\'s gradient, and the carrier logos, which are the one thing on the page that has no dark variant and never will.',
     },
     {
       t: 'image',
       src: '/trackwise-assets/dark.webp',
-      alt: 'The workspace home, a parcel detail page and the public tracking page in dark mode',
-      caption: 'Three of the screens from the top of this page, in Blade\'s dark scheme. The illustrations aren\'t recoloured — each resolves its own palette for the scheme it\'s rendered in.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/search.webp',
-      alt: 'The command palette searching across parcels, pages and actions, beside the account menu',
-      caption: 'One field over parcels, pages and actions — because in a 34-route product, search is navigation for anyone who has used it more than twice.',
-    },
-    {
-      t: 'p',
-      x: 'Settings is six sections rather than one long page, and each one is a real screen rather than a stub. Privacy in particular is a page with sentences on it — in a product that watches your parcels, that is a feature, not a legal obligation.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/settings-1.webp',
-      alt: 'Three settings sections — profile, plan and billing, and notifications',
-      caption: 'Profile, plan &amp; billing, notifications.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/settings-2.webp',
-      alt: 'Three more settings sections — team, privacy, and developer options',
-      caption: 'Team, privacy, and the developer options that make the whole thing reviewable.',
+      alt: 'The workspace home in dark mode',
+      caption: 'The same home screen, dark. The parts that came from Blade switched themselves; the parts I built are where the work was.',
     },
 
-    // ══ 15. Built on Blade ═══════════════════════════════════════════════════
-    { t: 'h2', x: '15. Designing Inside Someone Else\'s System' },
+    // ══ 18 · Trade-offs ═════════════════════════════════════════════════════
+    { t: 'h2', x: '18 · The trade-offs' },
+    {
+      t: 'table',
+      head: ['What I chose', 'What it cost', 'Why I took it anyway'],
+      rows: [
+        [
+          '<strong>Building inside Blade.</strong>',
+          'No visual identity of my own, and some screens fought the system before they fitted it.',
+          'Inventing a design language is the easy half. Working productively inside a real one — and knowing when to compose rather than invent — is the part that matters on a team.',
+        ],
+        [
+          '<strong>No upsells on the tracking page.</strong>',
+          'Gives up the highest-intent surface a merchant owns, which every competitor monetises.',
+          'A carousel above the answer is what sends a shopper back to Google, and that costs a ticket. The marketing moved below the answer instead.',
+        ],
+        [
+          '<strong>Status-only sharing.</strong>',
+          'A shared page is less useful — you cannot forward it as proof of address or delivery detail.',
+          'People paste these links into group chats. A tracking link that leaks a home address is a product that gets somebody hurt exactly once.',
+        ],
+        [
+          '<strong>Predictions that show their reasoning.</strong>',
+          'A lot more surface area, and it makes the product visibly wrong sometimes.',
+          'A prediction you cannot interrogate is one nobody acts on. Being visibly wrong occasionally is the price of being trusted the rest of the time.',
+        ],
+        [
+          '<strong>A persona and failure-state switch inside the product.</strong>',
+          'A control real users must never see, carried in the real build.',
+          'Near-quota, mid-trial and past-due each exist for about a week. Without a switch they never get reviewed, and they are where the revenue is.',
+        ],
+        [
+          '<strong>Three developer screens instead of one tab.</strong>',
+          'More navigation, and each screen is thinner than a combined one.',
+          'Getting started, wiring up and debugging at 2am are three jobs. A combined page serves the first and fails the third.',
+        ],
+      ],
+    },
+
+    // ══ 19 · Measurement ════════════════════════════════════════════════════
+    { t: 'h2', x: '19 · How I\'d know it worked' },
+    {
+      t: 'table',
+      head: ['', ''],
+      rows: [
+        ['<strong>North star</strong>', 'WISMO tickets per hundred orders, before and after. It is the number the product is sold on and the only one that matters.'],
+        ['<strong>Deflection</strong>', 'Tracking-page visits per parcel against support contacts per parcel. The first should rise while the second falls; if both rise, the page is not answering.'],
+        ['<strong>Prediction accuracy</strong>', 'Published in the product, not just measured. If a merchant cannot see how often we are right, they are right not to act on it.'],
+        ['<strong>The share test</strong>', 'How often a public tracking link gets shared. It is free distribution, and it only happens if the page is genuinely useful.'],
+        ['<strong>Guardrail</strong>', 'Bounces from the tracking page to a search engine. That is the exact failure the “answer first” rule exists to prevent.'],
+        ['<strong>The first experiment</strong>', 'Answer-first against marketing-first on the public page. Every competitor does the opposite of what I chose, which is either an insight or a mistake — and this is how you find out which.'],
+      ],
+    },
+
+    // ══ 20 · Scope ══════════════════════════════════════════════════════════
+    { t: 'h2', x: '20 · What isn\'t built' },
     {
       t: 'p',
-      x: 'I built this on <strong>Razorpay Blade</strong> deliberately. Designing a product with a bespoke design system is a pleasant exercise where every problem has the answer "add a token." Designing inside a real, opinionated, production system is the actual job — you inherit its type scale, its spacing, its colour semantics and its component API, and your taste has to show up in composition and behaviour instead of in decoration.',
+      x: 'No backend and no carrier integrations - which is the genuinely hard part of this product, and the part where a real version would live or die. The delay prediction is a plausible fiction rather than a model. No returns or exchanges, no shopper mobile app, and no multi-workspace for agencies. And no merchant has used it, which is why section 19 is a plan rather than a result.',
     },
     {
       t: 'stats',
       items: [
-        { v: '109', l: 'Blade components used' },
-        { v: '82', l: 'Source files' },
-        { v: '27.9k', l: 'Lines of TypeScript' },
-        { v: '34', l: 'Routes' },
+        { v: '2', l: 'audiences: shopper and merchant' },
+        { v: '7', l: 'personas, switchable in the build' },
+        { v: '7', l: 'backend conditions, including the ugly ones' },
+        { v: '1', l: 'design system, not my own' },
       ],
-    },
-    {
-      t: 'p',
-      x: 'Blade supplies effectively everything: <code>SideNav</code>, <code>TopNav</code>, <code>TabNav</code>, <code>Table</code>, <code>StepGroup</code>, the charts, <code>EmptyState</code>, every form control, and the colour, spacing, type, elevation and motion scales. Four things had to be hand-built, and each one earned it:',
-    },
-    {
-      t: 'cards',
-      items: [
-        { icon: 'map', title: 'The route rail', desc: 'Origin → destination with live progress. Needs arbitrary non-token colour to read as a journey rather than a progress bar.' },
-        { icon: 'image', title: 'The illustration set', desc: 'Blade ships icons but no illustrations — and empty states, feature gates and summary cards are where a dashboard earns its character. A <strong>1,355-line hand-written SVG set</strong>, each illustration resolving its palette per colour scheme.' },
-        { icon: 'window', title: 'The context tab strip', desc: 'Each tab is a real link with a sliding indicator, so scopes are shareable URLs rather than component state.' },
-        { icon: 'droplet', title: 'The branded page', desc: 'A merchant\'s palette can\'t come from a token system. It gets a deliberate escape hatch from the design system, and only there.' },
-      ],
-    },
-    {
-      t: 'callout',
-      kind: 'info',
-      title: 'The most instructive bug in the project',
-      x: 'Blade\'s <code>SideNav</code> is <code>position: fixed; top: 0; height: 100%</code> and exposes neither <code>top</code> nor <code>height</code>. Running the top bar full-width above the rail therefore needs one override that reaches past the library\'s API, via a <code>data-blade-component</code> selector. It is the only such override in the codebase — and it is the honest lesson of building on someone else\'s system: <strong>you will need exactly one escape hatch, and the discipline is in stopping at one.</strong>',
-    },
-    {
-      t: 'p',
-      x: 'Motion is the same story. The custom transitions in <code>motion.css</code> use Blade\'s own motion-token values rather than invented ones — the content column has to match the side nav\'s two easing curves exactly, or the seam between them tears open mid-transition. Everything collapses to a cross-fade under <code>prefers-reduced-motion</code>, and the review panel can force that on to check it.',
     },
 
-    // ══ 16. Designed for review ══════════════════════════════════════════════
-    { t: 'h2', x: '16. A Prototype Nobody Can Review Is a Prototype Nobody Believes' },
+    { t: 'h3', x: 'Sources' },
     {
-      t: 'p',
-      x: 'Nine personas and seven backend conditions is 63 combinations. If reaching the "payment failed on a Business account during a partial carrier outage" state requires a code change, then in practice nobody ever looks at it — including me. So the product carries its own switchboard: persona, backend condition, appearance and forced reduced motion, plus a complete route index so no screen is reachable only by accident. Choices persist across reloads.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/devpanel-1.webp',
-      alt: 'The developer options screen — nine persona cards with a note on what each one exists to exercise',
-      caption: 'Nine personas, each with one line on why it exists — "zero parcels, so every list renders its empty state." The panel documents itself.',
-    },
-    {
-      t: 'image',
-      src: '/trackwise-assets/devpanel-2.webp',
-      alt: 'The lower half of the developer options screen — backend condition switches, appearance controls and the full route index',
-      caption: 'Seven backend conditions, dark mode, forced reduced motion, and every route in the product as a link. Every figure in this case study was reached from here.',
-    },
-    {
-      t: 'p',
-      x: 'The same idea appears in a form a first-time visitor will actually find: three cards for the three user types and a row of chips for the states that only exist for a week — near a quota, mid-trial, past due. Those are precisely the states that otherwise go unreviewed, so the product volunteers them.',
-    },
-    {
-      t: 'callout',
-      kind: 'success',
-      title: 'The seed matters',
-      x: 'One seeded generator produces four parcel pools — 22, 64, 148 and a separate 6 for test mode — with coherent scan histories, carrier handovers, ETAs and delay predictions. <strong>Seeded, so the dataset is identical on every reload.</strong> A demo that reshuffles between screenshots cannot be reviewed, compared, or trusted — and neither can a case study built on one.',
-    },
-
-    // ══ 17. Reflection ═══════════════════════════════════════════════════════
-    { t: 'h2', x: '17. What I Actually Learned' },
-    {
-      t: 'cards',
+      t: 'list',
       items: [
-        { icon: 'zap', title: 'Answer first, ask later', desc: 'Moving the marketing from before the answer to after it made it persuasive for the first time. You cannot sell tracking to someone who is still anxious about a parcel.' },
-        { icon: 'check', title: 'Publish the error rate', desc: 'The false-positive count was the hardest thing to put on screen and the single strongest trust signal in the product. Naming a weakness converts it from a bug report into an expectation.' },
-        { icon: 'layers', title: 'Constraints sharpen taste', desc: 'Blade removed every decoration decision, so the work that remained was structure, sequence and language — which is where product design actually happens.' },
-        { icon: 'warn', title: 'Edge states are the product', desc: 'Rate-limited, past-due and partial-outage took longer than the happy path and are the screens a real user is most likely to remember.' },
-        { icon: 'timer', title: 'Never wall off work in flight', desc: 'Hitting a quota stops new parcels, never the ones already moving. That one rule made every limit screen easy to write honestly.' },
-        { icon: 'code', title: 'Building it changes the design', desc: 'The peek drawer, the tab-strip scopes and the split developer area were all consequences of using the thing daily — none of them survived contact as originally drawn.' },
+        'Published WISMO benchmarks for 2025 - share of inbound support volume, cost per contact, and the proportion of shoppers who track an order after buying.',
+        'Razorpay Blade - the published design system this is built on.',
       ],
     },
-    { t: 'h3', x: 'What I would do next' },
-    {
-      t: 'p',
-      x: 'The obvious gaps are honest ones. There is no backend, so the prediction is a designed artefact rather than a trained model — the next real step is defining what the model would actually need and what its interface promises on a bad day. The bundle is ~534 kB gzipped, most of it Blade plus the chart library, which a real deployment would code-split at the chart and settings routes. And the whole product currently assumes one workspace per person: multi-store switching is the first structural thing that would have to change.',
-    },
+
     { t: 'hr' },
     {
-      t: 'launch',
-      title: 'Trackwise on GitHub',
-      desc: 'The full source — 82 files, 34 routes, and the seeded dataset every figure on this page came from. Clone it, run it, and click through all 63 persona × condition combinations yourself.',
-      url: 'https://github.com/uxnijin/razorpay',
-      label: 'View the repo',
+      t: 'quote',
+      x: 'Building inside somebody else\'s design system changes the question. It stops being “what should this look like” and becomes “which component is this, really” — which is the question you spend most of your time on inside an actual product team.',
+      by: 'Design intent, Trackwise',
     },
   ],
-};
+});

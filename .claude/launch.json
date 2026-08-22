@@ -9,6 +9,13 @@
       "autoPort": true
     },
     {
+      "name": "trackwise",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/nijin/Files/Code/razorpay", "run", "dev"],
+      "port": 4173,
+      "autoPort": true
+    },
+    {
       "name": "aeros",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "/Users/nijin/Files/Code/samrt-control-dashboard", "run", "dev"],
