@@ -250,6 +250,7 @@
 
   const bySlugAll = (slug) =>
     DESIGNS.find((x) => x.slug === slug) ||
+    CASE_STUDIES.find((x) => x.slug === slug) ||
     PROJECTS.find((x) => x.slug === slug) ||
     FINDINGS.find((x) => x.slug === slug);
 
@@ -309,6 +310,7 @@
     const [head, slug] = path.split('/');
     const entry =
       head === 'designs' ? DESIGNS.find((d) => d.slug === slug)
+      : head === 'case-studies' ? CASE_STUDIES.find((c) => c.slug === slug)
       : head === 'docs' ? PROJECTS.find((p) => p.slug === slug)
       : head === 'findings' ? FINDINGS.find((f) => f.slug === slug)
       : null;
@@ -337,6 +339,7 @@
     const pageLinks = [
       ['', 'Index'],
       ['designs', 'Designs'],
+      ['case-studies', 'Case Studies'],
       ['products', 'Products'],
       ['findings', 'UX Findings'],
       // ['graphics', 'Graphic Design'],  — hidden for now
@@ -366,12 +369,14 @@
       </ul>`;
 
     const onDesign = path.startsWith('designs/');
+    const onCase = path.startsWith('case-studies/');
     const onDoc = path.startsWith('docs/');
 
     // the sidebar is the mobile drawer now, and it lists the collection the open
     // page belongs to — both collections anywhere else.
     let collections = '';
     if (onDesign) collections = list(DESIGNS, 'designs', 'Designs');
+    else if (onCase) collections = list(CASE_STUDIES, 'case-studies', 'Case Studies');
     else if (onDoc) collections = list(PROJECTS, 'docs', 'Products');
     else collections = list(DESIGNS, 'designs', 'Designs') + list(PROJECTS, 'docs', 'Products');
 
@@ -458,12 +463,17 @@
   const designThumb = (d) => cardThumb(d, shortName(d), d.category !== 'Onboarding');
   const findingThumb = (f) => cardThumb(f, f.title || '', true);
 
-  const designCard = (d) => `
-      <a class="acard" href="${href(`designs/${d.slug}`)}" data-link>
+  // same card either side: /designs and /case-studies both list article cards,
+  // only the base path differs
+  const entryCard = (base) => (d) => `
+      <a class="acard" href="${href(`${base}/${d.slug}`)}" data-link>
         <span class="acard-thumb">${designThumb(d)}</span>
         <p class="acard-title">${esc(d.name)}</p>
         <span class="acard-meta">${esc([d.category, d.status].filter(Boolean).join(' · '))}</span>
       </a>`;
+
+  const designCard = entryCard('designs');
+  const caseStudyCard = entryCard('case-studies');
 
   // findings use the same card as the designs grid, so an article sits at the
   // same size as a case study or a product
@@ -2538,6 +2548,7 @@
 
     // topnav active state
     const navKey = path.startsWith('designs') ? 'designs'
+      : path.startsWith('case-studies') ? 'case-studies'
       : path.startsWith('docs/') || path === 'products' ? 'products'
       : path.startsWith('findings') ? 'findings'
       : path === 'graphics' ? 'graphics'
@@ -2555,6 +2566,8 @@
       whenLoaded(() => pageReady('graphics'), viewGraphics, 'Graphic Design');
     } else if (path === 'designs') {
       viewDirectory(DESIGNS, 'designs');
+    } else if (path === 'case-studies') {
+      viewDirectory(CASE_STUDIES, 'case-studies');
     } else if (path === 'products') {
       viewDirectory(PROJECTS, 'docs');
     } else if (path === 'building') {
@@ -2589,6 +2602,12 @@
       } else {
         viewNotFound();
       }
+    } else if (path.startsWith('case-studies/')) {
+      const slug = path.slice('case-studies/'.length);
+      const c = CASE_STUDIES.find((x) => x.slug === slug);
+      c
+        ? whenLoaded(() => bodyReady(c), () => viewDoc(c, CASE_STUDIES, 'case-studies'), shortName(c))
+        : viewNotFound();
     } else if (path.startsWith('designs/')) {
       const slug = path.slice('designs/'.length);
       const d = designBySlug(slug);
@@ -2728,32 +2747,40 @@
 
   // ------------------------------------------------------------- directories
 
-  // /designs is laid out like an articles page (image cards); /products like
-  // a products page (tall cards, name below). Both open with the category
-  // pills, then the groups under mono labels.
+  // /designs and /case-studies are laid out like an articles page (image
+  // cards); /products like a products page (tall cards, name below). All of
+  // them open with the category pills, then the groups under mono labels.
   function viewDirectory(items, basePath) {
-    const isDesigns = basePath === 'designs';
+    const isProducts = basePath === 'docs';
+    const isCases = basePath === 'case-studies';
+    // article cards for everything that is not a product
+    const isArticles = !isProducts;
     // the copy key stays 'projects': the route and labels were renamed to
     // Products, the PAGE_COPY key in data.js was left alone
-    const copy = PAGECOPY(isDesigns ? 'designs' : 'projects');
-    const title = cms(copy.title, isDesigns ? 'Designs' : 'Products');
+    const copy = PAGECOPY(isProducts ? 'projects' : isCases ? 'caseStudies' : 'designs');
+    const title = cms(copy.title, isProducts ? 'Products' : isCases ? 'Case Studies' : 'Designs');
     const lede = cms(
       copy.lede,
-      isDesigns
-        ? 'Onboarding flows, paywalls, and full products. Every case study is backed by a real, running app.'
-        : 'Figma plugins, browser extensions, and network tools, designed, built, and shipped for real users.'
+      isProducts
+        ? 'Figma plugins, browser extensions, and network tools, designed, built, and shipped for real users.'
+        : isCases
+        ? 'Longer write-ups of the work — the problem, the decisions, and what shipped.'
+        : 'Onboarding flows, paywalls, and full products. Every case study is backed by a real, running app.'
     );
 
     document.title = `${title} | ${PROFILE.name}`;
     setDescription(lede);
 
-    const groups = isDesigns
-      ? groupBy(items, (d) => d.category || 'Design', ['Onboarding', 'Paywalls', 'Mobile App', 'Web'])
-      : groupBy(items, (p) => p.group || 'Products');
+    const groups = isProducts
+      ? groupBy(items, (p) => p.group || 'Products')
+      : isCases
+      ? groupBy(items, (c) => c.category || 'Case Studies')
+      : groupBy(items, (d) => d.category || 'Design', ['Onboarding', 'Paywalls', 'Mobile App', 'Web']);
 
+    const card = isCases ? caseStudyCard : designCard;
     const grid = (g) =>
-      isDesigns
-        ? `<div class="acard-grid">${g.items.map(designCard).join('')}</div>`
+      isArticles
+        ? `<div class="acard-grid">${g.items.map(card).join('')}</div>`
         : `<div class="pcard-grid">${g.items.map(projectCard).join('')}</div>`;
 
     const pills = groups
@@ -2781,7 +2808,9 @@
             <div class="group-head" id="g-${slugify(g.name)}">
               <h2 class="group-title">${esc(g.name)}</h2>
               <span class="group-count">${g.items.length} ${
-                isDesigns ? (g.items.length === 1 ? 'case study' : 'case studies') : g.items.length === 1 ? 'product' : 'products'
+                isProducts
+                  ? g.items.length === 1 ? 'product' : 'products'
+                  : g.items.length === 1 ? 'case study' : 'case studies'
               }</span>
             </div>
             ${grid(g)}`
@@ -3316,6 +3345,7 @@
             <h4>Explore</h4>
             <ul>
               <li><a href="${href('designs')}" data-link>Designs</a></li>
+              <li><a href="${href('case-studies')}" data-link>Case Studies</a></li>
               <li><a href="${href('products')}" data-link>Products</a></li>
               <li><a href="${href('findings')}" data-link>UX Findings</a></li>
               <li><a href="${href('about')}" data-link>About</a></li>

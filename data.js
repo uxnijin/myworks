@@ -125,6 +125,10 @@ const PAGE_COPY = {
     title: 'Products',
     lede: 'Figma plugins, browser extensions, and network tools, designed, built, and shipped for real users.',
   },
+  caseStudies: {
+    title: 'Case Studies',
+    lede: 'Longer write-ups of the work — the problem, the decisions, and what shipped.',
+  },
   findings: {
     title: 'UX Findings',
     lede: 'Findings, teardowns and notes from designing and building things.',
@@ -173,6 +177,25 @@ const CLIENTS = [
 //  Adding an entry is now TWO steps: a record here, and its body file. There
 //  is no <script> tag to add — the body is loaded by path.
 // ============================================================================
+
+// ============================================================================
+//  CASE_STUDIES — the /case-studies index. Same shape as a DESIGNS record:
+//  card fields here, the body in its own file under `case-studies/`.
+//  One placeholder entry for now.
+// ============================================================================
+const CASE_STUDIES = [
+  {
+    slug: 'sample-case-study',
+    name: 'Sample: A placeholder case study',
+    category: 'Placeholder',
+    icon: 'file',
+    tag: 'Case study',
+    status: 'Draft',
+    summary: 'A stand-in entry so the Case Studies section has something in it. Replace it with the first real write-up.',
+    lede: '<strong>Sample</strong> is a placeholder. It exists so the Case Studies route, its card and its document page can be seen working before the first real case study is written.',
+    body: '/case-studies/sample-case-study.js',
+  },
+];
 
 const DESIGNS = [
   {
