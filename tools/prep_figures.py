@@ -2,57 +2,42 @@
 """
 Prepare a supplied design image for the site.
 
-Every figure on a detail page is a 16:9 webp at 2400x1350, and every card
-thumbnail is 1600x900 — both sitting somewhere around 80-150KB. A PNG straight
-out of Figma is usually 1-4MB, which is the whole page budget spent on one
-picture, so nothing goes in without passing through here.
+    python3 tools/prep_figures.py crate-assets/hero.webp ~/Desktop/hero.png
+    python3 tools/prep_figures.py --thumb crate-assets/thumb.webp ~/Desktop/hero.png
+    python3 tools/prep_figures.py --crop 0,230,804,452 out.webp screen.png
 
-    python3 tools/prep_figures.py ember-assets/hero.webp ~/Desktop/hero.png
-    python3 tools/prep_figures.py --thumb ember-assets/thumb.webp ~/Desktop/list.png
-    python3 tools/prep_figures.py --thumb --crop 0,230,804,452 out.webp screen.png
+**The image keeps its own aspect ratio.** `.frame img` is `width: 100%` with no
+ratio box, so a figure is exactly as tall as its picture — which means padding a
+1754x1080 export out to 16:9 only ever added white bands down both sides and made
+the content smaller in the column. Nothing is padded, cropped or stretched here;
+the only geometry is a width ceiling.
 
-A card thumbnail usually wants a band out of a full-length screen rather than
-the whole thing padded into a letterbox, so --crop x,y,w,h takes that band
-first, in the source image's own pixels.
+That ceiling is a ceiling, not a size: a source narrower than the target keeps
+its own width, because upscaling invents detail and charges bytes for it.
 
-An image that is not already 16:9 is padded — never cropped, never stretched —
-onto white, because the house canvas is white anyway and a phone that has been
-squeezed reads as a mistake. Quality steps down from 88 until the file fits the
-budget, so a busy screenshot costs a little sharpness rather than 900KB.
+Quality steps down from 88 until the file fits its budget, so a busy screenshot
+costs a little sharpness rather than most of the page weight.
 
-It never scales an image up, either. A 1754px-wide export pushed to 2400 costs
-bytes for pixels that were never there, so the target is a ceiling rather than
-a size, and a smaller source keeps its own.
+`--crop x,y,w,h` takes a region out of the source first, in the source image's
+own pixels — for a card thumbnail that wants a band out of a full-length screen
+rather than the whole thing.
 """
 import subprocess, sys, tempfile, os
 from PIL import Image
 
-FIGURE = (2400, 1350, 150_000)   # width, height, max bytes
-THUMB  = (1600,  900,  90_000)
+FIGURE = (2400, 150_000)   # max width, max bytes
+THUMB  = (1600,  90_000)
 
 
 def prep(src, dst, spec, crop=None):
-    w, h, budget = spec
+    max_w, budget = spec
     im = Image.open(src).convert('RGB')
     if crop:
         x, y, cw, ch = crop
         im = im.crop((x, y, x + cw, y + ch))
 
-    # pad to 16:9 on white rather than crop — the canvas is white already
-    target = w / h
-    if abs(im.width / im.height - target) > 0.005:
-        if im.width / im.height < target:
-            box = (int(round(im.height * target)), im.height)
-        else:
-            box = (im.width, int(round(im.width / target)))
-        canvas = Image.new('RGB', box, 'white')
-        canvas.paste(im, ((box[0] - im.width) // 2, (box[1] - im.height) // 2))
-        im = canvas
-
-    # the target is a ceiling: upscaling invents detail and charges for it
-    if im.width < w:
-        w, h = im.width, round(im.width * h / w)
-    im = im.resize((w, h), Image.LANCZOS)
+    if im.width > max_w:
+        im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
 
     with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
         im.save(tmp.name)
@@ -64,7 +49,7 @@ def prep(src, dst, spec, crop=None):
                 break
         os.unlink(tmp.name)
 
-    print(f'{dst}  {w}x{h}  {size/1024:.0f}KB  q{q}')
+    print(f'{dst}  {im.width}x{im.height}  {size/1024:.0f}KB  q{q}')
 
 
 if __name__ == '__main__':
