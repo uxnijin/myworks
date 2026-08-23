@@ -2,18 +2,22 @@
 
 Every screen used by the case study, captured 2× (1206 × 2622) from the running
 SwiftUI app on an iPhone 17 Pro simulator with the status bar frozen at 9:41.
-Most of the 16:9 composites in `route-planner-assets/*.webp` are built from
-these files — the individual captures are the real deliverable. The exceptions
-are `hero.webp`, `dark.webp` and `thumb.webp`, which are supplied renders on a
-blue ground rather than bezels on white; `rp_figures.sh` skips those three, and
-`theme.webp` is gone because `dark.webp` replaced it.
+**None of the figures on the site are composed from these files any more.**
+Every figure in `route-planner-assets/*.webp` is now a supplied slide, prepared
+with `tools/prep_figures.py` — the same screens, framed better, plus close-ups
+and a full dark set that the composites never had. `tools/rp_figures.sh` and
+`tools/rp_thumb.py` are deleted rather than left lying around, because running
+either one would have overwritten every figure with the old look; `git log` has
+them if the capture pipeline is ever wanted back.
+
+These captures are still the real deliverable and still worth keeping: they are
+the running app, and `rp_capture.sh` still regenerates them.
 
 Regenerate:
 
 ```bash
 tools/rp_capture.sh light
 tools/rp_capture.sh dark
-tools/rp_figures.sh      # composes the figures and the card thumbnail
 ```
 
 **The app is dark-first**, so `dark/` is the primary set — every figure except
