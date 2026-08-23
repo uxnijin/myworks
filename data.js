@@ -255,6 +255,21 @@ const DESIGNS = [
     body: '/designs/kili.js',
   },
   {
+    // hidden until the four figures are in ember-assets/ — see designs/ember.js.
+    // Drop the `hidden` line to publish it.
+    hidden: true,
+    slug: 'ember',
+    thumbUrl: '/ember-assets/thumb.webp',
+    name: 'Ember: Habits and Streaks',
+    category: 'Mobile App',
+    icon: 'checklist',
+    tag: 'Design',
+    status: 'Concept',
+    summary: 'A habit tracker built around one number — the streak. Categories as chips, a setup form that fits in one scroll, and a month that shows a missed day without making a fuss of it.',
+    lede: 'A habit tracker built around the streak: the number that says how many days in a row you have kept something up. It is on every row in the list, and it is the biggest thing on the habit itself.',
+    body: '/designs/ember.js',
+  },
+  {
     slug: 'trackwise',
     thumbUrl: '/trackwise-assets/thumb.webp',
     name: 'Trackwise: Where Is My Parcel?',
