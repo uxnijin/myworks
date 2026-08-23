@@ -255,6 +255,18 @@ const DESIGNS = [
     body: '/designs/kili.js',
   },
   {
+    slug: 'chalo',
+    thumbUrl: '/chalo-assets/thumb.webp',
+    name: 'Chalo: A Trip You Can Describe',
+    category: 'Mobile App',
+    icon: 'globe',
+    tag: 'Design',
+    status: 'Concept',
+    summary: 'A travel app where the planning happens in a conversation — describe the trip, get an itinerary back, and book the flight without leaving the chat. Two-sided: there is a partner app for the people supplying it.',
+    lede: 'A travel app where the planning happens in a conversation. You describe the trip you want — where, roughly when, who with — and what comes back is an itinerary you can book from without leaving the chat.',
+    body: '/designs/chalo.js',
+  },
+  {
     slug: 'ember',
     thumbUrl: '/ember-assets/thumb.webp',
     name: 'Ember: Habits and Streaks',

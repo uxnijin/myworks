@@ -19,6 +19,10 @@ An image that is not already 16:9 is padded â€” never cropped, never stretched â
 onto white, because the house canvas is white anyway and a phone that has been
 squeezed reads as a mistake. Quality steps down from 88 until the file fits the
 budget, so a busy screenshot costs a little sharpness rather than 900KB.
+
+It never scales an image up, either. A 1754px-wide export pushed to 2400 costs
+bytes for pixels that were never there, so the target is a ceiling rather than
+a size, and a smaller source keeps its own.
 """
 import subprocess, sys, tempfile, os
 from PIL import Image
@@ -45,6 +49,9 @@ def prep(src, dst, spec, crop=None):
         canvas.paste(im, ((box[0] - im.width) // 2, (box[1] - im.height) // 2))
         im = canvas
 
+    # the target is a ceiling: upscaling invents detail and charges for it
+    if im.width < w:
+        w, h = im.width, round(im.width * h / w)
     im = im.resize((w, h), Image.LANCZOS)
 
     with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
