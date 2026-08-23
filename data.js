@@ -255,6 +255,18 @@ const DESIGNS = [
     body: '/designs/kili.js',
   },
   {
+    slug: 'crate',
+    thumbUrl: '/crate-assets/thumb.webp',
+    name: 'Crate: A Transfer You Can Brand',
+    category: 'Web',
+    icon: 'upload',
+    tag: 'Design',
+    status: 'Concept',
+    summary: 'A service for sending files too big to email, where the thing being designed is the page the recipient opens — built beside you as you upload, then dressed in your own logo, colours and type.',
+    lede: 'A service for sending files too big to email. The part it takes seriously is the page the person on the other end opens: you build that while you upload, and it stays on screen the whole time.',
+    body: '/designs/crate.js',
+  },
+  {
     slug: 'haca-design-school',
     thumbUrl: '/haca-design-school-assets/thumb.webp',
     name: 'HACA Design School: The Page That Sells the Course',
