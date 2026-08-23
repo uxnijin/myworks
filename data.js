@@ -186,6 +186,7 @@ const CLIENTS = [
 const CASE_STUDIES = [
   {
     slug: 'sample-case-study',
+    thumbUrl: '/images/thumbs/sample-case-study.webp',
     name: 'Sample: A placeholder case study',
     category: 'Placeholder',
     icon: 'file',
