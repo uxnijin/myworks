@@ -255,6 +255,18 @@ const DESIGNS = [
     body: '/designs/kili.js',
   },
   {
+    slug: 'haca-design-school',
+    thumbUrl: '/haca-design-school-assets/thumb.webp',
+    name: 'HACA Design School: A Course Page, Redesigned',
+    category: 'Web',
+    icon: 'graduation',
+    tag: 'Design',
+    status: 'Concept',
+    summary: 'A branding course sold on a page that did not look branded. The same sections, given display type, a colour per section, and the three things the old page was missing — student work, the instructors, and the awkward questions.',
+    lede: 'A landing page for a branding course, redesigned. The sections are the same ones the old page had; what changed is that the page now looks like it was made by people who can brand things.',
+    body: '/designs/haca-design-school.js',
+  },
+  {
     slug: 'chalo',
     thumbUrl: '/chalo-assets/thumb.webp',
     name: 'Chalo: A Trip You Can Describe',
