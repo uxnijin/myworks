@@ -8,8 +8,8 @@ BODY('route-planner', {
     {
       t: 'image',
       src: '/route-planner-assets/hero.webp',
-      alt: 'Five Route Planner screens: home, the route overview, driving, arrival and the end-of-day summary',
-      caption: 'The day, end to end.',
+      alt: 'Route Planner home, with today\'s route and progress, beside the stop card on the live map',
+      caption: 'The day so far, and the stop in front of you.',
     },
     { t: 'p', x: 'An import that only ever succeeds has not been designed, so this one arrives broken. The route exists only after you have read the middle screen.' },
     {
@@ -35,9 +35,9 @@ BODY('route-planner', {
     { t: 'p', x: 'The map, the route line and the accent survive the switch. Only the surfaces move.' },
     {
       t: 'image',
-      src: '/route-planner-assets/theme.webp',
-      alt: 'Home and navigation shown in light and dark side by side',
-      caption: 'The same two screens, light and dark.',
+      src: '/route-planner-assets/dark.webp',
+      alt: 'The same home screen and stop card in dark mode',
+      caption: 'The same pair, dark.',
     },
   ],
 });

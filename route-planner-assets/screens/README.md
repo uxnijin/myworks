@@ -2,8 +2,11 @@
 
 Every screen used by the case study, captured 2× (1206 × 2622) from the running
 SwiftUI app on an iPhone 17 Pro simulator with the status bar frozen at 9:41.
-The 16:9 composites in `route-planner-assets/*.webp` are built from these files
-— the individual captures are the real deliverable.
+Most of the 16:9 composites in `route-planner-assets/*.webp` are built from
+these files — the individual captures are the real deliverable. The exceptions
+are `hero.webp`, `dark.webp` and `thumb.webp`, which are supplied renders on a
+blue ground rather than bezels on white; `rp_figures.sh` skips those three, and
+`theme.webp` is gone because `dark.webp` replaced it.
 
 Regenerate:
 

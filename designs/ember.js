@@ -8,6 +8,7 @@
 
 BODY('ember', {
   blocks: [
+    { t: 'p', x: 'A design rather than a build — these are the screens as drawn, not captures of a running app.' },
     { t: 'p', x: 'Three screens carry the whole app: the list you open it for, the form that makes a habit, and the habit itself.' },
     {
       t: 'image',
