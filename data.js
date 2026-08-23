@@ -201,6 +201,7 @@ const DESIGNS = [
   {
     slug: 'paywalls',
     thumbUrl: '/paywall-assets/stride-screens/images/stride-01-offer.webp',
+    hidden: true,
     name: 'Paywalls',
     category: 'Paywalls',
     icon: 'cart',
@@ -212,6 +213,7 @@ const DESIGNS = [
   },
   {
     slug: 'tuck',
+    hidden: true,
     name: 'Tuck',
     category: 'Onboarding',
     icon: 'zap',
@@ -223,6 +225,7 @@ const DESIGNS = [
   },
   {
     slug: 'sprig',
+    hidden: true,
     name: 'Sprig',
     category: 'Onboarding',
     icon: 'droplet',
@@ -234,6 +237,7 @@ const DESIGNS = [
   },
   {
     slug: 'trove',
+    hidden: true,
     name: 'Trove',
     category: 'Onboarding',
     icon: 'layers',
@@ -245,6 +249,7 @@ const DESIGNS = [
   },
   {
     slug: 'kili',
+    hidden: true,
     name: 'Kili',
     category: 'Onboarding',
     icon: 'globe',
@@ -253,6 +258,18 @@ const DESIGNS = [
     summary: 'A language app you learn by speaking — twelve onboarding screens and every state that isn\'t the happy path.',
     lede: '<strong>Kili</strong> teaches a language by making you speak it — ten minutes, one conversation a day. Twelve onboarding screens, built as a running iOS app so every state can be seen rather than described.',
     body: '/designs/kili.js',
+  },
+  {
+    slug: 'plate',
+    thumbUrl: '/plate-assets/thumb.webp',
+    name: 'Plate: A Day of Eating on One Screen',
+    category: 'Mobile App',
+    icon: 'activity',
+    tag: 'Design',
+    status: 'Concept',
+    summary: 'A calorie tracker that fits on one screen — the week, what is left of today, and the meals you have logged, with the ones you have not sitting there as a row and a plus.',
+    lede: 'A calorie tracker that is one screen: the week across the top, what is left of the day under it, and everything you have eaten below that.',
+    body: '/designs/plate.js',
   },
   {
     slug: 'crate',
