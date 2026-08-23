@@ -53,6 +53,32 @@ refuses. Use `export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`
 and drive the simulator through Bash instead — and say so rather than switching
 silently.
 
+## A design entry is figures, not a case study
+
+**`/designs` is a design section. It is not where the long-form writing goes.**
+The screens are the work; the prose exists to point at them. An entry is:
+
+- one or two sentences of lede on the record in `data.js` — what the thing is,
+  and nothing about how it was built
+- a first paragraph in the body saying **it is a prototype build** and what it
+  runs on
+- then the figures, each with at most one short sentence in front of it and a
+  terse caption under it — a list of the screens, not an argument
+- an `h2` only when there are enough figures to need grouping (roughly eight or
+  more), and then in plain words: "The plumbing", "Dark", "The therapist's side"
+
+Around 150-400 words for the whole page, figures included. What does **not**
+belong: numbered section runs ("1 · The problem"), research and discovery,
+personas, user quotes, metrics, trade-off tables, "what I'd do next". If a
+sentence is not pointing at something visible in a screenshot, cut it.
+
+The tone to match is `/findings`: short sentences, one idea per paragraph,
+ordinary words. Read `findings/slow-doesnt-always-mean-broken.js` before
+writing a new entry.
+
+Long-form work goes in **`/case-studies`** instead — its own collection in
+`data.js`, its own body files under `case-studies/`.
+
 ## Onboarding case studies
 
 **One project per flow.** Each onboarding flow is its own entry in `DESIGNS`
