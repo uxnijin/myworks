@@ -9,6 +9,11 @@ picture, so nothing goes in without passing through here.
 
     python3 tools/prep_figures.py ember-assets/hero.webp ~/Desktop/hero.png
     python3 tools/prep_figures.py --thumb ember-assets/thumb.webp ~/Desktop/list.png
+    python3 tools/prep_figures.py --thumb --crop 0,230,804,452 out.webp screen.png
+
+A card thumbnail usually wants a band out of a full-length screen rather than
+the whole thing padded into a letterbox, so --crop x,y,w,h takes that band
+first, in the source image's own pixels.
 
 An image that is not already 16:9 is padded — never cropped, never stretched —
 onto white, because the house canvas is white anyway and a phone that has been
@@ -22,9 +27,12 @@ FIGURE = (2400, 1350, 150_000)   # width, height, max bytes
 THUMB  = (1600,  900,  90_000)
 
 
-def prep(src, dst, spec):
+def prep(src, dst, spec, crop=None):
     w, h, budget = spec
     im = Image.open(src).convert('RGB')
+    if crop:
+        x, y, cw, ch = crop
+        im = im.crop((x, y, x + cw, y + ch))
 
     # pad to 16:9 on white rather than crop — the canvas is white already
     target = w / h
@@ -56,8 +64,13 @@ if __name__ == '__main__':
     args = sys.argv[1:]
     spec = THUMB if '--thumb' in args else FIGURE
     args = [a for a in args if a != '--thumb']
+    crop = None
+    if '--crop' in args:
+        i = args.index('--crop')
+        crop = [int(v) for v in args[i + 1].split(',')]
+        del args[i:i + 2]
     if len(args) != 2:
         sys.exit(__doc__)
     dst, src = args
     os.makedirs(os.path.dirname(dst) or '.', exist_ok=True)
-    prep(src, dst, spec)
+    prep(src, dst, spec, crop)

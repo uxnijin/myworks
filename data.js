@@ -255,9 +255,6 @@ const DESIGNS = [
     body: '/designs/kili.js',
   },
   {
-    // hidden until the four figures are in ember-assets/ — see designs/ember.js.
-    // Drop the `hidden` line to publish it.
-    hidden: true,
     slug: 'ember',
     thumbUrl: '/ember-assets/thumb.webp',
     name: 'Ember: Habits and Streaks',
