@@ -257,13 +257,13 @@ const DESIGNS = [
   {
     slug: 'haca-design-school',
     thumbUrl: '/haca-design-school-assets/thumb.webp',
-    name: 'HACA Design School: A Course Page, Redesigned',
+    name: 'HACA Design School: The Page That Sells the Course',
     category: 'Web',
     icon: 'graduation',
     tag: 'Design',
     status: 'Concept',
-    summary: 'A branding course sold on a page that did not look branded. The same sections, given display type, a colour per section, and the three things the old page was missing — student work, the instructors, and the awkward questions.',
-    lede: 'A landing page for a branding course, redesigned. The sections are the same ones the old page had; what changed is that the page now looks like it was made by people who can brand things.',
+    summary: 'A branding course sold on a page that did not look branded. Display type, a colour per section, and the three things the page was missing — student work, the instructors, and the awkward questions about paying.',
+    lede: 'A landing page for a branding course. The argument was already settled by the first pass; what this one adds is a voice — display type, a colour per section, and the parts a design school cannot afford to leave out.',
     body: '/designs/haca-design-school.js',
   },
   {

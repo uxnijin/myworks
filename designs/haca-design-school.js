@@ -2,79 +2,44 @@
 //  HACA Design School. A design entry — the screens, and a little about them.
 //  Prose stays short on purpose.
 //
-//  The one entry where a compare block earns its place: the old page and the
-//  new one are the same sections, so they wipe against each other.
+//  The design leads. The first iteration is at the end, as an archive of the
+//  pass it came out of — not a before/after, and not a slider.
 //  Figures: haca-design-school-assets/, through tools/prep_figures.py.
 // ==========================================================================
 
 BODY('haca-design-school', {
   blocks: [
-    { t: 'p', x: 'A design rather than a build — these are the pages as drawn, not a site you can visit.' },
-    {
-      t: 'compare',
-      before: '/haca-design-school-assets/old-hero.webp',
-      after: '/haca-design-school-assets/new-hero.webp',
-      beforeLabel: 'Before',
-      afterLabel: 'After',
-      caption: 'The hero. Drag the handle across.',
-    },
-    { t: 'p', x: 'The old hero sold with a photograph and a sentence set in the same typeface as everything else. The new one makes the course name the picture — students set into the letters, so the people and the promise are one object instead of two.' },
-
-    { t: 'h2', x: 'The same page, section by section' },
-    { t: 'p', x: 'The questions did not change. The voice did: display type that commits, and a colour per section so scrolling feels like moving through rooms rather than down a list.' },
-    {
-      t: 'compare',
-      before: '/haca-design-school-assets/old-why.webp',
-      after: '/haca-design-school-assets/new-why.webp',
-      beforeLabel: 'Before',
-      afterLabel: 'After',
-      caption: 'Why people join.',
-    },
-    { t: 'p', x: 'Six reasons in a two-column grid became four, each with a face carrying the feeling the sentence describes — the doubt at the top, the ease at the bottom.' },
-    {
-      t: 'compare',
-      before: '/haca-design-school-assets/old-learn.webp',
-      after: '/haca-design-school-assets/new-learn.webp',
-      beforeLabel: 'Before',
-      afterLabel: 'After',
-      caption: 'The modules.',
-    },
-    { t: 'p', x: 'The module list was eight identical rows saying Branding basics. Now they are tabbed cards, numbered, each showing its level and who teaches it, so the shape of the course is visible without reading a word.' },
-    {
-      t: 'compare',
-      before: '/haca-design-school-assets/old-ai.webp',
-      after: '/haca-design-school-assets/new-ai.webp',
-      beforeLabel: 'Before',
-      afterLabel: 'After',
-      caption: 'The bonus module.',
-    },
-    { t: 'p', x: 'A bulleted list became four stacked cards, one colour each. The same four claims, given the weight of things rather than lines.' },
-    {
-      t: 'compare',
-      before: '/haca-design-school-assets/old-included.webp',
-      after: '/haca-design-school-assets/new-included.webp',
-      beforeLabel: 'Before',
-      afterLabel: 'After',
-      caption: 'What is included.',
-    },
-    { t: 'p', x: 'Then it is alternating rows — videos, projects, templates — so a long list of inclusions reads as a rhythm instead of a wall.' },
-    { t: 'image', src: '/haca-design-school-assets/included-detail.webp', alt: 'Alternating rows for instructional videos, course projects and templates, each with an illustration', caption: 'The rows underneath.' },
-    {
-      t: 'compare',
-      before: '/haca-design-school-assets/old-closer.webp',
-      after: '/haca-design-school-assets/new-closer.webp',
-      beforeLabel: 'Before',
-      afterLabel: 'After',
-      caption: 'The closer.',
-    },
-    { t: 'p', x: 'The last thing on the page stops being a blue rectangle and gets a shape of its own.' },
-
-    { t: 'h2', x: 'What the old page did not have' },
-    { t: 'p', x: 'A design course has to show the work its students make. This is the section a branding school cannot afford to be missing.' },
+    { t: 'p', x: 'A concept, and not a shipped one — these are the pages as drawn.' },
+    { t: 'p', x: 'The course name is the picture. Students are set into the letters, so the people and the promise arrive as one object rather than a photograph above a sentence.' },
+    { t: 'image', src: '/haca-design-school-assets/hero.webp', alt: 'The hero: HACA Design School introducing Branding Mastery, in heavy purple display type with student portraits set into the letters', caption: 'The hero.' },
+    { t: 'p', x: 'Every section takes a colour of its own, so scrolling feels like moving through rooms rather than down a list.' },
+    { t: 'image', src: '/haca-design-school-assets/why.webp', alt: 'Why people join this program, on green, with four reasons each carrying a face for the feeling it describes', caption: 'Why people join.' },
+    { t: 'p', x: 'The reasons are faces before they are sentences: the doubt at the top, the ease at the bottom.' },
+    { t: 'image', src: '/haca-design-school-assets/learn.webp', alt: 'What you will learn, with eight numbered module cards showing level and instructors beside a video thumbnail', caption: 'The modules.' },
+    { t: 'p', x: 'Eight numbered cards, each showing its level and who teaches it, so the shape of the course is visible without reading a word of it.' },
+    { t: 'image', src: '/haca-design-school-assets/ai.webp', alt: 'The AI bonus module section, with four stacked colour cards describing what it covers', caption: 'The bonus module.' },
+    { t: 'p', x: 'Four claims given the weight of objects rather than bullet points.' },
+    { t: 'image', src: '/haca-design-school-assets/included.webp', alt: 'Some of the things you will be learning and doing, on red with an illustration', caption: 'What is included.' },
+    { t: 'image', src: '/haca-design-school-assets/included-detail.webp', alt: 'Alternating rows for instructional videos, course projects and templates, each with an illustration', caption: 'And the rows under it.' },
+    { t: 'p', x: 'A branding school cannot afford to leave out the work its students make. This is the section that was missing.' },
     { t: 'image', src: '/haca-design-school-assets/students.webp', alt: 'A row of student project cards, each with the work, the student name and their batch', caption: 'Students&rsquo; work.' },
-    { t: 'p', x: 'And the people teaching it, since the fee is partly for access to them.' },
+    { t: 'p', x: 'So were the people teaching it, when part of what is being paid for is access to them.' },
     { t: 'image', src: '/haca-design-school-assets/instructors.webp', alt: 'The instructors section with a large founder portrait beside three smaller ones', caption: 'The instructors.' },
-    { t: 'p', x: 'The awkward questions — how you pay, in how many instalments — are answered on the page rather than in a message to the team.' },
+    { t: 'p', x: 'And the awkward question — how you pay, in how many instalments — answered on the page rather than in a message to the team.' },
     { t: 'image', src: '/haca-design-school-assets/faq.webp', alt: 'A frequently asked questions accordion with the payment options answer open', caption: 'The questions.' },
+    { t: 'p', x: 'The last thing on the page gets a shape of its own.' },
+    { t: 'image', src: '/haca-design-school-assets/closer.webp', alt: 'The closing section on purple with orange curves behind three team portraits and an enrol button', caption: 'The closer.' },
+
+    { t: 'h2', x: 'The first iteration' },
+    { t: 'p', x: 'The pass this came out of. Every section is already here — the argument was settled, and only the voice was still missing. Light sans headlines, flat blocks of colour, and a module list that says <em>Branding basics</em> eight times.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-hero.webp', alt: 'The first hero: a photograph of three people over purple, with the headline Land Your Next Big Client With A Branding Solution', caption: 'The hero.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-why.webp', alt: 'Why people join this program as six items in a two-column grid on a red ground', caption: 'Why people join.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-intro.webp', alt: 'A blue section introducing Brand Design Mastery with an illustration', caption: 'Introducing the course.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-learn.webp', alt: 'What you will learn, as a list of identical module rows beside a video thumbnail', caption: 'The modules.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-ai.webp', alt: 'The AI bonus module on yellow, with its four points as a bulleted list', caption: 'The bonus module.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-outcomes.webp', alt: 'By the end of this course you will be able to, as four coloured cards', caption: 'The outcomes.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-included.webp', alt: 'Some of the things you will be learning and doing, on cream with an illustration', caption: 'What is included.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-expert.webp', alt: 'Become an expert that can take any project, on green with a checklist and an illustration', caption: 'The promise.' },
+    { t: 'image', src: '/haca-design-school-assets/v1-closer.webp', alt: 'The closing section as a plain blue rectangle with three portraits and a get in touch button', caption: 'The closer.' },
   ],
 });
