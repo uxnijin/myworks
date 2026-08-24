@@ -261,6 +261,17 @@ const DESIGNS = [
     body: '/designs/kili.js',
   },
   {
+    slug: 'zaiqa',
+    thumbUrl: '/zaiqa-assets/thumb.webp',
+    name: 'Zaiqa: The Restaurant Takes Its Own Orders',
+    category: 'Mobile App',
+    icon: 'cart',
+    tag: 'Design',
+    summary: 'An Indian restaurant with its own ordering app instead of a listing on a marketplace — collection or delivery, sides priced as you tick them, saved addresses that are people, and a table booked on the same app as a takeaway.',
+    lede: 'An Indian restaurant taking its own orders rather than renting a spot on somebody else&rsquo;s marketplace. Collection or delivery, a dish built from its sides, a card or the driver, and a table booked on the same app.',
+    body: '/designs/zaiqa.js',
+  },
+  {
     slug: 'plate',
     thumbUrl: '/plate-assets/thumb.webp',
     name: 'Plate: A Day of Eating on One Screen',
