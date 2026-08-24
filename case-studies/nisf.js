@@ -52,6 +52,19 @@ BODY('nisf', {
         { src: '/nisf-assets/screens/0864.webp' }
       ],
     },
+
+    { t: 'h2', x: 'Where it starts' },
+    { t: 'p', x: 'Before a single screen gets redrawn: the two things every screen is made out of.' },
+    { t: 'image', src: '/nisf-assets/tokens-type.webp', alt: 'The Onest typeface — the name set large, the character set, five weights from Light to Bold, and a display, title and body scale', caption: 'Onest.' },
+    { t: 'p', x: 'One primary, <strong>#65558F</strong>, and the tones it makes. A palette grown from a single colour holds together as it spreads across surfaces, chips and states — and the app already lives on a near-white surface, so the tones do the separating instead of borders.' },
+    { t: 'image', src: '/nisf-assets/tokens-colour.webp', alt: 'The colour token sheet: the primary #65558F large, beside its tonal steps from 95 down to 20, with the surface and ink', caption: 'One colour, and its tones.' },
+
+    { t: 'h2', x: 'The navigation' },
+    { t: 'p', x: 'The old bar was Material&rsquo;s own: five tabs, a pill sliding in under the active one, Android&rsquo;s shape worn on both platforms. This one is the shape the two platforms already agree on — an icon, a label under it, and colour doing the work of saying where you are.' },
+    { t: 'p', x: 'Five tabs became four. Courses and Coaching were the same intent wearing two names, so they are one tab now, called Learn.' },
+    { t: 'p', x: 'The icons are drawn for this app rather than lifted from a set, so their weight and their corners match everything else in it.' },
+    { t: 'image', src: '/nisf-assets/navbar.webp', alt: 'The redesigned bottom navigation: Home, Requests, Learn and Profile, with custom filled icons and the active tab in purple', caption: 'Home, Requests, Learn, Profile.' },
+
     { t: 'p', x: 'The study goes under here.' },
   ],
 });
