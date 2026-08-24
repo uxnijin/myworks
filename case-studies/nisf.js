@@ -1,20 +1,22 @@
 // ============================================================================
-//  Nisf — a redesign, in progress.
+//  Nisf: a redesign, in progress.
 //
 //  Screens: nisf-assets/screens (31 captures of the app as it ships today;
 //  the My Information screen is left out, it carries a real email and phone
-//  number). They run as a full-bleed moving band — the `screens` block.
+//  number). They run as a full-bleed moving band, the `screens` block.
 //
 //  This is the opening only. The study itself goes underneath.
 // ============================================================================
 
 BODY('nisf', {
   blocks: [
-    { t: 'p', x: 'Nisf is a matrimonial app for practising Muslims. It is live, it has a real user base across Kerala, and this is a redesign of it.' },
-    { t: 'p', x: 'It does not open on photographs. A profile is a code, F&#8209;2249, with an age, a district and a line about how the person covers, and the work of the app is helping you decide who is worth a request.' },
+    { t: 'p', x: 'It is live, with a real user base across Kerala. That is the constraint behind most of what follows: the redesign lands on people who already know their way around, so it has to be recognisable on the first open.' },
+    { t: 'p', x: 'A profile is a code, F&#8209;2249, with an age, a district and a line about how the person covers. No photograph. So the work of the app is helping you decide who is worth a request from that alone.' },
     { t: 'p', x: 'That decision is where the app is unusual. Under the filters any matrimonial site has (age, location, education, income, height, language) sits a second layer that a general one has no reason to build: <em>path</em> and <em>aqeedah</em> and <em>madhab</em>, how much of the Qur&rsquo;an someone has memorised in juz, the level of their tajweed, their Arabic, their view on photography of people, the courses they have finished inside the app itself. A profile is read across five tabs, and one of them is Deen.' },
     { t: 'p', x: 'Around that sits the machinery: a wali&rsquo;s verification as a status you can see before you write, requests that live in four states, and a purchase wall somewhere in between.' },
-    { t: 'p', x: 'Every screen below is the app as it ships today. It is the thing being redesigned, not the redesign.' },
+
+    { t: 'h2', x: 'The app as it is today' },
+    { t: 'p', x: 'Thirty-one screens of the live app, running now on real phones. This is the thing being redesigned, not the redesign. Almost every decision further down this page is an answer to something in here.' },
     {
       t: 'screens',
       label: 'Thirty-one screens of the Nisf app as it ships today',
