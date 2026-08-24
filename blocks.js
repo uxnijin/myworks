@@ -224,16 +224,24 @@ const renderBlock = (b) => {
     // it pauses on hover, and reduced motion turns it into a strip you scroll
     // yourself rather than 60-odd phones wrapped into a wall.
     case 'screens': {
-      const shots = (b.items || [])
-        .map(
-          (it) =>
-            `<img src="${esc(it.src || it)}" alt="${esc(it.alt || '')}" draggable="false">`
-        )
-        .join('');
+      // The band is one figure, not thirty: the wrapper carries role="img" and
+      // the label, so each frame inside it is presentational and takes an empty
+      // alt rather than repeating the same sentence thirty times.
+      //
+      // Only the first few are worth fetching eagerly. The rest are off-screen
+      // in a track that is twice as long as it looks — the second copy exists
+      // solely so the marquee can loop — and eager-loading all of them was
+      // spending the page's whole image budget before the first paragraph.
+      const frame = (it, i) =>
+        `<img src="${esc(it.src || it)}" alt="" draggable="false"${
+          i < 3 ? '' : ' loading="lazy"'
+        } decoding="async">`;
+      const shots = (b.items || []).map(frame).join('');
+      const loop = (b.items || []).map((it) => frame(it, 99)).join('');
       return `<div class="screens-marquee" role="img" aria-label="${esc(
         b.label || 'App screens'
       )}">
-        <div class="screens-track">${shots}${shots}</div>
+        <div class="screens-track">${shots}${loop}</div>
       </div>`;
     }
 

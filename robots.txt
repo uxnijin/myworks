@@ -1,4 +1,86 @@
+# https://nijin.site/robots.txt
+#
+# Everything here is public work — a portfolio, a set of case studies and a
+# handful of free tools. There is nothing to withhold from a crawler, so the
+# default is open, and the specific agents below are named only to make that
+# explicit where a default of "unknown, therefore cautious" would otherwise
+# apply.
+
 User-agent: *
 Allow: /
+
+# --- search engines -------------------------------------------------------
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# --- answer engines -------------------------------------------------------
+#
+# These are the agents that fetch a page to cite it in an answer. They do not
+# execute JavaScript, which is the reason every route on this site is served
+# as prerendered HTML (see tools/prerender.js). Being readable to them is the
+# whole point of that work, so none of them are blocked.
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# --- housekeeping ---------------------------------------------------------
+#
+# Nothing is disallowed. In particular the body files under /designs, /projects,
+# /findings and /case-studies stay crawlable: the router fetches them to paint a
+# page, so blocking them would leave Googlebot's rendered copy of every case
+# study showing a load error where the article should be. They are served as
+# JavaScript and are not indexed as pages.
 
 Sitemap: https://nijin.site/sitemap.xml

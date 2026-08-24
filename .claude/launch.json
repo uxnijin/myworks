@@ -4,21 +4,47 @@
     {
       "name": "portfolio",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", "-s", "."],
+      "runtimeArgs": [
+        "-y",
+        "serve",
+        "-s",
+        "."
+      ],
       "port": 4321,
+      "autoPort": true
+    },
+    {
+      "name": "portfolio-static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "-y",
+        "serve",
+        "."
+      ],
+      "port": 4322,
       "autoPort": true
     },
     {
       "name": "trackwise",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "/Users/nijin/Files/Code/razorpay", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "/Users/nijin/Files/Code/razorpay",
+        "run",
+        "dev"
+      ],
       "port": 4173,
       "autoPort": true
     },
     {
       "name": "aeros",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "/Users/nijin/Files/Code/samrt-control-dashboard", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "/Users/nijin/Files/Code/samrt-control-dashboard",
+        "run",
+        "dev"
+      ],
       "port": 5173,
       "autoPort": true
     }

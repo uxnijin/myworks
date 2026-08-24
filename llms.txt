@@ -1,0 +1,77 @@
+# Nijin Muhammed
+
+> UI/UX and Product Designer in Kozhikode, Kerala, India, working with teams worldwide. Designs mobile apps, web products and design systems, and builds them — every case study on this site is backed by a real running app, and every figure is a screenshot of it.
+
+Contact: uxnijin@gmail.com. Hire: https://nijin.site/hire
+
+## Case studies
+
+Long-form write-ups: the problem, the reasoning behind each screen, and what shipped.
+
+- [Nisf: A Matrimonial App, Redesigned](https://nijin.site/case-studies/nisf): A live matrimonial app for practising Muslims, where the filtering goes past age and income into path, aqeedah, madhab and how much Qur'an someone has memorised. The redesign starts here.
+
+## Design portfolio
+
+App and product design work. Onboarding flows, paywalls and full products, each one built and captured running.
+
+- [Plate: A Day of Eating on One Screen](https://nijin.site/designs/plate): A calorie tracker that fits on one screen: the week, what is left of today, and the meals you have logged, with the ones you have not sitting there as a row and a plus.
+- [Crate: A Transfer You Can Brand](https://nijin.site/designs/crate): A service for sending files too big to email, where the thing being designed is the page the recipient opens, built beside you as you upload, then dressed in your own logo, colours and type.
+- [HACA Design School: The Page That Sells the Course](https://nijin.site/designs/haca-design-school): A branding course sold on a page that did not look branded. Display type, a colour per section, and the three things the page was missing: student work, the instructors, and the awkward questions about paying.
+- [Chalo: A Trip You Can Describe](https://nijin.site/designs/chalo): A travel app where the planning happens in a conversation: describe the trip, get an itinerary back, and book the flight without leaving the chat. Two-sided: there is a partner app for the people supplying it.
+- [Ember: Habits and Streaks](https://nijin.site/designs/ember): A habit tracker built around one number, the streak. Categories as chips, a setup form that fits in one scroll, and a month that shows a missed day without making a fuss of it.
+- [Trackwise: Where Is My Parcel?](https://nijin.site/designs/trackwise): “Where is my order?” is a quarter of all e-commerce support tickets, and the answer already exists in a carrier API. Built inside Razorpay's real Blade design system: one timeline across every handover, and every persona, plan edge and failure state designed rather than assumed.
+- [Oppam: A Companion, Not an App](https://nijin.site/designs/oppam): Kerala has India's best therapist coverage and still leaves most people untreated - so the problem is the walk to the door, not the waiting list. A concept redesign that builds both sides of the marketplace, shipped as a running SwiftUI app.
+- [KSRTC Booking: A Platform Redesign](https://nijin.site/designs/ksrtc): The bug in a booking funnel is its shape, not its styling. Rebuilding Kerala's state bus platform around one continuous surface that holds five steps, designed and shipped as a running SwiftUI app.
+- [Parcel: Premium Courier Booking](https://nijin.site/designs/parcel): Booking a courier that feels as effortless as ordering a ride, designed and built end-to-end in native SwiftUI.
+- [Route Planner: A Day of Deliveries](https://nijin.site/designs/route-planner): A last-mile delivery app that holds a 120-stop day on one surface, designed and built as a running SwiftUI prototype.
+- [ShipFlow: Shipment Operations Dashboard](https://nijin.site/designs/shipflow): The job is not managing shipments, it is finding the ones going wrong. A multi-carrier operations dashboard that opens on triage, designed and coded end-to-end, with no framework and no build step.
+
+## Products
+
+Figma plugins, browser extensions and network tools, designed and shipped for real users. All free.
+
+- [Figma Font Preview](https://nijin.site/docs/figma-font-preview): Browse local fonts, Google Fonts and Fontshare in one panel, and apply one with a click.
+- [Auto Dark Mode](https://nijin.site/docs/auto-dark-mode): Turn any frame into a readable dark version, with brand colours left alone.
+- [Figma PDF Creator](https://nijin.site/docs/figma-pdf-creator): Export frames as a finished PDF, with page order, page numbers, margins and print settings.
+- [Figma Contrast Checker](https://nijin.site/docs/figma-contrast-checker): Tells you whether your text is readable on its background, and fixes it if it is not.
+- [Figma CMYK Export](https://nijin.site/docs/figma-cmyk-export): Export straight to print-ready CMYK PDF and JPEG.
+- [Figma Background Remover](https://nijin.site/docs/figma-background-remover): Cut the background out of any image, free, without the photo leaving your machine.
+- [Figma Typography Creator](https://nijin.site/docs/figma-typography-creator): Work out a whole type scale from one size, then put it in the file as real text styles.
+- [Figma Table Creator](https://nijin.site/docs/figma-table-creator): Build a proper Auto Layout table in seconds, filled with your own CSV data.
+- [Design System Extractor](https://nijin.site/docs/design-system-extractor): Extract colors, typography, images, icons, and CSS styles from any website in seconds.
+- [Tasks Extension](https://nijin.site/docs/tasks-extension): A beautiful Chrome extension to manage and sync your tasks directly with Google Tasks.
+- [Figma Tints & Shades](https://nijin.site/docs/tints-and-shades): Turn one brand colour into an evenly spaced scale, and send it to variables or to code.
+- [Design School](https://nijin.site/docs/design-school): A curated collection of resources for learning design.
+- [Icon Library](https://nijin.site/docs/icon-library): Search, recolor and download 314,000+ open-source icons, free with no account.
+- [Speed Test](https://nijin.site/docs/speed-test): Internet speed test: download, upload, ping, jitter.
+- [Site Speed Test](https://nijin.site/docs/site-speed-test): Checks page load time, size, and request waterfall for any website.
+- [DNS Checker](https://nijin.site/docs/dns-checker): Shows your DNS records + propagation.
+- [IP Checker](https://nijin.site/docs/ip-checker): Check IP and location.
+- [Diecast Kerala](https://nijin.site/docs/diecastkerala): A Shopify storefront for die-cast model car collectors in Kerala: catalog, checkout, and brand design.
+
+## UX findings
+
+Short notes on interaction design, each one a single idea with a worked example.
+
+- [Bring Undo to more web interactions](https://nijin.site/findings/bring-undo-to-more-web-interactions): Muscle memory already knows Ctrl + Z, so give it something to reverse
+- [Don't move the page while I'm reading](https://nijin.site/findings/dont-move-the-page-while-im-reading): If something loads in above you, correct the scroll by exactly its height
+- [Don't make humans prove they are human](https://nijin.site/findings/dont-make-humans-prove-they-are-human): Read the signals already there, and only interrupt when the answer is genuinely unclear
+- [Slow doesn't always mean broken](https://nijin.site/findings/slow-doesnt-always-mean-broken): Let the message grow with the wait, so a slow load never reads as a dead one
+- [Prevent duplicate actions](https://nijin.site/findings/prevent-duplicate-actions): Answer the press instantly and lock the button, so nobody pays twice
+- [Retry only what failed](https://nijin.site/findings/retry-only-what-failed): One tile failed, so reload that tile, not the whole dashboard
+- [Reduce uncertainty before the click](https://nijin.site/findings/reduce-uncertainty-before-the-click): Continue to what? Name the step the button leads to, before it is pressed
+- [Make transitions preserve context](https://nijin.site/findings/make-transitions-preserve-context): The card the user clicked should be the thing that opens, not a screen that replaces it
+- [Don’t just say “No results”](https://nijin.site/findings/dont-just-say-no-results): Read the query, name what blocked it, and offer the one change that recovers it
+- [Remember where the user left](https://nijin.site/findings/remember-where-the-user-left): Come back to the field that was still empty, not to the top of the form
+- [Learn repeated actions](https://nijin.site/findings/learn-repeated-actions): Three of the ten edited the same way, so offer to finish the other seven
+- [Detect when the user is struggling](https://nijin.site/findings/detect-when-the-user-is-struggling): Typed, cleared, typed again, so offer the hint before they go looking for help
+- [Learn from repeated actions](https://nijin.site/findings/learn-from-repeated-actions): Drop the confirmation once the user is clearly cleaning up, and offer undo instead
+- [Convert currency in place](https://nijin.site/findings/currency-conversion-without-leaving-the-app): Put the converted amount in the selection menu, where the amount already is
+- [Start loading on hover](https://nijin.site/findings/start-loading-on-hover): Prefetch on hover, so the click lands on a page that is already there
+- [Let users start typing](https://nijin.site/findings/let-users-start-typing): Remove the extra click before typing
+
+## About
+
+- [About Nijin Muhammed](https://nijin.site/about): background, experience and toolkit.
+- [Hire a UI/UX designer](https://nijin.site/hire): services, process, and answers to the usual questions.
+- [Contact](https://nijin.site/contact): email, WhatsApp and a form.

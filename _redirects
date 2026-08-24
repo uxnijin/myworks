@@ -13,8 +13,10 @@ http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
 /tasks                                 /docs/tasks-extension                  301
 /tasks/                                /docs/tasks-extension                  301
 
-/tints-and-shades/privacy.html         /docs/tints-and-shades/privacy         301
-/tints-and-shades/terms.html           /docs/tints-and-shades/terms           301
+# Tints & Shades never had a privacy or terms body of its own, so these two
+# used to 301 onto a page that does not exist. They point at the product now.
+/tints-and-shades/privacy.html         /docs/tints-and-shades                 301
+/tints-and-shades/terms.html           /docs/tints-and-shades                 301
 /tints-and-shades                      /docs/tints-and-shades                 301
 /tints-and-shades/                     /docs/tints-and-shades                 301
 
@@ -28,6 +30,14 @@ http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
 /writings                              /findings                              301
 /writings/                             /findings                              301
 /writings/*                            /findings/:splat                       301
+
+# Aliases for /hire. A single canonical target, so a link that arrives on any
+# of them lands on the page that is actually indexed.
+/services                              /hire                                  301
+/services/                             /hire                                  301
+/freelance                             /hire                                  301
+/hire-me                               /hire                                  301
+/ui-ux-designer                        /hire                                  301
 
 # /exploring is gone — the toolkit it listed is now the Tools row on /about.
 /exploring                             /about                                 301

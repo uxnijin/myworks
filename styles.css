@@ -6974,3 +6974,71 @@ a.tile:hover {
     scroll-behavior: auto;
   }
 }
+
+/* --------------------------------------------------- prerendered listings
+ *
+ * tools/prerender.js writes a real HTML file per route so that a crawler — and
+ * anyone whose JavaScript has not arrived yet — gets the words and the links
+ * rather than an empty <div id="view">. On an index page that static markup is
+ * a list, and the router swaps it for the card grid a moment later.
+ *
+ * These rules are what stop that first paint reading as a broken page. They
+ * are deliberately close in height to the grid that replaces them, so the swap
+ * moves as little as possible.
+ */
+
+.seo-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.seo-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.seo-row-link {
+  font-family: var(--font-display, inherit);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.seo-row-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.seo-row-sub {
+  grid-column: 1;
+  margin: 0;
+  max-width: 68ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--soft);
+}
+
+.seo-row-meta {
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .seo-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .seo-row-meta {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}

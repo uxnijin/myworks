@@ -402,6 +402,9 @@ Watch for any rule that sets its own `background` after `.gcard` in the cascade
 2. `designs/<slug>.js` containing `BODY('<slug>', { blocks: [ … ] })`.
 3. A new `category` also needs adding to the order list in `viewDirectory`
    (`script.js`), or its group sorts last on the /designs index.
+4. **Build.** `node tools/prerender.js && python3 tools/make_og.py`, then commit
+   what they write. Until you do, the new entry has no page for a crawler and
+   no social card. See "The site is prerendered" below.
 
 There is no `<script>` tag to add and no `DESIGN_<NAME>` const — the body is
 fetched by the path on the record when someone opens the entry.
@@ -422,6 +425,83 @@ product name.
 
 Block DSL reference is at the top of `data.js`. Callouts are a hairline rule
 and a lead-in line — no tinted boxes with an icon in a circle.
+
+## The site is prerendered
+
+**Every route is a real HTML file, and it is generated, not written.** Run this
+after any edit to `data.js`, a body file, `index.html`, or `blocks.js`:
+
+```bash
+node tools/prerender.js && python3 tools/make_og.py
+```
+
+Commit what they produce. `node tools/prerender.js --check` exits non-zero when
+the committed pages are stale, which is the thing to run if you are unsure.
+
+**Why it exists.** The site was a single-page app behind `/*  /index.html  200`,
+so every URL served the same file: one `<title>`, one description, a canonical
+pointing at `/`, and an empty `<div id="view">`. A visitor never saw it, because
+`script.js` paints a few milliseconds later. Googlebot runs the JavaScript
+eventually, but eventually is a render queue measured in days — and the social
+crawlers and the answer engines (OAI-SearchBot, PerplexityBot, Claude-SearchBot)
+do not run it at all. To all of them the entire portfolio was one untitled page.
+
+**What it writes.** 59 files: `<route>/index.html` for every page, plus
+`sitemap.xml` and `llms.txt`. Each one carries a unique title, description and
+canonical, the OG and Twitter tags, a JSON-LD `@graph`, and **the article's real
+text**, rendered by `renderBlocks` — the same function the browser calls, so the
+static copy and the painted copy cannot say different things.
+
+**Netlify serves a real file in preference to a redirect rule**, which is what
+makes this work without touching `_redirects`. The catch-all stays last and
+still answers anything that is not a generated page.
+
+**Three invariants hold it together:**
+
+- `index.html` is the shell *and* the home page. The generator fills four marked
+  regions in it — `seo:head`, `seo:view`, `seo:nav`, `seo:foot` — and leaves
+  everything else alone. Do not hand-edit inside those markers; edit the copy in
+  `SEO` in `data.js` and re-run. Do edit outside them freely.
+- **The head is decided in one place.** `SEO` in `data.js` holds every title and
+  description; `tools/prerender.js` bakes them, and `applySeo()` in `script.js`
+  re-applies them on a client-side navigation. No view sets its own
+  `document.title` any more — one that did would win the race and undo the rest.
+- **The first paint must not move.** The generated markup for the top of each
+  page is byte-identical to what the router paints over it: the `.hero` on home,
+  `.page-head` on an index, `.doc-head` on a document. Below that the generated
+  index pages are a `.seo-list`, styled in `styles.css` for exactly this moment.
+  If you change one side of that pair, change the other.
+
+**A body file may not touch the DOM.** The generator runs `data.js`, `blocks.js`
+and every body in a Node `vm` with no `document`. That is the constraint that
+makes prerendering possible at all, and `blocks.js` is pure string templating
+today. Keep it that way.
+
+## SEO, the parts that are not prerendering
+
+- **`SEO` in `data.js` is the copy.** Titles aim at 50-60 characters with the
+  keyword first and the name last; descriptions at 140-160, written as a
+  sentence a person would read, because the click it earns is itself a ranking
+  input. `SEO.keywords` is not a meta tag — it is the list that keeps `/hire`,
+  `/about` and the index ledes pointed at the same intent.
+- **`/hire` is the only page written for someone deciding rather than
+  browsing.** Its services, process and questions live in `SEO.services`,
+  `SEO.process` and `SEO.faq`, read three times over: as the cards on the page,
+  as the same list in the prerendered HTML, and as `OfferCatalog` and `FAQPage`
+  in its schema. Change the object, not the markup.
+- **Social cards are generated too.** `tools/make_og.py` writes 1200x630 PNGs
+  into `/images/og/` — one per entry with a `thumbUrl`, plus `default.png`.
+  `og:image` used to point at the 1024x1024 avatar, which every platform was
+  cropping into a chin. The card puts the entry's own screenshot on it at its
+  real 16:9; nothing on it is invented.
+- **`robots.txt` blocks nothing**, and names the answer engines explicitly so
+  the open default is not mistaken for an oversight. In particular the body
+  files stay crawlable: blocking them would leave Googlebot's rendered copy of
+  every case study showing a load error where the article should be.
+- **`llms.txt` is generated** from the same route list, so it cannot go stale.
+- **Analytics is not running.** `ANALYTICS.clarityProjectId` in `analytics.js`
+  is still empty, so `window.track` is a stub and no traffic is being recorded
+  at all. Nothing else here can be judged until it is set.
 
 ## Prototypes
 

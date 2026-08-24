@@ -59,6 +59,101 @@
     if (meta) meta.content = desc;
   }
 
+  // ---- the head, on a client-side navigation
+  //
+  // Every page is served as real HTML by tools/prerender.js, with its title,
+  // description, canonical and social tags already correct. That is what a
+  // crawler reads. What follows keeps the same head correct once the router
+  // takes over and no new document is ever fetched — otherwise the second page
+  // a visitor opens would still be wearing the first page's title in their
+  // history, their bookmarks and anything they shared.
+  //
+  // Both sides read the same `SEO` object in data.js, so the wording lives in
+  // one place; only the assembly is written twice.
+
+  const SEOCFG = () => (typeof SEO !== 'undefined' && SEO) || { pages: {}, templates: {} };
+
+  const plainText = (s = '') =>
+    String(s).replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+
+  // cut at a word boundary; a description clipped mid-word reads as a fault
+  const clampText = (s, max = 158) => {
+    const t = plainText(s);
+    if (t.length <= max) return t;
+    const cut = t.slice(0, max);
+    return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:—-]$/, '').trim();
+  };
+
+  const fillTpl = (tpl = '', vars = {}) =>
+    tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] || '').replace(/\s+/g, ' ').trim();
+
+  function setMetaTag(selector, attr, value) {
+    if (!value) return;
+    let el = $(selector);
+    if (!el) {
+      el = document.createElement('meta');
+      const m = selector.match(/\[(property|name)="([^"]+)"\]/);
+      if (m) el.setAttribute(m[1], m[2]);
+      document.head.appendChild(el);
+    }
+    el.setAttribute(attr, value);
+  }
+
+  // title and description are decided here; og/twitter mirror them, which is
+  // what keeps a shared link showing the page that was actually shared
+  function applySeo(path, entry, kind) {
+    const cfg = SEOCFG();
+    const brand = ` | ${cfg.altName || PROFILE.name}`;
+    const page = (cfg.pages || {})[path];
+    const tpl = (cfg.templates || {})[kind] || {};
+
+    let title = '';
+    let description = '';
+    let image = cfg.defaultImage || PROFILE.avatar;
+    let type = 'website';
+    let noindex = false;
+
+    if (page) {
+      title = path === '' || path === 'hire' ? page.title : page.title + brand;
+      description = page.description;
+    } else if (entry && (kind === 'privacy' || kind === 'terms')) {
+      const label = kind === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
+      title = `${label} — ${shortName(entry)}${brand}`;
+      description = clampText(`The ${label.toLowerCase()} for ${plainText(shortName(entry))}, ${plainText(entry.summary || '')}`);
+      noindex = true;
+    } else if (entry) {
+      const name = kind === 'finding' ? plainText(entry.title) : shortName(entry);
+      title = clampText(fillTpl(tpl.title || '{name}', { name, sub: entry.group || entry.category || '' }), 66) + brand;
+      const lede = plainText(entry.lede || '');
+      const summary = plainText(entry.summary || '');
+      description = clampText(lede.length >= 80 ? lede : summary.length >= 80 ? summary : `${summary} ${lede}`);
+      image = entry.thumbUrl || entry.coverUrl || image;
+      type = kind === 'product' ? 'website' : 'article';
+    } else {
+      title = `Not found${brand}`;
+      description = "That page doesn't exist; it may have been renamed.";
+      noindex = true;
+    }
+
+    const url = path ? `${SITE_URL}/${path}` : `${SITE_URL}/`;
+    const absUrl = (u) => (!u ? '' : /^https?:/.test(u) ? u : SITE_URL + (u.startsWith('/') ? u : '/' + u));
+
+    document.title = title;
+    setDescription(description);
+    updateCanonical(path);
+
+    setMetaTag('meta[name="robots"]', 'content',
+      noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    setMetaTag('meta[property="og:type"]', 'content', type);
+    setMetaTag('meta[property="og:title"]', 'content', title);
+    setMetaTag('meta[property="og:description"]', 'content', description);
+    setMetaTag('meta[property="og:url"]', 'content', url);
+    setMetaTag('meta[property="og:image"]', 'content', absUrl(image));
+    setMetaTag('meta[name="twitter:title"]', 'content', title);
+    setMetaTag('meta[name="twitter:description"]', 'content', description);
+    setMetaTag('meta[name="twitter:image"]', 'content', absUrl(image));
+  }
+
   // theme: the data-theme attribute is set by the pre-paint inline script
   // in index.html and kept live there via a matchMedia listener — there's
   // no manual toggle, so nothing to wire up here.
@@ -344,6 +439,7 @@
       ['findings', 'UX Findings'],
       // ['graphics', 'Graphic Design'],  — hidden for now
       ['about', 'About'],
+      ['hire', 'Hire me'],
       ['contact', 'Contact'],
     ]
       .map(
@@ -533,8 +629,6 @@
   };
 
   function viewHome() {
-    document.title = `${PROFILE.name} ${PROFILE.role}`;
-    setDescription(`${PROFILE.tagline} Products, case studies, and tools by ${PROFILE.name}, ${PROFILE.role}.`);
 
     const pick = (list, slugs, fallback) => {
       const chosen = (slugs || []).map((sl) => list.find((x) => x.slug === sl)).filter(Boolean);
@@ -664,8 +758,6 @@
   // ------------------------------------------------------------- doc view
 
   function viewDoc(p, collection = PROJECTS, basePath = 'docs') {
-    document.title = `${p.name} | ${PROFILE.name}`;
-    setDescription(p.summary);
 
     const i = collection.indexOf(p);
     const prev = collection[i - 1];
@@ -2484,8 +2576,6 @@
   };
 
   function viewDocSubPage(p, title, blocks) {
-    document.title = `${title} | ${p.name} | ${PROFILE.name}`;
-    setDescription(`Legal documentation for ${p.name}.`);
 
     $('#view').innerHTML = `
       <div class="view">
@@ -2553,13 +2643,20 @@
       : path.startsWith('findings') ? 'findings'
       : path === 'graphics' ? 'graphics'
       : path === 'about' ? 'about'
+      : path === 'hire' ? 'hire'
       : '';
     $$('.topnav a').forEach((a) => a.classList.toggle('active', a.dataset.nav === navKey));
+
+    // what the page is about, for applySeo() at the bottom of this function
+    let seoEntry = null;
+    let seoKind = '';
 
     if (path === '' || path === 'index.html') {
       viewHome();
     } else if (path === 'contact') {
       viewContact();
+    } else if (path === 'hire') {
+      viewHire();
     } else if (path === 'about') {
       whenLoaded(() => pageReady('about'), viewAbout, 'About');
     } else if (path === 'graphics') {
@@ -2577,17 +2674,20 @@
     } else if (path.startsWith('findings/')) {
       const slug = path.slice('findings/'.length);
       const f = FINDINGS.find((x) => x.slug === slug);
+      seoEntry = f; seoKind = 'finding';
       f ? whenLoaded(() => bodyReady(f), () => viewFinding(f), f.title) : viewNotFound();
     } else if (path.startsWith('docs/')) {
       const parts = path.slice(5).split('/');
       const slug = parts[0];
       const sub = parts[1];
       const p = bySlug(slug);
+      if (!sub) { seoEntry = p; seoKind = 'product'; }
       if (!p) {
         viewNotFound();
       } else if (!sub) {
         whenLoaded(() => bodyReady(p), () => viewDoc(p), shortName(p));
       } else if (sub === 'privacy' || sub === 'terms') {
+        seoEntry = p; seoKind = sub === 'privacy' ? 'privacy' : 'terms';
         // the legal pages live in the same body file as the case study, so the
         // body has to be here before we can tell whether they exist at all
         whenLoaded(
@@ -2605,12 +2705,14 @@
     } else if (path.startsWith('case-studies/')) {
       const slug = path.slice('case-studies/'.length);
       const c = CASE_STUDIES.find((x) => x.slug === slug);
+      seoEntry = c; seoKind = 'caseStudy';
       c
         ? whenLoaded(() => bodyReady(c), () => viewDoc(c, CASE_STUDIES, 'case-studies'), shortName(c))
         : viewNotFound();
     } else if (path.startsWith('designs/')) {
       const slug = path.slice('designs/'.length);
       const d = designBySlug(slug);
+      seoEntry = d; seoKind = 'design';
       d ? whenLoaded(() => bodyReady(d), () => viewDoc(d, DESIGNS, 'designs'), shortName(d)) : viewNotFound();
     } else {
       viewNotFound();
@@ -2618,7 +2720,7 @@
 
     renderNav();
     window.scrollTo(0, 0);
-    updateCanonical(path);
+    applySeo(path, seoEntry, seoKind);
     if (window.trackPage) window.trackPage(path);
     afterRender();
   }
@@ -2634,6 +2736,19 @@
     if (window.MeshGradient) window.MeshGradient.scan();
   }
 
+  // True while the markup in #view is the prerendered HTML for the URL we are
+  // rendering — which is the case exactly once, on the first paint after a
+  // real page load. The attribute is cleared the moment it is read, so any
+  // later navigation to the same path behaves normally.
+  function hasPrerender() {
+    const view = $('#view');
+    if (!view) return false;
+    const baked = view.getAttribute('data-prerendered');
+    if (baked === null || baked !== currentPath()) return false;
+    view.removeAttribute('data-prerendered');
+    return true;
+  }
+
   // ---- lazy route helpers
   //
   // A detail page cannot paint until its body file has arrived, so it shows a
@@ -2644,7 +2759,12 @@
     const ready = load();
     if (ready.settled) return paint();
     const token = asyncToken;
-    paintSkeleton(describe);
+    // The page was served as prerendered HTML and this is the first render on
+    // it, so the real content is already on screen. Replacing it with a
+    // skeleton while the body file arrives would be a step backwards for the
+    // visitor and would throw away the LCP the static paint just earned.
+    const baked = hasPrerender();
+    if (!baked) paintSkeleton(describe);
     afterRender();
     ready
       .then(() => {
@@ -2654,7 +2774,10 @@
       })
       .catch(() => {
         if (token !== asyncToken) return;
-        paintLoadError(describe);
+        // on a prerendered page the article is already on screen and correct;
+        // replacing it with a retry prompt because the body file failed would
+        // be trading a working page for a broken one
+        if (!baked) paintLoadError(describe);
         afterRender();
       });
   }
@@ -2768,8 +2891,6 @@
         : 'Onboarding flows, paywalls, and full products. Every case study is backed by a real, running app.'
     );
 
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
 
     const groups = isProducts
       ? groupBy(items, (p) => p.group || 'Products')
@@ -2840,8 +2961,6 @@
     const title = cms(copy.title, 'Graphic Design');
     const lede = cms(copy.lede, 'Posters and print work, made for clients and for the fun of it.');
 
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
 
     // a poster without artwork has nothing to show, so it stays in the list in
     // pages/graphics.js as a placeholder for its file and is skipped here
@@ -2898,8 +3017,6 @@
     const title = cms(copy.title, 'UX Findings');
     const lede = cms(copy.lede, 'Findings, teardowns and notes from designing and building things.');
 
-    document.title = `${title} | ${PROFILE.name}`;
-    setDescription(lede);
     $('#toc').innerHTML = '';
 
     const items = FINDINGS.filter((f) => f && f.slug);
@@ -2968,8 +3085,6 @@
   }
 
   function viewFinding(f) {
-    document.title = `${f.title} | ${PROFILE.name}`;
-    setDescription(f.summary || '');
 
     const i = FINDINGS.indexOf(f);
     const prev = FINDINGS[i - 1];
@@ -3070,8 +3185,6 @@
     // shadows nothing: the About data lives in pages/about.js and only exists
     // once that file has been fetched
     const ABOUT = PAGE_DATA.about || {};
-    document.title = `About | ${PROFILE.name}`;
-    setDescription(`Who ${PROFILE.name} is: experience, education, skills, and the clients behind the work.`);
     $('#toc').innerHTML = '';
 
     // doubled below so the marquee can loop seamlessly
@@ -3188,8 +3301,6 @@
   }
 
   function viewContact() {
-    document.title = `Contact | ${PROFILE.name}`;
-    setDescription(`Get in touch with ${PROFILE.name} for collaborations, project inquiries, or just to say hi.`);
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
@@ -3282,9 +3393,87 @@
     });
   }
 
+  // ---- /hire
+  //
+  // The only page on the site written for someone who is deciding, not
+  // browsing: what I do, how a project runs, what it costs, and how to start.
+  // It is also the page the search terms point at — "hire a ui ux designer",
+  // "freelance product designer", "app design services" have nowhere else on
+  // this site to land, and a portfolio index answers none of them.
+  //
+  // The services list and the questions live in the SEO object in data.js and
+  // in tools/prerender.js, so this page and its FAQ schema say the same thing.
+  const HIRE_SERVICES = () => (typeof SEO !== 'undefined' && SEO.services) || [];
+  const HIRE_STEPS = () => (typeof SEO !== 'undefined' && SEO.process) || [];
+
+  function viewHire() {
+    $('#toc').innerHTML = '';
+    const cfg = (typeof SEO !== 'undefined' && SEO) || {};
+    const faq = cfg.faq || [];
+
+    $('#view').innerHTML = `
+      <div class="view">
+        <article class="doc-article read-doc">
+          <header class="doc-head">
+            <h1 class="doc-h1">
+              <span>Hire a UI/UX designer</span>
+              <span class="from">product, app and web design</span>
+            </h1>
+            <div class="doc-kicker mono-label">${esc(cfg.locality || 'Kozhikode')}, ${esc(cfg.region || 'Kerala')} &middot; working worldwide &middot; available now</div>
+            <p class="doc-lede">I am ${esc(cfg.fullName || PROFILE.name)}, a ${esc(cfg.jobTitle || PROFILE.role)}. I design mobile apps, web products and design systems, and I build them too, so what you get at the end is a running product rather than a folder of screens.</p>
+          </header>
+
+          <div class="prose read-prose">
+            <h2>What I do</h2>
+            ${renderBlocks([{ t: 'cards', items: HIRE_SERVICES() }])}
+
+            <h2>How a project runs</h2>
+            ${renderBlocks([{ t: 'steps', items: HIRE_STEPS() }])}
+
+            <h2>Questions</h2>
+            ${faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}
+
+            <h2>The proof</h2>
+            <p>Rather than take any of the above on trust: the <a href="${href('case-studies')}" data-link>case studies</a> walk through the reasoning behind individual screens, the <a href="${href('designs')}" data-link>design portfolio</a> is every flow shot from a real running build, and the <a href="${href('products')}" data-link>products</a> are tools you can install and use right now.</p>
+
+            <h2>Start</h2>
+            <p>Send a note with what you are building and roughly when you need it. I answer every enquiry myself, usually within a day.</p>
+          </div>
+
+          <div class="contact-rows" style="margin-top:24px">
+            <a href="mailto:${esc(EMAIL())}" class="contact-row">
+              <span class="channel-ico">${icon('mail')}</span>
+              <span class="channel-info">
+                <span class="channel-label">Email</span>
+                <span class="channel-value">${esc(EMAIL())}</span>
+              </span>
+              <span class="dir-go">${icon('arrowRight')}</span>
+            </a>
+            <a href="https://wa.me/${esc(WA())}" target="_blank" rel="noopener" class="contact-row">
+              <span class="channel-ico">${icon('whatsapp')}</span>
+              <span class="channel-info">
+                <span class="channel-label">WhatsApp</span>
+                <span class="channel-value">${esc(cms(CMS().whatsappLabel, '62384 17389'))}</span>
+              </span>
+              <span class="dir-go">${icon('arrowRight')}</span>
+            </a>
+            <a href="${href('contact')}" data-link class="contact-row">
+              <span class="channel-ico">${icon('mail')}</span>
+              <span class="channel-info">
+                <span class="channel-label">Contact form</span>
+                <span class="channel-value">Tell me about the project</span>
+              </span>
+              <span class="dir-go">${icon('arrowRight')}</span>
+            </a>
+          </div>
+        </article>
+      </div>`;
+  }
+
   function viewNotFound() {
-    document.title = `Not found | ${PROFILE.name}`;
-    setDescription(`That page doesn't exist; it may have been renamed.`);
+    // paints late on the async routes, so it re-applies the head itself rather
+    // than leaving a "Privacy Policy" title over a "Page not found" body
+    applySeo(currentPath(), null, '');
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
       <div class="view">
@@ -3338,6 +3527,7 @@
             <div class="foot-quick">
               <a href="${href('designs')}" data-link>Explore the designs</a>
               <a href="${href('products')}" data-link>Browse products</a>
+              <a href="${href('hire')}" data-link>Hire a UI/UX designer</a>
             </div>
           </div>
 
@@ -3348,7 +3538,9 @@
               <li><a href="${href('case-studies')}" data-link>Case Studies</a></li>
               <li><a href="${href('products')}" data-link>Products</a></li>
               <li><a href="${href('findings')}" data-link>UX Findings</a></li>
+              <li><a href="${href('graphics')}" data-link>Graphic Design</a></li>
               <li><a href="${href('about')}" data-link>About</a></li>
+              <li><a href="${href('hire')}" data-link>Hire me</a></li>
             </ul>
           </div>
 
