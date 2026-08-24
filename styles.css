@@ -6258,6 +6258,61 @@ a.tile:hover {
   }
 }
 
+/* ------------------------------------------------------ screens marquee */
+
+/* Same trick as the logo marquee: break out of the 720px reading column and
+   run the whole width of the screen. Inside a case study that is the only
+   thing on the page allowed to do it. */
+.screens-marquee {
+  overflow: hidden;
+  width: 100vw;
+  margin: 2.4em 0 2.4em calc(50% - 50vw);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+
+.screens-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  width: max-content;
+  animation: marquee 150s linear infinite;
+}
+
+.screens-marquee:hover .screens-track {
+  animation-play-state: paused;
+}
+
+.screens-track img {
+  height: 380px;
+  width: auto;
+  border-radius: 14px;
+  border: 1px solid var(--hairline-soft);
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .screens-track img {
+    height: 300px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screens-marquee {
+    overflow-x: auto;
+  }
+
+  .screens-track {
+    animation: none;
+  }
+
+  /* the doubled half is only there for the loop; without motion it is a
+     second copy of everything to scroll past */
+  .screens-track img:nth-child(n + 32) {
+    display: none;
+  }
+}
+
 /* ------------------------------------------------------- category groups */
 
 .cat-row {

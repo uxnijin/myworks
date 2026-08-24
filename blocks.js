@@ -219,6 +219,24 @@ const renderBlock = (b) => {
       </figure>`;
     }
 
+    // a moving band of app screens, full-bleed like the client logo marquee on
+    // /about. The track is doubled and translated -50%, so the loop is seamless;
+    // it pauses on hover, and reduced motion turns it into a strip you scroll
+    // yourself rather than 60-odd phones wrapped into a wall.
+    case 'screens': {
+      const shots = (b.items || [])
+        .map(
+          (it) =>
+            `<img src="${esc(it.src || it)}" alt="${esc(it.alt || '')}" draggable="false">`
+        )
+        .join('');
+      return `<div class="screens-marquee" role="img" aria-label="${esc(
+        b.label || 'App screens'
+      )}">
+        <div class="screens-track">${shots}${shots}</div>
+      </div>`;
+    }
+
     case 'gallery':
       return `<div class="gallery">${(b.items || [])
         .map(

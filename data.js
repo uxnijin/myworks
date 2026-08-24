@@ -14,6 +14,7 @@
 //    { t: 'h2' | 'h3', x: 'heading' }
 //    { t: 'image',   src, alt, caption, ratio?, bleed? }
 //    { t: 'gallery', items: [{ src, alt, caption }] }
+//    { t: 'screens', items: [{ src, alt }], label }   full-bleed moving band
 //    { t: 'callout', kind: 'info'|'warn'|'tip', title, x }
 //    { t: 'code',    lang, file, x }
 //    { t: 'cards',   items: [{ icon, title, desc }] }
@@ -185,16 +186,16 @@ const CLIENTS = [
 // ============================================================================
 const CASE_STUDIES = [
   {
-    slug: 'sample-case-study',
-    thumbUrl: '/images/thumbs/sample-case-study.webp',
-    name: 'Sample: A placeholder case study',
-    category: 'Placeholder',
-    icon: 'file',
+    slug: 'nisf',
+    thumbUrl: '/nisf-assets/thumb.webp',
+    name: 'Nisf: A Matrimonial App, Redesigned',
+    category: 'Mobile App',
+    icon: 'search',
     tag: 'Case study',
-    status: 'Draft',
-    summary: 'A stand-in entry so the Case Studies section has something in it. Replace it with the first real write-up.',
-    lede: '<strong>Sample</strong> is a placeholder. It exists so the Case Studies route, its card and its document page can be seen working before the first real case study is written.',
-    body: '/case-studies/sample-case-study.js',
+    status: 'In progress',
+    summary: 'A live matrimonial app for practising Muslims, where the filtering goes past age and income into path, aqeedah, madhab and how much Qur\'an someone has memorised. The redesign starts here.',
+    lede: 'Nisf is a matrimonial app for practising Muslims — no photographs, a profile read across five tabs, and a filter layer no general matrimonial site has any reason to build. This is the redesign, starting with the app as it stands.',
+    body: '/case-studies/nisf.js',
   },
 ];
 
