@@ -157,33 +157,45 @@ const fill = (tpl, vars) => tpl.replace(/\{(\w+)\}/g, (_, k) => vars[k] || '').r
 
 /* --------------------------------------------------------------- the routes
  *
- * One entry per URL the site answers on. `out` is the file written; Netlify
- * serves `<dir>/index.html` for an extensionless request, and serves a real
- * file in preference to the SPA catch-all in _redirects.
+ * One entry per URL the site answers on. The file for a route is
+ * `<path>.html`, not `<path>/index.html`.
+ *
+ * That is measured, not assumed. Netlify serves a flat file for an
+ * extensionless request directly: /_probe returned _probe.html with a 200 and
+ * no redirect. A directory index does not: /_probedir was sent to /_probedir/
+ * with a 301. Written the second way, /designs/plate would have answered on
+ * /designs/plate/ — one redirect hop away from every internal link, every
+ * sitemap entry, and its own canonical tag.
+ *
+ * The home page is index.html because it has to be.
+ *
+ * Netlify also serves a real file in preference to the SPA catch-all in
+ * _redirects, which is what lets all of this coexist with the router.
  */
 
 const routes = [];
-const addRoute = (r) => routes.push(r);
+// `out` is derived, never passed: the file and the URL cannot disagree.
+const addRoute = (r) => routes.push({ ...r, out: r.path === '' ? 'index.html' : `${r.path}.html` });
 
 // --- index and standalone pages
-addRoute({ path: '', out: 'index.html', kind: 'home' });
-addRoute({ path: 'designs', out: 'designs/index.html', kind: 'index', items: DESIGNS, base: 'designs' });
-addRoute({ path: 'case-studies', out: 'case-studies/index.html', kind: 'index', items: CASE_STUDIES, base: 'case-studies' });
-addRoute({ path: 'products', out: 'products/index.html', kind: 'index', items: PROJECTS, base: 'docs' });
-addRoute({ path: 'findings', out: 'findings/index.html', kind: 'index', items: FINDINGS, base: 'findings' });
-addRoute({ path: 'graphics', out: 'graphics/index.html', kind: 'graphics' });
-addRoute({ path: 'about', out: 'about/index.html', kind: 'about' });
-addRoute({ path: 'contact', out: 'contact/index.html', kind: 'contact' });
-addRoute({ path: 'hire', out: 'hire/index.html', kind: 'hire' });
+addRoute({ path: '', kind: 'home' });
+addRoute({ path: 'designs', kind: 'index', items: DESIGNS, base: 'designs' });
+addRoute({ path: 'case-studies', kind: 'index', items: CASE_STUDIES, base: 'case-studies' });
+addRoute({ path: 'products', kind: 'index', items: PROJECTS, base: 'docs' });
+addRoute({ path: 'findings', kind: 'index', items: FINDINGS, base: 'findings' });
+addRoute({ path: 'graphics', kind: 'graphics' });
+addRoute({ path: 'about', kind: 'about' });
+addRoute({ path: 'contact', kind: 'contact' });
+addRoute({ path: 'hire', kind: 'hire' });
 
 // --- detail pages
-for (const d of DESIGNS) addRoute({ path: `designs/${d.slug}`, out: `designs/${d.slug}/index.html`, kind: 'design', entry: d, collection: DESIGNS, base: 'designs' });
-for (const c of CASE_STUDIES) addRoute({ path: `case-studies/${c.slug}`, out: `case-studies/${c.slug}/index.html`, kind: 'caseStudy', entry: c, collection: CASE_STUDIES, base: 'case-studies' });
-for (const f of FINDINGS) addRoute({ path: `findings/${f.slug}`, out: `findings/${f.slug}/index.html`, kind: 'finding', entry: f, collection: FINDINGS, base: 'findings' });
+for (const d of DESIGNS) addRoute({ path: `designs/${d.slug}`, kind: 'design', entry: d, collection: DESIGNS, base: 'designs' });
+for (const c of CASE_STUDIES) addRoute({ path: `case-studies/${c.slug}`, kind: 'caseStudy', entry: c, collection: CASE_STUDIES, base: 'case-studies' });
+for (const f of FINDINGS) addRoute({ path: `findings/${f.slug}`, kind: 'finding', entry: f, collection: FINDINGS, base: 'findings' });
 for (const p of PROJECTS) {
-  addRoute({ path: `docs/${p.slug}`, out: `docs/${p.slug}/index.html`, kind: 'product', entry: p, collection: PROJECTS, base: 'docs' });
-  if (p.privacyBlocks) addRoute({ path: `docs/${p.slug}/privacy`, out: `docs/${p.slug}/privacy/index.html`, kind: 'legal', entry: p, legal: 'privacy' });
-  if (p.termsBlocks) addRoute({ path: `docs/${p.slug}/terms`, out: `docs/${p.slug}/terms/index.html`, kind: 'legal', entry: p, legal: 'terms' });
+  addRoute({ path: `docs/${p.slug}`, kind: 'product', entry: p, collection: PROJECTS, base: 'docs' });
+  if (p.privacyBlocks) addRoute({ path: `docs/${p.slug}/privacy`, kind: 'legal', entry: p, legal: 'privacy' });
+  if (p.termsBlocks) addRoute({ path: `docs/${p.slug}/terms`, kind: 'legal', entry: p, legal: 'terms' });
 }
 
 /* ------------------------------------------------------------------ the head

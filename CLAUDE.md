@@ -446,11 +446,18 @@ eventually, but eventually is a render queue measured in days — and the social
 crawlers and the answer engines (OAI-SearchBot, PerplexityBot, Claude-SearchBot)
 do not run it at all. To all of them the entire portfolio was one untitled page.
 
-**What it writes.** 59 files: `<route>/index.html` for every page, plus
-`sitemap.xml` and `llms.txt`. Each one carries a unique title, description and
-canonical, the OG and Twitter tags, a JSON-LD `@graph`, and **the article's real
-text**, rendered by `renderBlocks` — the same function the browser calls, so the
-static copy and the painted copy cannot say different things.
+**What it writes.** 59 files: `<route>.html` for every page, plus `sitemap.xml`
+and `llms.txt`. Each one carries a unique title, description and canonical, the
+OG and Twitter tags, a JSON-LD `@graph`, and **the article's real text**,
+rendered by `renderBlocks` — the same function the browser calls, so the static
+copy and the painted copy cannot say different things.
+
+**`<route>.html`, never `<route>/index.html`.** Netlify serves a flat file for
+an extensionless request directly, and 301s a directory index to a trailing
+slash. Written the second way, `/designs/plate` answers on `/designs/plate/`,
+one redirect hop from every internal link, every sitemap entry, and its own
+canonical tag. This was measured against the live site, not assumed. The home
+page is `index.html` because it has to be.
 
 **Netlify serves a real file in preference to a redirect rule**, which is what
 makes this work without touching `_redirects`. The catch-all stays last and
