@@ -4,7 +4,7 @@
 
 BODY('trackwise', {
   blocks: [
-    { t: 'p', x: 'A prototype build — a running React app, designed inside Razorpay&rsquo;s Blade design system rather than a house style of my own.' },
+    { t: 'p', x: 'A prototype build: a running React app, designed inside Razorpay&rsquo;s Blade design system rather than a house style of my own.' },
     {
       t: 'image',
       src: '/trackwise-assets/hero.webp',
@@ -14,7 +14,7 @@ BODY('trackwise', {
     { t: 'p', x: 'It opens on what needs a person, not on a list of everything.' },
 
     { t: 'h2', x: 'The part a shopper sees' },
-    { t: 'p', x: 'The landing page has one job. The marketing that used to sit under the hero moved to the tracking page — after the answer, where it is finally persuasive.' },
+    { t: 'p', x: 'The landing page has one job. The marketing that used to sit under the hero moved to the tracking page, after the answer, where it is finally persuasive.' },
     {
       t: 'image',
       src: '/trackwise-assets/landing.webp',

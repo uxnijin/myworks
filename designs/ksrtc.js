@@ -11,7 +11,7 @@ BODY('ksrtc', {
       alt: 'Five screens from the redesigned KSRTC app: search, results, the seat map, review and the ticket',
       caption: 'Search, results, seats, review, ticket.',
     },
-    { t: 'p', x: 'What matters here is what does not move — the trip summary, the progress rail, the total and the dock stay put the whole way down.' },
+    { t: 'p', x: 'What matters here is what does not move: the trip summary, the progress rail, the total and the dock stay put the whole way down.' },
     {
       t: 'image',
       src: '/ksrtc-assets/funnel.webp',

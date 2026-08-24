@@ -5,7 +5,7 @@
 BODY('tints-and-shades', {
   blocks: [
     { t: 'h2', x: 'What it does' },
-    { t: 'p', x: 'You give it a colour, it gives you the scale — evenly spaced, so no two neighbours jump.' },
+    { t: 'p', x: 'You give it a colour, it gives you the scale, evenly spaced, so no two neighbours jump.' },
     { t: 'p', x: 'Lighter steps are blends toward white. Darker steps are blends toward black. That is the whole calculation; the useful part is what happens to the result.' },
     {
       t: 'list',

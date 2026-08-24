@@ -46,7 +46,7 @@ BODY('shipflow', {
       alt: 'The delivery calendar with metric cards above it',
       caption: 'Calendar.',
     },
-    { t: 'p', x: 'Trends drawn on a canvas — on-time percentage, transit time, and which carrier is quietly slipping.' },
+    { t: 'p', x: 'Trends drawn on a canvas: on-time percentage, transit time, and which carrier is quietly slipping.' },
     {
       t: 'image',
       src: '/shipflow-assets/reports.webp',

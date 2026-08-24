@@ -5,7 +5,7 @@
 BODY('ip-checker', {
   blocks: [
     { t: 'h2', x: 'What it does' },
-    { t: 'p', x: 'It shows your public IP address the moment the page opens — no button, because you are asking about yourself and the server already knows.' },
+    { t: 'p', x: 'It shows your public IP address the moment the page opens. No button, because you are asking about yourself and the server already knows.' },
     {
       t: 'list',
       items: [

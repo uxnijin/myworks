@@ -8,7 +8,7 @@
 
 BODY('ember', {
   blocks: [
-    { t: 'p', x: 'A design rather than a build — these are the screens as drawn, not captures of a running app.' },
+    { t: 'p', x: 'A design rather than a build: these are the screens as drawn, not captures of a running app.' },
     { t: 'p', x: 'Three screens carry the whole app: the list you open it for, the form that makes a habit, and the habit itself.' },
     {
       t: 'image',
@@ -16,7 +16,7 @@ BODY('ember', {
       alt: 'Three Ember screens: the habit list, the new habit form, and a habit with its streak and calendar',
       caption: 'The list, the setup, the habit.',
     },
-    { t: 'p', x: 'A row is a habit, how often it is due, and the streak. Nothing else — the streak is the only number that has to be readable at a glance.' },
+    { t: 'p', x: 'A row is a habit, how often it is due, and the streak. Nothing else. The streak is the only number that has to be readable at a glance.' },
     {
       t: 'image',
       src: '/ember-assets/list.webp',

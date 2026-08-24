@@ -440,7 +440,7 @@ function renderCurrencyDemo() {
 const DEMO_ITEMS = [
   'Untitled project',
   'Old screenshots',
-  'Draft — pricing page',
+  'Draft: pricing page',
   'Scratch notes',
   'Test project',
   'Archive 2025',

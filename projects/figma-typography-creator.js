@@ -5,7 +5,7 @@
 BODY('figma-typography-creator', {
   blocks: [
     { t: 'h2', x: 'What it does' },
-    { t: 'p', x: 'You pick a base size and a ratio, and it works out the whole set of sizes for you — then puts them into the file.' },
+    { t: 'p', x: 'You pick a base size and a ratio, and it works out the whole set of sizes for you, then puts them into the file.' },
     {
       t: 'list',
       items: [

@@ -2698,7 +2698,7 @@
         <article class="doc-article">
           <header class="doc-head">
             <h1 class="doc-h1"><span>${esc(title || 'This page')}</span></h1>
-            <p class="doc-lede">This page could not be loaded. It may be a connection problem — reloading usually fixes it.</p>
+            <p class="doc-lede">This page could not be loaded. It may be a connection problem, and reloading usually fixes it.</p>
           </header>
           <p><a class="btn btn-secondary" href="${href('')}" data-link>Back to the index</a></p>
         </article>
@@ -2764,7 +2764,7 @@
       isProducts
         ? 'Figma plugins, browser extensions, and network tools, designed, built, and shipped for real users.'
         : isCases
-        ? 'Longer write-ups of the work — the problem, the decisions, and what shipped.'
+        ? 'Longer write-ups of the work: the problem, the decisions, and what shipped.'
         : 'Onboarding flows, paywalls, and full products. Every case study is backed by a real, running app.'
     );
 

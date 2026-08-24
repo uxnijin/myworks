@@ -53,6 +53,32 @@ refuses. Use `export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`
 and drive the simulator through Bash instead — and say so rather than switching
 silently.
 
+## In a case study, say why
+
+**`/case-studies` is where the reasoning goes.** A design entry points at
+screens; a case study explains them. Naming what was used is the least
+interesting half of a sentence — a reader can see the colour. What they cannot
+see is why it beat the alternative.
+
+So: a typeface gets a reason, a colour gets a reason, a merged tab gets a
+reason. Keep them plain and short enough to read once:
+
+- *"#65558F is not a new colour. It is the purple the app already wears, so the
+  redesign arrives as the same app rather than a different one that took the
+  name."*
+- *"Courses and Coaching were one intent wearing two names, so they are a
+  single tab called Learn."*
+
+**Reasons have to be real.** A checkable fact is worth more than an elegant
+argument — contrast ratios, a font's weight range, what the old screen actually
+did. Compute the number rather than asserting it. What is still banned is what
+the house style has always banned: invented research, invented users, invented
+metrics. "Testing showed" is not available; "white on it clears AA at 6.5:1" is,
+once you have worked it out.
+
+**No grand theories.** One or two sentences per decision. If a reason needs a
+paragraph to land, it is probably being dressed up.
+
 ## A design entry is figures, not a case study
 
 **`/designs` is a design section. It is not where the long-form writing goes.**

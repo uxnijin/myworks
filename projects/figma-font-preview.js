@@ -10,7 +10,7 @@ BODY('figma-font-preview', {
       t: 'list',
       items: [
         'Type your own preview text and change the size, so you see real words instead of "The quick brown fox".',
-        'Search by name, or filter by where the font comes from and by style — sans serif, serif, monospace, display, handwriting.',
+        'Search by name, or filter by where the font comes from and by style: sans serif, serif, monospace, display, handwriting.',
         'Click a font to apply it to whatever text layers you have selected.',
         'Web fonts that are not installed in Figma yet are flagged, so you know before you click.',
       ],

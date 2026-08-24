@@ -9,10 +9,10 @@ BODY('speed-test', {
     {
       t: 'list',
       items: [
-        '<strong>Download</strong> — how fast data comes down. The number people mean when they say "speed".',
-        '<strong>Upload</strong> — how fast it goes up. Usually far lower, and the one that ruins video calls.',
-        '<strong>Ping</strong> — the round trip. Decides whether things feel instant, however much bandwidth you have.',
-        '<strong>Jitter</strong> — how much the ping wobbles. The quiet one: a fast line with unstable latency still makes a bad call.',
+        '<strong>Download</strong>: how fast data comes down. The number people mean when they say "speed".',
+        '<strong>Upload</strong>: how fast it goes up. Usually far lower, and the one that ruins video calls.',
+        '<strong>Ping</strong>: the round trip. Decides whether things feel instant, however much bandwidth you have.',
+        '<strong>Jitter</strong>: how much the ping wobbles. The quiet one: a fast line with unstable latency still makes a bad call.',
       ],
     },
     { t: 'p', x: 'All four arrive together, at the same size. There is no "analysing…" stage, because that stage only ever existed to hold you long enough to show an ad.' },

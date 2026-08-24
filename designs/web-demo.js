@@ -23,7 +23,7 @@ BODY('web-demo', {
     { t: 'h2', x: 'The brief' },
     {
       t: 'p',
-      x: `What was the brief or the problem this site had to solve? Keep it short — one clear paragraph beats a wall of context.`,
+      x: `What was the brief or the problem this site had to solve? Keep it short: one clear paragraph beats a wall of context.`,
     },
     { t: 'h2', x: 'Design decisions' },
     {
@@ -32,7 +32,7 @@ BODY('web-demo', {
       after: '',
       beforeLabel: 'Before',
       afterLabel: 'After',
-      caption: 'A before/after is one of the fastest ways to show design impact — swap in real screenshots.',
+      caption: 'A before/after is one of the fastest ways to show design impact, so swap in real screenshots.',
     },
     {
       t: 'cards',
@@ -54,7 +54,7 @@ BODY('web-demo', {
       t: 'callout',
       kind: 'info',
       title: 'This is a demo case study',
-      x: 'Swap every block above for real content — text, screenshots, a live link — once you have a project to publish.',
+      x: 'Swap every block above for real content (text, screenshots, a live link) once you have a project to publish.',
     },
   ],
 });

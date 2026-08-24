@@ -17,6 +17,6 @@ BODY('figma-cmyk-export', {
     },
 
     { t: 'h2', x: 'Good to know' },
-    { t: 'p', x: 'Bright screen colours — strong greens, electric blues — cannot be made with ink. They will come out duller. The JPEG preview is there so you find that out now rather than after the print run.' },
+    { t: 'p', x: 'Bright screen colours (strong greens, electric blues) cannot be made with ink. They will come out duller. The JPEG preview is there so you find that out now rather than after the print run.' },
   ],
 });

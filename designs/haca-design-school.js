@@ -9,7 +9,7 @@
 
 BODY('haca-design-school', {
   blocks: [
-    { t: 'p', x: 'A concept, and not a shipped one — these are the pages as drawn.' },
+    { t: 'p', x: 'A concept, and not a shipped one: these are the pages as drawn.' },
     { t: 'p', x: 'The course name is the picture. Students are set into the letters, so the people and the promise arrive as one object rather than a photograph above a sentence.' },
     { t: 'image', src: '/haca-design-school-assets/hero.webp', alt: 'The hero: HACA Design School introducing Branding Mastery, in heavy purple display type with student portraits set into the letters', caption: 'The hero.' },
     { t: 'p', x: 'Every section takes a colour of its own, so scrolling feels like moving through rooms rather than down a list.' },
@@ -25,13 +25,13 @@ BODY('haca-design-school', {
     { t: 'image', src: '/haca-design-school-assets/students.webp', alt: 'A row of student project cards, each with the work, the student name and their batch', caption: 'Students&rsquo; work.' },
     { t: 'p', x: 'So were the people teaching it, when part of what is being paid for is access to them.' },
     { t: 'image', src: '/haca-design-school-assets/instructors.webp', alt: 'The instructors section with a large founder portrait beside three smaller ones', caption: 'The instructors.' },
-    { t: 'p', x: 'And the awkward question — how you pay, in how many instalments — answered on the page rather than in a message to the team.' },
+    { t: 'p', x: 'And the awkward question of how you pay, in how many instalments, answered on the page rather than in a message to the team.' },
     { t: 'image', src: '/haca-design-school-assets/faq.webp', alt: 'A frequently asked questions accordion with the payment options answer open', caption: 'The questions.' },
     { t: 'p', x: 'The last thing on the page gets a shape of its own.' },
     { t: 'image', src: '/haca-design-school-assets/closer.webp', alt: 'The closing section on purple with orange curves behind three team portraits and an enrol button', caption: 'The closer.' },
 
     { t: 'h2', x: 'The first iteration' },
-    { t: 'p', x: 'The pass this came out of. Every section is already here — the argument was settled, and only the voice was still missing. Light sans headlines, flat blocks of colour, and a module list that says <em>Branding basics</em> eight times.' },
+    { t: 'p', x: 'The pass this came out of. Every section is already here. The argument was settled, and only the voice was still missing. Light sans headlines, flat blocks of colour, and a module list that says <em>Branding basics</em> eight times.' },
     { t: 'image', src: '/haca-design-school-assets/v1-hero.webp', alt: 'The first hero: a photograph of three people over purple, with the headline Land Your Next Big Client With A Branding Solution', caption: 'The hero.' },
     { t: 'image', src: '/haca-design-school-assets/v1-why.webp', alt: 'Why people join this program as six items in a two-column grid on a red ground', caption: 'Why people join.' },
     { t: 'image', src: '/haca-design-school-assets/v1-intro.webp', alt: 'A blue section introducing Brand Design Mastery with an illustration', caption: 'Introducing the course.' },

@@ -39,7 +39,7 @@ BODY('route-planner', {
       t: 'image',
       src: '/route-planner-assets/import.webp',
       alt: 'The import screen offering CSV, voice, pasted addresses, label scanning and manual entry, with a note that nothing is added until you confirm',
-      caption: 'Five ways in — and nothing is added until you confirm.',
+      caption: 'Five ways in, and nothing is added until you confirm.',
     },
     { t: 'p', x: 'Every address is checked before it can join the route, and the ones that fail say what is wrong with them rather than being dropped quietly.' },
     {
@@ -48,7 +48,7 @@ BODY('route-planner', {
       alt: 'History, settings, and the review screen showing eleven ready, two warnings and one error before adding thirteen stops',
       caption: 'History, settings, and the check before the route exists.',
     },
-    { t: 'p', x: 'Then it is a list you can scope — everything, still pending, priority, already delivered — with the next stop held in place.' },
+    { t: 'p', x: 'Then it is a list you can scope (everything, still pending, priority, already delivered) with the next stop held in place.' },
     {
       t: 'image',
       src: '/route-planner-assets/stops.webp',
@@ -88,7 +88,7 @@ BODY('route-planner', {
       alt: 'The stat tiles and Resume Route button in dark mode',
       caption: 'And the tiles under it.',
     },
-    { t: 'p', x: 'Driving, delivering and looking back all hold together in it — the proof sheet is where a theme usually falls apart.' },
+    { t: 'p', x: 'Driving, delivering and looking back all hold together in it, and the proof sheet is where a theme usually falls apart.' },
     {
       t: 'image',
       src: '/route-planner-assets/dark-drive.webp',

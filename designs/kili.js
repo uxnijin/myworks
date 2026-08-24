@@ -10,7 +10,7 @@ BODY('kili', {
   blocks: [
     {
       t: 'p',
-      x: 'Nothing personal is asked until there is an account to attach it to, and after that every question says on its own screen where the answer goes — the name is public, the birthday sets the starting level and never appears on the profile, the level is never shown to other learners. The states that usually get left to the operating system are drawn as well: an address that already has an account, a code that doesn\'t match, an under-13 birthday that actually branches, and a dead network that keeps what you typed.',
+      x: 'Nothing personal is asked until there is an account to attach it to, and after that every question says on its own screen where the answer goes: the name is public, the birthday sets the starting level and never appears on the profile, the level is never shown to other learners. The states that usually get left to the operating system are drawn as well: an address that already has an account, a code that doesn\'t match, an under-13 birthday that actually branches, and a dead network that keeps what you typed.',
     },
     { t: 'image', src: '/onboarding-assets/kili-screens/images/kili-01.webp', alt: 'Kili splash and the four intro slides' },
     { t: 'image', src: '/onboarding-assets/kili-screens/images/kili-02.webp', alt: 'Kili account creation and email verification' },

@@ -5,7 +5,7 @@
 BODY('design-school', {
   blocks: [
     { t: 'h2', x: 'What it is' },
-    { t: 'p', x: 'A reading list for people learning design — the one I actually send students, instead of a bookmark folder with four hundred links in it.' },
+    { t: 'p', x: 'A reading list for people learning design: the one I actually send students, instead of a bookmark folder with four hundred links in it.' },
     {
       t: 'list',
       items: [
@@ -17,7 +17,7 @@ BODY('design-school', {
     },
 
     { t: 'h2', x: 'Why it is short' },
-    { t: 'p', x: 'The value is what got left out. Forty resources someone finishes beats four hundred they bounce off in a week. A link dump looks generous and is the opposite — it hands the hardest part of the job, deciding what is worth your time, back to the person least able to do it.' },
+    { t: 'p', x: 'The value is what got left out. Forty resources someone finishes beats four hundred they bounce off in a week. A link dump looks generous and is the opposite: it hands the hardest part of the job, deciding what is worth your time, back to the person least able to do it.' },
 
     { t: 'h2', x: 'What needs work' },
     { t: 'p', x: 'The hard part is maintenance, not building. Links rot and tools get bought and ruined, and a stale recommendation costs more trust than a missing one. There is no review schedule on this yet, and there should be.' },

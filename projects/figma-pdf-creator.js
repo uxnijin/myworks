@@ -5,7 +5,7 @@
 BODY('figma-pdf-creator', {
   blocks: [
     { t: 'h2', x: 'What it does' },
-    { t: 'p', x: 'It turns your frames into a finished PDF — pages in the right order, sized properly, ready to send or to print.' },
+    { t: 'p', x: 'It turns your frames into a finished PDF: pages in the right order, sized properly, ready to send or to print.' },
     {
       t: 'list',
       items: [

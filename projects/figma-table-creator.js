@@ -9,7 +9,7 @@ BODY('figma-table-creator', {
     {
       t: 'list',
       items: [
-        'Pick a style — Minimal, Notion, Stripe, Linear or Material — then adjust padding and corners.',
+        'Pick a style (Minimal, Notion, Stripe, Linear or Material), then adjust padding and corners.',
         'Paste in a CSV and it fills the table with your actual data instead of Lorem Ipsum.',
         'It reads what each column holds and formats it: statuses become coloured badges, dates get formatted, numbers and currency line up on the right.',
         'Everything is built with Auto Layout, so the table resizes properly and you can add a row without redrawing it.',

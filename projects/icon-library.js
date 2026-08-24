@@ -18,7 +18,7 @@ BODY('icon-library', {
     { t: 'p', x: 'No sign-up and nothing to install. It runs in the browser, so your searches and favourites never leave it.' },
 
     { t: 'h2', x: 'Getting past the search cap' },
-    { t: 'p', x: 'The icon API caps a query at 999 results, which quietly hides most of what exists. So it searches each set separately in the background and streams matches in as you scroll — "arrow" turns up over 5,500 icons instead of stopping at a thousand.' },
+    { t: 'p', x: 'The icon API caps a query at 999 results, which quietly hides most of what exists. So it searches each set separately in the background and streams matches in as you scroll, so "arrow" turns up over 5,500 icons instead of stopping at a thousand.' },
 
     { t: 'h2', x: 'Good to know' },
     { t: 'p', x: 'Each icon keeps its own open-source licence, mostly MIT, Apache-2.0 or CC0. Check the set before using one commercially.' },

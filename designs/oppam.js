@@ -29,7 +29,7 @@ BODY('oppam', {
     },
 
     { t: 'h2', x: 'Finding someone' },
-    { t: 'p', x: 'You name a feeling and meet three people with reasons attached — introductions rather than listings — then read one of them in their own words.' },
+    { t: 'p', x: 'You name a feeling and meet three people with reasons attached (introductions rather than listings), then read one of them in their own words.' },
     {
       t: 'image',
       src: '/oppam-assets/care.webp',
@@ -114,7 +114,7 @@ BODY('oppam', {
       alt: 'Five failure states: offline, card declined, payment dropped, call failed, and the catch-all',
       caption: 'A declined card, and a held slot.',
     },
-    { t: 'p', x: 'Empty is never a dead end — the companion waits in the blank space with a line and a way forward.' },
+    { t: 'p', x: 'Empty is never a dead end: the companion waits in the blank space with a line and a way forward.' },
     {
       t: 'image',
       src: '/oppam-assets/empties.webp',

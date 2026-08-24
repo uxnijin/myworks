@@ -7,7 +7,7 @@ BODY('design-system-extractor', {
     {
       t: 'list',
       items: [
-        'Brand colours, split into what they are used for — backgrounds, text, borders — with any CSS variables the site declares.',
+        'Brand colours, split into what they are used for (backgrounds, text, borders), with any CSS variables the site declares.',
         'Every font on the page, with the weights and sizes actually in use.',
         'Images and icons, with the SVGs cleaned up rather than dumped raw.',
         'Corner radii, shadows and gradients.',

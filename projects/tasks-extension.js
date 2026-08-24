@@ -7,7 +7,7 @@ BODY('tasks-extension', {
     {
       t: 'list',
       items: [
-        'Your real Google Tasks — the same lists, on the same account, syncing both ways. Nothing new to sign up for.',
+        'Your real Google Tasks: the same lists, on the same account, syncing both ways. Nothing new to sign up for.',
         'Add, complete, reorder and move tasks between lists.',
         'Due dates land on your Google Calendar, because they always did.',
         'Search across every list.',
@@ -16,7 +16,7 @@ BODY('tasks-extension', {
 
     { t: 'h2', x: 'The bet' },
     { t: 'p', x: 'Google Tasks is genuinely good and genuinely buried, three clicks deep in Gmail\'s sidebar. It is already synced to the thing you live in, and almost nobody uses it because of where it sits.' },
-    { t: 'p', x: 'So this is not another to-do app. It is a shorter path to one that already works — which kills an enormous amount of scope. No sync engine, no accounts, no conflict resolution, no mobile app, since Google already ships one. The whole thing is a surface over an API you already have permission to call.' },
+    { t: 'p', x: 'So this is not another to-do app. It is a shorter path to one that already works, which kills an enormous amount of scope. No sync engine, no accounts, no conflict resolution, no mobile app, since Google already ships one. The whole thing is a surface over an API you already have permission to call.' },
 
     { t: 'h2', x: 'Where your data goes' },
     { t: 'p', x: 'Your browser talks to Google. There is no server in between, because there is nothing for one to do.' },
