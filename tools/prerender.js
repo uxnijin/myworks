@@ -818,8 +818,15 @@ function buildContactView() {
 
         <section class="contact-work">
           <div class="sec-topline"><h2 class="sec-h">Questions</h2></div>
-          <div class="prose read-prose contact-faq">
-            ${SEO.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('\n            ')}
+          <div class="faq">
+            ${SEO.faq
+              .map(
+                (f) => `<details class="faq-item">
+              <summary class="faq-q"><h3>${esc(f.q)}</h3></summary>
+              <div class="faq-a"><p>${esc(f.a)}</p></div>
+            </details>`
+              )
+              .join('\n            ')}
           </div>
           <p>Before you write: the ${link('case-studies', 'case studies')} and the ${link('designs', 'design portfolio')} will tell you more than this page can, and the ${link('products', 'products')} are tools you can install and use right now.</p>
         </section>

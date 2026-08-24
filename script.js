@@ -3390,8 +3390,16 @@
           <div class="sec-topline">
             <h2 class="sec-h">Questions</h2>
           </div>
-          <div class="prose read-prose contact-faq">
-            ${FAQ().map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}
+          <div class="faq">
+            ${FAQ()
+              .map(
+                (f) => `
+              <details class="faq-item">
+                <summary class="faq-q"><h3>${esc(f.q)}</h3></summary>
+                <div class="faq-a"><p>${esc(f.a)}</p></div>
+              </details>`
+              )
+              .join('')}
           </div>
         </section>
       </div>`;

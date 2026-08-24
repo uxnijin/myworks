@@ -7033,24 +7033,106 @@ a.tile:hover {
   letter-spacing: -0.01em;
 }
 
-/* The FAQ borrows the document reading measure but not its type scale: a
-   question is a question, not a section heading, and read-prose's 24px h3 was
-   setting six of them at nearly the size of the section they sit under. */
-.prose.read-prose.contact-faq h3 {
-  margin: 32px 0 6px;
+/* The questions are a disclosure list, built on <details>. Six answers laid
+   out flat ran longer than the rest of the page put together; collapsed, the
+   whole section is a scannable list of the six things people ask.
+ *
+ * <details> keeps its contents in the DOM whether it is open or not, so every
+ * answer is still in the HTML a crawler reads, and the FAQPage schema is
+ * separate from it either way. Nothing is hidden from search by doing this.
+ *
+ * <summary> takes one heading element as its content, so the question stays an
+ * h3 in the document outline and still announces as a disclosure button. */
+
+.faq {
+  max-width: 720px;
+  border-top: 1px solid var(--hairline);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.faq-q {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 2px;
+  cursor: pointer;
+  list-style: none;
+}
+
+/* both spellings: Safari still ships the shadow-DOM marker */
+.faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.faq-q::marker {
+  content: '';
+}
+
+.faq-q h3 {
+  margin: 0;
+  font-family: var(--font-sans, inherit);
   font-size: 18px;
   line-height: 1.45;
   font-weight: 600;
-  font-variation-settings: normal;
+  letter-spacing: -0.005em;
+  color: var(--ink);
 }
 
-.prose.read-prose.contact-faq h3:first-child {
-  margin-top: 0;
+.faq-q:hover h3 {
+  color: var(--ink-full);
 }
 
-.prose.read-prose.contact-faq p {
+.faq-q:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* the marker: two borders rotated into a chevron, so it matches the stroke
+   weight of the icon set without needing an icon */
+.faq-q::after {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 2px;
+  border-right: 1.6px solid var(--muted);
+  border-bottom: 1.6px solid var(--muted);
+  transform: translateY(-2px) rotate(45deg);
+  transform-origin: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.faq-item[open] .faq-q::after {
+  transform: translateY(1px) rotate(-135deg);
+  border-color: var(--ink);
+}
+
+.faq-a {
+  padding: 0 2px 20px;
+  max-width: 64ch;
+}
+
+.faq-a p {
+  margin: 0;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.65;
+  color: var(--soft);
+}
+
+.faq-item[open] .faq-a {
+  animation: faq-open 0.22s ease;
+}
+
+@keyframes faq-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 
 @media (max-width: 860px) {

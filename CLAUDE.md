@@ -498,6 +498,14 @@ today. Keep it that way.
   prerendered HTML, and as `OfferCatalog` and `FAQPage` in its schema. Change
   the object, not the markup.
 
+  The questions are an accordion, built on `<details>`. Laid out flat they ran
+  longer than the rest of the page put together; collapsed, the section is a
+  scannable list of the six things people ask. `<details>` keeps its contents in
+  the DOM whether it is open or not, so every answer is still in the HTML a
+  crawler reads and nothing is hidden from search by collapsing it. `<summary>`
+  takes one heading element as its content, so the question stays an `h3` in the
+  document outline and still announces as a disclosure button.
+
   This was briefly a separate `/hire` page. A sales page sitting next to the
   contact page was one page too many, and the two competed for the same
   visitor; `/hire` and its aliases now 301 to `/contact`, and `render()` catches
