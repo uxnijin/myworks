@@ -71,6 +71,12 @@ BODY('nisf', {
     { t: 'p', x: 'And the icons are drawn for this app rather than lifted from a set, so their weight and their corners match everything around them. A borrowed icon set is the usual reason an app looks slightly assembled.' },
     { t: 'image', src: '/nisf-assets/navbar.webp', alt: 'The redesigned bottom navigation: Home, Requests, Learn and Profile, with custom filled icons and the active tab in purple', caption: 'Home, Requests, Learn, Profile.' },
 
+    { t: 'h2', x: 'The top of the list' },
+    { t: 'p', x: 'Search, filter and the status chips are all doing one job: narrowing a list of strangers down to a few worth reading. The old screen spread that job over three rows, put sort in the middle of it, and left the last chip cut off behind a scroll arrow.' },
+    { t: 'p', x: 'So filter moves up beside the field it belongs to, and the chips get the width to all fit. Everything that narrows the list is now one tap away, and none of it is hidden.' },
+    { t: 'p', x: 'The placeholder does a quiet job as well. It names what the field takes, id or location, because a box that only says <em>Search</em> has to be guessed at, and a guess that returns nothing reads as an empty app rather than a wrong query.' },
+    { t: 'image', src: '/nisf-assets/search.webp', alt: 'The redesigned top of the profiles list: a search field reading search by id or location, a filter button beside it, and the All, Not Viewed, Saved and Viewed chips', caption: 'Search, filter, and four chips that fit.' },
+
     { t: 'p', x: 'The study goes under here.' },
   ],
 });
