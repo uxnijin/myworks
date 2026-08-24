@@ -29,7 +29,7 @@ const ANALYTICS = {
   const projectId = ANALYTICS.clarityProjectId;
 
   if (!projectId) {
-    console.info('[analytics] no Clarity project ID set — see analytics.js');
+    console.info('[analytics] no Clarity project ID set, see analytics.js');
     window.track = () => {};
     return;
   }
