@@ -186,7 +186,6 @@ addRoute({ path: 'findings', kind: 'index', items: FINDINGS, base: 'findings' })
 addRoute({ path: 'graphics', kind: 'graphics' });
 addRoute({ path: 'about', kind: 'about' });
 addRoute({ path: 'contact', kind: 'contact' });
-addRoute({ path: 'hire', kind: 'hire' });
 
 // --- detail pages
 for (const d of DESIGNS) addRoute({ path: `designs/${d.slug}`, kind: 'design', entry: d, collection: DESIGNS, base: 'designs' });
@@ -369,7 +368,6 @@ function pageMeta(route) {
     case 'index':
     case 'graphics':
     case 'about':
-    case 'contact':
       return {
         title: p.title + brand,
         description: p.description,
@@ -399,17 +397,20 @@ function pageMeta(route) {
           : [],
       };
 
-    case 'hire':
+    // /contact is the page someone lands on when they are deciding rather than
+    // browsing, so it carries the service and FAQ markup as well as the
+    // breadcrumb every other page gets.
+    case 'contact':
       return {
         title: p.title,
         description: p.description,
-        trail: [{ name: 'Home', path: '' }, { name: 'Hire', path: 'hire' }],
+        trail: [{ name: 'Home', path: '' }, { name: 'Contact', path: 'contact' }],
         nodes: [
           {
             '@type': 'ProfessionalService',
-            '@id': `${SITE_URL}/hire#service`,
+            '@id': `${SITE_URL}/contact#service`,
             name: `${SEO.fullName} — ${SEO.jobTitle}`,
-            url: `${SITE_URL}/hire`,
+            url: `${SITE_URL}/contact`,
             image: abs(SEO.defaultImage),
             description: p.description,
             founder: { '@id': PERSON_ID },
@@ -436,7 +437,7 @@ function pageMeta(route) {
           },
           {
             '@type': 'FAQPage',
-            '@id': `${SITE_URL}/hire#faq`,
+            '@id': `${SITE_URL}/contact#faq`,
             mainEntity: SEO.faq.map((f) => ({
               '@type': 'Question',
               name: f.q,
@@ -607,7 +608,7 @@ function firstFigure(e) {
 }
 
 /* ------------------------------------------------------------------ services
- * The offer list on /hire. Kept here rather than in data.js because it is the
+ * The offer list on /contact. Kept here rather than in data.js because it is the
  * page's content and its schema at once, and the two must not drift.
  */
 
@@ -709,7 +710,7 @@ function buildView(route) {
             <li class="seo-row">${link('case-studies', 'UX case studies', 'seo-row-link')}<p class="seo-row-sub">${esc(PAGE_COPY.caseStudies.lede)}</p></li>
             <li class="seo-row">${link('products', 'Design tools, Figma plugins and browser extensions', 'seo-row-link')}<p class="seo-row-sub">${esc(PAGE_COPY.projects.lede)}</p></li>
             <li class="seo-row">${link('findings', 'UX findings', 'seo-row-link')}<p class="seo-row-sub">${esc(PAGE_COPY.findings.lede)}</p></li>
-            <li class="seo-row">${link('hire', 'Hire a UI/UX designer', 'seo-row-link')}<p class="seo-row-sub">Services, process, and answers to the questions that come up before a project starts.</p></li>
+            <li class="seo-row">${link('contact', 'Hire a UI/UX designer', 'seo-row-link')}<p class="seo-row-sub">Services, process, and answers to the questions that come up before a project starts.</p></li>
             <li class="seo-row">${link('about', 'About ' + SEO.fullName, 'seo-row-link')}<p class="seo-row-sub">Background, experience and the toolkit behind the work.</p></li>
           </ul>
         </section>
@@ -751,17 +752,7 @@ function buildView(route) {
       return buildAboutView();
 
     case 'contact':
-      return `
-      <div class="view">
-        <header class="page-head">
-          <h1 class="page-h1">${esc(CONTACT.heading)}</h1>
-          <p class="page-lede">${esc(CONTACT.text)}</p>
-        </header>
-        <p>Email <a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a> or message <a href="https://wa.me/${esc(SITE.whatsapp)}" rel="noopener">WhatsApp</a>. If you are weighing up whether to ${link('hire', 'hire a UI/UX designer')}, the services page has the shape of a typical project on it.</p>
-      </div>`;
-
-    case 'hire':
-      return buildHireView();
+      return buildContactView();
 
     default:
       return docArticle(route);
@@ -783,7 +774,7 @@ function buildAboutView() {
             <p class="about-bio">${a.bio || ''}</p>
           </div>
         </section>
-        <p>I am a ${esc(SEO.jobTitle)} working from ${esc(a.location || `${SEO.locality}, ${SEO.region}`)}. My work runs from the first flow through to a shipped app: UI design, UX research and testing, design systems, and the front-end build that proves the design works. You can ${link('hire', 'hire me for a project')}, read the ${link('case-studies', 'case studies')}, or try one of the ${link('products', 'tools I have shipped')}.</p>
+        <p>I am a ${esc(SEO.jobTitle)} working from ${esc(a.location || `${SEO.locality}, ${SEO.region}`)}. My work runs from the first flow through to a shipped app: UI design, UX research and testing, design systems, and the front-end build that proves the design works. You can ${link('contact', 'hire me for a project')}, read the ${link('case-studies', 'case studies')}, or try one of the ${link('products', 'tools I have shipped')}.</p>
         <h2>Experience</h2>
         <ul class="seo-list">
           ${exp}
@@ -795,29 +786,43 @@ function buildAboutView() {
       </div>`;
 }
 
-function buildHireView() {
+function buildContactView() {
   return `
       <div class="view">
-        <article class="doc-article read-doc">
-          <header class="doc-head">
-            <h1 class="doc-h1"><span>Hire a UI/UX designer</span><span class="from">product, app and web design</span></h1>
-            <p class="doc-lede">I am ${esc(SEO.fullName)}, a ${esc(SEO.jobTitle)} in ${esc(SEO.locality)}, ${esc(SEO.region)}. I design mobile apps, web products and design systems — and build them, so what you receive is a running product rather than a folder of screens.</p>
-          </header>
-          <div class="prose read-prose">
-            <h2>What I do</h2>
-            <ul>
-              ${SERVICES.map((s) => `<li><strong>${esc(s.title)}</strong> — ${esc(s.desc)}</li>`).join('\n              ')}
-            </ul>
-            <h2>How a project runs</h2>
-            <ol>
-              ${PROCESS.map((s) => `<li><strong>${esc(s.title)}.</strong> ${esc(s.desc)}</li>`).join('\n              ')}
-            </ol>
-            <h2>Questions</h2>
-            ${SEO.faq.map((f) => `<h3>${esc(f.q)}</h3>\n            <p>${esc(f.a)}</p>`).join('\n            ')}
-            <h2>Start</h2>
-            <p>Email <a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a>, message <a href="https://wa.me/${esc(SITE.whatsapp)}" rel="noopener">WhatsApp</a>, or use the ${link('contact', 'contact form')}. Before that, the ${link('case-studies', 'case studies')} and the ${link('designs', 'design portfolio')} will tell you more than this page can.</p>
+        <div class="contact-grid">
+          <div class="contact-intro">
+            <span class="mono-label">${esc(CONTACT.label || 'Contact')}</span>
+            <h1>${esc(CONTACT.heading)}</h1>
+            <p>${esc(CONTACT.text)}</p>
+            <p>I am ${esc(SEO.fullName)}, a ${esc(SEO.jobTitle)} in ${esc(SEO.locality)}, ${esc(SEO.region)}. I design mobile apps, web products and design systems, and I build them too, so what you get at the end is a running product rather than a folder of screens.</p>
+            <div class="contact-rows">
+              <a href="mailto:${esc(SITE.email)}" class="contact-row"><span class="channel-info"><span class="channel-label">Email</span><span class="channel-value">${esc(SITE.email)}</span></span></a>
+              <a href="https://wa.me/${esc(SITE.whatsapp)}" rel="noopener" class="contact-row"><span class="channel-info"><span class="channel-label">WhatsApp</span><span class="channel-value">${esc(SITE.whatsappLabel || SITE.whatsapp)}</span></span></a>
+            </div>
           </div>
-        </article>
+        </div>
+
+        <section class="contact-work">
+          <div class="sec-topline"><h2 class="sec-h">What I do</h2></div>
+          <ul>
+            ${SERVICES.map((sv) => `<li><strong>${esc(sv.title)}</strong> &mdash; ${esc(sv.desc)}</li>`).join('\n            ')}
+          </ul>
+        </section>
+
+        <section class="contact-work">
+          <div class="sec-topline"><h2 class="sec-h">How a project runs</h2></div>
+          <ol>
+            ${PROCESS.map((st) => `<li><strong>${esc(st.title)}.</strong> ${esc(st.desc)}</li>`).join('\n            ')}
+          </ol>
+        </section>
+
+        <section class="contact-work">
+          <div class="sec-topline"><h2 class="sec-h">Questions</h2></div>
+          <div class="prose read-prose contact-faq">
+            ${SEO.faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('\n            ')}
+          </div>
+          <p>Before you write: the ${link('case-studies', 'case studies')} and the ${link('designs', 'design portfolio')} will tell you more than this page can, and the ${link('products', 'products')} are tools you can install and use right now.</p>
+        </section>
       </div>`;
 }
 
@@ -835,7 +840,6 @@ function buildNav() {
     ['products', 'Products'],
     ['findings', 'UX Findings'],
     ['about', 'About'],
-    ['hire', 'Hire me'],
     ['contact', 'Contact'],
   ];
   const list = (items, base, title) => `
@@ -872,9 +876,9 @@ function buildFoot() {
       <div class="site-foot-in">
         <div class="foot-top">
           <div class="foot-id">
-            <p class="foot-tagline">${esc(SEO.fullName)} — ${esc(SEO.jobTitle)} in ${esc(SEO.locality)}, ${esc(SEO.region)}, ${esc(SEO.country)}.</p>
+            <p class="foot-tagline">${esc(SEO.fullName)}, ${esc(SEO.jobTitle)} in ${esc(SEO.locality)}, ${esc(SEO.region)}, ${esc(SEO.country)}.</p>
           </div>
-          ${col('Explore', [['/designs', 'Designs'], ['/case-studies', 'Case Studies'], ['/products', 'Products'], ['/findings', 'UX Findings'], ['/graphics', 'Graphic Design'], ['/about', 'About'], ['/hire', 'Hire me']])}
+          ${col('Explore', [['/designs', 'Designs'], ['/case-studies', 'Case Studies'], ['/products', 'Products'], ['/findings', 'UX Findings'], ['/graphics', 'Graphic Design'], ['/about', 'About'], ['/contact', 'Hire me']])}
           ${col('Popular', popular)}
           ${col('Connect', [['/contact', 'Contact'], [`mailto:${SITE.email}`, 'Email', true], [`https://wa.me/${SITE.whatsapp}`, 'WhatsApp', true], ...PROFILE.links.map((l) => [l.url, l.label, true])])}
         </div>
@@ -943,8 +947,8 @@ function lastmod(route) {
   return new Date().toISOString().slice(0, 10);
 }
 
-const PRIORITY = { home: '1.0', index: '0.9', hire: '0.9', about: '0.8', design: '0.8', caseStudy: '0.8', product: '0.7', finding: '0.6', graphics: '0.5', contact: '0.5', legal: '0.1' };
-const FREQ = { home: 'weekly', index: 'weekly', hire: 'monthly', about: 'monthly', design: 'monthly', caseStudy: 'monthly', product: 'monthly', finding: 'monthly', graphics: 'monthly', contact: 'yearly', legal: 'yearly' };
+const PRIORITY = { home: '1.0', index: '0.9', about: '0.8', design: '0.8', caseStudy: '0.8', product: '0.7', finding: '0.6', graphics: '0.5', contact: '0.9', legal: '0.1' };
+const FREQ = { home: 'weekly', index: 'weekly', about: 'monthly', design: 'monthly', caseStudy: 'monthly', product: 'monthly', finding: 'monthly', graphics: 'monthly', contact: 'monthly', legal: 'yearly' };
 
 // Every figure on this site is a real screenshot of a real running app, which
 // is exactly the kind of thing Google Images has an appetite for. Declaring
@@ -1013,9 +1017,9 @@ const entryLine = (e, base) =>
 const llms = [
   `# ${SEO.fullName}`,
   '',
-  `> ${SEO.jobTitle} in ${SEO.locality}, ${SEO.region}, ${SEO.country}, working with teams worldwide. Designs mobile apps, web products and design systems, and builds them — every case study on this site is backed by a real running app, and every figure is a screenshot of it.`,
+  `> ${SEO.jobTitle} in ${SEO.locality}, ${SEO.region}, ${SEO.country}, working with teams worldwide. Designs mobile apps, web products and design systems, and builds them, so every case study on this site is backed by a real running app, and every figure is a screenshot of it.`,
   '',
-  `Contact: ${SITE.email}. Hire: ${SITE_URL}/hire`,
+  `Contact and hire: ${SITE_URL}/contact  (${SITE.email})`,
   '',
   '## Case studies',
   '',
@@ -1044,8 +1048,7 @@ const llms = [
   '## About',
   '',
   `- [About ${SEO.fullName}](${SITE_URL}/about): background, experience and toolkit.`,
-  `- [Hire a UI/UX designer](${SITE_URL}/hire): services, process, and answers to the usual questions.`,
-  `- [Contact](${SITE_URL}/contact): email, WhatsApp and a form.`,
+  `- [Hire a UI/UX designer](${SITE_URL}/contact): services, process, the usual questions answered, and how to get in touch.`,
   '',
 ].join('\n');
 

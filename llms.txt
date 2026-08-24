@@ -1,8 +1,8 @@
 # Nijin Muhammed
 
-> UI/UX and Product Designer in Kozhikode, Kerala, India, working with teams worldwide. Designs mobile apps, web products and design systems, and builds them — every case study on this site is backed by a real running app, and every figure is a screenshot of it.
+> UI/UX and Product Designer in Kozhikode, Kerala, India, working with teams worldwide. Designs mobile apps, web products and design systems, and builds them, so every case study on this site is backed by a real running app, and every figure is a screenshot of it.
 
-Contact: uxnijin@gmail.com. Hire: https://nijin.site/hire
+Contact and hire: https://nijin.site/contact  (uxnijin@gmail.com)
 
 ## Case studies
 
@@ -73,5 +73,4 @@ Short notes on interaction design, each one a single idea with a worked example.
 ## About
 
 - [About Nijin Muhammed](https://nijin.site/about): background, experience and toolkit.
-- [Hire a UI/UX designer](https://nijin.site/hire): services, process, and answers to the usual questions.
-- [Contact](https://nijin.site/contact): email, WhatsApp and a form.
+- [Hire a UI/UX designer](https://nijin.site/contact): services, process, the usual questions answered, and how to get in touch.

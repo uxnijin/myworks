@@ -446,7 +446,7 @@ eventually, but eventually is a render queue measured in days — and the social
 crawlers and the answer engines (OAI-SearchBot, PerplexityBot, Claude-SearchBot)
 do not run it at all. To all of them the entire portfolio was one untitled page.
 
-**What it writes.** 59 files: `<route>.html` for every page, plus `sitemap.xml`
+**What it writes.** 58 files: `<route>.html` for every page, plus `sitemap.xml`
 and `llms.txt`. Each one carries a unique title, description and canonical, the
 OG and Twitter tags, a JSON-LD `@graph`, and **the article's real text**,
 rendered by `renderBlocks` — the same function the browser calls, so the static
@@ -489,13 +489,21 @@ today. Keep it that way.
 - **`SEO` in `data.js` is the copy.** Titles aim at 50-60 characters with the
   keyword first and the name last; descriptions at 140-160, written as a
   sentence a person would read, because the click it earns is itself a ranking
-  input. `SEO.keywords` is not a meta tag — it is the list that keeps `/hire`,
+  input. `SEO.keywords` is not a meta tag — it is the list that keeps `/contact`,
   `/about` and the index ledes pointed at the same intent.
-- **`/hire` is the only page written for someone deciding rather than
-  browsing.** Its services, process and questions live in `SEO.services`,
-  `SEO.process` and `SEO.faq`, read three times over: as the cards on the page,
-  as the same list in the prerendered HTML, and as `OfferCatalog` and `FAQPage`
-  in its schema. Change the object, not the markup.
+- **`/contact` is the page for someone deciding rather than browsing.** Under
+  the form it carries what I do, how a project runs, and the questions that come
+  up first. All three live in `SEO.services`, `SEO.process` and `SEO.faq`, read
+  three times over: as the cards on the page, as the same list in the
+  prerendered HTML, and as `OfferCatalog` and `FAQPage` in its schema. Change
+  the object, not the markup.
+
+  This was briefly a separate `/hire` page. A sales page sitting next to the
+  contact page was one page too many, and the two competed for the same
+  visitor; `/hire` and its aliases now 301 to `/contact`, and `render()` catches
+  the in-app history the same way it catches `/projects`. The form stays at the
+  top of the page: someone who already knows what they want should not have to
+  scroll past a pitch to reach it.
 - **Social cards are generated too.** `tools/make_og.py` writes 1200x630 PNGs
   into `/images/og/` — one per entry with a `thumbUrl`, plus `default.png`.
   `og:image` used to point at the 1024x1024 avatar, which every platform was

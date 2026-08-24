@@ -874,7 +874,7 @@ const SEO = {
 
   // Where the work is done from. Local intent ("ui ux designer in Kerala") is
   // the least contested query a designer can rank for, so the place is named
-  // in the schema, on /about, and on /hire rather than left implied.
+  // in the schema, on /about, and on /contact rather than left implied.
   locality: 'Kozhikode',
   region: 'Kerala',
   country: 'India',
@@ -890,7 +890,7 @@ const SEO = {
 
   // The phrases the site is actually competing for. Not a meta keywords tag —
   // that has been ignored since 2009 — but the list that keeps the copy on
-  // /hire, /about and every index lede pointed at the same intent.
+  // /contact, /about and every index lede pointed at the same intent.
   keywords: [
     'UI designer',
     'UX designer',
@@ -914,7 +914,7 @@ const SEO = {
     '': {
       title: 'Nijin Muhammed — UI/UX Designer & Product Designer',
       description:
-        'UI/UX and product designer in Kerala, India. I design and build mobile apps, web products and design tools end to end — 30+ clients, 500+ students mentored.',
+        'UI/UX and product designer in Kerala, India. I design and build mobile apps, web products and design tools end to end. 30+ clients, 500+ students mentored.',
       h1: 'Design engineering',
     },
     designs: {
@@ -948,14 +948,9 @@ const SEO = {
         'Product designer in Kozhikode, Kerala. 30+ clients, 500+ design students mentored at HACA, and a toolkit that runs from Figma through to shipped Swift and React.',
     },
     contact: {
-      title: 'Contact — Work With a UI/UX & Product Designer',
+      title: 'Hire a UI/UX & Product Designer — Contact Nijin',
       description:
-        'Get in touch about a product design, app design or design engineering project. Email, WhatsApp, or the form — I answer every enquiry myself.',
-    },
-    hire: {
-      title: 'Hire a UI/UX Designer — Freelance Product & App Design',
-      description:
-        'Hire a freelance UI/UX and product designer for mobile app design, web app design and design systems. Kerala-based, working with teams worldwide.',
+        'Hire a freelance UI/UX and product designer for mobile app design, web app design and design systems. Kerala-based, working worldwide. Email, WhatsApp, or the form.',
     },
   },
 
@@ -977,7 +972,7 @@ const SEO = {
     },
   },
 
-  // ---- what /hire offers. Read three times: as the cards on the page, as the
+  // ---- what the work is. Read three times: as the cards on /contact, as the
   //  same list in the prerendered HTML, and as the OfferCatalog in its schema.
   services: [
     {
@@ -1019,7 +1014,7 @@ const SEO = {
     { title: 'Build or handoff', desc: 'Either I build the front end, or you get an annotated file an engineer can work from without asking a question.' },
   ],
 
-  // ---- the questions /hire answers, which are also the FAQ schema on it
+  // ---- the questions /contact answers, which are also the FAQ schema on it
   faq: [
     {
       q: 'What does a UI/UX designer actually deliver?',
@@ -1035,11 +1030,11 @@ const SEO = {
     },
     {
       q: 'Can you design and build the product?',
-      a: 'Yes. Every case study on this site is backed by a real running app I designed and built — iOS in SwiftUI, web in React. That is the point of design engineering: the design is proven by the thing running, not by a mockup.',
+      a: 'Yes. Every case study on this site is backed by a real running app I designed and built: iOS in SwiftUI, web in React. That is the point of design engineering: the design is proven by the thing running, not by a mockup.',
     },
     {
       q: 'Where are you based, and do you work remotely?',
-      a: 'Kozhikode, Kerala, India. Most of my clients are elsewhere — remote is the default, and I overlap with European and US mornings.',
+      a: 'Kozhikode, Kerala, India. Most of my clients are elsewhere, so remote is the default, and I overlap with European and US mornings.',
     },
     {
       q: 'How do we start?',

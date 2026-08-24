@@ -31,13 +31,16 @@ http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
 /writings/                             /findings                              301
 /writings/*                            /findings/:splat                       301
 
-# Aliases for /hire. A single canonical target, so a link that arrives on any
-# of them lands on the page that is actually indexed.
-/services                              /hire                                  301
-/services/                             /hire                                  301
-/freelance                             /hire                                  301
-/hire-me                               /hire                                  301
-/ui-ux-designer                        /hire                                  301
+# /hire was folded into /contact: a sales page sitting beside the contact page
+# was one page too many, and the two competed for the same visitor. Everything
+# that page answered is on /contact now, so every phrasing points there.
+/hire                                  /contact                               301
+/hire/                                 /contact                               301
+/services                              /contact                               301
+/services/                             /contact                               301
+/freelance                             /contact                               301
+/hire-me                               /contact                               301
+/ui-ux-designer                        /contact                               301
 
 # /exploring is gone — the toolkit it listed is now the Tools row on /about.
 /exploring                             /about                                 301

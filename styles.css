@@ -6975,6 +6975,99 @@ a.tile:hover {
   }
 }
 
+/* ------------------------------------------------------ contact, the work half
+ *
+ * /contact used to be a heading, two channels and a form. What I do, how a
+ * project runs and the usual questions sat on a separate /hire page, which
+ * read as a sales page parked next to the contact page and split one visitor
+ * across two URLs. They are all one page now: the form stays at the top,
+ * because someone who already knows what they want should not have to scroll
+ * past a pitch to reach it, and the rest answers the person still deciding.
+ *
+ * The rhythm is tighter than .home-sec's 96px — this is one page continuing,
+ * not a run of separate sections on an index.
+ */
+
+.contact-work {
+  padding-top: 72px;
+}
+
+.contact-work:last-of-type {
+  padding-bottom: 96px;
+}
+
+.contact-work .sec-topline {
+  margin-bottom: 28px;
+}
+
+/* .cards auto-fits, which puts four across at container width and leaves the
+   last two services stranded on a row of their own. Six of them want three and
+   three. The block sets its own top margin for the prose it usually sits in,
+   which is already handled by the section's padding here. */
+.contact-work .cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+}
+
+.contact-work .steps {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .contact-work .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .contact-work .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* .sec-h is 40px because it heads a whole section of an index. Here three of
+   them sit under one h1 on a single page, and at that size the page reads as
+   three landing pages stacked. Two steps down, and the h1 leads again. */
+.contact-work .sec-h {
+  font-size: 28px;
+  letter-spacing: -0.01em;
+}
+
+/* The FAQ borrows the document reading measure but not its type scale: a
+   question is a question, not a section heading, and read-prose's 24px h3 was
+   setting six of them at nearly the size of the section they sit under. */
+.prose.read-prose.contact-faq h3 {
+  margin: 32px 0 6px;
+  font-size: 18px;
+  line-height: 1.45;
+  font-weight: 600;
+  font-variation-settings: normal;
+}
+
+.prose.read-prose.contact-faq h3:first-child {
+  margin-top: 0;
+}
+
+.prose.read-prose.contact-faq p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+@media (max-width: 860px) {
+  .contact-work {
+    padding-top: 56px;
+  }
+
+  .contact-work:last-of-type {
+    padding-bottom: 72px;
+  }
+
+  .contact-work .sec-h {
+    font-size: 24px;
+  }
+}
+
+
 /* --------------------------------------------------- prerendered listings
  *
  * tools/prerender.js writes a real HTML file per route so that a crawler — and

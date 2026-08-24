@@ -114,7 +114,7 @@
     let noindex = false;
 
     if (page) {
-      title = path === '' || path === 'hire' ? page.title : page.title + brand;
+      title = path === '' ? page.title : page.title + brand;
       description = page.description;
     } else if (entry && (kind === 'privacy' || kind === 'terms')) {
       const label = kind === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
@@ -439,7 +439,6 @@
       ['findings', 'UX Findings'],
       // ['graphics', 'Graphic Design'],  — hidden for now
       ['about', 'About'],
-      ['hire', 'Hire me'],
       ['contact', 'Contact'],
     ]
       .map(
@@ -2621,6 +2620,13 @@
       history.replaceState(null, '', href(path));
     }
 
+    // /hire was folded into /contact. Netlify 301s a real request; this catches
+    // a link already in someone's history or a bookmark.
+    if (path === 'hire') {
+      path = 'contact';
+      history.replaceState(null, '', href(path));
+    }
+
     // /exploring is gone — its toolkit is the Tools row on /about. Netlify
     // 301s a real request; this catches in-app history the same way.
     if (path === 'exploring') {
@@ -2643,7 +2649,6 @@
       : path.startsWith('findings') ? 'findings'
       : path === 'graphics' ? 'graphics'
       : path === 'about' ? 'about'
-      : path === 'hire' ? 'hire'
       : '';
     $$('.topnav a').forEach((a) => a.classList.toggle('active', a.dataset.nav === navKey));
 
@@ -2655,8 +2660,6 @@
       viewHome();
     } else if (path === 'contact') {
       viewContact();
-    } else if (path === 'hire') {
-      viewHire();
     } else if (path === 'about') {
       whenLoaded(() => pageReady('about'), viewAbout, 'About');
     } else if (path === 'graphics') {
@@ -3300,6 +3303,15 @@
       </div>`;
   }
 
+  // The services, the process and the questions all live in the SEO object in
+  // data.js, so this page, the prerendered copy of it and its FAQ schema say
+  // the same thing. They used to have a page of their own at /hire; a sales
+  // page sitting next to Contact was one page too many, and split the intent
+  // across two URLs that both wanted the same visitor.
+  const SERVICES = () => (typeof SEO !== 'undefined' && SEO.services) || [];
+  const PROCESS = () => (typeof SEO !== 'undefined' && SEO.process) || [];
+  const FAQ = () => (typeof SEO !== 'undefined' && SEO.faq) || [];
+
   function viewContact() {
     $('#toc').innerHTML = '';
     $('#view').innerHTML = `
@@ -3359,6 +3371,29 @@
             <div class="form-status" id="form-status"></div>
           </form>
         </div>
+
+        <section class="contact-work">
+          <div class="sec-topline">
+            <h2 class="sec-h">What I do</h2>
+          </div>
+          ${renderBlocks([{ t: 'cards', items: SERVICES() }])}
+        </section>
+
+        <section class="contact-work">
+          <div class="sec-topline">
+            <h2 class="sec-h">How a project runs</h2>
+          </div>
+          ${renderBlocks([{ t: 'steps', items: PROCESS() }])}
+        </section>
+
+        <section class="contact-work">
+          <div class="sec-topline">
+            <h2 class="sec-h">Questions</h2>
+          </div>
+          <div class="prose read-prose contact-faq">
+            ${FAQ().map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}
+          </div>
+        </section>
       </div>`;
 
     const form = $('#contact-form');
@@ -3391,83 +3426,6 @@
         status.className = 'form-status error';
       }
     });
-  }
-
-  // ---- /hire
-  //
-  // The only page on the site written for someone who is deciding, not
-  // browsing: what I do, how a project runs, what it costs, and how to start.
-  // It is also the page the search terms point at — "hire a ui ux designer",
-  // "freelance product designer", "app design services" have nowhere else on
-  // this site to land, and a portfolio index answers none of them.
-  //
-  // The services list and the questions live in the SEO object in data.js and
-  // in tools/prerender.js, so this page and its FAQ schema say the same thing.
-  const HIRE_SERVICES = () => (typeof SEO !== 'undefined' && SEO.services) || [];
-  const HIRE_STEPS = () => (typeof SEO !== 'undefined' && SEO.process) || [];
-
-  function viewHire() {
-    $('#toc').innerHTML = '';
-    const cfg = (typeof SEO !== 'undefined' && SEO) || {};
-    const faq = cfg.faq || [];
-
-    $('#view').innerHTML = `
-      <div class="view">
-        <article class="doc-article read-doc">
-          <header class="doc-head">
-            <h1 class="doc-h1">
-              <span>Hire a UI/UX designer</span>
-              <span class="from">product, app and web design</span>
-            </h1>
-            <div class="doc-kicker mono-label">${esc(cfg.locality || 'Kozhikode')}, ${esc(cfg.region || 'Kerala')} &middot; working worldwide &middot; available now</div>
-            <p class="doc-lede">I am ${esc(cfg.fullName || PROFILE.name)}, a ${esc(cfg.jobTitle || PROFILE.role)}. I design mobile apps, web products and design systems, and I build them too, so what you get at the end is a running product rather than a folder of screens.</p>
-          </header>
-
-          <div class="prose read-prose">
-            <h2>What I do</h2>
-            ${renderBlocks([{ t: 'cards', items: HIRE_SERVICES() }])}
-
-            <h2>How a project runs</h2>
-            ${renderBlocks([{ t: 'steps', items: HIRE_STEPS() }])}
-
-            <h2>Questions</h2>
-            ${faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}
-
-            <h2>The proof</h2>
-            <p>Rather than take any of the above on trust: the <a href="${href('case-studies')}" data-link>case studies</a> walk through the reasoning behind individual screens, the <a href="${href('designs')}" data-link>design portfolio</a> is every flow shot from a real running build, and the <a href="${href('products')}" data-link>products</a> are tools you can install and use right now.</p>
-
-            <h2>Start</h2>
-            <p>Send a note with what you are building and roughly when you need it. I answer every enquiry myself, usually within a day.</p>
-          </div>
-
-          <div class="contact-rows" style="margin-top:24px">
-            <a href="mailto:${esc(EMAIL())}" class="contact-row">
-              <span class="channel-ico">${icon('mail')}</span>
-              <span class="channel-info">
-                <span class="channel-label">Email</span>
-                <span class="channel-value">${esc(EMAIL())}</span>
-              </span>
-              <span class="dir-go">${icon('arrowRight')}</span>
-            </a>
-            <a href="https://wa.me/${esc(WA())}" target="_blank" rel="noopener" class="contact-row">
-              <span class="channel-ico">${icon('whatsapp')}</span>
-              <span class="channel-info">
-                <span class="channel-label">WhatsApp</span>
-                <span class="channel-value">${esc(cms(CMS().whatsappLabel, '62384 17389'))}</span>
-              </span>
-              <span class="dir-go">${icon('arrowRight')}</span>
-            </a>
-            <a href="${href('contact')}" data-link class="contact-row">
-              <span class="channel-ico">${icon('mail')}</span>
-              <span class="channel-info">
-                <span class="channel-label">Contact form</span>
-                <span class="channel-value">Tell me about the project</span>
-              </span>
-              <span class="dir-go">${icon('arrowRight')}</span>
-            </a>
-          </div>
-        </article>
-      </div>`;
   }
 
   function viewNotFound() {
@@ -3527,7 +3485,6 @@
             <div class="foot-quick">
               <a href="${href('designs')}" data-link>Explore the designs</a>
               <a href="${href('products')}" data-link>Browse products</a>
-              <a href="${href('hire')}" data-link>Hire a UI/UX designer</a>
             </div>
           </div>
 
@@ -3540,7 +3497,6 @@
               <li><a href="${href('findings')}" data-link>UX Findings</a></li>
               <li><a href="${href('graphics')}" data-link>Graphic Design</a></li>
               <li><a href="${href('about')}" data-link>About</a></li>
-              <li><a href="${href('hire')}" data-link>Hire me</a></li>
             </ul>
           </div>
 
