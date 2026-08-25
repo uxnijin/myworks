@@ -128,7 +128,7 @@ const ANALYTICS = {
     ['.rail .btn-primary', 'open_product_from_rail'],
     ['.doc-links', 'open_product'],
     ['.acard', 'open_case_study'],
-    ['.pcard-wrap, .show-card', 'open_project'],
+    ['.dir-row, .show-card', 'open_project'],
     ['.news-item', 'open_latest'],
     ['.cat-pill', 'filter_category'],
     ['.nav-panel', 'nav_dropdown'],

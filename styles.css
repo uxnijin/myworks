@@ -979,8 +979,6 @@ body.with-sidebar .sidebar {
 }
 
 /* cards come alive under the cursor */
-.pcard-wrap:hover .gcard::before,
-.pcard-wrap:hover .gcard::after,
 .acard:hover .gcard::before,
 .acard:hover .gcard::after,
 .news-item:hover .gcard::before,
@@ -1262,59 +1260,9 @@ a.tile:hover {
   white-space: nowrap;
 }
 
-/* ------------------------------------------------------------ product cards
-   tall light card, mono corner labels, centered icon — the NAME SITS BELOW
-   the card, not inside it */
-
-.pcard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 36px 24px;
-}
-
-/* the whole card gets a quiet gray plate on hover so it reads clickable */
-.pcard-wrap {
-  display: block;
-  padding: 10px 10px 14px;
-  margin: -10px -10px -14px;
-  border-radius: 18px;
-  transition: background 0.2s var(--ease);
-}
-
-.pcard-wrap:hover {
-  background: var(--surface);
-}
-
-/* the card itself is a drifting gradient; nothing sits between the gradient
-   and the mark in the middle */
-/* same 16/10 plate as the design cards, rather than a fixed tall height */
-.pcard {
-  display: flex;
-  flex-direction: column;
-  border-radius: 12px;
-  padding: 14px;
-  aspect-ratio: 16 / 10;
-}
-
-.pcard-corners {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.pcard .mono-label {
-  color: #fff;
-  font-weight: 500;
-}
-
-.pcard-center {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 0;
-}
+/* ------------------------------------------------------- product card mark
+   the centred white glyph, all that is left of the old product card: the
+   products index is a row list now, the home showcase still uses the plate */
 
 .pcard-icon {
   color: #fff;
@@ -1325,41 +1273,6 @@ a.tile:hover {
 .pcard-icon svg {
   width: 38px;
   height: 38px;
-}
-
-.pcard-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 15px;
-  object-fit: cover;
-  transition: transform 0.3s var(--ease-out);
-}
-
-.pcard-wrap:hover .pcard-icon,
-.pcard-wrap:hover .pcard-logo {
-  transform: scale(1.06);
-}
-
-.pcard-caption {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 0 2px;
-}
-
-.pcard-name {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--ink-full);
-}
-
-.pcard-sub {
-  font-size: 15px;
-  color: var(--soft);
-  flex-shrink: 0;
 }
 
 /* ------------------------------------------------------------ article cards
@@ -1495,12 +1408,30 @@ a.tile:hover {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 24px 0;
+  padding: 18px 12px;
+  margin-inline: -12px;
+  border-radius: 12px;
+  transition: background 0.2s var(--ease);
+}
+
+/* a hairline between rows, drawn on the row above so the hover plate on the
+   row below covers a clean edge rather than sitting on top of a line */
+.dir-row + .dir-row {
+  box-shadow: inset 0 1px 0 var(--hairline-soft);
+}
+
+.dir-row:hover {
+  background: var(--surface);
+  box-shadow: none;
+}
+
+.dir-row:hover + .dir-row {
+  box-shadow: none;
 }
 
 .dir-ava {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   flex-shrink: 0;
   overflow: hidden;
@@ -1514,8 +1445,8 @@ a.tile:hover {
 }
 
 .dir-ava svg {
-  width: 13px;
-  height: 13px;
+  width: 16px;
+  height: 16px;
 }
 
 .dir-ava img {
@@ -1528,7 +1459,7 @@ a.tile:hover {
 .dir-ava.img {
   background: var(--surface);
   border: 1px solid var(--hairline-soft);
-  border-radius: 7px;
+  border-radius: 8px;
 }
 
 .dir-main {
@@ -1596,9 +1527,12 @@ a.tile:hover {
   border-bottom: 1px solid var(--hairline-soft);
 }
 
-.dir-list .acard-grid,
-.dir-list .pcard-grid {
+.dir-list .acard-grid {
   margin: 28px 0 20px;
+}
+
+.dir-list .dir-rows {
+  margin: 4px 0 20px;
 }
 
 /* ------------------------------------------------------------ detail pages */
@@ -7000,8 +6934,7 @@ a.tile:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .acard-grid,
-  .pcard-grid {
+  .acard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -7088,18 +7021,13 @@ a.tile:hover {
     margin-top: 16px;
   }
 
-  .acard-grid,
-  .pcard-grid {
+  .acard-grid {
     grid-template-columns: 1fr;
   }
 
   .stat-card {
     grid-template-columns: 1fr;
     padding: 32px 26px;
-  }
-
-  .pcard {
-    height: 260px;
   }
 
   .hero {
@@ -7160,7 +7088,8 @@ a.tile:hover {
 
   .dir-row {
     flex-wrap: wrap;
-    padding: 20px 0;
+    padding: 16px 10px;
+    margin-inline: -10px;
   }
 
   .dir-name {

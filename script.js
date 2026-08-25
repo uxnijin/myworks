@@ -498,12 +498,14 @@
   // ------------------------------------------------------------- shared row builders
 
   // mono meta line under a directory row's name; skips the category/group
-  // when the visible subtitle already says it
-  const entryMeta = (p) => {
+  // when the visible subtitle already says it, or when the row is sitting
+  // under a heading that has just said it
+  const entryMeta = (p, said = '') => {
     const sub = subName(p).toLowerCase();
+    const spent = (v) => v.toLowerCase() === sub || v.toLowerCase() === said.toLowerCase();
     const bits = [];
-    if (p.category && p.category.toLowerCase() !== sub) bits.push(p.category);
-    if (p.group && p.group.toLowerCase() !== sub) bits.push(p.group);
+    if (p.category && !spent(p.category)) bits.push(p.category);
+    if (p.group && !spent(p.group)) bits.push(p.group);
     if (p.users) bits.push(`${p.users.toLocaleString('en-US')} users`);
     if (p.status) bits.push(p.status);
     return bits.join(' · ');
@@ -521,12 +523,12 @@
   };
 
   // a PROJECTS/DESIGNS entry as a surf-directory row
-  const dirRow = (p, basePath) => `
+  const dirRow = (p, basePath, said) => `
       <a class="dir-row" href="${href(`${basePath}/${p.slug}`)}" data-link>
         ${entryAva(p)}
         <span class="dir-main">
           <span class="dir-name">${esc(shortName(p))}${subName(p) ? ` <span class="sub">${esc(subName(p))}</span>` : ''}</span>
-          <span class="dir-meta">${esc(entryMeta(p))}</span>
+          <span class="dir-meta">${esc(entryMeta(p, said))}</span>
         </span>
         <span class="dir-side">
           <span class="dir-links">${entryChannels(p).map(esc).join('&ensp;')}</span>
@@ -534,7 +536,8 @@
         </span>
       </a>`;
 
-  const buildDirRows = (items, basePath) => items.map((p) => dirRow(p, basePath)).join('');
+  const buildDirRows = (items, basePath, said) =>
+    items.map((p) => dirRow(p, basePath, said)).join('');
 
   // article-style card thumbnail, shared by design case studies and findings:
   // `thumbUrl` on the index record wins, then the first figure in the body,
@@ -579,31 +582,6 @@
         <p class="acard-title">${esc(f.title || '')}</p>
         <span class="acard-meta">${esc([f.kind || f.category, f.date].filter(Boolean).join(' · '))}</span>
       </a>`;
-
-  // product-style card: a drifting gradient with the mark sitting plainly in
-  // the middle, corner labels and white chips on the gradient, name and user
-  // count below the card
-  const projectCard = (p) => {
-    const chips = entryChannels(p).concat(p.status ? [p.status] : []).slice(0, 3);
-    return `
-      <a class="pcard-wrap" href="${href(`docs/${p.slug}`)}" data-link>
-        <span class="pcard ${gradClass(p.slug)}">
-          <span class="pcard-corners">
-            <span class="mono-label">${esc(p.group || '')}</span>
-            <span class="chips">${chips.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</span>
-          </span>
-          <span class="pcard-center">${
-            hasLogo(p)
-              ? `<img class="pcard-logo" src="${esc(logoSrc(p))}" alt="" loading="lazy">`
-              : `<span class="pcard-icon">${icon(p.icon)}</span>`
-          }</span>
-        </span>
-        <span class="pcard-caption">
-          <span class="pcard-name">${esc(shortName(p))}</span>
-          <span class="pcard-sub">${p.users ? `${p.users.toLocaleString('en-US')} users` : esc(p.status || '')}</span>
-        </span>
-      </a>`;
-  };
 
   // showcase card: media plate on top, name + summary + arrow link below.
   // Used for the featured products on the home page.
@@ -2910,10 +2888,14 @@
       : groupBy(items, (d) => d.category || 'Design', ['Onboarding', 'Paywalls', 'Mobile App', 'Web']);
 
     const card = isCases ? caseStudyCard : designCard;
+    // products are a row list, not cards: eighteen gradient plates in a column
+    // is a wall of colour, and a product is a name you are scanning for, not a
+    // picture you are browsing. Case studies keep their cards, where the figure
+    // is the thing being chosen between.
     const grid = (g) =>
       isArticles
         ? `<div class="acard-grid">${g.items.map(card).join('')}</div>`
-        : `<div class="pcard-grid">${g.items.map(projectCard).join('')}</div>`;
+        : `<div class="dir-rows">${buildDirRows(g.items, 'docs', g.name)}</div>`;
 
     const pills = groups
       .map(
