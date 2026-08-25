@@ -1481,14 +1481,19 @@ a.tile:hover {
   font-weight: 500;
 }
 
+/* the line under a row's name is read, not glanced at: 10px mono caps in
+   --faint sits at 2.1:1 on white, which is under every threshold there is.
+   Inter at 14/500 in --soft is 5.7:1 on white and 8.2:1 on the dark page,
+   and sentence case gives the numbers their ordinary shapes back. */
 .dir-meta {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--faint);
-  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--soft);
+  margin-top: 3px;
 }
 
 .dir-side {
