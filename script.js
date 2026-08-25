@@ -154,9 +154,10 @@
     setMetaTag('meta[name="twitter:image"]', 'content', absUrl(image));
   }
 
-  // theme: dark is a `prefers-color-scheme` block in styles.css and nothing
-  // else. No attribute on <html>, no stored preference, no toggle — so there
-  // is nothing for the router to set or restore on a navigation.
+  // theme: `data-theme` on <html> is written by the inline script in
+  // index.html before the first paint, and never by a view — so there is
+  // nothing for the router to set or restore on a navigation. The footer's
+  // picker is wired in initThemePick() below.
 
   // containers that hold a single, framed image — these get a shimmering
   // skeleton while the image is in flight, so the page doesn't show a hole.
@@ -3547,9 +3548,62 @@
 
         <div class="foot-bottom">
           <span class="foot-note">© ${new Date().getFullYear()} ${esc(PROFILE.name)}. All rights reserved</span>
+          <div class="theme-pick" role="radiogroup" aria-label="Colour theme">
+            ${THEME_PREFS.map(
+              (pref) =>
+                `<button type="button" class="theme-opt" role="radio" aria-checked="false" tabindex="-1" data-theme-set="${pref}">${pref}</button>`
+            ).join('')}
+          </div>
           <span class="foot-note">${esc(cms(CMS().footerNote, 'Designed and built by hand, no templates'))}</span>
         </div>
       </div>`;
+
+    syncThemePick();
+  }
+
+  /* --------------------------------------------------------- theme picker
+
+     The theme itself is handled by the inline script in index.html — it owns
+     the preference, writes data-theme on <html> before the first paint, and
+     exposes get/setThemePref. All this does is keep the footer's three
+     buttons showing which one is on, and hand a click back.
+
+     Roving tabindex: a radiogroup takes one tab stop, and the arrows move
+     within it. The buttons are only ever rendered by renderFooter(), so the
+     listeners below are attached once and delegate. */
+
+  const THEME_PREFS = ['system', 'light', 'dark'];
+
+  function syncThemePick() {
+    const pref = (window.getThemePref && window.getThemePref()) || 'system';
+    $$('.theme-opt').forEach((b) => {
+      const on = b.dataset.themeSet === pref;
+      b.setAttribute('aria-checked', String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+  }
+
+  function initThemePick() {
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-theme-set]');
+      if (btn && window.setThemePref) window.setThemePref(btn.dataset.themeSet);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const btn = e.target.closest && e.target.closest('[data-theme-set]');
+      if (!btn) return;
+      const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1
+        : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      const i = THEME_PREFS.indexOf(btn.dataset.themeSet);
+      const next = THEME_PREFS[(i + step + THEME_PREFS.length) % THEME_PREFS.length];
+      if (window.setThemePref) window.setThemePref(next);
+      const el = $(`[data-theme-set="${next}"]`);
+      if (el) el.focus();
+    });
+
+    window.addEventListener('themechange', syncThemePick);
   }
 
   function boot() {
@@ -3561,6 +3615,7 @@
     $('#brand-name').textContent = PROFILE.name;
 
     renderFooter();
+    initThemePick();
     if (window.MeshGradient) window.MeshGradient.scan();
 
     renderPromo();

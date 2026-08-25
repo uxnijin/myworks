@@ -362,29 +362,45 @@ Two ties in the cascade need the double class (`.prose.read-prose`), because
 Below 1080px the rail keeps 240px but the cap is dropped (`max-width: none`);
 below 860px `.doc-grid` goes to `display: block` and the rail stacks underneath.
 
-## Dark mode follows the system
+## Dark mode
 
-**There is no toggle.** The page reads `prefers-color-scheme` and nothing
-else — no attribute on `<html>`, no stored preference, no button in the
-topbar. The OS switch already says which one the person wants, and a second
-control on one portfolio site is a control to maintain, explain and get wrong
-on the first paint.
+**The theme is `data-theme` on `<html>`, and one inline script owns it.** That
+script sits at the top of `index.html`'s `<head>` and runs synchronously, so
+the attribute is set before the first paint — deferring it would show a white
+page for a frame and then swap. It resolves a stored preference against
+`prefers-color-scheme` and writes the answer:
 
-**Only the tokens flip.** The theme is a `@media (prefers-color-scheme: dark)`
-block at the top of `styles.css` that restates the `:root` custom properties.
-Every rule below it reads tokens, so no rule in the file knows which theme it
-is in. Adding a colour means adding a token, not adding a dark rule — if you
-find yourself writing a selector inside the media block, the colour underneath
-it is probably hardcoded and wants tokenising instead.
+```
+preference (localStorage 'nijin:theme')   system | light | dark
+resolved   (data-theme on <html>)         light | dark
+also       (data-theme-pref on <html>)    the preference, for the picker
+```
 
-**The handful of element rules dark does need live in a second media block at
-the very bottom of the file**, and they have to. `.frame` in a media query and
-`.frame` in the body of the file are the same specificity, so the one further
-down wins — put them next to the token block at the top and they lose to the
-rules they are meant to beat, silently, with the browser showing you the
-light-theme value in devtools.
+It exposes `window.getThemePref()` and `window.setThemePref(pref)`, keeps a
+`matchMedia` listener so `system` follows the machine as it changes, and
+updates the single `theme-color` meta. `script.js` does not own any of this —
+it only paints the footer picker and calls `setThemePref`.
 
-The tokens that exist only because dark exists:
+**The picker is three options, not a switch.** System / Light / Dark, in
+`.foot-bottom`, rendered by `renderFooter()` and wired by `initThemePick()`. A
+two-way switch cannot say "whatever the machine says", and System has to stay
+reachable after you have touched the other two. It is a `radiogroup` with a
+roving tabindex and arrow keys. It is deliberately **not** in the prerendered
+footer that `tools/prerender.js` writes — without JS the control would do
+nothing, so a crawler and a no-JS visitor do not get a dead one.
+
+**An attribute, not a media query.** A media query cannot be overridden by a
+choice, and keeping a palette in a media block *and* an attribute block is two
+palettes to drift apart. The attribute also removes a specificity trap that
+cost two rounds of "it is still wrong": a media query adds no specificity, so
+`.frame` inside `@media (prefers-color-scheme: dark)` loses to a plain
+`.frame` further down the file, silently. `[data-theme='dark'] .frame` is
+0,2,0 and wins wherever it sits.
+
+**Only the tokens flip.** `:root[data-theme='dark']` restates the `:root`
+custom properties and every rule below reads them, so nothing else in the file
+knows which theme it is in. Adding a colour means adding a token, not adding a
+dark rule. The tokens that exist only because dark exists:
 
 ```
 --panel / --panel-2      a card, then a popover raised above one
@@ -410,13 +426,12 @@ The tokens that exist only because dark exists:
   padding-box` in dark so the hairline composites over the page instead.
 - **The `.demo` widgets keep the light palette they were drawn in.** They are
   simulations of a light-mode product and each carries its own hardcoded
-  blues, greens and greys, so the dark block hands the whole `.demo` subtree
-  the light token values back rather than restyling two thousand lines. A new
-  demo inherits that for free by being inside `.demo`.
+  blues, greens and greys, so `[data-theme='dark'] .demo` hands the whole
+  subtree the light token values back rather than restyling two thousand
+  lines. A new demo inherits that for free by being inside `.demo`.
 
 The page is `#0c0c0d`, not black: hairlines stay readable on it, and the white
-figures do not punch a hole through the page. `index.html` carries two
-`theme-color` metas with `media` attributes so the browser chrome follows too.
+figures do not punch a hole through the page.
 
 ## The mesh gradient
 

@@ -95,11 +95,20 @@
   --radius-md: var(--r-card);
 }
 
-/* ------------------------------------------------------- dark, by system
+/* ------------------------------------------------ dark, on a root attribute
 
-   There is no toggle. The page follows `prefers-color-scheme`, which is what
-   the OS switch already says, so the site changes with everything else on the
-   machine instead of asking a second time.
+   The theme is `data-theme` on `<html>`, written before first paint by the
+   inline script in index.html. That script resolves the person's preference —
+   `system`, `light` or `dark`, kept in localStorage — against
+   `prefers-color-scheme`, and keeps following the OS while the preference is
+   `system`. The footer has the picker.
+
+   It is an attribute rather than a media query because a media query cannot
+   be overridden by a choice, and duplicating sixty tokens across a media
+   block and an attribute block is two palettes to keep in sync. The attribute
+   also fixes the specificity problem: `[data-theme='dark'] .frame` is 0,2,0
+   and beats a plain `.frame` wherever either one sits in the file, whereas a
+   media query adds nothing and loses to whatever comes after it.
 
    Only the tokens are restated — every rule below reads them, so nothing else
    in the file knows which theme it is in. Two things deliberately do not
@@ -114,60 +123,111 @@
      below hands that subtree the light values back.
 */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
+:root[data-theme='dark'] {
+  color-scheme: dark;
 
-    /* ink */
-    --ink-full: #fff;
-    --ink: rgba(255, 255, 255, 0.92);
-    --ink-soft: rgba(255, 255, 255, 0.72);
-    --muted: rgba(255, 255, 255, 0.5);
-    --faint: rgba(255, 255, 255, 0.34);
-    --soft: rgba(255, 255, 255, 0.64);
+  /* ink */
+  --ink-full: #fff;
+  --ink: rgba(255, 255, 255, 0.92);
+  --ink-soft: rgba(255, 255, 255, 0.72);
+  --muted: rgba(255, 255, 255, 0.5);
+  --faint: rgba(255, 255, 255, 0.34);
+  --soft: rgba(255, 255, 255, 0.64);
 
-    /* surfaces — not pure black: #0c0c0d keeps the hairlines readable and
-       stops the white figures from blowing a hole in the page */
-    --bg: #0c0c0d;
-    --surface: rgba(255, 255, 255, 0.035);
-    --surface-2: rgba(255, 255, 255, 0.065);
-    --surface-3: rgba(255, 255, 255, 0.1);
-    --hairline: rgba(255, 255, 255, 0.13);
-    --hairline-soft: rgba(255, 255, 255, 0.09);
-    --hairline-strong: rgba(255, 255, 255, 0.24);
-    --edge-strong: rgba(255, 255, 255, 0.45);
+  /* surfaces — not pure black: #0c0c0d keeps the hairlines readable and
+     stops the white figures from blowing a hole in the page */
+  --bg: #0c0c0d;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-2: rgba(255, 255, 255, 0.065);
+  --surface-3: rgba(255, 255, 255, 0.1);
+  --hairline: rgba(255, 255, 255, 0.13);
+  --hairline-soft: rgba(255, 255, 255, 0.09);
+  --hairline-strong: rgba(255, 255, 255, 0.24);
+  --edge-strong: rgba(255, 255, 255, 0.45);
 
-    --panel: #151517;
-    --panel-2: #1d1d20;
-    --panel-code: #121214;
+  --panel: #151517;
+  --panel-2: #1d1d20;
+  --panel-code: #121214;
 
-    /* the dark pill inverts with the page: white on black becomes black on
-       white, so it is still the one loud non-orange thing */
-    --invert-bg: #fff;
-    --invert-bg-hover: #d6d6d6;
-    --invert-ink: #000;
+  /* the dark pill inverts with the page: white on black becomes black on
+     white, so it is still the one loud non-orange thing */
+  --invert-bg: #fff;
+  --invert-bg-hover: #d6d6d6;
+  --invert-ink: #000;
 
-    --topbar-bg: rgba(12, 12, 13, 0.82);
-    --scroll-thumb: rgba(255, 255, 255, 0.18);
-    --scrim: rgba(0, 0, 0, 0.64);
+  --topbar-bg: rgba(12, 12, 13, 0.82);
+  --scroll-thumb: rgba(255, 255, 255, 0.18);
+  --scrim: rgba(0, 0, 0, 0.64);
 
-    /* a shadow does no work on a dark page; these carry the depth in the
-       ring, not the blur, so they are pushed much darker */
-    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.55);
-    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.66);
+  /* a shadow does no work on a dark page; these carry the depth in the
+     ring, not the blur, so they are pushed much darker */
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.66);
 
-    /* both clear AA on #0c0c0d; the light-theme pair does not */
-    --ok: #35c46a;
-    --danger: #ff6f61;
+  /* both clear AA on #0c0c0d; the light-theme pair does not */
+  --ok: #35c46a;
+  --danger: #ff6f61;
 
-    --logo-filter: brightness(0) invert(1);
+  --logo-filter: brightness(0) invert(1);
 
-    --tk-k: #c8a9ff;
-    --tk-s: #f0b25e;
-    --tk-n: #5fd0b8;
-    --tk-f: #86aaff;
-  }
+  --tk-k: #c8a9ff;
+  --tk-s: #f0b25e;
+  --tk-n: #5fd0b8;
+  --tk-f: #86aaff;
+}
+
+/* the accent gradient is already light-on-anything, but the orange sits a
+   touch hot against a dark page */
+[data-theme='dark'] ::selection {
+  background: #ff5400;
+  color: #fff;
+}
+
+/* The frame's plate is white in both themes, and by default a background
+   paints under the border too — so any hairline on it came out as a pure
+   white ring. Harmless around a white-canvas figure, loud around one that
+   is a solid colour. Clipping the plate to the padding box lets the
+   hairline composite over the page instead, which is what makes it read as
+   an edge rather than an outline. */
+[data-theme='dark'] .frame {
+  background-clip: padding-box;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .diagram {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* the demos are light-mode products being demonstrated — hand the subtree
+   the light palette back rather than restyling two thousand lines */
+[data-theme='dark'] .demo {
+  color-scheme: light;
+  --ink-full: #000;
+  --ink: rgba(0, 0, 0, 0.9);
+  --ink-soft: rgba(0, 0, 0, 0.7);
+  --muted: rgba(0, 0, 0, 0.45);
+  --faint: rgba(0, 0, 0, 0.3);
+  --soft: rgba(0, 0, 0, 0.6);
+  --bg: #fff;
+  --surface: rgba(0, 0, 0, 0.02);
+  --surface-2: rgba(0, 0, 0, 0.04);
+  --surface-3: rgba(0, 0, 0, 0.06);
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-soft: rgba(0, 0, 0, 0.06);
+  --hairline-strong: rgba(0, 0, 0, 0.16);
+  --edge-strong: rgba(0, 0, 0, 0.4);
+  --panel: #fff;
+  --panel-2: #fff;
+  --invert-bg: #000;
+  --invert-bg-hover: #262626;
+  --invert-ink: #fff;
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.18);
+  --ok: #1fad52;
+  --danger: #c0392b;
+  color: var(--ink);
 }
 
 /* ------------------------------------------------------------------- reset */
@@ -5970,6 +6030,47 @@ a.tile:hover {
   color: var(--faint);
 }
 
+/* ------------------------------------------------------------ theme picker
+
+   Three options, not a two-way switch: once you have touched Light or Dark,
+   System has to still be reachable, and a switch with two ends cannot say
+   "whatever the machine says". It sits in the footer because it is a setting,
+   not a piece of navigation — nobody arrives wanting it. */
+
+.theme-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-pill);
+}
+
+.theme-opt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+}
+
+.theme-opt:hover {
+  color: var(--ink);
+}
+
+.theme-opt[aria-checked='true'] {
+  background: var(--surface-2);
+  color: var(--ink-full);
+}
+
+.theme-opt:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 @media (max-width: 1000px) {
   .foot-top {
     grid-template-columns: 1fr 1fr;
@@ -7329,70 +7430,5 @@ a.tile:hover {
   .seo-row-meta {
     grid-column: 1;
     grid-row: auto;
-  }
-}
-
-/* ==========================================================================
-   dark, the part that is not tokens
-
-   These override element rules rather than declaring custom properties, so
-   they have to come after the rules they beat — a `.frame` here and a
-   `.frame` at the top of the file are the same specificity, and the last one
-   in the file wins. The token block stays up with `:root`, where nothing
-   competes with it; everything else lives down here.
-   ========================================================================== */
-
-@media (prefers-color-scheme: dark) {
-  /* the accent gradient is already light-on-anything, but the orange sits a
-     touch hot against a dark page */
-  ::selection {
-    background: #ff5400;
-    color: #fff;
-  }
-
-  /* The frame's plate is white in both themes, and by default a background
-     paints under the border too — so any hairline on it came out as a pure
-     white ring. Harmless around a white-canvas figure, loud around one that
-     is a solid colour. Clipping the plate to the padding box lets the
-     hairline composite over the page instead, which is what makes it read as
-     an edge rather than an outline. */
-  .frame {
-    background-clip: padding-box;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .diagram {
-    border-color: rgba(255, 255, 255, 0.16);
-  }
-
-  /* the demos are light-mode products being demonstrated — hand the subtree
-     the light palette back rather than restyling two thousand lines */
-  .demo {
-    color-scheme: light;
-    --ink-full: #000;
-    --ink: rgba(0, 0, 0, 0.9);
-    --ink-soft: rgba(0, 0, 0, 0.7);
-    --muted: rgba(0, 0, 0, 0.45);
-    --faint: rgba(0, 0, 0, 0.3);
-    --soft: rgba(0, 0, 0, 0.6);
-    --bg: #fff;
-    --surface: rgba(0, 0, 0, 0.02);
-    --surface-2: rgba(0, 0, 0, 0.04);
-    --surface-3: rgba(0, 0, 0, 0.06);
-    --hairline: rgba(0, 0, 0, 0.08);
-    --hairline-soft: rgba(0, 0, 0, 0.06);
-    --hairline-strong: rgba(0, 0, 0, 0.16);
-    --edge-strong: rgba(0, 0, 0, 0.4);
-    --panel: #fff;
-    --panel-2: #fff;
-    --invert-bg: #000;
-    --invert-bg-hover: #262626;
-    --invert-ink: #fff;
-    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.18);
-    --ok: #1fad52;
-    --danger: #c0392b;
-    color: var(--ink);
   }
 }
