@@ -154,9 +154,9 @@
     setMetaTag('meta[name="twitter:image"]', 'content', absUrl(image));
   }
 
-  // theme: the data-theme attribute is set by the pre-paint inline script
-  // in index.html and kept live there via a matchMedia listener — there's
-  // no manual toggle, so nothing to wire up here.
+  // theme: dark is a `prefers-color-scheme` block in styles.css and nothing
+  // else. No attribute on <html>, no stored preference, no toggle — so there
+  // is nothing for the router to set or restore on a navigation.
 
   // containers that hold a single, framed image — these get a shimmering
   // skeleton while the image is in flight, so the page doesn't show a hole.

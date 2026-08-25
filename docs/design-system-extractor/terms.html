@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -159,7 +159,9 @@
   <script src="/blocks.js" defer></script>
   <script src="/script.js" defer></script>
 
-  <meta name="theme-color" content="#ffffff">
+  <!-- the browser chrome follows the same system setting the page does -->
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0c0d" media="(prefers-color-scheme: dark)">
 </head>
 
 <body>

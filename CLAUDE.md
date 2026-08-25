@@ -362,6 +362,52 @@ Two ties in the cascade need the double class (`.prose.read-prose`), because
 Below 1080px the rail keeps 240px but the cap is dropped (`max-width: none`);
 below 860px `.doc-grid` goes to `display: block` and the rail stacks underneath.
 
+## Dark mode follows the system
+
+**There is no toggle.** The page reads `prefers-color-scheme` and nothing
+else — no attribute on `<html>`, no stored preference, no button in the
+topbar. The OS switch already says which one the person wants, and a second
+control on one portfolio site is a control to maintain, explain and get wrong
+on the first paint.
+
+**Only the tokens flip.** The whole theme is one
+`@media (prefers-color-scheme: dark)` block at the top of `styles.css` that
+restates the `:root` custom properties. Every rule below it reads tokens, so
+no rule in the file knows which theme it is in. Adding a colour means adding
+a token, not adding a dark rule — if you find yourself writing a selector
+inside the media block, the colour underneath it is probably hardcoded and
+wants tokenising instead.
+
+The tokens that exist only because dark exists:
+
+```
+--panel / --panel-2      a card, then a popover raised above one
+--panel-code             the code block
+--plate                  a figure's backing — white in BOTH themes
+--invert-bg / --invert-ink   the one dark pill; it swaps to black-on-white
+--topbar-bg              the blurred sticky bar
+--edge-strong            a focused input, a live tile
+--scrim, --shadow-sm/md/lg, --scroll-thumb
+--ok / --danger          green and red, lifted so both clear AA on #0c0c0d
+--logo-filter            brightness(0), plus invert(1) in dark
+--tk-k/s/n/f             syntax
+```
+
+**Two things deliberately stay light.**
+
+- **A figure keeps its white plate.** Every screenshot here is phones on a
+  1920x1080 white canvas, so a dark frame would only draw a border around a
+  white rectangle. `--plate` is `#fff` in both themes.
+- **The `.demo` widgets keep the light palette they were drawn in.** They are
+  simulations of a light-mode product and each carries its own hardcoded
+  blues, greens and greys, so the dark block hands the whole `.demo` subtree
+  the light token values back rather than restyling two thousand lines. A new
+  demo inherits that for free by being inside `.demo`.
+
+The page is `#0c0c0d`, not black: hairlines stay readable on it, and the white
+figures do not punch a hole through the page. `index.html` carries two
+`theme-color` metas with `media` attributes so the browser chrome follows too.
+
 ## The mesh gradient
 
 `mesh.js` renders the gradients, not CSS. The look being matched is a

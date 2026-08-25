@@ -2,7 +2,8 @@
    nijin.site — visual language rebuilt around a surf-directory aesthetic:
    white page, hairline rules, IBM Plex Mono eyebrow labels, Inter Tight
    display type, pill buttons (one orange radial-gradient CTA), soft gray
-   tiles, and airy directory rows. Light only — there is no dark theme.
+   tiles, and airy directory rows. Dark is the same language with the tokens
+   restated; it follows the system setting and has no toggle.
    ============================================================================ */
 
 /* ------------------------------------------------------------------ tokens */
@@ -48,12 +49,170 @@
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
+  /* ---- the pieces that flip in dark mode -------------------------------
+     Everything above is either the same in both themes or gets restated in
+     the prefers-color-scheme block below. These are the ones that are a flat
+     colour in light and cannot be expressed as an alpha over the page. */
+
+  --panel: #fff;              /* a card, an input, a popover on the page */
+  --panel-2: #fff;            /* raised above a card: menus, the palette */
+  --panel-code: #fafafa;      /* the code block */
+  --plate: #fff;              /* a figure: the screenshots are white canvases,
+                                 so this stays white in both themes */
+
+  --invert-bg: #000;          /* the one dark pill: CTA, avatar, tooltip */
+  --invert-bg-hover: #262626;
+  --invert-ink: #fff;
+
+  --topbar-bg: rgba(255, 255, 255, 0.86);
+  --hairline-strong: rgba(0, 0, 0, 0.16);
+  --edge-strong: rgba(0, 0, 0, 0.4);      /* a focused input, a live tile */
+  --scroll-thumb: rgba(0, 0, 0, 0.14);
+  --scrim: rgba(0, 0, 0, 0.32);
+
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.18);
+
+  --ok: #1fad52;
+  --danger: #c0392b;
+
+  --logo-filter: brightness(0);            /* client marks, one flat colour */
+
+  /* syntax */
+  --tk-k: #7c3aed;
+  --tk-s: #b45309;
+  --tk-n: #0f766e;
+  --tk-f: #1d4ed8;
+
+  color-scheme: light;
+
   /* legacy aliases still referenced by older view markup */
   --text: var(--ink);
   --text-faint: var(--muted);
   --border: var(--hairline);
   --bg-subtle: var(--surface);
   --radius-md: var(--r-card);
+}
+
+/* ------------------------------------------------------- dark, by system
+
+   There is no toggle. The page follows `prefers-color-scheme`, which is what
+   the OS switch already says, so the site changes with everything else on the
+   machine instead of asking a second time.
+
+   Only the tokens are restated — every rule below reads them, so nothing else
+   in the file knows which theme it is in. Two things deliberately do not
+   flip:
+
+   - a figure keeps its white plate. Every screenshot on this site is a phone
+     on a 1920x1080 white canvas, so a dark frame would only draw a border
+     around a white rectangle.
+   - the interactive demos keep the light palette they were drawn in. They are
+     little simulations of a light-mode product, and each one carries its own
+     hardcoded blues, greens and greys inside it; the token reset on `.demo`
+     below hands that subtree the light values back.
+*/
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    /* ink */
+    --ink-full: #fff;
+    --ink: rgba(255, 255, 255, 0.92);
+    --ink-soft: rgba(255, 255, 255, 0.72);
+    --muted: rgba(255, 255, 255, 0.5);
+    --faint: rgba(255, 255, 255, 0.34);
+    --soft: rgba(255, 255, 255, 0.64);
+
+    /* surfaces — not pure black: #0c0c0d keeps the hairlines readable and
+       stops the white figures from blowing a hole in the page */
+    --bg: #0c0c0d;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-2: rgba(255, 255, 255, 0.065);
+    --surface-3: rgba(255, 255, 255, 0.1);
+    --hairline: rgba(255, 255, 255, 0.13);
+    --hairline-soft: rgba(255, 255, 255, 0.09);
+    --hairline-strong: rgba(255, 255, 255, 0.24);
+    --edge-strong: rgba(255, 255, 255, 0.45);
+
+    --panel: #151517;
+    --panel-2: #1d1d20;
+    --panel-code: #121214;
+
+    /* the dark pill inverts with the page: white on black becomes black on
+       white, so it is still the one loud non-orange thing */
+    --invert-bg: #fff;
+    --invert-bg-hover: #d6d6d6;
+    --invert-ink: #000;
+
+    --topbar-bg: rgba(12, 12, 13, 0.82);
+    --scroll-thumb: rgba(255, 255, 255, 0.18);
+    --scrim: rgba(0, 0, 0, 0.64);
+
+    /* a shadow does no work on a dark page; these carry the depth in the
+       ring, not the blur, so they are pushed much darker */
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.66);
+
+    /* both clear AA on #0c0c0d; the light-theme pair does not */
+    --ok: #35c46a;
+    --danger: #ff6f61;
+
+    --logo-filter: brightness(0) invert(1);
+
+    --tk-k: #c8a9ff;
+    --tk-s: #f0b25e;
+    --tk-n: #5fd0b8;
+    --tk-f: #86aaff;
+  }
+
+  /* the accent gradient is already light-on-anything, but the orange sits a
+     touch hot against a dark page */
+  ::selection {
+    background: #ff5400;
+    color: #fff;
+  }
+
+  /* a screenshot is a bright rectangle either way; the frame just stops
+     glowing at the edges */
+  .frame,
+  .diagram {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  /* the demos are light-mode products being demonstrated — hand the subtree
+     the light palette back rather than restyling two thousand lines */
+  .demo {
+    color-scheme: light;
+    --ink-full: #000;
+    --ink: rgba(0, 0, 0, 0.9);
+    --ink-soft: rgba(0, 0, 0, 0.7);
+    --muted: rgba(0, 0, 0, 0.45);
+    --faint: rgba(0, 0, 0, 0.3);
+    --soft: rgba(0, 0, 0, 0.6);
+    --bg: #fff;
+    --surface: rgba(0, 0, 0, 0.02);
+    --surface-2: rgba(0, 0, 0, 0.04);
+    --surface-3: rgba(0, 0, 0, 0.06);
+    --hairline: rgba(0, 0, 0, 0.08);
+    --hairline-soft: rgba(0, 0, 0, 0.06);
+    --hairline-strong: rgba(0, 0, 0, 0.16);
+    --edge-strong: rgba(0, 0, 0, 0.4);
+    --panel: #fff;
+    --panel-2: #fff;
+    --invert-bg: #000;
+    --invert-bg-hover: #262626;
+    --invert-ink: #fff;
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.18);
+    --ok: #1fad52;
+    --danger: #c0392b;
+    color: var(--ink);
+  }
 }
 
 /* ------------------------------------------------------------------- reset */
@@ -124,8 +283,8 @@ button {
   top: -48px;
   left: 16px;
   z-index: 200;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   padding: 10px 18px;
   border-radius: var(--r-pill);
   font-size: 13px;
@@ -197,7 +356,7 @@ h4 {
 }
 
 .btn-secondary {
-  background: var(--bg);
+  background: var(--panel);
   color: var(--ink-full);
   box-shadow: inset 0 0 0 1px var(--hairline);
 }
@@ -207,13 +366,13 @@ h4 {
 }
 
 .btn-dark {
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
 }
 
 .btn-light {
   background: #fff;
-  color: var(--ink-full);
+  color: #000;
 }
 
 .btn-light:hover {
@@ -221,7 +380,7 @@ h4 {
 }
 
 .btn-dark:hover {
-  background: #262626;
+  background: var(--invert-bg-hover);
 }
 
 .btn svg {
@@ -257,15 +416,15 @@ h4 {
   height: 44px;
   padding: 0 22px;
   border-radius: var(--r-pill);
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   font-size: 14px;
   font-weight: 500;
   transition: background 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .cta:hover {
-  background: #262626;
+  background: var(--invert-bg-hover);
 }
 
 .cta:active {
@@ -313,7 +472,7 @@ h4 {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.86);
+  background: var(--topbar-bg);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--hairline-soft);
@@ -386,14 +545,14 @@ h4 {
   padding: 0 8px 0 14px;
   min-width: 230px;
   border-radius: var(--r-pill);
-  background: #f5f5f5;
+  background: var(--surface-2);
   color: var(--muted);
   font-size: 13px;
   transition: background 0.15s var(--ease);
 }
 
 .search-btn:hover {
-  background: #efefef;
+  background: var(--surface-3);
 }
 
 .search-ico {
@@ -414,7 +573,7 @@ h4 {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--muted);
-  background: #fff;
+  background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: 6px;
   padding: 3px 6px;
@@ -475,7 +634,7 @@ body.with-sidebar .sidebar {
   overflow-y: auto;
   padding: 40px 0 48px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.14) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 
 .side-title {
@@ -1021,8 +1180,8 @@ a.tile:hover {
 }
 
 .tile-logo.glyph {
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   border-radius: 50%;
 }
 
@@ -1061,8 +1220,8 @@ a.tile:hover {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--soft);
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--panel);
+  border: 1px solid var(--hairline-soft);
   border-radius: 7px;
   padding: 4px 8px;
   white-space: nowrap;
@@ -1313,8 +1472,8 @@ a.tile:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   align-self: flex-start;
   margin-top: 2px;
 }
@@ -1436,7 +1595,7 @@ a.tile:hover {
 }
 
 .doc-h1 .from {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--faint);
   font-weight: 500;
 }
 
@@ -1622,7 +1781,7 @@ a.tile:hover {
 }
 
 .pill.live .dot {
-  background: #1fad52;
+  background: var(--ok);
 }
 
 /* ------------------------------------------------------------------ prose */
@@ -1774,7 +1933,7 @@ a.tile:hover {
   border-radius: var(--r-card);
   overflow: hidden;
   border: 1px solid var(--hairline-soft);
-  background: #fff;
+  background: var(--plate);
   cursor: zoom-in;
 }
 
@@ -1928,7 +2087,7 @@ a.tile:hover {
 }
 
 .callout.danger .callout-title {
-  color: #c0392b;
+  color: var(--danger);
 }
 
 /* ------------------------------------------------------------------- code */
@@ -1937,7 +2096,7 @@ a.tile:hover {
   margin: 2em 0;
   border-radius: var(--r-card);
   overflow: hidden;
-  background: #fafafa;
+  background: var(--panel-code);
   border: 1px solid var(--hairline-soft);
 }
 
@@ -2001,7 +2160,7 @@ a.tile:hover {
 
 .copy-btn.done .check {
   display: block;
-  color: #1fad52;
+  color: var(--ok);
 }
 
 .copy-btn.done .copy {
@@ -2009,11 +2168,11 @@ a.tile:hover {
 }
 
 /* syntax tokens — quiet grayscale with one warm accent */
-.tk-k { color: #7c3aed; }
-.tk-s { color: #b45309; }
-.tk-n { color: #0f766e; }
+.tk-k { color: var(--tk-k); }
+.tk-s { color: var(--tk-s); }
+.tk-n { color: var(--tk-n); }
 .tk-c { color: var(--faint); font-style: italic; }
-.tk-f { color: #1d4ed8; }
+.tk-f { color: var(--tk-f); }
 
 /* ------------------------------------------------------------ cards, steps */
 
@@ -2029,7 +2188,7 @@ a.tile:hover {
 }
 
 .card {
-  background: var(--bg);
+  background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: var(--r-card);
   padding: 22px 20px 20px;
@@ -2037,7 +2196,7 @@ a.tile:hover {
 }
 
 .card:hover {
-  border-color: rgba(0, 0, 0, 0.16);
+  border-color: var(--hairline-strong);
   background: var(--surface);
 }
 
@@ -2101,8 +2260,8 @@ a.tile:hover {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   font-family: var(--font-mono);
   font-size: 11px;
   display: flex;
@@ -2428,7 +2587,7 @@ a.tile:hover {
   border-radius: var(--r-card);
   border: 1px solid var(--hairline-soft);
   padding: 24px;
-  background: #fff;
+  background: var(--panel);
 }
 
 .diagram svg {
@@ -2531,8 +2690,8 @@ a.tile:hover {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -5221,8 +5380,8 @@ a.tile:hover {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -5278,7 +5437,7 @@ a.tile:hover {
   font: inherit;
   font-size: 15px;
   color: var(--ink);
-  background: #fff;
+  background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: var(--r-input);
   padding: 13px 14px;
@@ -5288,7 +5447,7 @@ a.tile:hover {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: rgba(0, 0, 0, 0.4);
+  border-color: var(--edge-strong);
 }
 
 .form-group textarea {
@@ -5315,11 +5474,11 @@ a.tile:hover {
 }
 
 .form-status.success {
-  color: #1fad52;
+  color: var(--ok);
 }
 
 .form-status.error {
-  color: #c0392b;
+  color: var(--danger);
 }
 
 .form-status svg {
@@ -5333,7 +5492,7 @@ a.tile:hover {
   border: 1px solid var(--hairline-soft);
   border-radius: var(--r-card);
   padding: 26px 28px 22px;
-  background: #fff;
+  background: var(--panel);
 }
 
 .gh-skel {
@@ -5475,8 +5634,8 @@ a.tile:hover {
 .gh-tip {
   position: fixed;
   z-index: 160;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   font-family: var(--font-mono);
   font-size: 10px;
   padding: 6px 9px;
@@ -5497,7 +5656,7 @@ a.tile:hover {
   position: fixed;
   inset: 0;
   z-index: 150;
-  background: rgba(0, 0, 0, 0.32);
+  background: var(--scrim);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   display: none;
@@ -5513,10 +5672,10 @@ a.tile:hover {
 .pal {
   width: 100%;
   max-width: 560px;
-  background: #fff;
+  background: var(--panel-2);
   border-radius: var(--r-card);
   border: 1px solid var(--hairline-soft);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
 
@@ -5574,8 +5733,8 @@ a.tile:hover {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   flex-shrink: 0;
 }
 
@@ -5825,14 +5984,14 @@ a.tile:hover {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #f2f2f2;
+  background: var(--surface-2);
   color: var(--ink-full);
   transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .icon-btn-c:hover {
-  background: #000;
-  color: #fff;
+  background: var(--invert-bg);
+  color: var(--invert-ink);
   transform: translateY(-2px);
 }
 
@@ -6059,7 +6218,7 @@ a.tile:hover {
 .show-media img {
   width: 80%;
   border-radius: 10px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-md);
   transition: transform 0.35s var(--ease-out);
 }
 
@@ -6080,7 +6239,7 @@ a.tile:hover {
   height: 40px;
   border: 1px solid var(--hairline-soft);
   border-radius: 11px;
-  background: #fff;
+  background: var(--panel);
   color: var(--ink-full);
   margin-bottom: 14px;
 }
@@ -6158,7 +6317,7 @@ a.tile:hover {
 }
 
 .promo-bar a.promo-cta:hover {
-  background: #262626;
+  background: var(--invert-bg-hover);
 }
 
 @media (max-width: 860px) {
@@ -6233,7 +6392,7 @@ a.tile:hover {
   /* --s bumps a mark that reads small at a shared height; see CLIENTS */
   height: calc(26px * var(--s, 1));
   width: auto;
-  filter: brightness(0);
+  filter: var(--logo-filter);
   opacity: 0.62;
   transition: opacity 0.2s var(--ease);
 }
@@ -6444,7 +6603,7 @@ a.tile:hover {
 
 .form-card .form-group input:focus,
 .form-card .form-group textarea:focus {
-  border-color: rgba(0, 0, 0, 0.35);
+  border-color: var(--edge-strong);
 }
 
 @media (max-width: 960px) {
@@ -6820,7 +6979,7 @@ a.tile:hover {
     z-index: 130;
     width: min(320px, 84vw);
     max-height: none;
-    background: #fff;
+    background: var(--bg);
     border-right: 1px solid var(--hairline-soft);
     padding: 24px 16px 32px;
     transform: translateX(-102%);
