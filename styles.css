@@ -168,59 +168,6 @@
     --tk-n: #5fd0b8;
     --tk-f: #86aaff;
   }
-
-  /* the accent gradient is already light-on-anything, but the orange sits a
-     touch hot against a dark page */
-  ::selection {
-    background: #ff5400;
-    color: #fff;
-  }
-
-  /* The frame's plate is white in both themes, and by default a background
-     paints under the border too — so any hairline on it came out as a pure
-     white ring. Harmless around a white-canvas figure, loud around one that
-     is a solid colour. Clipping the plate to the padding box lets the
-     hairline composite over the page instead, which is what makes it read as
-     an edge rather than an outline. */
-  .frame {
-    background-clip: padding-box;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .diagram {
-    border-color: rgba(255, 255, 255, 0.16);
-  }
-
-  /* the demos are light-mode products being demonstrated — hand the subtree
-     the light palette back rather than restyling two thousand lines */
-  .demo {
-    color-scheme: light;
-    --ink-full: #000;
-    --ink: rgba(0, 0, 0, 0.9);
-    --ink-soft: rgba(0, 0, 0, 0.7);
-    --muted: rgba(0, 0, 0, 0.45);
-    --faint: rgba(0, 0, 0, 0.3);
-    --soft: rgba(0, 0, 0, 0.6);
-    --bg: #fff;
-    --surface: rgba(0, 0, 0, 0.02);
-    --surface-2: rgba(0, 0, 0, 0.04);
-    --surface-3: rgba(0, 0, 0, 0.06);
-    --hairline: rgba(0, 0, 0, 0.08);
-    --hairline-soft: rgba(0, 0, 0, 0.06);
-    --hairline-strong: rgba(0, 0, 0, 0.16);
-    --edge-strong: rgba(0, 0, 0, 0.4);
-    --panel: #fff;
-    --panel-2: #fff;
-    --invert-bg: #000;
-    --invert-bg-hover: #262626;
-    --invert-ink: #fff;
-    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.18);
-    --ok: #1fad52;
-    --danger: #c0392b;
-    color: var(--ink);
-  }
 }
 
 /* ------------------------------------------------------------------- reset */
@@ -7382,5 +7329,70 @@ a.tile:hover {
   .seo-row-meta {
     grid-column: 1;
     grid-row: auto;
+  }
+}
+
+/* ==========================================================================
+   dark, the part that is not tokens
+
+   These override element rules rather than declaring custom properties, so
+   they have to come after the rules they beat — a `.frame` here and a
+   `.frame` at the top of the file are the same specificity, and the last one
+   in the file wins. The token block stays up with `:root`, where nothing
+   competes with it; everything else lives down here.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  /* the accent gradient is already light-on-anything, but the orange sits a
+     touch hot against a dark page */
+  ::selection {
+    background: #ff5400;
+    color: #fff;
+  }
+
+  /* The frame's plate is white in both themes, and by default a background
+     paints under the border too — so any hairline on it came out as a pure
+     white ring. Harmless around a white-canvas figure, loud around one that
+     is a solid colour. Clipping the plate to the padding box lets the
+     hairline composite over the page instead, which is what makes it read as
+     an edge rather than an outline. */
+  .frame {
+    background-clip: padding-box;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .diagram {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  /* the demos are light-mode products being demonstrated — hand the subtree
+     the light palette back rather than restyling two thousand lines */
+  .demo {
+    color-scheme: light;
+    --ink-full: #000;
+    --ink: rgba(0, 0, 0, 0.9);
+    --ink-soft: rgba(0, 0, 0, 0.7);
+    --muted: rgba(0, 0, 0, 0.45);
+    --faint: rgba(0, 0, 0, 0.3);
+    --soft: rgba(0, 0, 0, 0.6);
+    --bg: #fff;
+    --surface: rgba(0, 0, 0, 0.02);
+    --surface-2: rgba(0, 0, 0, 0.04);
+    --surface-3: rgba(0, 0, 0, 0.06);
+    --hairline: rgba(0, 0, 0, 0.08);
+    --hairline-soft: rgba(0, 0, 0, 0.06);
+    --hairline-strong: rgba(0, 0, 0, 0.16);
+    --edge-strong: rgba(0, 0, 0, 0.4);
+    --panel: #fff;
+    --panel-2: #fff;
+    --invert-bg: #000;
+    --invert-bg-hover: #262626;
+    --invert-ink: #fff;
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.18);
+    --ok: #1fad52;
+    --danger: #c0392b;
+    color: var(--ink);
   }
 }

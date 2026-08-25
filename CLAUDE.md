@@ -370,13 +370,19 @@ topbar. The OS switch already says which one the person wants, and a second
 control on one portfolio site is a control to maintain, explain and get wrong
 on the first paint.
 
-**Only the tokens flip.** The whole theme is one
-`@media (prefers-color-scheme: dark)` block at the top of `styles.css` that
-restates the `:root` custom properties. Every rule below it reads tokens, so
-no rule in the file knows which theme it is in. Adding a colour means adding
-a token, not adding a dark rule — if you find yourself writing a selector
-inside the media block, the colour underneath it is probably hardcoded and
-wants tokenising instead.
+**Only the tokens flip.** The theme is a `@media (prefers-color-scheme: dark)`
+block at the top of `styles.css` that restates the `:root` custom properties.
+Every rule below it reads tokens, so no rule in the file knows which theme it
+is in. Adding a colour means adding a token, not adding a dark rule — if you
+find yourself writing a selector inside the media block, the colour underneath
+it is probably hardcoded and wants tokenising instead.
+
+**The handful of element rules dark does need live in a second media block at
+the very bottom of the file**, and they have to. `.frame` in a media query and
+`.frame` in the body of the file are the same specificity, so the one further
+down wins — put them next to the token block at the top and they lose to the
+rules they are meant to beat, silently, with the browser showing you the
+light-theme value in devtools.
 
 The tokens that exist only because dark exists:
 
