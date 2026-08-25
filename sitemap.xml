@@ -9,6 +9,8 @@
   <url><loc>https://nijin.site/graphics</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://nijin.site/about</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://nijin.site/contact</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/designs/bizzscribe-shopping</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/designs/bizzscribe-storefront</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://nijin.site/designs/plate</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/plate-assets/thumb.webp</image:loc><image:title>Plate: A Day of Eating on One Screen</image:title></image:image>
     <image:image><image:loc>https://nijin.site/plate-assets/today.webp</image:loc><image:title>The Plate today screen held in one hand: a week strip, the calories left for today, and the day’s</image:title></image:image>
