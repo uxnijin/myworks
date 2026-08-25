@@ -2630,6 +2630,13 @@
 
     // /exploring is gone — its toolkit is the Tools row on /about. Netlify
     // 301s a real request; this catches in-app history the same way.
+    // Oppam moved from a design entry to a case study. Netlify 301s a real
+    // request; this catches in-app history the same way the renames above do.
+    if (path === 'designs/oppam') {
+      path = 'case-studies/oppam';
+      history.replaceState(null, '', href(path));
+    }
+
     if (path === 'exploring') {
       path = 'about';
       history.replaceState(null, '', href(path));

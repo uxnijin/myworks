@@ -131,6 +131,7 @@
     <image:image><image:loc>https://nijin.site/shipflow-assets/guide.webp</image:loc><image:title>The living style guide page showing the component library</image:title></image:image>
     <image:image><image:loc>https://nijin.site/shipflow-assets/dark.webp</image:loc><image:title>The shipments dashboard in dark mode</image:title></image:image>
     <image:image><image:loc>https://nijin.site/shipflow-assets/notfound.webp</image:loc><image:title>The 404 page</image:title></image:image></url>
+  <url><loc>https://nijin.site/case-studies/oppam</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://nijin.site/case-studies/nisf</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/nisf-assets/thumb.webp</image:loc><image:title>Nisf: A Matrimonial App, Redesigned</image:title></image:image>
     <image:image><image:loc>https://nijin.site/nisf-assets/screens/0833.webp</image:loc><image:title>Thirty-one screens of the Nisf app as it ships today</image:title></image:image>

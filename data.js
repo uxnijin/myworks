@@ -186,6 +186,18 @@ const CLIENTS = [
 // ============================================================================
 const CASE_STUDIES = [
   {
+    slug: 'oppam',
+    thumbUrl: '/oppam-assets/thumb.webp',
+    name: 'Oppam: Designing the Minutes Before Someone Asks for Help',
+    category: 'Mobile App',
+    icon: 'sun',
+    tag: 'Case study',
+    status: 'Prototype',
+    summary: 'Kerala has the most psychiatrists per person in India and still leaves most people untreated, so the wall is not supply. A running iOS app for a real Kozhikode counselling service, built around the ten minutes before a booking, with the therapist\'s side designed too.',
+    lede: 'Oppam is a real counselling service in Kozhikode, and today it is a website and a phone number. Kerala has more psychiatrists per person than any state in India and still leaves most people untreated, so the wall is not supply. It is the walk to the door. This is the app built for that walk.',
+    body: '/case-studies/oppam.js',
+  },
+  {
     slug: 'nisf',
     thumbUrl: '/nisf-assets/thumb.webp',
     name: 'Nisf: A Matrimonial App, Redesigned',
@@ -355,19 +367,6 @@ const DESIGNS = [
     lede: 'Parcel tracking for a shop and its customers. Paste a tracking number from any of 14 carriers and get one timeline back, even when the parcel changed hands halfway.',
     tech: ['React 18', 'TypeScript', 'Razorpay Blade v12 (109 components)', 'styled-components', 'React Router', 'Framer Motion', 'Recharts', 'Vite', 'Seeded mock data · no backend'],
     body: '/designs/trackwise.js',
-  },
-  {
-    slug: 'oppam',
-    thumbUrl: '/oppam-assets/thumb.webp',
-    name: 'Oppam: A Companion, Not an App',
-    category: 'Mobile App',
-    icon: 'sun',
-    tag: 'Design',
-    status: 'Prototype',
-    summary: 'Kerala has India\'s best therapist coverage and still leaves most people untreated - so the problem is the walk to the door, not the waiting list. A concept redesign that builds both sides of the marketplace, shipped as a running SwiftUI app.',
-    lede: 'A therapy app for Kerala, designed around the minutes before somebody books, the part that usually decides whether they book at all. Both sides are built: the person looking for help, and the therapist taking the sessions.',
-    tech: ['SwiftUI', 'iOS 18', 'SwiftData (on-device only)', 'Observation', 'WidgetKit', 'Custom character system', 'Face ID', 'Two-sided · seeker + therapist', 'Mock data · no cloud'],
-    body: '/designs/oppam.js',
   },
   {
     slug: 'netti',

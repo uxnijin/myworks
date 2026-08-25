@@ -46,6 +46,11 @@ http://tintsandshades.nijin.site/*   /tints-and-shades/:splat  200
 /exploring                             /about                                 301
 /exploring/                            /about                                 301
 
+# Oppam grew out of a design entry into a case study. The old URL has been
+# shared, so it moves rather than dying.
+/designs/oppam                         /case-studies/oppam                    301
+/designs/oppam/                        /case-studies/oppam                    301
+
 # SPA fallback for the docs router (/docs/<slug>).
 # Netlify serves matching static files first, so the real product directories
 # (/tasks/, /design-system-extractor/, /tints-and-shades/) keep resolving normally.
