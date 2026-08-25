@@ -176,9 +176,17 @@
     color: #fff;
   }
 
-  /* a screenshot is a bright rectangle either way; the frame just stops
-     glowing at the edges */
-  .frame,
+  /* The frame's plate is white in both themes, and by default a background
+     paints under the border too — so any hairline on it came out as a pure
+     white ring. Harmless around a white-canvas figure, loud around one that
+     is a solid colour. Clipping the plate to the padding box lets the
+     hairline composite over the page instead, which is what makes it read as
+     an edge rather than an outline. */
+  .frame {
+    background-clip: padding-box;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
   .diagram {
     border-color: rgba(255, 255, 255, 0.16);
   }

@@ -397,7 +397,11 @@ The tokens that exist only because dark exists:
 
 - **A figure keeps its white plate.** Every screenshot here is phones on a
   1920x1080 white canvas, so a dark frame would only draw a border around a
-  white rectangle. `--plate` is `#fff` in both themes.
+  white rectangle. `--plate` is `#fff` in both themes. The catch is that a
+  background paints under the border too, so a hairline on a white plate comes
+  out as a pure white ring — invisible around a white-canvas figure, loud
+  around one that is a solid colour. `.frame` takes `background-clip:
+  padding-box` in dark so the hairline composites over the page instead.
 - **The `.demo` widgets keep the light palette they were drawn in.** They are
   simulations of a light-mode product and each carries its own hardcoded
   blues, greens and greys, so the dark block hands the whole `.demo` subtree
