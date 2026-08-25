@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://nijin.site/</loc><lastmod>2026-08-24</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://nijin.site/designs</loc><lastmod>2026-08-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/case-studies</loc><lastmod>2026-08-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/products</loc><lastmod>2026-08-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/findings</loc><lastmod>2026-08-24</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/graphics</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://nijin.site/about</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://nijin.site/contact</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/designs/bizzscribe-shopping</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/designs/bizzscribe-storefront</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://nijin.site/designs</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/case-studies</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/products</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/findings</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/graphics</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://nijin.site/about</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/contact</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/designs/bizzscribe-shopping</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-thumb.webp</image:loc><image:title>Bizzscribe Shopping: The Same Store, in an App</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-home.webp</image:loc><image:title>The app home screen with collection tiles, a best sellers row and the bottom tab bar</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-browse.webp</image:loc><image:title>A filtered listing of hoodies with filter and sort controls, beside a category browse screen</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-search.webp</image:loc><image:title>The search screen with recent searches and a recently viewed row</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-product.webp</image:loc><image:title>A hoodie product page with add to cart and buy now, beside a DJ equipment rental page with book now</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-cart.webp</image:loc><image:title>The cart, the shipping address screen and the add new address form</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-order.webp</image:loc><image:title>The order summary, the payment methods screen and the order placed confirmation</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-orders.webp</image:loc><image:title>The my orders screen listing delivered orders with prices and dates</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-account.webp</image:loc><image:title>The account screen, the saved addresses list and the login and security screen</image:title></image:image></url>
+  <url><loc>https://nijin.site/designs/bizzscribe-storefront</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-thumb.webp</image:loc><image:title>Bizzscribe Storefront: The Shop a Business Builds</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-home.webp</image:loc><image:title>The storefront home page in a desktop browser and on a phone: a seasonal banner, a collections row</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-menu.webp</image:loc><image:title>The categories mega menu showing Women, Men and Kids as columns of tops, outerwear, activewear</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-product.webp</image:loc><image:title>A product page on desktop and phone: gallery, price, rating, size and colour, and the add to cart</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-reviews.webp</image:loc><image:title>The product description, the ratings breakdown, the need-ordering-help panel and a row of related</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-cart.webp</image:loc><image:title>The product grid with the cart open as a side panel listing items, the subtotal and a continue to</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-wishlist.webp</image:loc><image:title>The grid with the wishlist panel open, showing saved items and recently viewed</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/bizzscribe-assets/web-account.webp</image:loc><image:title>The account page on desktop and phone with personal details, saved addresses, cards and login</image:title></image:image></url>
   <url><loc>https://nijin.site/designs/plate</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/plate-assets/thumb.webp</image:loc><image:title>Plate: A Day of Eating on One Screen</image:title></image:image>
     <image:image><image:loc>https://nijin.site/plate-assets/today.webp</image:loc><image:title>The Plate today screen held in one hand: a week strip, the calories left for today, and the day’s</image:title></image:image>
@@ -75,19 +92,6 @@
     <image:image><image:loc>https://nijin.site/trackwise-assets/alerts.webp</image:loc><image:title>The alerts screen, grouped by day, showing which channel each alert went out on</image:title></image:image>
     <image:image><image:loc>https://nijin.site/trackwise-assets/webhooks.webp</image:loc><image:title>The webhooks screen with endpoints and delivery attempts</image:title></image:image>
     <image:image><image:loc>https://nijin.site/trackwise-assets/integrations.webp</image:loc><image:title>The integrations screen showing inbox, store, channel and developer connections with real states</image:title></image:image></url>
-  <url><loc>https://nijin.site/designs/oppam</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
-    <image:image><image:loc>https://nijin.site/oppam-assets/thumb.webp</image:loc><image:title>Oppam: A Companion, Not an App</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/hero.webp</image:loc><image:title>Five Oppam screens: the welcome, home, a therapist introduction, the journal, and the therapist</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/onboarding.webp</image:loc><image:title>Five onboarding screens: welcome, a name, language, what brings you, and the privacy promise</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/home-times.webp</image:loc><image:title>The home screen at morning, afternoon, evening and night</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/care.webp</image:loc><image:title>Care: naming a feeling, three matched introductions, and a therapist profile</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/booking.webp</image:loc><image:title>The four booking steps - plan, time, how to meet, and the bill - then the confirmation</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/session.webp</image:loc><image:title>The connected session room, and session history</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/pages.webp</image:loc><image:title>The Pages journal, the writing composer, and the letter-to-future-self composer</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/privacy.webp</image:loc><image:title>The Face-ID door, the Privacy Room, the app-switcher cover, and the You tab</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/companion.webp</image:loc><image:title>The five companion moods, the breathing exercise, and the night companion holding a lantern</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/motion-breathe.gif</image:loc><image:title>The companion breathing - one full cycle, captured from the running app</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/oppam-assets/practice-day.webp</image:loc><image:title>The therapist console: today, incoming requests, the session room and the note composer</image:title></image:image></url>
   <url><loc>https://nijin.site/designs/ksrtc</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/ksrtc-assets/thumb.webp</image:loc><image:title>KSRTC Booking: A Platform Redesign</image:title></image:image>
     <image:image><image:loc>https://nijin.site/ksrtc-assets/hero.webp</image:loc><image:title>Five screens from the redesigned KSRTC app: search, results, the seat map, review and the ticket</image:title></image:image>
@@ -131,7 +135,19 @@
     <image:image><image:loc>https://nijin.site/shipflow-assets/guide.webp</image:loc><image:title>The living style guide page showing the component library</image:title></image:image>
     <image:image><image:loc>https://nijin.site/shipflow-assets/dark.webp</image:loc><image:title>The shipments dashboard in dark mode</image:title></image:image>
     <image:image><image:loc>https://nijin.site/shipflow-assets/notfound.webp</image:loc><image:title>The 404 page</image:title></image:image></url>
-  <url><loc>https://nijin.site/case-studies/oppam</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/case-studies/oppam</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+    <image:image><image:loc>https://nijin.site/oppam-assets/thumb.webp</image:loc><image:title>Oppam: Designing the Minutes Before Someone Asks for Help</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/brand.webp</image:loc><image:title>The Oppam wordmark with its smiling mark, beside the app home screen</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-kerala.webp</image:loc><image:title>Kerala in three numbers: 1.2 psychiatrists per 100,000, an 84.5 percent national treatment gap, and</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-gap.webp</image:loc><image:title>Psychiatrists per 100,000 people: Kerala 1.2, India 0.75, a workable minimum 3.0</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-starts.webp</image:loc><image:title>The first App Store screenshot of Wysa, Amaha and YourDOST</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-price.webp</image:loc><image:title>BetterHelp at 70 to 100 dollars a week beside Oppam at 1,000 rupees a session</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-category.webp</image:loc><image:title>Wysa, Amaha and YourDOST with their reach: 11 million lives across 105 countries, 4.5 million</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/site-hero.webp</image:loc><image:title>The oppam.me homepage: a sunrise illustration, 24x7 online therapy, and a consult a therapist button</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-oppam.webp</image:loc><image:title>Oppam has raised 1.5 crore in seed funding led by Phoenix Angels and 90 lakh in an extended round</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/site-cards.webp</image:loc><image:title>Therapist cards on the website showing photo, credential, concern tags, a voice introduction</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-ftc.webp</image:loc><image:title>BetterHelp paid 7.8 million dollars to settle with the US Federal Trade Commission over sharing</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/oppam-assets/the-rules.webp</image:loc><image:title>Four rules: trust before identity, one loud action, visible not promised, and presence not</image:title></image:image></url>
   <url><loc>https://nijin.site/case-studies/nisf</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/nisf-assets/thumb.webp</image:loc><image:title>Nisf: A Matrimonial App, Redesigned</image:title></image:image>
     <image:image><image:loc>https://nijin.site/nisf-assets/screens/0833.webp</image:loc><image:title>Thirty-one screens of the Nisf app as it ships today</image:title></image:image>

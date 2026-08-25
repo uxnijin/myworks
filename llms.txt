@@ -8,19 +8,21 @@ Contact and hire: https://nijin.site/contact  (uxnijin@gmail.com)
 
 Long-form write-ups: the problem, the reasoning behind each screen, and what shipped.
 
+- [Oppam: Designing the Minutes Before Someone Asks for Help](https://nijin.site/case-studies/oppam): Kerala has the most psychiatrists per person in India and still leaves most people untreated, so the wall is not supply. A running iOS app for a real Kozhikode counselling service, built around the ten minutes before a booking, with the therapist's side designed too.
 - [Nisf: A Matrimonial App, Redesigned](https://nijin.site/case-studies/nisf): A live matrimonial app for practising Muslims, where the filtering goes past age and income into path, aqeedah, madhab and how much Qur'an someone has memorised. The redesign starts here.
 
 ## Design portfolio
 
 App and product design work. Onboarding flows, paywalls and full products, each one built and captured running.
 
+- [Bizzscribe Shopping: The Same Store, in an App](https://nijin.site/designs/bizzscribe-shopping): The shopping app that comes with a Bizzscribe store. One product page carries both a thing and a booking, and only the pair of buttons at the bottom changes.
+- [Bizzscribe Storefront: The Shop a Business Builds](https://nijin.site/designs/bizzscribe-storefront): The ecommerce store a business builds on Bizzscribe and hands to its own customers, drawn for desktop and phone together. Nothing on the page belongs to the platform underneath.
 - [Plate: A Day of Eating on One Screen](https://nijin.site/designs/plate): A calorie tracker that fits on one screen: the week, what is left of today, and the meals you have logged, with the ones you have not sitting there as a row and a plus.
 - [Crate: A Transfer You Can Brand](https://nijin.site/designs/crate): A service for sending files too big to email, where the thing being designed is the page the recipient opens, built beside you as you upload, then dressed in your own logo, colours and type.
 - [HACA Design School: The Page That Sells the Course](https://nijin.site/designs/haca-design-school): A branding course sold on a page that did not look branded. Display type, a colour per section, and the three things the page was missing: student work, the instructors, and the awkward questions about paying.
 - [Chalo: A Trip You Can Describe](https://nijin.site/designs/chalo): A travel app where the planning happens in a conversation: describe the trip, get an itinerary back, and book the flight without leaving the chat. Two-sided: there is a partner app for the people supplying it.
 - [Ember: Habits and Streaks](https://nijin.site/designs/ember): A habit tracker built around one number, the streak. Categories as chips, a setup form that fits in one scroll, and a month that shows a missed day without making a fuss of it.
 - [Trackwise: Where Is My Parcel?](https://nijin.site/designs/trackwise): “Where is my order?” is a quarter of all e-commerce support tickets, and the answer already exists in a carrier API. Built inside Razorpay's real Blade design system: one timeline across every handover, and every persona, plan edge and failure state designed rather than assumed.
-- [Oppam: A Companion, Not an App](https://nijin.site/designs/oppam): Kerala has India's best therapist coverage and still leaves most people untreated - so the problem is the walk to the door, not the waiting list. A concept redesign that builds both sides of the marketplace, shipped as a running SwiftUI app.
 - [KSRTC Booking: A Platform Redesign](https://nijin.site/designs/ksrtc): The bug in a booking funnel is its shape, not its styling. Rebuilding Kerala's state bus platform around one continuous surface that holds five steps, designed and shipped as a running SwiftUI app.
 - [Parcel: Premium Courier Booking](https://nijin.site/designs/parcel): Booking a courier that feels as effortless as ordering a ride, designed and built end-to-end in native SwiftUI.
 - [Route Planner: A Day of Deliveries](https://nijin.site/designs/route-planner): A last-mile delivery app that holds a 120-stop day on one surface, designed and built as a running SwiftUI prototype.
