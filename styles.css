@@ -77,6 +77,14 @@
   --ok: #1fad52;
   --danger: #c0392b;
 
+  /* the contributions ramp: pale to saturated, which on white is quiet to
+     loud */
+  --gh-0: var(--surface-2);
+  --gh-1: #ffd9c2;
+  --gh-2: #ffb187;
+  --gh-3: #ff7e40;
+  --gh-4: #ff5400;
+
   --logo-filter: brightness(0);            /* client marks, one flat colour */
 
   /* syntax */
@@ -168,6 +176,18 @@
   /* both clear AA on #0c0c0d; the light-theme pair does not */
   --ok: #35c46a;
   --danger: #ff6f61;
+
+  /* The light ramp is pale-to-saturated, which reads quiet-to-loud on white
+     and exactly backwards on black: #ffd9c2 was the brightest thing in the
+     card and #ff5400 the dimmest, so a week with one commit outshone a week
+     with thirty. Dark runs the same ember the other way and still lands on
+     the accent. The empty cell is dimmed a little too, so one contribution
+     separates from none by more than a hair. */
+  --gh-0: rgba(255, 255, 255, 0.05);
+  --gh-1: #5c2814;
+  --gh-2: #943d15;
+  --gh-3: #cf4a0b;
+  --gh-4: #ff5400;
 
   --logo-filter: brightness(0) invert(1);
 
@@ -5594,7 +5614,7 @@ a.tile:hover {
 
 .gh-cell {
   border-radius: 2.5px;
-  background: var(--surface-2);
+  background: var(--gh-0);
 }
 
 /* square, sized by the 1fr column it sits in */
@@ -5608,10 +5628,10 @@ a.tile:hover {
   background: none;
 }
 
-.gh-cell[data-l='1'] { background: #ffd9c2; }
-.gh-cell[data-l='2'] { background: #ffb187; }
-.gh-cell[data-l='3'] { background: #ff7e40; }
-.gh-cell[data-l='4'] { background: #ff5400; }
+.gh-cell[data-l='1'] { background: var(--gh-1); }
+.gh-cell[data-l='2'] { background: var(--gh-2); }
+.gh-cell[data-l='3'] { background: var(--gh-3); }
+.gh-cell[data-l='4'] { background: var(--gh-4); }
 
 .gh-foot {
   display: flex;

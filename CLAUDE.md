@@ -412,8 +412,16 @@ dark rule. The tokens that exist only because dark exists:
 --scrim, --shadow-sm/md/lg, --scroll-thumb
 --ok / --danger          green and red, lifted so both clear AA on #0c0c0d
 --logo-filter            brightness(0), plus invert(1) in dark
+--gh-0…4                 the contributions ramp
 --tk-k/s/n/f             syntax
 ```
+
+The contributions ramp is the one palette that is not the light one restated
+in reverse. Light runs pale to saturated (`#ffd9c2` → `#ff5400`), which is
+quiet to loud on white and exactly backwards on black — a week with one commit
+outshone a week with thirty. Dark runs the same ember the other way,
+`#5c2814` → `#ff5400`, so intensity tracks the count in both. Any future
+colour scale on this site has the same trap in it.
 
 **Two things deliberately stay light.**
 
