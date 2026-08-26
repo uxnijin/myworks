@@ -371,6 +371,7 @@ const renderBlock = (b) => {
       if (b.kind === 'human') return renderHumanDemo();
       if (b.kind === 'anchor') return renderAnchorDemo();
       if (b.kind === 'undo') return renderUndoDemo();
+      if (b.kind === 'tabs') return renderTabsDemo();
       return '';
 
     default:
@@ -943,6 +944,37 @@ function renderUndoDemo() {
     </div>
     <div class="demo-foot">
       <span class="udemo-step">Watching</span>
+      <span class="demo-note">Runs on its own</span>
+    </div>
+  </div>`;
+}
+
+// The tabs demo: a strip that holds its tab widths while the pointer is closing
+// tabs, so the next close button arrives in the slot the last one left. The
+// widths only relax once the pointer leaves.
+const DEMO_TABS = [
+  'Inbox', 'Calendar', 'Docs', 'Figma', 'GitHub', 'Analytics', 'Notes', 'Music',
+];
+
+function renderTabsDemo() {
+  return `<div class="demo xdemo" data-demo="tabs" data-hold="on">
+    <div class="demo-screen">
+      <div class="xdemo-stage">
+        <div class="xdemo-strip">
+          ${DEMO_TABS.map(
+            (name) => `<span class="xdemo-tab">
+              <span class="xdemo-fav"></span>
+              <span class="xdemo-t">${esc(name)}</span>
+              <span class="xdemo-x">${icon('x', 'xdemo-x-i')}</span>
+            </span>`
+          ).join('')}
+        </div>
+        <div class="xdemo-page"><span class="xdemo-url"></span></div>
+        <span class="xdemo-guide"><i></i></span>
+      </div>
+    </div>
+    <div class="demo-foot">
+      <span class="xdemo-step">Watching</span>
       <span class="demo-note">Runs on its own</span>
     </div>
   </div>`;

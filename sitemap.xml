@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://nijin.site/</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://nijin.site/designs</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/case-studies</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/products</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/findings</loc><lastmod>2026-08-25</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://nijin.site/graphics</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://nijin.site/about</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://nijin.site/contact</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/</loc><lastmod>2026-08-26</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://nijin.site/designs</loc><lastmod>2026-08-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/case-studies</loc><lastmod>2026-08-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/products</loc><lastmod>2026-08-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/findings</loc><lastmod>2026-08-26</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://nijin.site/graphics</loc><lastmod>2026-08-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://nijin.site/about</loc><lastmod>2026-08-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://nijin.site/contact</loc><lastmod>2026-08-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://nijin.site/designs/bizzscribe-shopping</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-thumb.webp</image:loc><image:title>Bizzscribe Shopping: The Same Store, in an App</image:title></image:image>
     <image:image><image:loc>https://nijin.site/bizzscribe-assets/app-home.webp</image:loc><image:title>The app home screen with collection tiles, a best sellers row and the bottom tab bar</image:title></image:image>
@@ -161,6 +161,7 @@
     <image:image><image:loc>https://nijin.site/nisf-assets/screens/0841.webp</image:loc><image:title>Thirty-one screens of the Nisf app as it ships today</image:title></image:image>
     <image:image><image:loc>https://nijin.site/nisf-assets/screens/0842.webp</image:loc><image:title>Thirty-one screens of the Nisf app as it ships today</image:title></image:image>
     <image:image><image:loc>https://nijin.site/nisf-assets/screens/0843.webp</image:loc><image:title>Thirty-one screens of the Nisf app as it ships today</image:title></image:image></url>
+  <url><loc>https://nijin.site/findings/dont-move-the-target-while-im-clicking</loc><lastmod>2026-08-26</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://nijin.site/findings/bring-undo-to-more-web-interactions</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://nijin.site/findings/dont-move-the-page-while-im-reading</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://nijin.site/findings/dont-make-humans-prove-they-are-human</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>

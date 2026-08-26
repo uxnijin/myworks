@@ -705,6 +705,16 @@ PROJECTS.forEach((p) => {
 
 const FINDINGS = [
   {
+    slug: 'dont-move-the-target-while-im-clicking',
+    title: "Don't move the target while I'm clicking",
+    category: 'Continuity',
+    kind: 'Finding',
+    date: 'August 2026',
+    icon: 'window',
+    summary: 'Closing eight tabs should be eight clicks in one place, not eight little hunts',
+    body: '/findings/dont-move-the-target-while-im-clicking.js',
+  },
+  {
     slug: 'bring-undo-to-more-web-interactions',
     title: 'Bring Undo to more web interactions',
     category: 'Recovery',

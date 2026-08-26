@@ -55,6 +55,7 @@ Figma plugins, browser extensions and network tools, designed and shipped for re
 
 Short notes on interaction design, each one a single idea with a worked example.
 
+- [Don't move the target while I'm clicking](https://nijin.site/findings/dont-move-the-target-while-im-clicking): Closing eight tabs should be eight clicks in one place, not eight little hunts
 - [Bring Undo to more web interactions](https://nijin.site/findings/bring-undo-to-more-web-interactions): Muscle memory already knows Ctrl + Z, so give it something to reverse
 - [Don't move the page while I'm reading](https://nijin.site/findings/dont-move-the-page-while-im-reading): If something loads in above you, correct the scroll by exactly its height
 - [Don't make humans prove they are human](https://nijin.site/findings/dont-make-humans-prove-they-are-human): Read the signals already there, and only interrupt when the answer is genuinely unclear

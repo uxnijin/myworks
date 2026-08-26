@@ -5314,6 +5314,155 @@ a.tile:hover {
   }
 }
 
+/* ---------------------------------------------- demo (a strip that holds still) */
+
+/* tabs closed one after another, with the strip refusing to re-lay itself out
+   until the pointer leaves */
+
+.xdemo-stage {
+  position: relative;
+  padding: 18px 18px 22px;
+  background: #fff;
+}
+
+.xdemo-strip {
+  display: flex;
+  gap: 4px;
+  padding: 6px 6px 0;
+  border-radius: 12px 12px 0 0;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.xdemo-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* held: every tab keeps the width it had, so the next close button arrives
+     in the slot the last one left */
+  width: 124px;
+  flex: 0 0 124px;
+  padding: 9px 10px;
+  border-radius: 9px 9px 0 0;
+  background: #fff;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  transition:
+    width 0.34s var(--ease-out),
+    flex-basis 0.34s var(--ease-out),
+    opacity 0.18s var(--ease);
+}
+
+/* released: the remaining tabs spread across the strip again */
+.xdemo[data-hold='off'] .xdemo-tab {
+  width: auto;
+  flex: 1 1 auto;
+}
+
+.xdemo-tab.going {
+  opacity: 0;
+}
+
+.xdemo-fav {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  flex: 0 0 auto;
+}
+
+.xdemo-t {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.xdemo-x {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  color: var(--muted);
+  flex: 0 0 auto;
+  transition:
+    background 0.14s var(--ease),
+    transform 0.14s var(--ease);
+}
+
+.xdemo-x.pressed {
+  background: var(--surface-3);
+  transform: scale(0.9);
+}
+
+.xdemo-x-i {
+  width: 11px;
+  height: 11px;
+}
+
+.xdemo-page {
+  height: 96px;
+  border-radius: 0 0 12px 12px;
+  background: var(--surface);
+  padding: 12px;
+}
+
+.xdemo-url {
+  display: block;
+  width: 42%;
+  height: 9px;
+  border-radius: 5px;
+  background: var(--surface-3);
+}
+
+/* the line the pointer never leaves */
+.xdemo-guide {
+  position: absolute;
+  top: 12px;
+  bottom: 84px;
+  width: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.xdemo-guide i {
+  position: absolute;
+  inset: 0;
+  border-left: 1.5px dashed rgba(255, 84, 0, 0.55);
+}
+
+.xdemo[data-hold='off'] .xdemo-guide {
+  opacity: 0;
+}
+
+.xdemo .demo-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.xdemo-step::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+  animation: demo-live 2.4s var(--ease) infinite;
+}
+
+@media (max-width: 620px) {
+  .xdemo-tab {
+    width: 96px;
+    flex-basis: 96px;
+  }
+}
+
 /* ---------------------------------------------------------------- contact */
 
 .contact-wrap {

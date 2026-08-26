@@ -881,6 +881,7 @@
     initHumanDemo();
     initAnchorDemo();
     initUndoDemo();
+    initTabsDemo();
   }
 
   // ------------------------------------------------------------- headings
@@ -2285,6 +2286,70 @@
     });
   }
 
+  // --------------------------------------------------------------- tabs demo
+
+  // Closing several tabs in a row only works if the strip refuses to re-lay
+  // itself out while the pointer is in it: the next tab takes the slot the last
+  // one left, so its close button is already under the cursor. The guide marks
+  // the cursor's x, and the tabs only widen once the pointer leaves.
+  function initTabsDemo() {
+    const demo = $('[data-demo="tabs"]');
+    if (!demo) return;
+
+    const strip = $('.xdemo-strip', demo);
+    const guide = $('.xdemo-guide', demo);
+    const step = $('.xdemo-step', demo);
+    const hand = pointerFor(demo);
+    const ALL = strip.innerHTML;
+    const CLOSES = 4;
+
+    const say = (s) => {
+      step.textContent = s;
+    };
+
+    // the guide sits on the close button the pointer is using
+    const markGuide = (btn) => {
+      const d = $('.xdemo-stage', demo).getBoundingClientRect();
+      const r = btn.getBoundingClientRect();
+      guide.style.left = `${r.left - d.left + r.width / 2}px`;
+    };
+
+    ambient(demo, {
+      still: () => {
+        strip.innerHTML = ALL;
+        demo.dataset.hold = 'on';
+        markGuide($('.xdemo-x', strip));
+        say('The next close button lands in the same slot');
+      },
+      run: async (beat) => {
+        strip.innerHTML = ALL;
+        demo.dataset.hold = 'on';
+        markGuide($('.xdemo-x', strip));
+        say('Eight tabs, and the pointer on the first close button');
+        await beat(1100);
+
+        for (let i = 0; i < CLOSES; i += 1) {
+          const tab = strip.firstElementChild;
+          await hand.tap($('.xdemo-x', tab), beat, () => {
+            tab.classList.add('going');
+            say(`Closed ${i + 1} \u2014 the pointer has not moved`);
+          });
+          await beat(200);
+          tab.remove();
+          await beat(420);
+        }
+
+        await beat(900);
+
+        // the widths were only being held for the run of clicks
+        say('Pointer leaves, and the strip re-lays itself out');
+        demo.dataset.hold = 'off';
+        await hand.park(beat);
+        await beat(2800);
+      },
+    });
+  }
+
   // ------------------------------------------------------------- github graph
 
   const GH_CACHE = 'gh-contrib-cache';
@@ -3159,6 +3224,7 @@
     initHumanDemo();
     initAnchorDemo();
     initUndoDemo();
+    initTabsDemo();
   }
 
   // A tool is either a plain name or { name, icon }, where `icon` is a file in
