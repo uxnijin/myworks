@@ -258,13 +258,17 @@ const renderBlock = (b) => {
 
     case 'hscroll':
       return `<div class="hscroll" role="group" aria-label="${esc(b.label || 'Image strip')}">${(b.items || [])
-        .map(
-          (it) => `<div class="hscroll-item"${it.src ? ' data-zoom' : ''}>${
+        .map((it) => {
+          if (it.video)
+            return `<div class="hscroll-item"><video autoplay loop muted playsinline preload="metadata" src="${esc(
+              it.video
+            )}"></video></div>`;
+          return `<div class="hscroll-item"${it.src ? ' data-zoom' : ''}>${
             it.src
               ? `<img src="${esc(it.src)}" alt="${esc(it.alt || '')}" loading="lazy" decoding="async">`
               : placeholder(it.alt || 'Screenshot')
-          }</div>`
-        )
+          }</div>`;
+        })
         .join('')}</div>`;
 
     case 'button':

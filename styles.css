@@ -210,7 +210,9 @@
    is a solid colour. Clipping the plate to the padding box lets the
    hairline composite over the page instead, which is what makes it read as
    an edge rather than an outline. */
-[data-theme='dark'] .frame {
+[data-theme='dark'] .frame,
+[data-theme='dark'] .hscroll .hscroll-item,
+[data-theme='dark'] .video-loop {
   background-clip: padding-box;
   border-color: rgba(255, 255, 255, 0.1);
 }
@@ -1935,14 +1937,15 @@ a.tile:hover {
   margin: 0;
 }
 
-/* horizontal image strip — deck slides, store screenshots */
+/* horizontal image strip — deck slides, store screenshots. Full-bleed. */
 .hscroll {
   display: flex;
   gap: 14px;
   overflow-x: auto;
-  margin: 2em 0;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
+  width: 100vw;
+  margin: 2em 0 2em calc(50% - 50vw);
+  padding: 2px max(24px, calc(50vw - 50%)) 12px;
+  scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -1957,13 +1960,26 @@ a.tile:hover {
 }
 
 .hscroll .hscroll-item img {
-  height: 320px;
+  height: 420px;
+  width: auto;
+  display: block;
+}
+
+/* motion strips: small looping clips in a row */
+.hscroll .hscroll-item video {
+  height: 260px;
   width: auto;
   display: block;
 }
 
 .block-btn {
   margin: 2em 0;
+}
+
+.block-btn .btn {
+  text-decoration: none;
+  border-bottom: none;
+  color: var(--invert-ink);
 }
 
 /* autoplaying loop clips exported from Figma motion */
