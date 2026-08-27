@@ -228,14 +228,8 @@
     <image:image><image:loc>https://nijin.site/images/thumbs/design-school.webp</image:loc><image:title>Design School</image:title></image:image></url>
   <url><loc>https://nijin.site/docs/icon-library</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
     <image:image><image:loc>https://nijin.site/images/thumbs/icon-library.webp</image:loc><image:title>Icon Library</image:title></image:image></url>
-  <url><loc>https://nijin.site/docs/speed-test</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
-    <image:image><image:loc>https://nijin.site/images/thumbs/speed-test.webp</image:loc><image:title>Speed Test</image:title></image:image></url>
-  <url><loc>https://nijin.site/docs/site-speed-test</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
-    <image:image><image:loc>https://nijin.site/images/thumbs/site-speed-test.webp</image:loc><image:title>Site Speed Test</image:title></image:image></url>
-  <url><loc>https://nijin.site/docs/dns-checker</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
-    <image:image><image:loc>https://nijin.site/images/thumbs/dns-checker.webp</image:loc><image:title>DNS Checker</image:title></image:image></url>
-  <url><loc>https://nijin.site/docs/ip-checker</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
-    <image:image><image:loc>https://nijin.site/images/thumbs/ip-checker.webp</image:loc><image:title>IP Checker</image:title></image:image></url>
+  <url><loc>https://nijin.site/docs/network-tools</loc><lastmod>2026-08-27</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
+    <image:image><image:loc>https://nijin.site/images/thumbs/network-tools.webp</image:loc><image:title>Network Tools</image:title></image:image></url>
   <url><loc>https://nijin.site/docs/diecastkerala</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
     <image:image><image:loc>https://nijin.site/images/thumbs/diecastkerala.webp</image:loc><image:title>Diecast Kerala</image:title></image:image></url>
 </urlset>

@@ -46,10 +46,7 @@ Figma plugins, browser extensions and network tools, designed and shipped for re
 - [Figma Tints & Shades](https://nijin.site/docs/tints-and-shades): Turn one brand colour into an evenly spaced scale, and send it to variables or to code.
 - [Design School](https://nijin.site/docs/design-school): A curated collection of resources for learning design.
 - [Icon Library](https://nijin.site/docs/icon-library): Search, recolor and download 314,000+ open-source icons, free with no account.
-- [Speed Test](https://nijin.site/docs/speed-test): Internet speed test: download, upload, ping, jitter.
-- [Site Speed Test](https://nijin.site/docs/site-speed-test): Checks page load time, size, and request waterfall for any website.
-- [DNS Checker](https://nijin.site/docs/dns-checker): Shows your DNS records + propagation.
-- [IP Checker](https://nijin.site/docs/ip-checker): Check IP and location.
+- [Network Tools](https://nijin.site/docs/network-tools): Speed test, site speed test, DNS checker and IP checker. Four tools on one site, built in the Carbon design style.
 - [Diecast Kerala](https://nijin.site/docs/diecastkerala): A Shopify storefront for die-cast model car collectors in Kerala: catalog, checkout, and brand design.
 
 ## UX findings
