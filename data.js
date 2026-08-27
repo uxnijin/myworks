@@ -211,7 +211,7 @@ const CASE_STUDIES = [
   },
   {
     slug: 'kcalo',
-    thumbUrl: '/kcalo-assets/thumb.webp',
+    thumbUrl: '/plate-assets/thumb.webp',
     name: 'Kcalo: A Calorie Tracker, Designed End to End',
     category: 'Mobile App',
     icon: 'activity',

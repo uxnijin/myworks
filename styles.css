@@ -1935,6 +1935,50 @@ a.tile:hover {
   margin: 0;
 }
 
+/* horizontal image strip — deck slides, store screenshots */
+.hscroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  margin: 2em 0;
+  padding-bottom: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hscroll .hscroll-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  border: 1px solid var(--hairline-soft);
+  background: var(--plate);
+  cursor: zoom-in;
+}
+
+.hscroll .hscroll-item img {
+  height: 320px;
+  width: auto;
+  display: block;
+}
+
+.block-btn {
+  margin: 2em 0;
+}
+
+/* autoplaying loop clips exported from Figma motion */
+.video-loop {
+  border-radius: var(--r-card);
+  overflow: hidden;
+  border: 1px solid var(--hairline-soft);
+  background: var(--plate);
+}
+
+.video-loop video {
+  width: 100%;
+  display: block;
+}
+
 /* image placeholder */
 .ph {
   border: 1px dashed var(--hairline);

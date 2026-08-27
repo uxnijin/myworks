@@ -256,7 +256,28 @@ const renderBlock = (b) => {
         )
         .join('')}</div>`;
 
+    case 'hscroll':
+      return `<div class="hscroll" role="group" aria-label="${esc(b.label || 'Image strip')}">${(b.items || [])
+        .map(
+          (it) => `<div class="hscroll-item"${it.src ? ' data-zoom' : ''}>${
+            it.src
+              ? `<img src="${esc(it.src)}" alt="${esc(it.alt || '')}" loading="lazy" decoding="async">`
+              : placeholder(it.alt || 'Screenshot')
+          }</div>`
+        )
+        .join('')}</div>`;
+
+    case 'button':
+      return `<p class="block-btn"><a class="btn btn-dark" href="${esc(b.href || '#')}" target="_blank" rel="noopener">${esc(
+        b.label || 'Open'
+      )}</a></p>`;
+
     case 'video': {
+      if (b.loop && b.src) {
+        return `<figure class="figure"><div class="video-loop"><video autoplay loop muted playsinline preload="metadata" src="${esc(
+          b.src
+        )}"></video></div>${b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : ''}</figure>`;
+      }
       if (b.youtube) {
         return `<div class="embed" data-embed="https://www.youtube-nocookie.com/embed/${esc(b.youtube)}?autoplay=1">
           <div class="facade">
