@@ -16,7 +16,7 @@ BODY('kcalo', {
     { t: 'button', href: 'https://www.figma.com/design/izblJrOLpLaz3KAcyICKZa/Kcalo-Health-App?node-id=23-40', label: 'Open the full Figma file' },
 
     { t: 'p', x: 'The short version first. Ten slides carry the whole argument. Scroll through them, tap any to zoom. The rest of this page expands each one.' },
-    { t: 'hscroll', label: 'The ten-slide pitch deck', items: [
+    { t: 'hscroll', size: 'sm', label: 'The ten-slide pitch deck', items: [
       { src: '/kcalo-assets/deck-01.webp', alt: 'Deck slide 1: cover' },
       { src: '/kcalo-assets/deck-02.webp', alt: 'Deck slide 2: tracking works, nobody lasts' },
       { src: '/kcalo-assets/deck-03.webp', alt: 'Deck slide 3: the camera is the keyboard' },
@@ -94,7 +94,17 @@ BODY('kcalo', {
       { video: '/kcalo-assets/motion-button.mp4' },
     ] },
     { t: 'image', src: '/kcalo-assets/zoom-controls.webp', alt: 'Enlarged controls: day cells, the macro bars on green, a toggle, a stat chip and the primary button', caption: 'The controls, at reading distance.' },
-    { t: 'image', src: '/kcalo-assets/zoom-ring.webp', alt: 'The flame progress ring enlarged on a green circle', caption: 'The ring: yellow arc on a quiet track, flame at home.' },
+
+    { t: 'h2', x: 'Six frames on the store' },
+    { t: 'p', x: 'The store listing tells the loop in six frames. Scroll through them, tap any to zoom.' },
+    { t: 'hscroll', label: 'App Store screenshots', items: [
+      { src: '/kcalo-assets/appstore-01.webp', alt: 'App Store frame 1: Snap your meal' },
+      { src: '/kcalo-assets/appstore-02.webp', alt: 'App Store frame 2: Counted in seconds' },
+      { src: '/kcalo-assets/appstore-03.webp', alt: 'App Store frame 3: Your day, one glance' },
+      { src: '/kcalo-assets/appstore-04.webp', alt: 'App Store frame 4: Watch it trend' },
+      { src: '/kcalo-assets/appstore-05.webp', alt: 'App Store frame 5: Streaks that stick' },
+      { src: '/kcalo-assets/appstore-06.webp', alt: 'App Store frame 6: A plan built for you' },
+    ] },
 
     { t: 'h2', x: 'The system underneath' },
     { t: 'image', src: '/kcalo-assets/components.webp', alt: 'The component sheet: buttons, day cells, macro bars, chips, toggles and rows', caption: 'Eleven components, thirty-one screens.' },
@@ -109,15 +119,6 @@ BODY('kcalo', {
       { src: '/kcalo-assets/poster-streak.webp', alt: 'Dark streak poster: Day 12, streaks that survive wedding season' },
       { src: '/kcalo-assets/posters-3.webp', alt: 'Three more posters: Know your numbers, One photo Logged, and Log the sadya' },
       { src: '/kcalo-assets/posters-2.webp', alt: 'The streak poster in dark and light variants' },
-    ] },
-    { t: 'p', x: 'The store listing tells the loop in six frames — scroll through them, tap any to zoom.' },
-    { t: 'hscroll', label: 'App Store screenshots', items: [
-      { src: '/kcalo-assets/appstore-01.webp', alt: 'App Store frame 1: Snap your meal' },
-      { src: '/kcalo-assets/appstore-02.webp', alt: 'App Store frame 2: Counted in seconds' },
-      { src: '/kcalo-assets/appstore-03.webp', alt: 'App Store frame 3: Your day, one glance' },
-      { src: '/kcalo-assets/appstore-04.webp', alt: 'App Store frame 4: Watch it trend' },
-      { src: '/kcalo-assets/appstore-05.webp', alt: 'App Store frame 5: Streaks that stick' },
-      { src: '/kcalo-assets/appstore-06.webp', alt: 'App Store frame 6: A plan built for you' },
     ] },
 
     { t: 'h2', x: 'Decisions, dated' },

@@ -257,10 +257,10 @@ const renderBlock = (b) => {
         .join('')}</div>`;
 
     case 'hscroll':
-      return `<div class="hscroll" role="group" aria-label="${esc(b.label || 'Image strip')}">${(b.items || [])
+      return `<div class="hscroll${b.size === 'sm' ? ' hscroll-sm' : ''}" role="group" aria-label="${esc(b.label || 'Image strip')}">${(b.items || [])
         .map((it) => {
           if (it.video)
-            return `<div class="hscroll-item"><video autoplay loop muted playsinline preload="metadata" src="${esc(
+            return `<div class="hscroll-item" data-zoom><video autoplay loop muted playsinline preload="metadata" src="${esc(
               it.video
             )}"></video></div>`;
           return `<div class="hscroll-item"${it.src ? ' data-zoom' : ''}>${

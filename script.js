@@ -916,21 +916,63 @@
     });
   }
 
+  // Items zoomed from the same .hscroll strip form a group the lightbox can
+  // step through with the arrow keys; a lone figure is a group of one.
+  let zoomGroup = [];
+  let zoomIndex = -1;
+
+  function showZoom(f) {
+    const img = f.querySelector('img');
+    const vid = f.querySelector('video');
+    const lbImg = $('#lb-img');
+    let lbVid = $('#lb-video');
+    if (vid) {
+      if (!lbVid) {
+        lbVid = document.createElement('video');
+        lbVid.id = 'lb-video';
+        lbVid.autoplay = true;
+        lbVid.loop = true;
+        lbVid.muted = true;
+        lbVid.playsInline = true;
+        $('#lb').appendChild(lbVid);
+      }
+      lbVid.src = vid.currentSrc || vid.src;
+      lbVid.style.display = 'block';
+      lbImg.style.display = 'none';
+      lbVid.play?.();
+    } else if (img) {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbImg.style.display = '';
+      if (lbVid) {
+        lbVid.pause();
+        lbVid.style.display = 'none';
+      }
+    } else {
+      return;
+    }
+    const strip = f.closest('.hscroll');
+    zoomGroup = strip ? $$('.hscroll-item[data-zoom]', strip) : [f];
+    zoomIndex = zoomGroup.indexOf(f);
+    $('#lb').classList.add('on');
+    document.body.style.overflow = 'hidden';
+  }
+
+  const stepZoom = (dir) => {
+    const next = zoomIndex + dir;
+    if (next < 0 || next >= zoomGroup.length) return;
+    showZoom(zoomGroup[next]);
+  };
+
   function initZoom() {
     $$('[data-zoom]').forEach((f) => {
-      f.addEventListener('click', () => {
-        const img = f.querySelector('img');
-        if (!img) return;
-        $('#lb-img').src = img.src;
-        $('#lb-img').alt = img.alt;
-        $('#lb').classList.add('on');
-        document.body.style.overflow = 'hidden';
-      });
+      f.addEventListener('click', () => showZoom(f));
     });
   }
 
   const closeLB = () => {
     $('#lb').classList.remove('on');
+    $('#lb-video')?.pause();
     document.body.style.overflow = '';
   };
 
@@ -3779,6 +3821,23 @@
     // lightbox
     $('#lb').addEventListener('click', closeLB);
 
+    // Over a strip, a vertical wheel scrolls the strip sideways until it runs
+    // out of track, then the page takes the wheel back. Delegated once at
+    // boot; must be non-passive to claim the event.
+    document.addEventListener(
+      'wheel',
+      (e) => {
+        const strip = e.target.closest?.('.hscroll');
+        if (!strip || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        const max = strip.scrollWidth - strip.clientWidth;
+        const next = Math.max(0, Math.min(max, strip.scrollLeft + e.deltaY));
+        if (next === strip.scrollLeft) return;
+        e.preventDefault();
+        strip.scrollLeft = next;
+      },
+      { passive: false }
+    );
+
     initCompareGlobals();
 
     // keys
@@ -3799,6 +3858,11 @@
         if (palOpen) closePalette();
         if ($('#lb').classList.contains('on')) closeLB();
         closeNav();
+        return;
+      }
+      if (!palOpen && $('#lb').classList.contains('on') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+        e.preventDefault();
+        stepZoom(e.key === 'ArrowRight' ? 1 : -1);
         return;
       }
       if (!palOpen) return;
