@@ -1,11 +1,11 @@
 // ==========================================================================
-//  LogiOps. A design entry — a logistics control center built with IBM's
+//  LogiOps. A design entry — a logistics control center built with the
 //  Carbon design system (v11 Figma kit). Prose stays short on purpose.
 // ==========================================================================
 
 BODY('logiops', {
   blocks: [
-    { t: 'p', x: 'A concept built inside IBM&rsquo;s Carbon design system, using the real v11 kit: its components, its tokens, its data table, its UI shell. The product is an internal tool for a logistics operations team, and it follows one story the whole way. A shipment is delayed. Someone finds it, understands why, fixes it, and tracks the fix.' },
+    { t: 'p', x: 'A concept built with the Carbon design system, using the real v11 kit: its components, its tokens, its data table, its UI shell. The product is an internal tool for a logistics operations team, and it follows one story the whole way. A shipment is delayed. Someone finds it, understands why, fixes it, and tracks the fix.' },
     {
       t: 'image',
       src: '/logiops-assets/overview.webp',
@@ -13,9 +13,15 @@ BODY('logiops', {
       caption: 'The overview. Five numbers, and the three exceptions that matter today.',
     },
     { t: 'p', x: 'The dashboard is not a report. The critical exceptions card is a queue, and every row on it goes somewhere.' },
+    {
+      t: 'image',
+      src: '/logiops-assets/zoom-health.webp',
+      alt: 'The shipment health card enlarged: the donut with 86% on time and its legend',
+      caption: 'Shipment health, closer.',
+    },
 
     { t: 'h2', x: 'The table' },
-    { t: 'p', x: 'The main screen is a Carbon data table doing everything an enterprise table has to do: search in the toolbar, filters above, sortable columns with the sort shown, bulk selection, status as tags, and pagination that admits there are 2,761 pages.' },
+    { t: 'p', x: 'The main screen is a data table doing everything an enterprise table has to do: search in the toolbar, filters above, sortable columns with the sort shown, bulk selection, status as tags, and pagination that admits there are 2,761 pages.' },
     {
       t: 'image',
       src: '/logiops-assets/shipments.webp',
@@ -35,7 +41,7 @@ BODY('logiops', {
       t: 'image',
       src: '/logiops-assets/zoom-timeline.webp',
       alt: 'The shipment timeline enlarged: completed steps, a delay marked in red, and the two steps still pending',
-      caption: 'The timeline, closer. The error state is Carbon&rsquo;s own.',
+      caption: 'The timeline, closer. The error state comes from the component itself.',
     },
 
     { t: 'h2', x: 'The exception workspace' },
@@ -75,15 +81,14 @@ BODY('logiops', {
       caption: 'VH-1832, available, 2.1 km away.',
     },
     {
-      t: 'gallery',
-      items: [
-        { src: '/logiops-assets/zoom-vehicle.webp', alt: 'The vehicle details panel enlarged: driver, location, health bar, recent trips and the assign button' },
-        { src: '/logiops-assets/zoom-health.webp', alt: 'The average delay by region bar chart enlarged' },
-      ],
+      t: 'image',
+      src: '/logiops-assets/zoom-vehicle.webp',
+      alt: 'The vehicle details panel enlarged: driver, location, health bar, recent trips and the assign button',
+      caption: 'VH-1832, ready to take the load.',
     },
 
     { t: 'h2', x: 'Analytics' },
-    { t: 'p', x: 'Kept simple: four KPIs, one trend, and two ways of slicing the trouble. The charts use Carbon&rsquo;s data visualization palette.' },
+    { t: 'p', x: 'Kept simple: four KPIs, one trend, and two ways of slicing the trouble. The charts use the system&rsquo;s data visualization palette.' },
     {
       t: 'image',
       src: '/logiops-assets/analytics.webp',
@@ -98,7 +103,7 @@ BODY('logiops', {
     },
 
     { t: 'h2', x: 'Dark, from tokens' },
-    { t: 'p', x: 'The dark theme is not a repaint. Every fill and every text on these screens is bound to a Carbon theme variable, so the dark set is the same frames with the theme collection switched to Gray 90. Components, tags, tables and charts follow on their own.' },
+    { t: 'p', x: 'The dark theme is not a repaint. Every fill and every text on these screens is bound to a theme token, so the dark set is the same frames with the theme collection switched to Gray 90. Components, tags, tables and charts follow on their own.' },
     {
       t: 'image',
       src: '/logiops-assets/overview-dark.webp',

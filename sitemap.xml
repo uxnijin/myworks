@@ -31,6 +31,7 @@
   <url><loc>https://nijin.site/designs/logiops</loc><lastmod>2026-08-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/logiops-assets/thumb.webp</image:loc><image:title>LogiOps: A Control Center for Shipment Exceptions</image:title></image:image>
     <image:image><image:loc>https://nijin.site/logiops-assets/overview.webp</image:loc><image:title>The LogiOps operations overview: five KPI tiles, a shipment health donut, activity bars, critical</image:title></image:image>
+    <image:image><image:loc>https://nijin.site/logiops-assets/zoom-health.webp</image:loc><image:title>The shipment health card enlarged: the donut with 86% on time and its legend</image:title></image:image>
     <image:image><image:loc>https://nijin.site/logiops-assets/shipments.webp</image:loc><image:title>The shipments screen: filter dropdowns, a searchable data table with selection checkboxes, status</image:title></image:image>
     <image:image><image:loc>https://nijin.site/logiops-assets/shipment-details.webp</image:loc><image:title>Shipment details: a warning notification, a vertical timeline with an error step, current status</image:title></image:image>
     <image:image><image:loc>https://nijin.site/logiops-assets/zoom-timeline.webp</image:loc><image:title>The shipment timeline enlarged: completed steps, a delay marked in red, and the two steps still</image:title></image:image>
@@ -39,8 +40,7 @@
     <image:image><image:loc>https://nijin.site/logiops-assets/zoom-problem.webp</image:loc><image:title>The problem card enlarged: the delay statement and the reason it happened</image:title></image:image>
     <image:image><image:loc>https://nijin.site/logiops-assets/zoom-actions.webp</image:loc><image:title>The recommended actions enlarged: three numbered steps, each with its own button</image:title></image:image>
     <image:image><image:loc>https://nijin.site/logiops-assets/fleet.webp</image:loc><image:title>The fleet screen: a vehicle table with status tags and a side panel showing vehicle details, health</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/logiops-assets/zoom-vehicle.webp</image:loc><image:title>The vehicle details panel enlarged: driver, location, health bar, recent trips and the assign button</image:title></image:image>
-    <image:image><image:loc>https://nijin.site/logiops-assets/zoom-health.webp</image:loc><image:title>The average delay by region bar chart enlarged</image:title></image:image></url>
+    <image:image><image:loc>https://nijin.site/logiops-assets/zoom-vehicle.webp</image:loc><image:title>The vehicle details panel enlarged: driver, location, health bar, recent trips and the assign button</image:title></image:image></url>
   <url><loc>https://nijin.site/designs/crate</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
     <image:image><image:loc>https://nijin.site/crate-assets/thumb.webp</image:loc><image:title>Crate: A Transfer You Can Brand</image:title></image:image>
     <image:image><image:loc>https://nijin.site/crate-assets/landing.webp</image:loc><image:title>The empty state: a drop area reading Add Files, with up to 10GB on one side and secured file</image:title></image:image>

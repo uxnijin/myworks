@@ -315,8 +315,8 @@ const DESIGNS = [
     icon: 'gauge',
     tag: 'Design',
     status: 'Concept',
-    summary: 'An internal logistics operations tool built with IBM\u2019s Carbon design system. Find the delayed shipment, understand why, fix it from one place. Seven screens, light and dark from the same tokens.',
-    lede: '<strong>LogiOps</strong> is the screen a logistics operations team keeps open all day. Built with IBM\u2019s Carbon design system: real components, real tokens, and a dark theme that is a mode switch rather than a second design.',
+    summary: 'An internal logistics operations tool built with the Carbon design system. Find the delayed shipment, understand why, fix it from one place. Seven screens, light and dark from the same tokens.',
+    lede: '<strong>LogiOps</strong> is the screen a logistics operations team keeps open all day. Real components, real tokens, and a dark theme that is a mode switch rather than a second design.',
     body: '/designs/logiops.js',
   },
   {
