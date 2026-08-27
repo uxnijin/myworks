@@ -209,6 +209,18 @@ const CASE_STUDIES = [
     lede: 'Nisf is a matrimonial app for practising Muslims: no photographs, a profile read across five tabs, and a filter layer no general matrimonial site has any reason to build. This is the redesign, starting with the app as it stands.',
     body: '/case-studies/nisf.js',
   },
+  {
+    slug: 'kcalo',
+    thumbUrl: '/kcalo-assets/thumb.webp',
+    name: 'Kcalo: A Calorie Tracker, Designed End to End',
+    category: 'Mobile App',
+    icon: 'activity',
+    tag: 'Case study',
+    status: 'Concept',
+    summary: 'Every food diary dies the same death: the logging. Kcalo is a concept calorie tracker where the camera is the keyboard, built as a complete thing — 31 screens, a component library, the brand, the store listing and the pitch.',
+    lede: 'Kcalo is a concept calorie tracker built end to end, from research boards to App Store screenshots. The premise fits in a sentence: people will not type their dinner, but they will photograph it. So the camera is the keyboard, and everything else is designed around the five seconds that follow the shutter.',
+    body: '/case-studies/kcalo.js',
+  },
 ];
 
 const DESIGNS = [

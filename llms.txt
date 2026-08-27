@@ -10,6 +10,7 @@ Long-form write-ups: the problem, the reasoning behind each screen, and what shi
 
 - [Oppam: Designing the Minutes Before Someone Asks for Help](https://nijin.site/case-studies/oppam): Kerala has the most psychiatrists per person in India and still leaves most people untreated, so the wall is not supply. A running iOS app for a real Kozhikode counselling service, built around the ten minutes before a booking, with the therapist's side designed too.
 - [Nisf: A Matrimonial App, Redesigned](https://nijin.site/case-studies/nisf): A live matrimonial app for practising Muslims, where the filtering goes past age and income into path, aqeedah, madhab and how much Qur'an someone has memorised. The redesign starts here.
+- [Kcalo: A Calorie Tracker, Designed End to End](https://nijin.site/case-studies/kcalo): Every food diary dies the same death: the logging. Kcalo is a concept calorie tracker where the camera is the keyboard, built as a complete thing — 31 screens, a component library, the brand, the store listing and the pitch.
 
 ## Design portfolio
 
