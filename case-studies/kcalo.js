@@ -11,7 +11,7 @@
 BODY('kcalo', {
   blocks: [
     { t: 'p', x: 'This one has no client and no users, and says so up front. The brief was mine: take one sharp idea and carry it the whole distance a real product goes. Research, flows, wireframes, a token system, a component library, thirty-one screens with their empty and error states, motion, a brand, six posters, an App Store listing and a ten-slide pitch. One Figma file.' },
-    { t: 'p', x: 'It started as a single screen: a design entry on this site called <em>Plate</em>, one day of eating on one page. This study is that screen carried the whole distance, and it kept the test the screen was built for. Everyone has installed a calorie tracker; nobody still uses one. The apps work. The logging is what dies. And the same people who will not type a meal photograph their meals constantly. The behaviour already exists. Kcalo reroutes it.' },
+    { t: 'p', x: 'It started as a single screen, one day of eating on one page, designed before any of the rest existed. This study is that screen carried the whole distance, and it kept the test the screen was built for. Everyone has installed a calorie tracker; nobody still uses one. The apps work. The logging is what dies. And the same people who will not type a meal photograph their meals constantly. The behaviour already exists. Kcalo reroutes it.' },
     { t: 'image', src: '/plate-assets/top.webp', alt: 'The Kcalo home screen in a device frame: Today header, week strip, the green hero card and meal cards', caption: 'The screen it grew from.' },
     { t: 'button', href: 'https://www.figma.com/design/izblJrOLpLaz3KAcyICKZa/Kcalo-Health-App?node-id=23-40', label: 'Open the full Figma file' },
 
